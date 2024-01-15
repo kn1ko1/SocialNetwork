@@ -1,11 +1,11 @@
 package models
 
 type Post struct {
-	PostId int
-	CreatedAt   int64
-	Description string
-	GroupId     int
-	Title       string
-	UpdatedAt   int64
-	UserId      int
+	PostId    int
+	Body      string
+	CreatedAt int64
+	GroupId   int
+	ImageURL  string
+	UpdatedAt int64
+	UserId    int
 }

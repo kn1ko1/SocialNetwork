@@ -1,11 +1,11 @@
 package models
 
 type Message struct {
-	MessageId int
-	Body string
-	CreatedAt int
-	SenderId int
-	TargetId int
-	Type string
-	UpdatedAt int64
+	MessageId   int
+	Body        string
+	CreatedAt   int
+	MessageType string
+	SenderId    int
+	TargetId    int
+	UpdatedAt   int64
 }
