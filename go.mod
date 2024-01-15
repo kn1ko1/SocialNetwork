@@ -1,3 +1,3 @@
-module matthewhope/example-architecture
+module socialnetwork
 
-go 1.20
+go 1.21.1
