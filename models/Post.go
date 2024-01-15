@@ -5,7 +5,7 @@ type Post struct {
 	Body      string
 	CreatedAt int64
 	GroupId   int
-	Title     string
+	ImageURL  string
 	UpdatedAt int64
 	UserId    int
 }

@@ -3,9 +3,9 @@ package models
 type Message struct {
 	MessageId   int
 	Body        string
-	CreatedAt   int64
+	CreatedAt   int
+	MessageType string
 	SenderId    int
 	TargetId    int
-	MessageType string
 	UpdatedAt   int64
 }
