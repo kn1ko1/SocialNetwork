@@ -2,7 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
-	"matthewhope/example-architecture/models"
+	"socialnetwork/models"
 )
 
 func CreatePost(db *sql.DB, p models.Post) (models.Post, error) {

@@ -69,7 +69,7 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 	// (we are gonna do both, using headers correctly we can separate UI logic from API logic)
 	//
 	// Again, ommitted here for sake of example. We just assume this is what user is trying to post:
-	post := models.Post{UserId: 1, Title: "Example"}
+	post := models.Post{UserId: 1, Body: "Example"}
 	// Self-contained Validation pipeline method
 	// If this fails - Bad Request
 	// err := post.Validate()
