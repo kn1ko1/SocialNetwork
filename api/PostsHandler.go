@@ -3,10 +3,10 @@ package ui
 import (
 	"fmt"
 	"log"
-	"matthewhope/example-architecture/auth"
-	"matthewhope/example-architecture/models"
-	"matthewhope/example-architecture/repo"
 	"net/http"
+	"socialnetwork/auth"
+	"socialnetwork/models"
+	"socialnetwork/repo"
 )
 
 // Endpoint: /api/posts
@@ -69,15 +69,15 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 	// (we are gonna do both, using headers correctly we can separate UI logic from API logic)
 	//
 	// Again, ommitted here for sake of example. We just assume this is what user is trying to post:
-	post := models.Post{AuthorID: 1, Title: "Example", Contents: "This is an example"}
+	post := models.Post{UserId: 1, Title: "Example"}
 	// Self-contained Validation pipeline method
 	// If this fails - Bad Request
-	err := post.Validate()
-	if err != nil {
-		log.Println(err.Error())
-		http.Error(w, "bad request", http.StatusBadRequest)
-		return
-	}
+	// err := post.Validate()
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// 	http.Error(w, "bad request", http.StatusBadRequest)
+	// 	return
+	// }
 	// Handler uses its Repo instance to add the post to the DB
 	// The Repo instance itself is responsible for its own
 	// data access layer (DAL) implementation. e.g. SQLite, MySQL, etc.

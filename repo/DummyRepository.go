@@ -1,6 +1,6 @@
 package repo
 
-import "matthewhope/example-architecture/models"
+import "socialnetwork/models"
 
 // Field commented for implementation example reasons:
 // Should take as a field a private DB instance
@@ -23,6 +23,6 @@ func (r *DummyRepository) CreatePost(p models.Post) (models.Post, error) {
 	// return sqlite.CreatePost(r.db, p)
 
 	// Since it is ommitted for simplicity, let's simulate it:
-	p.ID = 1
+	p.UserId = 1
 	return p, nil
 }

@@ -1,6 +1,6 @@
 package repo
 
-import "matthewhope/example-architecture/models"
+import "socialnetwork/models"
 
 type IRepository interface {
 	CreatePost(p models.Post) (models.Post, error)
