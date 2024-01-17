@@ -5,7 +5,7 @@ import (
 	"socialnetwork/models"
 )
 
-// Adds comment into the given database
+// Adds post into the given database
 func CreatePost(database *sql.DB, post models.Post) (models.Post, error) {
 
 	query := `

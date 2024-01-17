@@ -5,6 +5,7 @@ import (
 	"socialnetwork/models"
 )
 
+// Adds user into the given database
 func CreateUser(database *sql.DB, User *models.User) (*models.User, error) {
 
 	query := "INSERT INTO USERS (" +

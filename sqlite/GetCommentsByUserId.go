@@ -6,8 +6,8 @@ import (
 )
 
 // Retrieves comment with the relevant userId from the COMMENTS table
-func GetCommentsByUserId(db *sql.DB, userId int) ([]*models.Comment, error) {
-	rows, err := db.Query("SELECT * FROM COMMENTS WHERE UserId = ?", userId)
+func GetCommentsByUserId(database *sql.DB, userId int) ([]*models.Comment, error) {
+	rows, err := database.Query("SELECT * FROM COMMENTS WHERE UserId = ?", userId)
 	if err != nil {
 		return nil, err
 	}

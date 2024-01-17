@@ -7,9 +7,9 @@ import (
 )
 
 // Retrieves event with the relevant eventId from the EVENTS table
-func GetEventById(db *sql.DB, groupId int) (*models.Event, error) {
+func GetEventById(database *sql.DB, groupId int) (*models.Event, error) {
 	var event models.Event
-	err := db.QueryRow("SELECT * FROM EVENTS WHERE EventId = ?", groupId).
+	err := database.QueryRow("SELECT * FROM EVENTS WHERE EventId = ?", groupId).
 		Scan(
 			&event.EventId,
 			&event.CreatedAt,

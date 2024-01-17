@@ -11,15 +11,15 @@ type IRepository interface {
 	GetUserByUsername(username string) (models.User, error)
 	DeleteAllUsers() error
 	DeleteUserById(userId int) error
-	DeleteUserByEmail(email string) error
-	DeleteUserByUsername(username string) error
+	// DeleteUserByEmail(email string) error
+	// DeleteUserByUsername(username string) error
 
 	// Post
 	CreatePost(post models.Post) error
 	GetAllPosts() ([]models.Post, error)
 	GetPostById(postId int) ([]models.Post, error)
-	GetPostByGroupId(groupId int) (models.Post, error)
-	GetPostByUserId(userId int) (models.Post, error)
+	GetPostsByGroupId(groupId int) (models.Post, error)
+	GetPostsByUserId(userId int) (models.Post, error)
 	DeleteAllPosts() error
 	DeletePostById(postId int) error
 	DeletePostByGroupId(groupId int) error
@@ -29,36 +29,36 @@ type IRepository interface {
 	CreateComment(comment models.Comment) error
 	GetAllComments() ([]models.Comment, error)
 	GetCommentById(commentId int) (models.Comment, error)
-	GetCommentByGroupId(groupId int) (models.Comment, error)
-	GetCommentByUserId(userId int) (models.Comment, error)
-	GetCommentByPostId(postId int) (models.Comment, error)
-	DeleteAllComment() error
+	GetCommentsByGroupId(groupId int) (models.Comment, error)
+	GetCommentsByUserId(userId int) (models.Comment, error)
+	GetCommentsByPostId(postId int) (models.Comment, error)
+	DeleteAllComments() error
 	DeleteCommentById(commentId int) error
-	DeleteCommentByGroupId(groupId int) error
-	DeleteCommentByUserId(userId int) error
-	DeleteCommentByPostId(postId int) error
+	DeleteCommentsByGroupId(groupId int) error
+	DeleteCommentsByUserId(userId int) error
+	DeleteCommentsByPostId(postId int) error
 
 	// Event
 	CreateEvent(event models.Event) error
 	GetAllEvents() ([]models.Event, error)
 	GetEventById(eventId int) (models.Event, error)
-	GetEventByGroupId(groupId int) (models.Event, error)
-	GetEventByUserId(userId int) (models.Event, error)
-	DeleteAllEvent() error
+	GetEventsByGroupId(groupId int) (models.Event, error)
+	GetEventsByUserId(userId int) (models.Event, error)
+	DeleteAllEvents() error
 	DeleteEventById(eventId int) error
-	DeleteEventByGroupId(groupId int) error
-	DeleteEventByUserId(userId int) error
+	DeleteEventsByGroupId(groupId int) error
+	DeleteEventsByUserId(userId int) error
 
 	// Message
 	CreateMessage(message models.Message) error
 	GetAllMessages() ([]models.Message, error)
-	GetAllMessagesByType(messageType string) ([]models.Message, error)
+	GetMessagesByType(messageType string) ([]models.Message, error)
 	GetMessageById(messageId int) (models.Message, error)
-	GetMessageBySenderId(senderId int) (models.Message, error)
-	GetMessageByTargetId(targetId int) (models.Message, error)
-	DeleteAllMessage() error
-	DeleteAllMessagesByType(messageType string) error
+	GetMessagesBySenderId(senderId int) (models.Message, error)
+	GetMessagesByTargetId(targetId int) (models.Message, error)
+	DeleteAllMessages() error
+	DeleteMessagesByType(messageType string) error
 	DeleteMessageById(messageId int) error
-	DeleteMessageBySenderId(senderId int) error
-	DeleteMessageByTargetId(targetId int) error
+	DeleteMessagesBySenderId(senderId int) error
+	DeleteMessagesByTargetId(targetId int) error
 }

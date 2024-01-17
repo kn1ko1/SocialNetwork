@@ -6,8 +6,8 @@ import (
 )
 
 // Retrieves all users from the USERS table
-func GetAllUsers(db *sql.DB) ([]models.User, error) {
-	rows, err := db.Query("SELECT * FROM USERS")
+func GetAllUsers(database *sql.DB) ([]models.User, error) {
+	rows, err := database.Query("SELECT * FROM USERS")
 	if err != nil {
 		return nil, err
 	}

@@ -6,8 +6,8 @@ import (
 )
 
 // Retrieves post with the relevant userId from the POSTS table
-func GetPostsByUserId(db *sql.DB, userId int) ([]*models.Post, error) {
-	rows, err := db.Query("SELECT * FROM POSTS WHERE UserId = ?", userId)
+func GetPostsByUserId(database *sql.DB, userId int) ([]*models.Post, error) {
+	rows, err := database.Query("SELECT * FROM POSTS WHERE UserId = ?", userId)
 	if err != nil {
 		return nil, err
 	}

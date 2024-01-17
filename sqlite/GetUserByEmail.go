@@ -7,9 +7,9 @@ import (
 )
 
 // Retrieves user with the relevant userId from the USERS table
-func GetUserByEmail(db *sql.DB, email string) (*models.User, error) {
+func GetUserByEmail(database *sql.DB, email string) (*models.User, error) {
 	var user models.User
-	err := db.QueryRow("SELECT * FROM USERS WHERE Email = ?", email).
+	err := database.QueryRow("SELECT * FROM USERS WHERE Email = ?", email).
 		Scan(
 			&user.Bio,
 			&user.CreatedAt,

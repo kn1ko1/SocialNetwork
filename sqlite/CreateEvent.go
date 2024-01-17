@@ -5,7 +5,7 @@ import (
 	"socialnetwork/models"
 )
 
-// Adds comment into the given database
+// Adds event into the given database
 func CreateEvent(database *sql.DB, event models.Event) (models.Event, error) {
 
 	query := `

@@ -6,8 +6,8 @@ import (
 )
 
 // Retrieves post with the relevant groupId from the POSTS table
-func GetPostsByGroupId(db *sql.DB, groupId int) ([]*models.Post, error) {
-	rows, err := db.Query("SELECT * FROM POSTS WHERE GroupId = ?", groupId)
+func GetPostsByGroupId(database *sql.DB, groupId int) ([]*models.Post, error) {
+	rows, err := database.Query("SELECT * FROM POSTS WHERE GroupId = ?", groupId)
 	if err != nil {
 		return nil, err
 	}

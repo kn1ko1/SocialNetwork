@@ -6,8 +6,8 @@ import (
 )
 
 // Retrieves all posts from the POSTS table
-func GetAllPosts(db *sql.DB) ([]models.Post, error) {
-	rows, err := db.Query("SELECT * FROM POSTS")
+func GetAllPosts(database *sql.DB) ([]models.Post, error) {
+	rows, err := database.Query("SELECT * FROM POSTS")
 	if err != nil {
 		return nil, err
 	}

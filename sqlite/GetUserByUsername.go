@@ -7,9 +7,9 @@ import (
 )
 
 // Retrieves user with the relevant username from the USERS table
-func GetUserByUsername(db *sql.DB, username string) (*models.User, error) {
+func GetUserByUsername(database *sql.DB, username string) (*models.User, error) {
 	var user models.User
-	err := db.QueryRow("SELECT * FROM USERS WHERE Username = ?", username).
+	err := database.QueryRow("SELECT * FROM USERS WHERE Username = ?", username).
 		Scan(
 			&user.Bio,
 			&user.CreatedAt,

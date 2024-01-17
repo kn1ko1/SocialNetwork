@@ -6,8 +6,8 @@ import (
 )
 
 // Retrieves comment with the relevant groupId from the COMMENTS table
-func GetCommentsByGroupId(db *sql.DB, groupId int) ([]*models.Comment, error) {
-	rows, err := db.Query("SELECT * FROM COMMENTS WHERE GroupId = ?", groupId)
+func GetCommentsByGroupId(database *sql.DB, groupId int) ([]*models.Comment, error) {
+	rows, err := database.Query("SELECT * FROM COMMENTS WHERE GroupId = ?", groupId)
 	if err != nil {
 		return nil, err
 	}

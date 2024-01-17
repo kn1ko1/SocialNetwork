@@ -6,8 +6,8 @@ import (
 )
 
 // Retrieves comments with the relevant postId from the COMMENTS table
-func GetCommentsByPostId(db *sql.DB, postId int) ([]*models.Comment, error) {
-	rows, err := db.Query("SELECT * FROM COMMENTS WHERE PostId = ?", postId)
+func GetCommentsByPostId(database *sql.DB, postId int) ([]*models.Comment, error) {
+	rows, err := database.Query("SELECT * FROM COMMENTS WHERE PostId = ?", postId)
 	if err != nil {
 		return nil, err
 	}

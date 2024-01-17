@@ -6,8 +6,8 @@ import (
 )
 
 // Retrieves all comments from the COMMENTS table
-func GetAllComments(db *sql.DB) ([]models.Comment, error) {
-	rows, err := db.Query("SELECT * FROM COMMENTS")
+func GetAllComments(database *sql.DB) ([]models.Comment, error) {
+	rows, err := database.Query("SELECT * FROM COMMENTS")
 	if err != nil {
 		return nil, err
 	}

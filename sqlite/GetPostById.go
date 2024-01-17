@@ -7,9 +7,9 @@ import (
 )
 
 // Retrieves post with the relevant postId from the POSTS table
-func GetPostById(db *sql.DB, groupId int) (*models.Post, error) {
+func GetPostById(database *sql.DB, groupId int) (*models.Post, error) {
 	var post models.Post
-	err := db.QueryRow("SELECT * FROM POSTS WHERE PostId = ?", groupId).
+	err := database.QueryRow("SELECT * FROM POSTS WHERE PostId = ?", groupId).
 		Scan(
 			&post.PostId,
 			&post.Body,
