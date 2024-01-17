@@ -8,7 +8,16 @@ import (
 // Adds comment into the given database
 func CreateComment(database *sql.DB, comment models.Comment) (models.Comment, error) {
 
-	query := "INSERT INTO COMMENTS (Body, CreatedAt, ImageURL, PostId, UpdatedAt, UserId) VALUES (?, ?, ?, ?, ?, ?)"
+	query := `
+	INSERT INTO COMMENTS (
+		Body,
+		CreatedAt,
+		ImageURL,
+		PostId,
+		UpdatedAt,
+		UserId
+	) VALUES (?, ?, ?, ?, ?, ?)
+`
 	statement, err := database.Prepare(query)
 	if err != nil {
 		return comment, err

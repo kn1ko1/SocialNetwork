@@ -6,10 +6,10 @@ import (
 )
 
 // Adds comment into the given database
-func CreatePost(database *sql.DB, post models.Post) (models.Post, error) {
+func CreateEvent(database *sql.DB, event models.Event) (models.Event, error) {
 
 	query := `
-	INSERT INTO POSTS (
+	INSERT INTO EVENTS (
 		Body,
 		CreatedAt,
 		GroupId,
@@ -18,24 +18,26 @@ func CreatePost(database *sql.DB, post models.Post) (models.Post, error) {
 		UserId
 	) VALUES (?, ?, ?, ?, ?, ?)
 `
+
 	statement, err := database.Prepare(query)
 	if err != nil {
-		return post, err
+		return event, err
 	}
 	res, err := statement.Exec(query,
-		post.Body,
-		post.CreatedAt,
-		post.GroupId,
-		post.ImageURL,
-		post.UpdatedAt,
-		post.UserId)
+		event.CreatedAt,
+		event.DateTime,
+		event.Description,
+		event.GroupId,
+		event.Title,
+		event.UpdatedAt,
+		event.UserId)
 	if err != nil {
-		return post, err
+		return event, err
 	}
 	id, err := res.LastInsertId()
 	if err != nil {
-		return post, err
+		return event, err
 	}
-	post.PostId = int(id)
-	return post, nil
+	event.EventId = int(id)
+	return event, nil
 }
