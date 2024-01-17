@@ -11,8 +11,6 @@ type IRepository interface {
 	GetUserByUsername(username string) (models.User, error)
 	DeleteAllUsers() error
 	DeleteUserById(userId int) error
-	// DeleteUserByEmail(email string) error
-	// DeleteUserByUsername(username string) error
 
 	// Post
 	CreatePost(post models.Post) error
