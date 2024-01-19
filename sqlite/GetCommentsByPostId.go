@@ -16,7 +16,7 @@ func GetCommentsByPostId(database *sql.DB, postId int) ([]*models.Comment, error
 	var comments []*models.Comment
 
 	for rows.Next() {
-		var comment *models.Comment
+		var comment models.Comment
 		err := rows.Scan(
 			&comment.CommentId,
 			&comment.Body,
@@ -30,7 +30,7 @@ func GetCommentsByPostId(database *sql.DB, postId int) ([]*models.Comment, error
 			return nil, err
 		}
 
-		comments = append(comments, comment)
+		comments = append(comments, &comment)
 	}
 
 	if err := rows.Err(); err != nil {

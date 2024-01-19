@@ -13,7 +13,6 @@ func GetUserById(database *sql.DB, userId int) (*models.User, error) {
 		Scan(
 			&user.Bio,
 			&user.CreatedAt,
-			&user.CreatedAt,
 			&user.DOB,
 			&user.Email,
 			&user.EncryptedPassword,

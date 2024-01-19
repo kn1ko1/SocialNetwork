@@ -13,7 +13,6 @@ func GetUserByEmail(database *sql.DB, email string) (*models.User, error) {
 		Scan(
 			&user.Bio,
 			&user.CreatedAt,
-			&user.CreatedAt,
 			&user.DOB,
 			&user.Email,
 			&user.EncryptedPassword,

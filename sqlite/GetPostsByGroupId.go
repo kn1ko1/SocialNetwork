@@ -5,7 +5,7 @@ import (
 	"socialnetwork/models"
 )
 
-// Retrieves post with the relevant groupId from the POSTS table
+// Retrieves posts with the relevant groupId from the POSTS table
 func GetPostsByGroupId(database *sql.DB, groupId int) ([]*models.Post, error) {
 	rows, err := database.Query("SELECT * FROM POSTS WHERE GroupId = ?", groupId)
 	if err != nil {
@@ -16,13 +16,13 @@ func GetPostsByGroupId(database *sql.DB, groupId int) ([]*models.Post, error) {
 	var posts []*models.Post
 
 	for rows.Next() {
-		var post *models.Post
+		var post models.Post
 		err := rows.Scan(
 			&post.PostId,
 			&post.Body,
 			&post.CreatedAt,
+			&post.GroupId,
 			&post.ImageURL,
-			&post.PostId,
 			&post.UpdatedAt,
 			&post.UserId,
 		)
@@ -30,7 +30,7 @@ func GetPostsByGroupId(database *sql.DB, groupId int) ([]*models.Post, error) {
 			return nil, err
 		}
 
-		posts = append(posts, post)
+		posts = append(posts, &post)
 	}
 
 	if err := rows.Err(); err != nil {

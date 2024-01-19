@@ -16,7 +16,7 @@ func GetEventsByGroupId(database *sql.DB, groupId int) ([]*models.Event, error) 
 	var events []*models.Event
 
 	for rows.Next() {
-		var event *models.Event
+		var event models.Event
 		err := rows.Scan(
 			&event.EventId,
 			&event.CreatedAt,
@@ -31,7 +31,7 @@ func GetEventsByGroupId(database *sql.DB, groupId int) ([]*models.Event, error) 
 			return nil, err
 		}
 
-		events = append(events, event)
+		events = append(events, &event)
 	}
 
 	if err := rows.Err(); err != nil {
