@@ -25,7 +25,7 @@ func CreateUser(database *sql.DB, User *models.User) (*models.User, error) {
 	if err != nil {
 		return User, err
 	}
-	res, err := statement.Exec(query,
+	res, err := statement.Exec(
 		User.Bio,
 		User.CreatedAt,
 		User.DOB,

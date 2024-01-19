@@ -22,7 +22,14 @@ func CreateComment(database *sql.DB, comment models.Comment) (models.Comment, er
 	if err != nil {
 		return comment, err
 	}
-	res, err := statement.Exec(query, comment.Body, comment.ImageURL, comment.PostId, comment.UserId)
+	res, err := statement.Exec(
+		comment.Body,
+		comment.CreatedAt,
+		comment.ImageURL,
+		comment.PostId,
+		comment.UpdatedAt,
+		comment.UserId,
+	)
 	if err != nil {
 		return comment, err
 	}

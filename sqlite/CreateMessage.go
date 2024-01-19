@@ -23,14 +23,14 @@ func CreateMessage(database *sql.DB, message models.Message) (models.Message, er
 	if err != nil {
 		return message, err
 	}
-	res, err := statement.Exec(query,
+	res, err := statement.Exec(
 		message.Body,
 		message.CreatedAt,
 		message.MessageType,
 		message.SenderId,
 		message.TargetId,
-		message.TargetId,
-		message.UpdatedAt)
+		message.UpdatedAt,
+	)
 	if err != nil {
 		return message, err
 	}

@@ -22,7 +22,7 @@ func CreatePost(database *sql.DB, post models.Post) (models.Post, error) {
 	if err != nil {
 		return post, err
 	}
-	res, err := statement.Exec(query,
+	res, err := statement.Exec(
 		post.Body,
 		post.CreatedAt,
 		post.GroupId,

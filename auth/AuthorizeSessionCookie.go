@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"matthewhope/example-architecture/models"
 	"net/http"
+	"socialnetwork/models"
 )
 
 // Not implemented - here we would authenticate the session cookie

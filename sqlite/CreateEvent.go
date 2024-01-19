@@ -10,27 +10,29 @@ func CreateEvent(database *sql.DB, event models.Event) (models.Event, error) {
 
 	query := `
 	INSERT INTO EVENTS (
-		Body,
 		CreatedAt,
+		DateTime,
+		Description,
 		GroupId,
-		ImageURL,
+		Title,
 		UpdatedAt,
 		UserId
-	) VALUES (?, ?, ?, ?, ?, ?)
+	) VALUES (?, ?, ?, ?, ?, ?, ?)
 `
 
 	statement, err := database.Prepare(query)
 	if err != nil {
 		return event, err
 	}
-	res, err := statement.Exec(query,
+	res, err := statement.Exec(
 		event.CreatedAt,
 		event.DateTime,
 		event.Description,
 		event.GroupId,
 		event.Title,
 		event.UpdatedAt,
-		event.UserId)
+		event.UserId,
+	)
 	if err != nil {
 		return event, err
 	}
