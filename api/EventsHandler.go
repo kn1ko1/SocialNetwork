@@ -1,4 +1,4 @@
-package handlers
+package api
 
 import (
 	"encoding/json"
@@ -124,7 +124,7 @@ func (h *EventsHandler) get(w http.ResponseWriter, r *http.Request) {
 
 	allPosts, err := h.Repo.GetAllPosts()
 	if err != nil {
-		log.Println("Failed to get posts in PostHandler. ", err)
+		log.Println("Failed to get event in EventHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -137,7 +137,7 @@ func (h *EventsHandler) get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Here are your posts"))
+	w.Write([]byte("Here are your events"))
 }
 
 func (h *EventsHandler) put(w http.ResponseWriter, r *http.Request) {
@@ -164,14 +164,14 @@ func (h *EventsHandler) put(w http.ResponseWriter, r *http.Request) {
 	// 	Title:       "Magnificient Updated Example Event",
 	// 	UserId:      2}
 
-	// Validate the post
+	// Validate the event
 	if validationErr := event.Validate(); validationErr != nil {
 		log.Println("Validation failed:", validationErr)
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
 
-	// Create post in the repository
+	// Create event in the repository
 	result, createErr := h.Repo.UpdateEvent(event)
 	if createErr != nil {
 		log.Println("Failed to update event in the repository:", createErr)
@@ -196,26 +196,26 @@ func (h *EventsHandler) delete(w http.ResponseWriter, r *http.Request) {
 	// Enable CORS headers for this handler
 	SetupCORS(&w, r)
 
-	// figure out postId
-	var postId int
-	err := json.NewDecoder(r.Body).Decode(&postId)
+	// figure out eventId
+	var eventId int
+	err := json.NewDecoder(r.Body).Decode(&eventId)
 	if err != nil {
 		log.Println("Failed to decode request body:", err)
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
-	log.Println("Received delete request for postId:", postId)
+	log.Println("Received delete request for eventId:", eventId)
 
-	// example postId for testing
-	// postId := 1
+	// example eventId for testing
+	// eventId := 1
 
-	err = h.Repo.DeletePostById(postId)
+	err = h.Repo.DeleteEventById(eventId)
 	if err != nil {
-		log.Println("Failed to delete Post. ", err)
+		log.Println("Failed to delete event. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("post was deleted"))
+	w.Write([]byte("event was deleted"))
 }

@@ -1,7 +1,7 @@
-package handlers
+package api
 
 import (
-	"fmt"
+	"encoding/json"
 	"log"
 	"net/http"
 	"socialnetwork/auth"
@@ -10,7 +10,7 @@ import (
 )
 
 // Endpoint: /api/messages
-// Allowed methods: GET, POST
+// Allowed methods: GET, POST, PUT, DELETE
 
 type MessagesHandler struct {
 	Repo repo.IRepository
@@ -47,13 +47,17 @@ func (h *MessagesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
 	// HTTP GET logic
-	case http.MethodGet:
-		// Not Implemented
-		h.get(w, r)
-		return
-	// HTTP POST logic
 	case http.MethodPost:
 		h.post(w, r)
+		return
+	case http.MethodGet:
+		h.get(w, r)
+		return
+	case http.MethodPut:
+		h.put(w, r)
+		return
+	case http.MethodDelete:
+		h.delete(w, r)
 		return
 	// All unimplemented methods default to a "method not allowed" error
 	default:
@@ -65,39 +69,153 @@ func (h *MessagesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // Separate out HTTP methods for clean separation of concerns
 // N.B. Use lowercase names, i.e. "post", "get", etc. for correct encapsulation
 func (h *MessagesHandler) post(w http.ResponseWriter, r *http.Request) {
-	// Read the JSON body of the request OR parse form data to get the message
-	// (we are gonna do both, using headers correctly we can separate UI logic from API logic)
-	//
-	// Again, ommitted here for sake of example. We just assume this is what user is trying to message:
-	message := models.Message{MessageId: 1, Body: "Example"}
-	// Self-contained Validation pipeline method
-	// If this fails - Bad Request
-	// err := message.Validate()
-	// if err != nil {
-	// 	log.Println(err.Error())
-	// 	http.Error(w, "bad request", http.StatusBadRequest)
-	// 	return
-	// }
-	// Handler uses its Repo instance to add the message to the DB
-	// The Repo instance itself is responsible for its own
-	// data access layer (DAL) implementation. e.g. SQLite, MySQL, etc.
-	//
-	// If this fails - internal server error
-	result, err := h.Repo.CreateMessage(message)
+
+	// Enable CORS headers for this handler
+	SetupCORS(&w, r)
+
+	var message models.Message
+	err := json.NewDecoder(r.Body).Decode(&message)
 	if err != nil {
-		log.Println(err.Error())
-		http.Error(w, "internal server error", http.StatusInternalServerError)
+		log.Println("Failed to decode request body:", err)
+		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
-	// Instead of just printing here, we would then put the result in a JSON
-	// payload, to make the API RESTful... not implemented again because, example init
-	fmt.Println(result)
+	log.Println("Received message:", message.Body)
+
+	// Example message to test function
+	// message := models.Message{
+	// 	Body:        "example message",
+	// 	CreatedAt:   111111111,
+	// 	MessageType: "example",
+	// 	SenderID:    1,
+	// 	TargetID:    2,
+	// 	UpdatedAt:   111111}
+
+	// Validate the event
+	if validationErr := message.Validate(); validationErr != nil {
+		log.Println("Validation failed:", validationErr)
+		http.Error(w, "Validation failed", http.StatusBadRequest)
+		return
+	}
+
+	// Create event in the repository
+	result, createErr := h.Repo.CreateMessage(message)
+	if createErr != nil {
+		log.Println("Failed to create message in the repository:", createErr)
+		http.Error(w, "Failed to create message", http.StatusInternalServerError)
+		return
+	}
+
+	// Encode and write the response
+	err = json.NewEncoder(w).Encode(result)
+	if err != nil {
+		log.Println("Failed to encode and write JSON response. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 	// Correct HTTP header for a newly created resource:
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("message created!"))
+	w.Write([]byte("Event created successfully!"))
 }
 
 func (h *MessagesHandler) get(w http.ResponseWriter, r *http.Request) {
-	// Not Implemented - would be h.Repo.GetAllMessages() ... you get the idea
-	w.Write([]byte("Here are your messages!"))
+
+	// Enable CORS headers for this handler
+	SetupCORS(&w, r)
+
+	allMessages, err := h.Repo.GetAllMessages()
+	if err != nil {
+		log.Println("Failed to get messages in Messages. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(allMessages)
+	if err != nil {
+		log.Println("Failed to encode and write JSON response. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Here are your messages"))
+}
+
+func (h *MessagesHandler) put(w http.ResponseWriter, r *http.Request) {
+
+	// Enable CORS headers for this handler
+	SetupCORS(&w, r)
+
+	var message models.Message
+	err := json.NewDecoder(r.Body).Decode(&message)
+	if err != nil {
+		log.Println("Failed to decode request body:", err)
+		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+		return
+	}
+	log.Println("Received message:", message.Body)
+
+	// Example message to test function
+	// message := models.Message{
+	// 	Body:        "updated example message",
+	// 	CreatedAt:   111111111,
+	// 	MessageType: "example",
+	// 	SenderID:    1,
+	// 	TargetID:    2,
+	// 	UpdatedAt:   333333333333}
+
+	// Validate the event
+	if validationErr := message.Validate(); validationErr != nil {
+		log.Println("Validation failed:", validationErr)
+		http.Error(w, "Validation failed", http.StatusBadRequest)
+		return
+	}
+
+	// Create event in the repository
+	result, createErr := h.Repo.UpdateMessage(message)
+	if createErr != nil {
+		log.Println("Failed to update message in the repository:", createErr)
+		http.Error(w, "Failed to update message", http.StatusInternalServerError)
+		return
+	}
+
+	// Encode and write the response
+	err = json.NewEncoder(w).Encode(result)
+	if err != nil {
+		log.Println("Failed to encode and write JSON response. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	// Correct HTTP header for a newly created resource:
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte("Post updated successfully!"))
+}
+
+func (h *MessagesHandler) delete(w http.ResponseWriter, r *http.Request) {
+
+	// Enable CORS headers for this handler
+	SetupCORS(&w, r)
+
+	// figure out eventId
+	var messageId int
+	err := json.NewDecoder(r.Body).Decode(&messageId)
+	if err != nil {
+		log.Println("Failed to decode request body:", err)
+		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+		return
+	}
+	log.Println("Received delete request for messageId:", messageId)
+
+	// example eventId for testing
+	// eventId := 1
+
+	err = h.Repo.DeleteMessageById(messageId)
+	if err != nil {
+		log.Println("Failed to delete messageId. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("messageId was deleted"))
 }
