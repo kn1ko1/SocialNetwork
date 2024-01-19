@@ -47,12 +47,11 @@ func (h *PostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
 
-	case http.MethodGet:
-		// Not Implemented
-		h.get(w, r)
-		return
 	case http.MethodPost:
 		h.post(w, r)
+		return
+	case http.MethodGet:
+		h.get(w, r)
 		return
 	case http.MethodPut:
 		h.put(w, r)
@@ -70,7 +69,7 @@ func (h *PostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 
 	// Enable CORS headers for this handler
-	// SetupCORS(&w, r)
+	SetupCORS(&w, r)
 
 	var post models.Post
 	err := json.NewDecoder(r.Body).Decode(&post)
