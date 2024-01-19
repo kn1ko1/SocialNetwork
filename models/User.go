@@ -1,5 +1,14 @@
 package models
 
+import (
+	"errors"
+)
+
+const (
+	minUsernameLength = 4
+	maxUsernameLength = 50
+)
+
 type User struct {
 	UserId            int
 	Bio               string
@@ -13,4 +22,12 @@ type User struct {
 	LastName          string
 	UpdatedAt         int64
 	Username          string
+}
+
+func (u *User) Validate() error {
+	// All of the stuff
+	if len(u.Username) < minUsernameLength || len(u.Username) > maxUsernameLength {
+		return errors.New("invalid length of username")
+	}
+	return nil
 }

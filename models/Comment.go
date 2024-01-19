@@ -1,5 +1,7 @@
 package models
 
+import "errors"
+
 type Comment struct {
 	CommentId int
 	Body      string
@@ -8,4 +10,12 @@ type Comment struct {
 	PostId    int
 	UpdatedAt int64
 	UserId    int
+}
+
+func (c *Comment) Validate() error {
+	// Validate logic here
+	if c.Body == "" {
+		return errors.New("comment body must not be empty")
+	}
+	return nil
 }

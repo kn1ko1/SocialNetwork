@@ -9,3 +9,8 @@ type Message struct {
 	TargetId    int
 	UpdatedAt   int64
 }
+
+func (m *Message) Validate() error {
+	// Validate logic here
+	return nil
+}
