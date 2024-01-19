@@ -128,30 +128,40 @@ func (h *UsersHandler) put(w http.ResponseWriter, r *http.Request) {
 	// Enable CORS headers for this handler
 	SetupCORS(&w, r)
 
-	var post models.Post
-	err := json.NewDecoder(r.Body).Decode(&post)
+	var user models.User
+	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		log.Println("Failed to decode request body:", err)
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
-	log.Println("Received post:", post.UserId, post.Body)
+	log.Println("Updating User:", user.UserId, user.Username)
 
-	// Example Post to test function
-	// post := models.Post{Body: "Example", CreatedAt: 111111, UpdatedAt: 111111, UserId: 2}
+	// Example User to test function
+	// user := models.User{
+	// Bio: "Bio (update)"
+	// 	CreatedAt:         111111111,
+	// 	DOB:               2221111,
+	// 	Email:             "example@example.com",
+	// 	EncryptedPassword: "eXaMpLe",
+	// 	FirstName:         "Rupert",
+	// 	IsPublic:          true,
+	// 	LastName:          "Cheetham",
+	// 	UpdatedAt:         3333333333,
+	// 	Username:          "Ardek"}
 
 	// Validate the post
-	if validationErr := post.Validate(); validationErr != nil {
+	if validationErr := user.Validate(); validationErr != nil {
 		log.Println("Validation failed:", validationErr)
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
 
 	// Create post in the repository
-	result, createErr := h.Repo.UpdatePost(post)
+	result, createErr := h.Repo.UpdateUser(user)
 	if createErr != nil {
-		log.Println("Failed to update post in the repository:", createErr)
-		http.Error(w, "Failed to update post", http.StatusInternalServerError)
+		log.Println("Failed to update user in the repository:", createErr)
+		http.Error(w, "Failed to update user", http.StatusInternalServerError)
 		return
 	}
 
@@ -164,7 +174,7 @@ func (h *UsersHandler) put(w http.ResponseWriter, r *http.Request) {
 	}
 	// Correct HTTP header for a newly created resource:
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Post updated successfully!"))
+	w.Write([]byte("User updated successfully!"))
 }
 
 func (h *UsersHandler) delete(w http.ResponseWriter, r *http.Request) {
@@ -173,25 +183,25 @@ func (h *UsersHandler) delete(w http.ResponseWriter, r *http.Request) {
 	SetupCORS(&w, r)
 
 	// figure out postId
-	var postId int
-	err := json.NewDecoder(r.Body).Decode(&postId)
+	var userId int
+	err := json.NewDecoder(r.Body).Decode(&userId)
 	if err != nil {
 		log.Println("Failed to decode request body:", err)
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
-	log.Println("Received delete request for postId:", postId)
+	log.Println("Received delete request for userId:", userId)
 
 	// example postId for testing
 	// postId := 1
 
-	err = h.Repo.DeletePostById(postId)
+	err = h.Repo.DeleteUserById(userId)
 	if err != nil {
-		log.Println("Failed to delete Post. ", err)
+		log.Println("Failed to delete User. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("post was deleted"))
+	w.Write([]byte("user deleted successfully"))
 }

@@ -80,7 +80,12 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("Received post:", post.UserId, post.Body)
 
-	// post := models.Post{Body: "Example", CreatedAt: 111111, UpdatedAt: 111111, UserId: 2}
+	// Example Post to test function
+	// post := models.Post{
+	// 	Body: "Example",
+	// 	CreatedAt: 111111,
+	// 	UpdatedAt: 111111,
+	// 	UserId: 2}
 
 	// Validate the post
 	if validationErr := post.Validate(); validationErr != nil {
@@ -148,9 +153,9 @@ func (h *PostsHandler) put(w http.ResponseWriter, r *http.Request) {
 
 	// Example Post to test function
 	// post := models.Post{
-	// 	Body: "Example",
+	// 	Body: "Updated Example",
 	// 	CreatedAt: 111111,
-	// 	UpdatedAt: 111111,
+	// 	UpdatedAt: 333333,
 	// 	UserId: 2}
 
 	// Validate the post
