@@ -10,7 +10,7 @@ import (
 )
 
 // Endpoint: /api/posts
-// Allowed methods: GET, POST, PUT, Delete
+// Allowed methods: GET, POST, PUT, DELETE
 
 type PostsHandler struct {
 	Repo repo.IRepository
@@ -147,7 +147,11 @@ func (h *PostsHandler) put(w http.ResponseWriter, r *http.Request) {
 	log.Println("Received post:", post.UserId, post.Body)
 
 	// Example Post to test function
-	// post := models.Post{Body: "Example", CreatedAt: 111111, UpdatedAt: 111111, UserId: 2}
+	// post := models.Post{
+	// 	Body: "Example",
+	// 	CreatedAt: 111111,
+	// 	UpdatedAt: 111111,
+	// 	UserId: 2}
 
 	// Validate the post
 	if validationErr := post.Validate(); validationErr != nil {
