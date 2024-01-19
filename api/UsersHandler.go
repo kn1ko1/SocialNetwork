@@ -80,7 +80,16 @@ func (h *UsersHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("Received user:", user.Username)
 
-	// user := models.User{Username: "Example", CreatedAt: 111111, UpdatedAt: 111111}
+	// user := models.User{
+	// 	CreatedAt:         111111111,
+	// 	DOB:               2221111,
+	// 	Email:             "example@example.com",
+	// 	EncryptedPassword: "eXaMpLe",
+	// 	FirstName:         "Rupert",
+	// 	IsPublic:          true,
+	// 	LastName:          "Cheetham",
+	// 	UpdatedAt:         111111111,
+	// 	Username:          "Ardek"}
 
 	// Validate the user
 	if validationErr := user.Validate(); validationErr != nil {
