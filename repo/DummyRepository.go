@@ -8,23 +8,34 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+const (
+	dbDriver       = "sqlite3"
+	identityDbPath = "./sqlite/data/Identity.db"
+	businessDbPath = "./sqlite/data/Business.db"
+)
+
 // Field commented for implementation example reasons:
 // Should take as a field a private DB instance
 //
 // The repo instance is then responsible for maintaining
 // the concrete DB connection
 type DummyRepository struct {
-	db *sql.DB
+	identityDb *sql.DB
+	businessDb *sql.DB
 }
 
 // Constructor function
 func NewDummyRepository() *DummyRepository {
 	// The DB field would be constructed properly here!
-	db, err := sql.Open("sqlite3", database)
+	identityDb, err := sql.Open(dbDriver, identityDbPath)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return &DummyRepository{db: db}
+	businessDb, err := sql.Open(dbDriver, businessDbPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return &DummyRepository{identityDb: identityDb, businessDb: businessDb}
 }
 
 func (r *DummyRepository) CreatePost(p models.Post) (models.Post, error) {
