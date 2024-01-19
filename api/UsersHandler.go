@@ -1,4 +1,4 @@
-package ui
+package handlers
 
 import (
 	"fmt"
