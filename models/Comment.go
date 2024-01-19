@@ -13,10 +13,23 @@ type Comment struct {
 }
 
 func (c *Comment) Validate() error {
-	// Validate logic here
 	if c.Body == "" {
 		return errors.New("comment body must not be empty")
 	}
+	if c.CreatedAt <= 0 {
+		return errors.New("invalid 'CreatedAt' field")
+	}
+	if c.PostId <= 0 {
+		return errors.New("invalid 'PostId' field")
+	}
+	if c.UpdatedAt <= 0 {
+		return errors.New("invalid 'UpdatedAt' field")
+	}
+	if c.UserId <= 0 {
+		return errors.New("invalid 'UserId' field")
+	}
+	if c.UpdatedAt < c.CreatedAt {
+		return errors.New("invalid, 'UpdatedAt' field cannot be before 'CreatedAt' field")
+	}
 	return nil
 }
-
