@@ -12,5 +12,5 @@ import (
 // For the example, I am just ommitting all this logic and simulating
 // it successfully returning a 'Test' user
 func AuthenticateSessionCookie(c *http.Cookie) (models.User, error) {
-	return models.User{Username: "Test", Password: "abc"}, nil
+	return models.User{Username: "Test", EncryptedPassword: "abc"}, nil
 }
