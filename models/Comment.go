@@ -19,3 +19,4 @@ func (c *Comment) Validate() error {
 	}
 	return nil
 }
+
