@@ -9,7 +9,7 @@ import (
 	"socialnetwork/repo"
 )
 
-// Endpoint: /api/posts
+// Endpoint: /api/events
 // Allowed methods: GET, POST
 
 type EventsHandler struct {
@@ -97,7 +97,7 @@ func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("event created!"))
 }
 
-func (h *PostsHandler) get(w http.ResponseWriter, r *http.Request) {
+func (h *EventsHandler) get(w http.ResponseWriter, r *http.Request) {
 	// Not Implemented - would be h.Repo.GetAllPosts() ... you get the idea
 	w.Write([]byte("Here are your events!"))
 }
