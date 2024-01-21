@@ -6,9 +6,13 @@ import (
 	"testing"
 )
 
+const (
+	tableRunCount = 10
+)
+
 func TestValidateInvalidCommentExpectError(t *testing.T) {
 	var vc []*Comment
-	for i := 0; i < 10; i++ {
+	for i := 0; i < tableRunCount; i++ {
 		vc = append(vc, generateInvalidComment())
 	}
 	for _, c := range vc {
@@ -24,7 +28,7 @@ func TestValidateInvalidCommentExpectError(t *testing.T) {
 
 func TestValidateValidCommentExpectNil(t *testing.T) {
 	var vc []*Comment
-	for i := 0; i < 10; i++ {
+	for i := 0; i < tableRunCount; i++ {
 		vc = append(vc, generateValidComment())
 	}
 	for _, c := range vc {
@@ -39,13 +43,13 @@ func TestValidateValidCommentExpectNil(t *testing.T) {
 }
 
 func generateValidComment() *Comment {
-	ctime := rand.Int63n(1000)
+	ctime := rand.Int63n(1000) + 1
 	c := &Comment{
 		Body:      "hello",
 		CreatedAt: ctime,
-		PostId:    rand.Intn(1000),
+		PostId:    rand.Intn(1000) + 1,
 		UpdatedAt: ctime,
-		UserId:    rand.Intn(1000),
+		UserId:    rand.Intn(1000) + 1,
 	}
 	return c
 }
@@ -58,7 +62,6 @@ func generateInvalidComment() *Comment {
 		c.Body = ""
 	case 1:
 		c.CreatedAt = -c.CreatedAt
-
 	case 2:
 		c.PostId = -c.PostId
 	case 3:
