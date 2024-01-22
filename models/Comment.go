@@ -22,14 +22,12 @@ func (c *Comment) Validate() error {
 	if c.PostId <= 0 {
 		return errors.New("invalid 'PostId' field")
 	}
-	if c.UpdatedAt <= 0 {
-		return errors.New("invalid 'UpdatedAt' field")
+	if c.UpdatedAt < c.CreatedAt {
+		return errors.New("invalid 'UpdatedAt' field. cannot be before 'CreatedAt' field")
 	}
 	if c.UserId <= 0 {
 		return errors.New("invalid 'UserId' field")
 	}
-	if c.UpdatedAt < c.CreatedAt {
-		return errors.New("invalid, 'UpdatedAt' field cannot be before 'CreatedAt' field")
-	}
+
 	return nil
 }

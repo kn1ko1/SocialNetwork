@@ -186,6 +186,11 @@ func (h *CommentsHandler) put(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Comment updated successfully!"))
 }
 
+// Note from Matt
+// This function should be used with the '/api/comments/{id}' endpoint
+// For RESTful purposes
+//
+// A 'delete' at this endpoint would correspond to deleting the entire resource
 func (h *CommentsHandler) delete(w http.ResponseWriter, r *http.Request) {
 
 	// Enable CORS headers for this handler
