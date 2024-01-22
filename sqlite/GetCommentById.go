@@ -7,9 +7,9 @@ import (
 )
 
 // Retrieves comment with the relevant commentId from the COMMENTS table
-func GetCommentById(db *sql.DB, commentId int) (*models.Comment, error) {
+func GetCommentById(database *sql.DB, commentId int) (*models.Comment, error) {
 	var comment models.Comment
-	err := db.QueryRow("SELECT * FROM COMMENTS WHERE CommentId = ?", commentId).
+	err := database.QueryRow("SELECT * FROM COMMENTS WHERE CommentId = ?", commentId).
 		Scan(
 			&comment.CommentId,
 			&comment.Body,

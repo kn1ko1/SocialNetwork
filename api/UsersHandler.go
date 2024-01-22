@@ -1,7 +1,7 @@
-package ui
+package api
 
 import (
-	"fmt"
+	"encoding/json"
 	"log"
 	"net/http"
 	"socialnetwork/auth"
@@ -10,7 +10,7 @@ import (
 )
 
 // Endpoint: /api/users
-// Allowed methods: GET, POST
+// Allowed methods: GET, POST, PUT, Delete
 
 type UsersHandler struct {
 	Repo repo.IRepository
@@ -44,16 +44,21 @@ func (h *UsersHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}
+
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
-	// HTTP GET logic
-	case http.MethodGet:
-		// Not Implemented
-		h.get(w, r)
-		return
-	// HTTP POST logic
+
 	case http.MethodPost:
 		h.post(w, r)
+		return
+	case http.MethodGet:
+		h.get(w, r)
+		return
+	case http.MethodPut:
+		h.put(w, r)
+		return
+	case http.MethodDelete:
+		h.delete(w, r)
 		return
 	// All unimplemented methods default to a "method not allowed" error
 	default:
@@ -65,39 +70,138 @@ func (h *UsersHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // Separate out HTTP methods for clean separation of concerns
 // N.B. Use lowercase names, i.e. "post", "get", etc. for correct encapsulation
 func (h *UsersHandler) post(w http.ResponseWriter, r *http.Request) {
-	// Read the JSON body of the request OR parse form data to get the post
-	// (we are gonna do both, using headers correctly we can separate UI logic from API logic)
-	//
-	// Again, ommitted here for sake of example. We just assume this is what user is trying to post:
-	user := models.User{UserId: 1, FirstName: "Example", LastName: "Example"}
-	// Self-contained Validation pipeline method
-	// If this fails - Bad Request
-	// err := post.Validate()
-	// if err != nil {
-	// 	log.Println(err.Error())
-	// 	http.Error(w, "bad request", http.StatusBadRequest)
-	// 	return
-	// }
-	// Handler uses its Repo instance to add the post to the DB
-	// The Repo instance itself is responsible for its own
-	// data access layer (DAL) implementation. e.g. SQLite, MySQL, etc.
-	//
-	// If this fails - internal server error
-	result, err := h.Repo.CreateUser(user)
+
+	var user models.User
+	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		log.Println(err.Error())
-		http.Error(w, "internal server error", http.StatusInternalServerError)
+		log.Println("Failed to decode request body:", err)
+		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
-	// Instead of just printing here, we would then put the result in a JSON
-	// payload, to make the API RESTful... not implemented again because, example init
-	fmt.Println(result)
+	log.Println("Received user:", user.Username)
+
+	// user := models.User{
+	// 	CreatedAt:         111111111,
+	// 	DOB:               2221111,
+	// 	Email:             "example@example.com",
+	// 	EncryptedPassword: "eXaMpLe",
+	// 	FirstName:         "Rupert",
+	// 	IsPublic:          true,
+	// 	LastName:          "Cheetham",
+	// 	UpdatedAt:         111111111,
+	// 	Username:          "Ardek"}
+
+	// Validate the user
+	if validationErr := user.Validate(); validationErr != nil {
+		log.Println("Validation failed:", validationErr)
+		http.Error(w, "Validation failed", http.StatusBadRequest)
+		return
+	}
+
+	// Create post in the repository
+	result, createErr := h.Repo.CreateUser(user)
+	if createErr != nil {
+		log.Println("Failed to create user in the repository:", createErr)
+		http.Error(w, "Failed to create user", http.StatusInternalServerError)
+		return
+	}
+
+	// Encode and write the response
+	err = json.NewEncoder(w).Encode(result)
+	if err != nil {
+		log.Println("Failed to encode and write JSON response. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 	// Correct HTTP header for a newly created resource:
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("user created!"))
+	w.Write([]byte("User created successfully!"))
 }
 
 func (h *UsersHandler) get(w http.ResponseWriter, r *http.Request) {
 	// Not Implemented - would be h.Repo.GetAllUsers() ... you get the idea
 	w.Write([]byte("Here are your users!"))
+}
+
+func (h *UsersHandler) put(w http.ResponseWriter, r *http.Request) {
+
+	// Enable CORS headers for this handler
+	SetupCORS(&w, r)
+
+	var user models.User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		log.Println("Failed to decode request body:", err)
+		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+		return
+	}
+	log.Println("Updating User:", user.UserId, user.Username)
+
+	// Example User to test function
+	// user := models.User{
+	// Bio: "Bio (update)"
+	// 	CreatedAt:         111111111,
+	// 	DOB:               2221111,
+	// 	Email:             "example@example.com",
+	// 	EncryptedPassword: "eXaMpLe",
+	// 	FirstName:         "Rupert",
+	// 	IsPublic:          true,
+	// 	LastName:          "Cheetham",
+	// 	UpdatedAt:         3333333333,
+	// 	Username:          "Ardek"}
+
+	// Validate the post
+	if validationErr := user.Validate(); validationErr != nil {
+		log.Println("Validation failed:", validationErr)
+		http.Error(w, "Validation failed", http.StatusBadRequest)
+		return
+	}
+
+	// Create post in the repository
+	result, createErr := h.Repo.UpdateUser(user)
+	if createErr != nil {
+		log.Println("Failed to update user in the repository:", createErr)
+		http.Error(w, "Failed to update user", http.StatusInternalServerError)
+		return
+	}
+
+	// Encode and write the response
+	err = json.NewEncoder(w).Encode(result)
+	if err != nil {
+		log.Println("Failed to encode and write JSON response. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	// Correct HTTP header for a newly created resource:
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte("User updated successfully!"))
+}
+
+func (h *UsersHandler) delete(w http.ResponseWriter, r *http.Request) {
+
+	// Enable CORS headers for this handler
+	SetupCORS(&w, r)
+
+	// figure out postId
+	var userId int
+	err := json.NewDecoder(r.Body).Decode(&userId)
+	if err != nil {
+		log.Println("Failed to decode request body:", err)
+		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+		return
+	}
+	log.Println("Received delete request for userId:", userId)
+
+	// example postId for testing
+	// postId := 1
+
+	err = h.Repo.DeleteUserById(userId)
+	if err != nil {
+		log.Println("Failed to delete User. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("user deleted successfully"))
 }
