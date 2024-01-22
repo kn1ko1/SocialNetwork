@@ -125,9 +125,6 @@ func (h *UsersHandler) get(w http.ResponseWriter, r *http.Request) {
 
 func (h *UsersHandler) put(w http.ResponseWriter, r *http.Request) {
 
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
-
 	var user models.User
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
@@ -178,9 +175,6 @@ func (h *UsersHandler) put(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *UsersHandler) delete(w http.ResponseWriter, r *http.Request) {
-
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
 
 	// figure out postId
 	var userId int

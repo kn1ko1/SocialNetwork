@@ -6,14 +6,14 @@ import (
 )
 
 // Retrieves comment with the relevant groupId from the COMMENTS table
-func GetCommentsByGroupId(database *sql.DB, groupId int) ([]*models.Comment, error) {
+func GetCommentsByGroupId(database *sql.DB, groupId int) ([]models.Comment, error) {
 	rows, err := database.Query("SELECT * FROM COMMENTS WHERE GroupId = ?", groupId)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var comments []*models.Comment
+	var comments []models.Comment
 
 	for rows.Next() {
 		var comment models.Comment
@@ -30,7 +30,7 @@ func GetCommentsByGroupId(database *sql.DB, groupId int) ([]*models.Comment, err
 			return nil, err
 		}
 
-		comments = append(comments, &comment)
+		comments = append(comments, comment)
 	}
 
 	if err := rows.Err(); err != nil {

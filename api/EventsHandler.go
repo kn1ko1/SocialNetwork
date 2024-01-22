@@ -68,9 +68,6 @@ func (h *EventsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
 
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
-
 	var event models.Event
 	err := json.NewDecoder(r.Body).Decode(&event)
 	if err != nil {
@@ -119,9 +116,6 @@ func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
 
 func (h *EventsHandler) get(w http.ResponseWriter, r *http.Request) {
 
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
-
 	allPosts, err := h.Repo.GetAllPosts()
 	if err != nil {
 		log.Println("Failed to get event in EventHandler. ", err)
@@ -141,9 +135,6 @@ func (h *EventsHandler) get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *EventsHandler) put(w http.ResponseWriter, r *http.Request) {
-
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
 
 	var event models.Event
 	err := json.NewDecoder(r.Body).Decode(&event)
@@ -192,9 +183,6 @@ func (h *EventsHandler) put(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *EventsHandler) delete(w http.ResponseWriter, r *http.Request) {
-
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
 
 	// figure out eventId
 	var eventId int

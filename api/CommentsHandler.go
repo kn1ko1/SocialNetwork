@@ -68,9 +68,6 @@ func (h *CommentsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
 
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
-
 	var comment models.Comment
 	err := json.NewDecoder(r.Body).Decode(&comment)
 	if err != nil {
@@ -117,9 +114,6 @@ func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
 
 func (h *CommentsHandler) get(w http.ResponseWriter, r *http.Request) {
 
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
-
 	allPosts, err := h.Repo.GetAllPosts()
 	if err != nil {
 		log.Println("Failed to get comments in CommentHandler. ", err)
@@ -139,9 +133,6 @@ func (h *CommentsHandler) get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *CommentsHandler) put(w http.ResponseWriter, r *http.Request) {
-
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
 
 	var comment models.Comment
 	err := json.NewDecoder(r.Body).Decode(&comment)
@@ -192,9 +183,6 @@ func (h *CommentsHandler) put(w http.ResponseWriter, r *http.Request) {
 //
 // A 'delete' at this endpoint would correspond to deleting the entire resource
 func (h *CommentsHandler) delete(w http.ResponseWriter, r *http.Request) {
-
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
 
 	// figure out postId
 	var commentId int

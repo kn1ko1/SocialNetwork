@@ -7,7 +7,7 @@ import (
 )
 
 // Retrieves event with the relevant eventId from the EVENTS table
-func GetEventById(database *sql.DB, eventId int) (*models.Event, error) {
+func GetEventById(database *sql.DB, eventId int) (models.Event, error) {
 	var event models.Event
 	err := database.QueryRow("SELECT * FROM EVENTS WHERE EventId = ?", eventId).
 		Scan(
@@ -23,10 +23,10 @@ func GetEventById(database *sql.DB, eventId int) (*models.Event, error) {
 
 	switch {
 	case err == sql.ErrNoRows:
-		return nil, errors.New("event not found")
+		return event, errors.New("event not found")
 	case err != nil:
-		return nil, err
+		return event, err
 	}
 
-	return &event, nil
+	return event, nil
 }

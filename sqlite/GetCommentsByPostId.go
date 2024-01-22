@@ -6,14 +6,14 @@ import (
 )
 
 // Retrieves comments with the relevant postId from the COMMENTS table
-func GetCommentsByPostId(database *sql.DB, postId int) ([]*models.Comment, error) {
+func GetCommentsByPostId(database *sql.DB, postId int) ([]models.Comment, error) {
 	rows, err := database.Query("SELECT * FROM COMMENTS WHERE PostId = ?", postId)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var comments []*models.Comment
+	var comments []models.Comment
 
 	for rows.Next() {
 		var comment models.Comment
@@ -30,7 +30,7 @@ func GetCommentsByPostId(database *sql.DB, postId int) ([]*models.Comment, error
 			return nil, err
 		}
 
-		comments = append(comments, &comment)
+		comments = append(comments, comment)
 	}
 
 	if err := rows.Err(); err != nil {

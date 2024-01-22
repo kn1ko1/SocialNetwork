@@ -7,7 +7,7 @@ import (
 )
 
 // Retrieves message with the relevant messageId from the MESSAGES table
-func GetMessageById(database *sql.DB, messageId int) (*models.Message, error) {
+func GetMessageById(database *sql.DB, messageId int) (models.Message, error) {
 	var message models.Message
 	err := database.QueryRow("SELECT * FROM MESSAGES WHERE MessageId = ?", messageId).
 		Scan(
@@ -22,10 +22,10 @@ func GetMessageById(database *sql.DB, messageId int) (*models.Message, error) {
 
 	switch {
 	case err == sql.ErrNoRows:
-		return nil, errors.New("message not found")
+		return message, errors.New("message not found")
 	case err != nil:
-		return nil, err
+		return message, err
 	}
 
-	return &message, nil
+	return message, nil
 }

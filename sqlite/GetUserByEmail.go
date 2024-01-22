@@ -7,7 +7,7 @@ import (
 )
 
 // Retrieves user with the relevant userId from the USERS table
-func GetUserByEmail(database *sql.DB, email string) (*models.User, error) {
+func GetUserByEmail(database *sql.DB, email string) (models.User, error) {
 	var user models.User
 	err := database.QueryRow("SELECT * FROM USERS WHERE Email = ?", email).
 		Scan(
@@ -26,10 +26,10 @@ func GetUserByEmail(database *sql.DB, email string) (*models.User, error) {
 
 	switch {
 	case err == sql.ErrNoRows:
-		return nil, errors.New("user not found")
+		return user, errors.New("user not found")
 	case err != nil:
-		return nil, err
+		return user, err
 	}
 
-	return &user, nil
+	return user, nil
 }

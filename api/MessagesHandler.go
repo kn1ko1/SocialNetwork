@@ -70,9 +70,6 @@ func (h *MessagesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // N.B. Use lowercase names, i.e. "post", "get", etc. for correct encapsulation
 func (h *MessagesHandler) post(w http.ResponseWriter, r *http.Request) {
 
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
-
 	var message models.Message
 	err := json.NewDecoder(r.Body).Decode(&message)
 	if err != nil {
@@ -120,9 +117,6 @@ func (h *MessagesHandler) post(w http.ResponseWriter, r *http.Request) {
 
 func (h *MessagesHandler) get(w http.ResponseWriter, r *http.Request) {
 
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
-
 	allMessages, err := h.Repo.GetAllMessages()
 	if err != nil {
 		log.Println("Failed to get messages in Messages. ", err)
@@ -142,9 +136,6 @@ func (h *MessagesHandler) get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *MessagesHandler) put(w http.ResponseWriter, r *http.Request) {
-
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
 
 	var message models.Message
 	err := json.NewDecoder(r.Body).Decode(&message)
@@ -192,9 +183,6 @@ func (h *MessagesHandler) put(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *MessagesHandler) delete(w http.ResponseWriter, r *http.Request) {
-
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
 
 	// figure out eventId
 	var messageId int

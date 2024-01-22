@@ -5,22 +5,22 @@ import (
 	"socialnetwork/models"
 )
 
-// Adds user into the given database
-func CreateUser(database *sql.DB, User *models.User) (*models.User, error) {
+// Adds user into the gdatabase *sql.DBiven database
+func CreateUser(database *sql.DB, User models.User) (models.User, error) {
 
-	query := "INSERT INTO USERS (" +
-		"Bio, " +
-		"CreatedAt, " +
-		"DOB, " +
-		"Email, " +
-		"EncryptedPassword, " +
-		"FirstName, " +
-		"ImageUrl, " +
-		"IsPublic, " +
-		"LastName, " +
-		"UpdatedAt, " +
-		"Username" +
-		") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	query := `INSERT INTO USERS (
+		Bio,
+		CreatedAt, 
+		DOB,
+		Email,
+		EncryptedPassword,
+		FirstName,
+		ImageUrl,
+		IsPublic,
+		LastName,
+		UpdatedAt,
+		Username
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 	statement, err := database.Prepare(query)
 	if err != nil {
 		return User, err

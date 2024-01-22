@@ -7,7 +7,7 @@ import (
 )
 
 // Retrieves post with the relevant postId from the POSTS table
-func GetPostById(database *sql.DB, groupId int) (*models.Post, error) {
+func GetPostById(database *sql.DB, groupId int) (models.Post, error) {
 	var post models.Post
 	err := database.QueryRow("SELECT * FROM POSTS WHERE PostId = ?", groupId).
 		Scan(
@@ -22,10 +22,10 @@ func GetPostById(database *sql.DB, groupId int) (*models.Post, error) {
 
 	switch {
 	case err == sql.ErrNoRows:
-		return nil, errors.New("post not found")
+		return post, errors.New("post not found")
 	case err != nil:
-		return nil, err
+		return post, err
 	}
 
-	return &post, nil
+	return post, nil
 }

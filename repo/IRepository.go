@@ -10,8 +10,8 @@ type IRepository interface {
 	GetUserByEmail(email string) (models.User, error)
 	GetUserByUsername(username string) (models.User, error)
 	UpdateUser(user models.User) (models.User, error)
-	DeleteAllUsers() error
 	DeleteUserById(userId int) error
+	DeleteAllUsers() error
 
 	// Post
 	CreatePost(post models.Post) (models.Post, error)
@@ -20,10 +20,10 @@ type IRepository interface {
 	GetPostsByGroupId(groupId int) (models.Post, error)
 	GetPostsByUserId(userId int) (models.Post, error)
 	UpdatePost(post models.Post) (models.Post, error)
-	DeleteAllPosts() error
 	DeletePostById(postId int) error
 	DeletePostByGroupId(groupId int) error
 	DeletePostByUserId(userId int) error
+	DeleteAllPosts() error
 
 	// Comments
 	CreateComment(comment models.Comment) (models.Comment, error)
@@ -33,11 +33,11 @@ type IRepository interface {
 	GetCommentsByUserId(userId int) (models.Comment, error)
 	GetCommentsByPostId(postId int) (models.Comment, error)
 	UpdateComment(comment models.Comment) (models.Comment, error)
-	DeleteAllComments() error
 	DeleteCommentById(commentId int) error
 	DeleteCommentsByGroupId(groupId int) error
 	DeleteCommentsByUserId(userId int) error
 	DeleteCommentsByPostId(postId int) error
+	DeleteAllComments() error
 
 	// Event
 	CreateEvent(event models.Event) (models.Event, error)
@@ -46,10 +46,10 @@ type IRepository interface {
 	GetEventsByGroupId(groupId int) (models.Event, error)
 	GetEventsByUserId(userId int) (models.Event, error)
 	UpdateEvent(event models.Event) (models.Event, error)
-	DeleteAllEvents() error
 	DeleteEventById(eventId int) error
 	DeleteEventsByGroupId(groupId int) error
 	DeleteEventsByUserId(userId int) error
+	DeleteAllEvents() error
 
 	// Message
 	CreateMessage(message models.Message) (models.Message, error)
@@ -59,9 +59,9 @@ type IRepository interface {
 	GetMessagesBySenderId(senderId int) (models.Message, error)
 	GetMessagesByTargetId(targetId int) (models.Message, error)
 	UpdateMessage(message models.Message) (models.Message, error)
-	DeleteAllMessages() error
 	DeleteMessagesByType(messageType string) error
 	DeleteMessageById(messageId int) error
 	DeleteMessagesBySenderId(senderId int) error
 	DeleteMessagesByTargetId(targetId int) error
+	DeleteAllMessages() error
 }

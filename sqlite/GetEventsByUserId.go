@@ -6,17 +6,17 @@ import (
 )
 
 // Retrieves event with the relevant userId from the EVENTS table
-func GetEventsByUserId(database *sql.DB, userId int) ([]*models.Event, error) {
+func GetEventsByUserId(database *sql.DB, userId int) ([]models.Event, error) {
 	rows, err := database.Query("SELECT * FROM EVENTS WHERE UserId = ?", userId)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var events []*models.Event
+	var events []models.Event
 
 	for rows.Next() {
-		var event *models.Event
+		var event models.Event
 		err := rows.Scan(
 			&event.EventId,
 			&event.CreatedAt,

@@ -68,9 +68,6 @@ func (h *PostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
-
 	var post models.Post
 	err := json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
@@ -116,9 +113,6 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 
 func (h *PostsHandler) get(w http.ResponseWriter, r *http.Request) {
 
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
-
 	allPosts, err := h.Repo.GetAllPosts()
 	if err != nil {
 		log.Println("Failed to get posts in PostHandler. ", err)
@@ -138,9 +132,6 @@ func (h *PostsHandler) get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *PostsHandler) put(w http.ResponseWriter, r *http.Request) {
-
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
 
 	var post models.Post
 	err := json.NewDecoder(r.Body).Decode(&post)
@@ -186,9 +177,6 @@ func (h *PostsHandler) put(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *PostsHandler) delete(w http.ResponseWriter, r *http.Request) {
-
-	// Enable CORS headers for this handler
-	SetupCORS(&w, r)
 
 	// figure out postId
 	var postId int
