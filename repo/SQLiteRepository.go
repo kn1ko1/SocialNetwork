@@ -1,7 +1,6 @@
 package repo
 
 import (
-	"database/sql"
 	"socialnetwork/models"
 )
 
@@ -13,47 +12,47 @@ func NewSQLiteRepository() *SQLiteRepository {
 }
 
 func (r *SQLiteRepository) CreateUser(CreatedAt, DOB date, Email string, EncryptedPassword string, FirstName string, LastName string, Username string) (int, error) {
-	return sql.CreateUser(postID, authorID, author, content, timestamp)
+	return r.CreateUser(postID, authorID, author, content, timestamp)
 }
 
 func (r *SQLiteRepository) CreateMessage(senderID, targetID int, author, content string, timestamp int64) (int, error) {
-	return sql.CreateMessage(senderID, targetID, author, content, timestamp)
+	return r.CreateMessage(senderID, targetID, author, content, timestamp)
 }
 
 func (r *SQLiteRepository) CreatePost(authorID int, author, content, categories string, timestamp int64) (int, error) {
-	return sql.CreatePost(authorID, author, content, categories, timestamp)
+	return r.CreatePost(authorID, author, content, categories, timestamp)
 }
 
 func (r *SQLiteRepository) CreateUser(nickname, age, gender, firstName, lastName, emailAddress, password string) (int, error) {
-	return sql.CreateUser(nickname, age, gender, firstName, lastName, emailAddress, password)
+	return r.CreateUser(nickname, age, gender, firstName, lastName, emailAddress, password)
 }
 
 func (r *SQLiteRepository) GetUserByID(id int) (models.User, error) {
-	return sql.GetUserByID(id)
+	return r.GetUserByID(id)
 }
 
 func (r *SQLiteRepository) GetUsers() ([]models.User, error) {
-	return sql.GetAllUsers()
+	return r.GetAllUsers()
 }
 
 func (r *SQLiteRepository) GetUserByNickname(nickname string) (models.User, error) {
-	return sql.GetUserByNickname(nickname)
+	return r.GetUserByNickname(nickname)
 }
 
 func (r *SQLiteRepository) GetMessagesBySenderAndTargetIDs(senderID, targetID int) ([]models.Message, error) {
-	return sql.GetMessagesBySenderAndTargetIDs(senderID, targetID)
+	return r.GetMessagesBySenderAndTargetIDs(senderID, targetID)
 }
 
 func (r *SQLiteRepository) GetLimitedMessagesBySenderAndTargetIDs(senderID, targetID, limit, offset int) ([]models.Message, error) {
-	return sql.GetLimitedMessagesBySenderAndTargetIDs(senderID, targetID, limit, offset)
+	return r.GetLimitedMessagesBySenderAndTargetIDs(senderID, targetID, limit, offset)
 }
 
 func (r *SQLiteRepository) GetPosts() ([]models.Post, error) {
-	return sql.GetAllPosts()
+	return r.GetAllPosts()
 }
 
 func (r *SQLiteRepository) GetCommentsByPostID(postID int) ([]models.Comment, error) {
-	return sql.GetCommentsByPostID(postID)
+	return r.GetCommentsByPostID(postID)
 }
 
 type IRepy interface {
