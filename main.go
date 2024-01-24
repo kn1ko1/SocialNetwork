@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"socialnetwork/api"
+	"socialnetwork/auth"
 	"socialnetwork/router"
 	"socialnetwork/ui"
 )
@@ -32,6 +34,13 @@ func setupRouter(mux *http.ServeMux) {
 	rt := router.NewRouter()
 	// Dummy UI handler, as an example
 	rt.AddHandler(regexp.MustCompile(`^/$`), ui.NewDummyPageHandler())
+	rt.AddHandler(regexp.MustCompile(`^/login$`), &auth.LoginHandler{})
+	rt.AddHandler(regexp.MustCompile(`^/user$`), &api.UsersHandler{})
+	rt.AddHandler(regexp.MustCompile(`^/posts$`), &api.PostsHandler{})
+	rt.AddHandler(regexp.MustCompile(`^/message$`), &api.MessagesHandler{})
+	rt.AddHandler(regexp.MustCompile(`^/comment$`), &api.CommentsHandler{})
+	rt.AddHandler(regexp.MustCompile(`^/event$`), &api.EventsHandler{})
+
 	mux.Handle("/", rt)
 }
 

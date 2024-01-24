@@ -33,7 +33,7 @@ func (h *PostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		//
 		// N.B. for simplicity of the example, we are simply returning
 		// an HTTP error. In the actual project, probably a JSON payload.
-		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		http.Error(w, "unauthorized session", http.StatusUnauthorized)
 		return
 	}
 	// Authenticate Session Cookie - user variable discarded because user struct not used here...
@@ -41,12 +41,11 @@ func (h *PostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		// Same error as above - maker of request is unauthorized
 		log.Println(err.Error())
-		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		http.Error(w, "unauthorized auth session cookie", http.StatusUnauthorized)
 		return
 	}
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
-
 	case http.MethodPost:
 		h.post(w, r)
 		return
@@ -113,19 +112,19 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 
 func (h *PostsHandler) get(w http.ResponseWriter, r *http.Request) {
 
-	allPosts, err := h.Repo.GetAllPosts()
-	if err != nil {
-		log.Println("Failed to get posts in PostHandler. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
+	// allPosts, err := h.Repo.GetAllPosts()
+	// if err != nil {
+	// 	log.Println("Failed to get posts in PostHandler. ", err)
+	// 	http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	// 	return
+	// }
 
-	err = json.NewEncoder(w).Encode(allPosts)
-	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
+	// err = json.NewEncoder(w).Encode(allPosts)
+	// if err != nil {
+	// 	log.Println("Failed to encode and write JSON response. ", err)
+	// 	http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	// 	return
+	// }
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Here are your posts"))
@@ -177,7 +176,6 @@ func (h *PostsHandler) put(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *PostsHandler) delete(w http.ResponseWriter, r *http.Request) {
-
 	// figure out postId
 	var postId int
 	err := json.NewDecoder(r.Body).Decode(&postId)

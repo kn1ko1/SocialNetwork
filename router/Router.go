@@ -12,9 +12,11 @@ type Router struct {
 func NewRouter() *Router {
 	return &Router{Handlers: make(map[*regexp.Regexp]http.Handler)}
 }
+
 func (rt *Router) AddHandler(exp *regexp.Regexp, h http.Handler) {
 	rt.Handlers[exp] = h
 }
+
 func (rt *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	for exp, h := range rt.Handlers {
 		if exp.MatchString(r.URL.Path) {
@@ -23,6 +25,7 @@ func (rt *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	http.Error(w, "not found", http.StatusNotFound)
+
 	// w.WriteHeader(http.StatusNotFound)
 	// enc := json.NewEncoder(w)
 	// jsonPayload := transport.ErrorDTO{HTTPStatusCode: http.StatusNotFound, Message: "resource not found"}
