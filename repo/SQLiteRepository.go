@@ -3,7 +3,7 @@ package repo
 import (
 	"database/sql"
 	"socialnetwork/models"
-	"socialnetwork/sqlite"
+	sqlite "socialnetwork/sqlite/query"
 )
 
 type DatabaseRepository struct {
