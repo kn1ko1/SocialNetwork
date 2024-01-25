@@ -10,7 +10,7 @@ import (
 )
 
 // Endpoint: /api/messages
-// Allowed methods: GET, POST, PUT, DELETE
+// Allowed methods: POST
 
 type MessagesHandler struct {
 	Repo repo.IRepository
@@ -50,15 +50,15 @@ func (h *MessagesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		h.post(w, r)
 		return
-	case http.MethodGet:
-		h.get(w, r)
-		return
-	case http.MethodPut:
-		h.put(w, r)
-		return
-	case http.MethodDelete:
-		h.delete(w, r)
-		return
+	// case http.MethodGet:
+	// 	h.get(w, r)
+	// 	return
+	// case http.MethodPut:
+	// 	h.put(w, r)
+	// 	return
+	// case http.MethodDelete:
+	// 	h.delete(w, r)
+	// 	return
 	// All unimplemented methods default to a "method not allowed" error
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -66,8 +66,7 @@ func (h *MessagesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Separate out HTTP methods for clean separation of concerns
-// N.B. Use lowercase names, i.e. "post", "get", etc. for correct encapsulation
+// POST /api/messages
 func (h *MessagesHandler) post(w http.ResponseWriter, r *http.Request) {
 
 	var message models.Message
@@ -115,95 +114,113 @@ func (h *MessagesHandler) post(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Event created successfully!"))
 }
 
-func (h *MessagesHandler) get(w http.ResponseWriter, r *http.Request) {
+// // GET /api/messages?senderId=1&targetId=2
+// func (h *MessagesHandler) get(w http.ResponseWriter, r *http.Request) {
 
-	allMessages, err := h.Repo.GetAllMessages()
-	if err != nil {
-		log.Println("Failed to get messages in Messages. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
+// 	queryParams := r.URL.Query()
+// 	senderIdString := queryParams.Get("senderId")
+// 	targetIdString := queryParams.Get("targetId")
+// 	senderId, senderIdErr := strconv.Atoi(senderIdString)
+// 	if senderIdErr != nil {
+// 		log.Println("Problem with AtoI senderId. ", senderIdErr)
+// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 		return
+// 	}
+// 	targetId, targetIdErr := strconv.Atoi(targetIdString)
+// 	if targetIdErr != nil {
+// 		log.Println("Problem with AtoI targetId. ", targetIdErr)
+// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 		return
+// 	}
+// 	chatMessages, err := h.Repo.GetMessagesBySenderAndTargetIDs(senderId, targetId)
+// 	if err != nil {
+// 		log.Println("Failed to get messages in Messages. ", err)
+// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 		return
+// 	}
 
-	err = json.NewEncoder(w).Encode(allMessages)
-	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
+// 	err = json.NewEncoder(w).Encode(chatMessages)
+// 	if err != nil {
+// 		log.Println("Failed to encode and write JSON response. ", err)
+// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 		return
+// 	}
 
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Here are your messages"))
-}
+// 	w.WriteHeader(http.StatusOK)
+// 	w.Write([]byte("Here are your messages"))
+// }
 
-func (h *MessagesHandler) put(w http.ResponseWriter, r *http.Request) {
+// // PUT /api/messages/{messageId}
+// func (h *MessagesHandler) put(w http.ResponseWriter, r *http.Request) {
 
-	var message models.Message
-	err := json.NewDecoder(r.Body).Decode(&message)
-	if err != nil {
-		log.Println("Failed to decode request body:", err)
-		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
-		return
-	}
-	log.Println("Received message:", message.Body)
+// 	var message models.Message
+// 	err := json.NewDecoder(r.Body).Decode(&message)
+// 	if err != nil {
+// 		log.Println("Failed to decode request body:", err)
+// 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+// 		return
+// 	}
+// 	log.Println("Received message:", message.Body)
 
-	// Example message to test function
-	// message := models.Message{
-	// 	Body:        "updated example message",
-	// 	CreatedAt:   111111111,
-	// 	MessageType: "example",
-	// 	SenderID:    1,
-	// 	TargetID:    2,
-	// 	UpdatedAt:   333333333333}
+// 	// Example message to test function
+// 	// message := models.Message{
+// 	// 	Body:        "updated example message",
+// 	// 	CreatedAt:   111111111,
+// 	// 	MessageType: "example",
+// 	// 	SenderID:    1,
+// 	// 	TargetID:    2,
+// 	// 	UpdatedAt:   333333333333}
 
-	// Validate the event
-	if validationErr := message.Validate(); validationErr != nil {
-		log.Println("Validation failed:", validationErr)
-		http.Error(w, "Validation failed", http.StatusBadRequest)
-		return
-	}
+// 	// Validate the event
+// 	if validationErr := message.Validate(); validationErr != nil {
+// 		log.Println("Validation failed:", validationErr)
+// 		http.Error(w, "Validation failed", http.StatusBadRequest)
+// 		return
+// 	}
 
-	// Create event in the repository
-	result, createErr := h.Repo.UpdateMessage(message)
-	if createErr != nil {
-		log.Println("Failed to update message in the repository:", createErr)
-		http.Error(w, "Failed to update message", http.StatusInternalServerError)
-		return
-	}
+// 	// Create event in the repository
+// 	result, createErr := h.Repo.UpdateMessage(message)
+// 	if createErr != nil {
+// 		log.Println("Failed to update message in the repository:", createErr)
+// 		http.Error(w, "Failed to update message", http.StatusInternalServerError)
+// 		return
+// 	}
 
-	// Encode and write the response
-	err = json.NewEncoder(w).Encode(result)
-	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-	// Correct HTTP header for a newly created resource:
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Post updated successfully!"))
-}
+// 	// Encode and write the response
+// 	err = json.NewEncoder(w).Encode(result)
+// 	if err != nil {
+// 		log.Println("Failed to encode and write JSON response. ", err)
+// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 		return
+// 	}
+// 	// Correct HTTP header for a newly created resource:
+// 	w.WriteHeader(http.StatusCreated)
+// 	w.Write([]byte("Post updated successfully!"))
+// }
 
-func (h *MessagesHandler) delete(w http.ResponseWriter, r *http.Request) {
+// // DELETE /api/messages/{messageId}
+// func (h *MessagesHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-	// figure out eventId
-	var messageId int
-	err := json.NewDecoder(r.Body).Decode(&messageId)
-	if err != nil {
-		log.Println("Failed to decode request body:", err)
-		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
-		return
-	}
-	log.Println("Received delete request for messageId:", messageId)
+// 	// figure out eventId
+// 	var messageId int
+// 	err := json.NewDecoder(r.Body).Decode(&messageId)
+// 	if err != nil {
+// 		log.Println("Failed to decode request body:", err)
+// 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+// 		return
+// 	}
+// 	log.Println("Received delete request for messageId:", messageId)
 
-	// example eventId for testing
-	// eventId := 1
+// 	// example eventId for testing
+// 	// eventId := 1
 
-	err = h.Repo.DeleteMessageById(messageId)
-	if err != nil {
-		log.Println("Failed to delete messageId. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
+// 	err = h.Repo.DeleteMessageById(messageId)
+// 	if err != nil {
+// 		log.Println("Failed to delete messageId. ", err)
+// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 		return
+// 	}
 
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("messageId was deleted"))
-}
+// 	w.WriteHeader(http.StatusOK)
+// 	w.Write([]byte("messageId was deleted"))
+// }

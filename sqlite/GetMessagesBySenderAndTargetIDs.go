@@ -6,15 +6,19 @@ import (
 )
 
 // Retrieves message with the relevant senderId from the MESSAGES table
-func GetMessagesBySenderId(database *sql.DB, senderId int) ([]models.Message, error) {
-	rows, err := database.Query("SELECT * FROM MESSAGES WHERE SenderId = ?", senderId)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
+func GetMessagesBySenderAndTargetIDs(database *sql.DB, senderId, targetId int) ([]models.Message, error) {
+
+	queryStr := `SELECT *
+	FROM "messages"
+	WHERE (SenderID = (?) AND TargetID = (?))
+	OR (SenderID = (?) AND TargetID = (?))
+	ORDER BY timestamp ASC;`
 
 	var messages []models.Message
-
+	rows, err := database.Query(queryStr, senderId, targetId, targetId, senderId)
+	if err != nil {
+		return messages, err
+	}
 	for rows.Next() {
 		var message models.Message
 		err := rows.Scan(

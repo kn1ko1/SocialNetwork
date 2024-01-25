@@ -10,7 +10,7 @@ import (
 )
 
 // Endpoint: /api/comments
-// Allowed methods: GET, POST, PUT, DELETE
+// Allowed methods: POST
 
 type CommentsHandler struct {
 	Repo repo.IRepository
@@ -56,9 +56,9 @@ func (h *CommentsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPut:
 		h.put(w, r)
 		return
-	case http.MethodDelete:
-		h.delete(w, r)
-		return
+	// case http.MethodDelete:
+	// 	h.delete(w, r)
+	// 	return
 	// All unimplemented methods default to a "method not allowed" error
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -79,20 +79,20 @@ func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
 
 	// Example Comment to test function
 	// comment := models.Comment{
-	// 	Body: "Example",
-	// 	CreatedAt: 111111,
-	//	PostId: 3,
-	// 	UpdatedAt: 111111,
-	// 	UserId: 2}
+	// 	Body:      "Example Comment",
+	// 	CreatedAt: 1111111,
+	// 	PostId:    2,
+	// 	UpdatedAt: 1111111,
+	// 	UserId:    1}
 
-	// Validate the post
+	// Validate the comment
 	if validationErr := comment.Validate(); validationErr != nil {
 		log.Println("Validation failed:", validationErr)
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
 
-	// Create post in the repository
+	// Create comment in the repository
 	result, createErr := h.Repo.CreateComment(comment)
 	if createErr != nil {
 		log.Println("Failed to create comment in the repository:", createErr)
@@ -114,14 +114,14 @@ func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
 
 func (h *CommentsHandler) get(w http.ResponseWriter, r *http.Request) {
 
-	allPosts, err := h.Repo.GetAllPosts()
+	allComments, err := h.Repo.GetAllComments()
 	if err != nil {
 		log.Println("Failed to get comments in CommentHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(allPosts)
+	err = json.NewEncoder(w).Encode(allComments)
 	if err != nil {
 		log.Println("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -141,27 +141,28 @@ func (h *CommentsHandler) put(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
-	log.Println("Received post:", comment.Body)
+	log.Println("Received comment:", comment.Body)
 
 	// Example Comment to test function
 	// comment := models.Comment{
-	// 	Body: "Updated Example",
-	// 	CreatedAt: 111111,
-	// 	UpdatedAt: 333333,
-	// 	UserId: 2}
+	// 	Body:      "Updated Comment",
+	// 	CreatedAt: 1111111,
+	// 	PostId:    2,
+	// 	UpdatedAt: 3333333,
+	// 	UserId:    1}
 
-	// Validate the post
+	// Validate the comment
 	if validationErr := comment.Validate(); validationErr != nil {
 		log.Println("Validation failed:", validationErr)
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
 
-	// Create post in the repository
-	result, createErr := h.Repo.UpdateComment(comment)
+	// Update comment in the repository
+	result, createErr := h.Repo.UpdateCommentById(comment)
 	if createErr != nil {
-		log.Println("Failed to update post in the repository:", createErr)
-		http.Error(w, "Failed to update post", http.StatusInternalServerError)
+		log.Println("Failed to update comment in the repository:", createErr)
+		http.Error(w, "Failed to update comment", http.StatusInternalServerError)
 		return
 	}
 
@@ -177,33 +178,15 @@ func (h *CommentsHandler) put(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Comment updated successfully!"))
 }
 
-// Note from Matt
-// This function should be used with the '/api/comments/{id}' endpoint
-// For RESTful purposes
-//
-// A 'delete' at this endpoint would correspond to deleting the entire resource
-func (h *CommentsHandler) delete(w http.ResponseWriter, r *http.Request) {
+// func (h *CommentsHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-	// figure out postId
-	var commentId int
-	err := json.NewDecoder(r.Body).Decode(&commentId)
-	if err != nil {
-		log.Println("Failed to decode request body:", err)
-		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
-		return
-	}
-	log.Println("Received delete request for coomentId:", commentId)
+// 	err := h.Repo.DeleteAllComments()
+// 	if err != nil {
+// 		log.Println("Failed to delete all Comments. ", err)
+// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 		return
+// 	}
 
-	// example postId for testing
-	// postId := 1
-
-	err = h.Repo.DeleteCommentById(commentId)
-	if err != nil {
-		log.Println("Failed to delete Comment. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("comment was deleted"))
-}
+// 	w.WriteHeader(http.StatusOK)
+// 	w.Write([]byte("comments were deleted"))
+// }

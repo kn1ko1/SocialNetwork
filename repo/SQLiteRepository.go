@@ -64,8 +64,8 @@ func (r *DatabaseRepository) UpdatePost(database *sql.DB, post models.Post) (mod
 func (r *DatabaseRepository) DeletePostByGroupId(database *sql.DB, groupId int) error {
 	return sqlite.DeletePostByGroupId(database, groupId)
 }
-func (r *DatabaseRepository) DeletePostByUserId(database *sql.DB, userId int) error {
-	return sqlite.DeletePostByUserId(database, userId)
+func (r *DatabaseRepository) DeletePostsByUserId(database *sql.DB, userId int) error {
+	return sqlite.DeletePostsByUserId(database, userId)
 }
 func (r *DatabaseRepository) DeleteAllPosts(database *sql.DB) error {
 	return sqlite.DeleteAllPosts(database)
@@ -154,11 +154,8 @@ func (r *DatabaseRepository) GetMessagesByType(database *sql.DB, messageType str
 func (r *DatabaseRepository) GetMessageById(database *sql.DB, messageId int) (models.Message, error) {
 	return sqlite.GetMessageById(database, messageId)
 }
-func (r *DatabaseRepository) GetMessagesBySenderId(database *sql.DB, senderId int) ([]models.Message, error) {
-	return sqlite.GetMessagesBySenderId(database, senderId)
-}
-func (r *DatabaseRepository) GetMessagesByTargetId(database *sql.DB, targetId int) ([]models.Message, error) {
-	return sqlite.GetMessagesByTargetId(database, targetId)
+func (r *DatabaseRepository) GetMessagesBySenderAndTargetIDs(database *sql.DB, senderId, targetId int) ([]models.Message, error) {
+	return sqlite.GetMessagesBySenderAndTargetIDs(database, senderId, targetId)
 }
 func (r *DatabaseRepository) UpdateMessage(database *sql.DB, message models.Message) (models.Message, error) {
 	return sqlite.UpdateMessage(database, message)

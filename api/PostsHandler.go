@@ -10,7 +10,7 @@ import (
 )
 
 // Endpoint: /api/posts
-// Allowed methods: GET, POST, PUT, DELETE
+// Allowed methods: GET, POST
 
 type PostsHandler struct {
 	Repo repo.IRepository
@@ -53,12 +53,12 @@ func (h *PostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		h.get(w, r)
 		return
-	case http.MethodPut:
-		h.put(w, r)
-		return
-	case http.MethodDelete:
-		h.delete(w, r)
-		return
+	// case http.MethodPut:
+	// 	h.put(w, r)
+	// 	return
+	// case http.MethodDelete:
+	// 	h.delete(w, r)
+	// 	return
 	// All unimplemented methods default to a "method not allowed" error
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -131,73 +131,62 @@ func (h *PostsHandler) get(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Here are your posts"))
 }
 
-func (h *PostsHandler) put(w http.ResponseWriter, r *http.Request) {
+// func (h *PostsHandler) put(w http.ResponseWriter, r *http.Request) {
 
-	var post models.Post
-	err := json.NewDecoder(r.Body).Decode(&post)
-	if err != nil {
-		log.Println("Failed to decode request body:", err)
-		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
-		return
-	}
-	log.Println("Received post:", post.UserId, post.Body)
+// 	var post models.Post
+// 	err := json.NewDecoder(r.Body).Decode(&post)
+// 	if err != nil {
+// 		log.Println("Failed to decode request body:", err)
+// 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+// 		return
+// 	}
+// 	log.Println("Received post:", post.UserId, post.Body)
 
-	// Example Post to test function
-	// post := models.Post{
-	// 	Body: "Updated Example",
-	// 	CreatedAt: 111111,
-	// 	UpdatedAt: 333333,
-	// 	UserId: 2}
+// 	// Example Post to test function
+// 	// post := models.Post{
+// 	// 	Body: "Updated Example",
+// 	// 	CreatedAt: 111111,
+// 	// 	UpdatedAt: 333333,
+// 	// 	UserId: 2}
 
-	// Validate the post
-	if validationErr := post.Validate(); validationErr != nil {
-		log.Println("Validation failed:", validationErr)
-		http.Error(w, "Validation failed", http.StatusBadRequest)
-		return
-	}
+// 	// Validate the post
+// 	if validationErr := post.Validate(); validationErr != nil {
+// 		log.Println("Validation failed:", validationErr)
+// 		http.Error(w, "Validation failed", http.StatusBadRequest)
+// 		return
+// 	}
 
-	// Create post in the repository
-	result, createErr := h.Repo.UpdatePost(post)
-	if createErr != nil {
-		log.Println("Failed to update post in the repository:", createErr)
-		http.Error(w, "Failed to update post", http.StatusInternalServerError)
-		return
-	}
+// 	// Update post in the repository
+// 	result, createErr := h.Repo.UpdatePost(post)
+// 	if createErr != nil {
+// 		log.Println("Failed to update post in the repository:", createErr)
+// 		http.Error(w, "Failed to update post", http.StatusInternalServerError)
+// 		return
+// 	}
 
-	// Encode and write the response
-	err = json.NewEncoder(w).Encode(result)
-	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-	// Correct HTTP header for a newly created resource:
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Post updated successfully!"))
-}
+// 	// Encode and write the response
+// 	err = json.NewEncoder(w).Encode(result)
+// 	if err != nil {
+// 		log.Println("Failed to encode and write JSON response. ", err)
+// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 		return
+// 	}
+// 	// Correct HTTP header for a newly created resource:
+// 	w.WriteHeader(http.StatusCreated)
+// 	w.Write([]byte("Post updated successfully!"))
+// }
 
-func (h *PostsHandler) delete(w http.ResponseWriter, r *http.Request) {
+// func (h *PostsHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-	// figure out postId
-	var postId int
-	err := json.NewDecoder(r.Body).Decode(&postId)
-	if err != nil {
-		log.Println("Failed to decode request body:", err)
-		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
-		return
-	}
-	log.Println("Received delete request for postId:", postId)
+// 	log.Println("Received delete request for all posts")
 
-	// example postId for testing
-	// postId := 1
+// 	err := h.Repo.DeleteAllPosts()
+// 	if err != nil {
+// 		log.Println("Failed to delete all Posts. ", err)
+// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 		return
+// 	}
 
-	err = h.Repo.DeletePostById(postId)
-	if err != nil {
-		log.Println("Failed to delete Post. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("post was deleted"))
-}
+// 	w.WriteHeader(http.StatusOK)
+// 	w.Write([]byte("all posts were deleted"))
+// }
