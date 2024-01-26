@@ -1,6 +1,9 @@
 package models
 
-import "errors"
+import (
+	"errors"
+	"math/rand"
+)
 
 type Group struct {
 	GroupID     int
@@ -29,4 +32,18 @@ func (g *Group) Validate() error {
 		return errors.New("invalid 'UpdatedAt' field")
 	}
 	return nil
+}
+
+func GenerateValidGroup() *Group {
+	ctime := rand.Int63n(1000) + 1
+	idxDescriptions := rand.Intn(len(sutDescriptions))
+	idxTitle := rand.Intn(len(sutTitle))
+	g := &Group{
+		CreatedAt:   ctime,
+		CreatorID:   rand.Intn(1000) + 1,
+		Description: sutDescriptions[idxDescriptions],
+		Title:       sutTitle[idxTitle],
+		UpdatedAt:   ctime,
+	}
+	return g
 }

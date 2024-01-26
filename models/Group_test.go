@@ -54,20 +54,6 @@ func TestGroupValidateValidExpectNil(t *testing.T) {
 	}
 }
 
-func GenerateValidGroup() *Group {
-	ctime := rand.Int63n(1000) + 1
-	idxDescriptions := rand.Intn(len(sutDescriptions))
-	idxTitle := rand.Intn(len(sutTitle))
-	g := &Group{
-		CreatedAt:   ctime,
-		CreatorID:   rand.Intn(1000) + 1,
-		Description: sutDescriptions[idxDescriptions],
-		Title:       sutTitle[idxTitle],
-		UpdatedAt:   ctime,
-	}
-	return g
-}
-
 func generateMissingFieldGroup() *Group {
 	g := GenerateValidGroup()
 	missingField := rand.Intn(5)
