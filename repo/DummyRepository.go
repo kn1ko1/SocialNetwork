@@ -169,6 +169,7 @@ func (r *DummyRepository) GetAllComments() ([]models.Comment, error) {
 	for i := 0; i < sutTableRuns; i++ {
 		c := *models.GenerateValidComment()
 		c.CommentId = i + 1
+		comments[i] = c
 	}
 	return comments, nil
 }
