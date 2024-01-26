@@ -73,3 +73,32 @@ func (r *DummyRepository) GetAllUsers() ([]models.User, error) {
 	}
 	return dummyUsers, nil
 }
+
+func (r *DummyRepository) CreatePost(post models.Post) (models.Post, error) {
+	return post, nil
+}
+
+func (r *DummyRepository) GetAllPosts() ([]models.Post, error) {
+	ctime := time.Now().UTC().UnixMilli()
+	dummyPosts := []models.Post{
+		{
+			PostId:    1,
+			Body:      "This is fun",
+			CreatedAt: ctime,
+			GroupId:   0,
+			ImageURL:  "example/url",
+			UpdatedAt: ctime,
+			UserId:    1,
+		},
+		{
+			PostId:    2,
+			Body:      "This is not fun",
+			CreatedAt: ctime,
+			GroupId:   0,
+			ImageURL:  "example/url2",
+			UpdatedAt: ctime,
+			UserId:    2,
+		},
+	}
+	return dummyPosts, nil
+}
