@@ -9,7 +9,6 @@ import (
 	"strconv"
 )
 
-// Endpoint: /api/Messa s/Message/{MessageId}
 // Allowed methods: GET, PUT, DELETE
 
 type MessageByIdHandler struct {
@@ -44,29 +43,26 @@ func (h *MessageByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (h *MessageByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
-	messageIdString := queryParams.Get("postId")
+	messageIdString := queryParams.Get("messageId")
 	messageId, messageIdErr := strconv.Atoi(messageIdString)
 	if messageIdErr != nil {
 		log.Println("Problem with AtoI messageId. ", messageIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	userMessages, err := h.Repo.GetMessageById(messageId)
+	message, err := h.Repo.GetMessageById(messageId)
 	if err != nil {
-		log.Println("Failed to get posts in GetMessageByIdHandler. ", err)
+		log.Println("Failed to get message in GetMessageByIdHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(userMessages)
+	err = json.NewEncoder(w).Encode(message)
 	if err != nil {
 		log.Println("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Here are your posts"))
 }
 
 func (h *MessageByIdHandler) put(w http.ResponseWriter, r *http.Request) {
@@ -79,13 +75,6 @@ func (h *MessageByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("received Message to update:", Message.Body)
-
-	// Example Post to test function
-	// post := models.Post{
-	// 	Body: "Updated Example",
-	// 	CreatedAt: 111111,
-	// 	UpdatedAt: 333333,
-	// 	UserId: 2}
 
 	// Validate the Message
 	if validationErr := Message.Validate(); validationErr != nil {
@@ -109,30 +98,21 @@ func (h *MessageByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	// Correct HTTP header for a newly created resource:
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Message updated successfully!"))
 }
 
 func (h *MessageByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-	// look at penultimate id for userId
-
-	// figure out userID
 	queryParams := r.URL.Query()
-	userIDString := queryParams.Get("userID")
-	userID, userIDErr := strconv.Atoi(userIDString)
-	if userIDErr != nil {
-		log.Println("Problem with AtoI userID. ", userIDErr)
+	messageIdString := queryParams.Get("messageId")
+	messageId, messageIdErr := strconv.Atoi(messageIdString)
+	if messageIdErr != nil {
+		log.Println("Problem with AtoI messageId. ", messageIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	log.Println("Received delete request for userID:", userID)
+	log.Println("Received delete request for messageId:", messageId)
 
-	// example postId for testing
-	// postId := 1
-
-	err := h.Repo.DeleteMessageById(userID)
+	err := h.Repo.DeleteMessageById(messageId)
 	if err != nil {
 		log.Println("Failed to delete Messages. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

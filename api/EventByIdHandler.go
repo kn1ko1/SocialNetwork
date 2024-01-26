@@ -12,16 +12,16 @@ import (
 // Endpoint: /api/events/{eventId}
 // Allowed methods: GET, PUT, DELETE
 
-type EventByUserIdHandler struct {
+type EventByIdHandler struct {
 	Repo repo.IRepository
 }
 
 // Constructor with dependency injection of a repo implementation
-func NewEventByUserIdHandler(r repo.IRepository) *EventByUserIdHandler {
-	return &EventByUserIdHandler{Repo: r}
+func NewEventByIdHandler(r repo.IRepository) *EventByIdHandler {
+	return &EventByIdHandler{Repo: r}
 }
 
-func (h *EventByUserIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *EventByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 
@@ -37,7 +37,7 @@ func (h *EventByUserIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 	}
 }
 
-func (h *EventByUserIdHandler) get(w http.ResponseWriter, r *http.Request) {
+func (h *EventByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
 	eventIdString := queryParams.Get("eventId")
 	eventId, postIdErr := strconv.Atoi(eventIdString)
@@ -60,11 +60,9 @@ func (h *EventByUserIdHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Here are your posts"))
 }
 
-func (h *EventByUserIdHandler) put(w http.ResponseWriter, r *http.Request) {
+func (h *EventByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 
 	var event models.Event
 	err := json.NewDecoder(r.Body).Decode(&event)
@@ -73,17 +71,7 @@ func (h *EventByUserIdHandler) put(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
-	log.Println("Received event:", event.Title, event.Description)
-
-	// Example event to test function
-	// event := models.Event{
-	// 	CreatedAt:   111111,
-	// 	DateTime:    1212121212,
-	// 	Description: "updated example event description",
-	// 	GroupID:     1,
-	// 	UpdatedAt:   33333333,
-	// 	Title:       "Magnificient Updated Example Event",
-	// 	UserId:      2}
+	log.Println("Updating event:", event.Title, event.Description)
 
 	// Validate the event
 	if validationErr := event.Validate(); validationErr != nil {
@@ -107,7 +95,5 @@ func (h *EventByUserIdHandler) put(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	// Correct HTTP header for a newly created resource:
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Post updated successfully!"))
+
 }

@@ -38,8 +38,6 @@ func (h *UsersHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Separate out HTTP methods for clean separation of concerns
-// N.B. Use lowercase names, i.e. "post", "get", etc. for correct encapsulation
 func (h *UsersHandler) post(w http.ResponseWriter, r *http.Request) {
 
 	var user models.User

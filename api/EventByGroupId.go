@@ -44,21 +44,21 @@ func (h *EventByGroupIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 
 func (h *EventByGroupIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
-	EventIdString := queryParams.Get("postId")
-	EventId, EventIdErr := strconv.Atoi(EventIdString)
+	groupIdString := queryParams.Get("groupId")
+	groupId, EventIdErr := strconv.Atoi(groupIdString)
 	if EventIdErr != nil {
-		log.Println("Problem with AtoI EventId. ", EventIdErr)
+		log.Println("Problem with AtoI groupId. ", EventIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	userEvents, err := h.Repo.GetEventById(EventId)
+	events, err := h.Repo.GetEventsByGroupId(groupId)
 	if err != nil {
-		log.Println("Failed to get posts in GetEventByIdHandler. ", err)
+		log.Println("Failed to get posts in GetEventsByGroupId. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(userEvents)
+	err = json.NewEncoder(w).Encode(events)
 	if err != nil {
 		log.Println("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
