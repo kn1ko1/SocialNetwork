@@ -99,23 +99,21 @@ func generateValidUser() *User {
 
 func generateMissingFieldUser() *User {
 	u := generateValidUser()
-	missingField := rand.Intn(8)
+	missingField := rand.Intn(7)
 	switch missingField {
 	case 0:
 		u.CreatedAt = 0
 	case 1:
-		u.DOB = 0
-	case 2:
 		u.Email = ""
-	case 3:
+	case 2:
 		u.EncryptedPassword = ""
-	case 4:
+	case 3:
 		u.FirstName = ""
-	case 5:
+	case 4:
 		u.LastName = ""
-	case 6:
+	case 5:
 		u.UpdatedAt = 0
-	case 7:
+	case 6:
 		u.Username = ""
 	}
 	return u
