@@ -44,21 +44,21 @@ func (h *CommentByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (h *CommentByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
-	postIdString := queryParams.Get("postId")
-	postId, postIdErr := strconv.Atoi(postIdString)
+	commentIdString := queryParams.Get("commentId")
+	commentId, postIdErr := strconv.Atoi(commentIdString)
 	if postIdErr != nil {
 		log.Println("Problem with AtoI postId. ", postIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	userComments, err := h.Repo.GetCommentById(postId)
+	comment, err := h.Repo.GetCommentById(commentId)
 	if err != nil {
 		log.Println("Failed to get posts in GetCommentByIdHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(userComments)
+	err = json.NewEncoder(w).Encode(comment)
 	if err != nil {
 		log.Println("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
