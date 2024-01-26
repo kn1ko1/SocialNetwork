@@ -62,7 +62,7 @@ func (u *User) Validate() error {
 	return nil
 }
 
-func GenerateValidUser() *User {
+func GenerateValidUser(withId bool) *User {
 	idxBio := rand.Intn(len(sutBio))
 	idxDOB := rand.Intn(len(sutDOB))
 	ctime := rand.Int63n(1000) + 1
@@ -86,6 +86,9 @@ func GenerateValidUser() *User {
 		LastName:          sutLastName[idxLastName],
 		UpdatedAt:         ctime,
 		Username:          sutUsername[idxUsername],
+	}
+	if withId {
+		u.UserId = rand.Intn(1000)
 	}
 	return u
 }
