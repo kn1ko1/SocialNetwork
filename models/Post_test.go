@@ -45,7 +45,7 @@ func TestPostValidateMissingFieldExpectError(t *testing.T) {
 func TestPostValidateValidExpectNil(t *testing.T) {
 	var posts []*Post
 	for i := 0; i < tableRunCount; i++ {
-		posts = append(posts, generateValidPost())
+		posts = append(posts, GenerateValidPost())
 	}
 	for _, p := range posts {
 		name := fmt.Sprintf("%+v", *p)
@@ -58,7 +58,7 @@ func TestPostValidateValidExpectNil(t *testing.T) {
 	}
 }
 
-func generateValidPost() *Post {
+func GenerateValidPost() *Post {
 	ctime := rand.Int63n(1000) + 1
 	idxBody := rand.Intn(len(sutBody))
 	idxImageURL := rand.Intn(len(sutImageURL))
@@ -75,7 +75,7 @@ func generateValidPost() *Post {
 }
 
 func generateMissingFieldPost() *Post {
-	p := generateValidPost()
+	p := GenerateValidPost()
 	missingField := rand.Intn(4)
 	switch missingField {
 	case 0:
@@ -91,7 +91,7 @@ func generateMissingFieldPost() *Post {
 }
 
 func generateInvalidPost() *Post {
-	p := generateValidPost()
+	p := GenerateValidPost()
 	invalidField := rand.Intn(4)
 	switch invalidField {
 	case 0:

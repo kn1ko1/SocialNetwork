@@ -45,7 +45,7 @@ func TestGroupValidateMissingFieldExpectError(t *testing.T) {
 func TestGroupValidateValidExpectNil(t *testing.T) {
 	var groups []*Group
 	for i := 0; i < tableRunCount; i++ {
-		groups = append(groups, generateValidGroup())
+		groups = append(groups, GenerateValidGroup())
 	}
 	for _, g := range groups {
 		name := fmt.Sprintf("%+v", *g)
@@ -58,7 +58,7 @@ func TestGroupValidateValidExpectNil(t *testing.T) {
 	}
 }
 
-func generateValidGroup() *Group {
+func GenerateValidGroup() *Group {
 	ctime := rand.Int63n(1000) + 1
 	idxDescriptions := rand.Intn(len(sutDescriptions))
 	idxTitle := rand.Intn(len(sutTitle))
@@ -73,7 +73,7 @@ func generateValidGroup() *Group {
 }
 
 func generateMissingFieldGroup() *Group {
-	g := generateValidGroup()
+	g := GenerateValidGroup()
 	missingField := rand.Intn(5)
 	switch missingField {
 	case 0:
@@ -91,7 +91,7 @@ func generateMissingFieldGroup() *Group {
 }
 
 func generateInvalidGroup() *Group {
-	g := generateValidGroup()
+	g := GenerateValidGroup()
 	invalidField := rand.Intn(5)
 	switch invalidField {
 	case 0:

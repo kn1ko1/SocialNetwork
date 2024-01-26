@@ -56,7 +56,7 @@ func TestUserValidateMissingFieldExpectError(t *testing.T) {
 func TestUserValidateValidExpectNil(t *testing.T) {
 	var users []*User
 	for i := 0; i < tableRunCount; i++ {
-		users = append(users, generateValidUser())
+		users = append(users, GenerateValidUser())
 	}
 	for _, u := range users {
 		name := fmt.Sprintf("%+v", *u)
@@ -69,7 +69,7 @@ func TestUserValidateValidExpectNil(t *testing.T) {
 	}
 }
 
-func generateValidUser() *User {
+func GenerateValidUser() *User {
 	idxBio := rand.Intn(len(sutBio))
 	idxDOB := rand.Intn(len(sutDOB))
 	ctime := rand.Int63n(1000) + 1
@@ -98,7 +98,7 @@ func generateValidUser() *User {
 }
 
 func generateMissingFieldUser() *User {
-	u := generateValidUser()
+	u := GenerateValidUser()
 	missingField := rand.Intn(7)
 	switch missingField {
 	case 0:
@@ -120,7 +120,7 @@ func generateMissingFieldUser() *User {
 }
 
 func generateInvalidUser() *User {
-	u := generateValidUser()
+	u := GenerateValidUser()
 	invalidField := rand.Intn(8)
 	switch invalidField {
 	case 0:

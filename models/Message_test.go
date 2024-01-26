@@ -45,7 +45,7 @@ func TestMessageValidateMissingFieldExpectError(t *testing.T) {
 func TestMessageValidateValidExpectNil(t *testing.T) {
 	var messages []*Message
 	for i := 0; i < tableRunCount; i++ {
-		messages = append(messages, generateValidMessage())
+		messages = append(messages, GenerateValidMessage())
 	}
 	for _, m := range messages {
 		name := fmt.Sprintf("%+v", *m)
@@ -58,7 +58,7 @@ func TestMessageValidateValidExpectNil(t *testing.T) {
 	}
 }
 
-func generateValidMessage() *Message {
+func GenerateValidMessage() *Message {
 	ctime := rand.Int63n(1000) + 1
 	idxBody := rand.Intn(len(sutBody))
 	idxMessageType := rand.Intn(len(sutMessageTypes))
@@ -75,7 +75,7 @@ func generateValidMessage() *Message {
 }
 
 func generateMissingFieldMessage() *Message {
-	m := generateValidMessage()
+	m := GenerateValidMessage()
 	missingField := rand.Intn(6)
 	switch missingField {
 	case 0:
@@ -95,7 +95,7 @@ func generateMissingFieldMessage() *Message {
 }
 
 func generateInvalidMessage() *Message {
-	m := generateValidMessage()
+	m := GenerateValidMessage()
 	invalidField := rand.Intn(6)
 	switch invalidField {
 	case 0:

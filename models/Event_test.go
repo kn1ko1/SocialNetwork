@@ -50,7 +50,7 @@ func TestEventValidateMissingFieldExpectError(t *testing.T) {
 func TestEventValidateValidExpectNil(t *testing.T) {
 	var events []*Event
 	for i := 0; i < tableRunCount; i++ {
-		events = append(events, generateValidEvent())
+		events = append(events, GenerateValidEvent())
 	}
 	for _, e := range events {
 		name := fmt.Sprintf("%+v", *e)
@@ -63,7 +63,7 @@ func TestEventValidateValidExpectNil(t *testing.T) {
 	}
 }
 
-func generateValidEvent() *Event {
+func GenerateValidEvent() *Event {
 	ctime := rand.Int63n(1000) + 1
 	idxDesc := rand.Intn(len(sutDescriptions))
 	idxTitle := rand.Intn(len(sutTitles))
@@ -80,7 +80,7 @@ func generateValidEvent() *Event {
 }
 
 func generateMissingFieldEvent() *Event {
-	e := generateValidEvent()
+	e := GenerateValidEvent()
 	missingField := rand.Intn(7)
 	switch missingField {
 	case 0:
@@ -102,7 +102,7 @@ func generateMissingFieldEvent() *Event {
 }
 
 func generateInvalidEvent() *Event {
-	e := generateValidEvent()
+	e := GenerateValidEvent()
 	invalidField := rand.Intn(7)
 	switch invalidField {
 	case 0:

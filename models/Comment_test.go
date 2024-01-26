@@ -49,7 +49,7 @@ func TestCommentValidateMissingFieldExpectError(t *testing.T) {
 func TestCommentValidateValidExpectNil(t *testing.T) {
 	var comments []*Comment
 	for i := 0; i < tableRunCount; i++ {
-		comments = append(comments, generateValidComment())
+		comments = append(comments, GenerateValidComment())
 	}
 	for _, c := range comments {
 		name := fmt.Sprintf("%+v", *c)
@@ -62,7 +62,7 @@ func TestCommentValidateValidExpectNil(t *testing.T) {
 	}
 }
 
-func generateValidComment() *Comment {
+func GenerateValidComment() *Comment {
 	ctime := rand.Int63n(1000) + 1
 	idx := rand.Intn(len(sutBody))
 	c := &Comment{
@@ -76,7 +76,7 @@ func generateValidComment() *Comment {
 }
 
 func generateMissingFieldComment() *Comment {
-	c := generateValidComment()
+	c := GenerateValidComment()
 	missingField := rand.Intn(5)
 	switch missingField {
 	case 0:
@@ -94,7 +94,7 @@ func generateMissingFieldComment() *Comment {
 }
 
 func generateInvalidComment() *Comment {
-	c := generateValidComment()
+	c := GenerateValidComment()
 	invalidField := rand.Intn(5)
 	switch invalidField {
 	case 0:
