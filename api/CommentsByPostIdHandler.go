@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-// Endpoint: /api/comments/post/{postId}
+// Endpoint: /api/posts/{postId}/comments
 // Allowed methods: GET, DELETE
 
 type CommentsByPostIdHandler struct {

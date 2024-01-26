@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"socialnetwork/auth"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"strconv"
@@ -23,27 +22,7 @@ func NewEventByUserIdHandler(r repo.IRepository) *EventByUserIdHandler {
 }
 
 func (h *EventByUserIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// Get Session Cookie
-	c, err := r.Cookie("Session")
-	if err != nil {
-		// Log Error
-		log.Println(err.Error())
-		// Return HTTP Status Unauthorized
-		//
-		// N.B. for simplicity of the example, we are simply returning
-		// an HTTP error. In the actual project, probably a JSON payload.
-		http.Error(w, "unauthorized", http.StatusUnauthorized)
-		return
-	}
-	// Authenticate Session Cookie - user variable discarded because user struct not used here...
-	_, err = auth.AuthenticateSessionCookie(c)
-	if err != nil {
-		// Same error as above - maker of request is unauthorized
-		log.Println(err.Error())
-		http.Error(w, "unauthorized", http.StatusUnauthorized)
-		return
-	}
-	// Switch on the Request method, call the correct subroutine...
+
 	switch r.Method {
 
 	case http.MethodGet:

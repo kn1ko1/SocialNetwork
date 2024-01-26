@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"socialnetwork/auth"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 )
@@ -24,36 +23,15 @@ func NewUsersHandler(r repo.IRepository) *UsersHandler {
 // A UsersHandler instance implements the ServeHTTP interface, and thus
 // itself becomes an HTTPHandler
 func (h *UsersHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// Get Session Cookie
-	c, err := r.Cookie("Session")
-	if err != nil {
-		// Log Error
-		log.Println(err.Error())
-		// Return HTTP Status Unauthorized
-		//
-		// N.B. for simplicity of the example, we are simply returning
-		// an HTTP error. In the actual project, probably a JSON payload.
-		http.Error(w, "unauthorized", http.StatusUnauthorized)
-		return
-	}
-	// Authenticate Session Cookie - user variable discarded because user struct not used here...
-	_, err = auth.AuthenticateSessionCookie(c)
-	if err != nil {
-		// Same error as above - maker of request is unauthorized
-		log.Println(err.Error())
-		http.Error(w, "unauthorized", http.StatusUnauthorized)
-		return
-	}
 
-	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
 
 	case http.MethodPost:
 		h.post(w, r)
 		return
-	case http.MethodGet:
-		h.get(w, r)
-		return
+	// case http.MethodGet:
+	// 	h.get(w, r)
+	// 	return
 	// case http.MethodPut:
 	// 	h.put(w, r)
 	// 	return
@@ -118,10 +96,25 @@ func (h *UsersHandler) post(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("User created successfully!"))
 }
 
-func (h *UsersHandler) get(w http.ResponseWriter, r *http.Request) {
-	// Not Implemented - would be h.Repo.GetAllUsers() ... you get the idea
-	w.Write([]byte("Here are your users!"))
-}
+// func (h *UsersHandler) get(w http.ResponseWriter, r *http.Request) {
+
+// 	allUsers, err := h.Repo.GetAllUsers()
+// 	if err != nil {
+// 		log.Println("Failed to get all users in UserHandler. ", err)
+// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 		return
+// 	}
+
+// 	err = json.NewEncoder(w).Encode(allUsers)
+// 	if err != nil {
+// 		log.Println("Failed to encode and write JSON response. ", err)
+// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 		return
+// 	}
+
+// 	w.WriteHeader(http.StatusOK)
+// 	w.Write([]byte("Here are all users"))
+// }
 
 // func (h *UsersHandler) put(w http.ResponseWriter, r *http.Request) {
 

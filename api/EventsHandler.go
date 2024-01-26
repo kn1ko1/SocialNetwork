@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"socialnetwork/auth"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 )
@@ -24,26 +23,7 @@ func NewEventsHandler(r repo.IRepository) *EventsHandler {
 // A PostsHandler instance implements the ServeHTTP interface, and thus
 // itself becomes an HTTPHandler
 func (h *EventsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// Get Session Cookie
-	c, err := r.Cookie("Session")
-	if err != nil {
-		// Log Error
-		log.Println(err.Error())
-		// Return HTTP Status Unauthorized
-		//
-		// N.B. for simplicity of the example, we are simply returning
-		// an HTTP error. In the actual project, probably a JSON payload.
-		http.Error(w, "unauthorized", http.StatusUnauthorized)
-		return
-	}
-	// Authenticate Session Cookie - user variable discarded because user struct not used here...
-	_, err = auth.AuthenticateSessionCookie(c)
-	if err != nil {
-		// Same error as above - maker of request is unauthorized
-		log.Println(err.Error())
-		http.Error(w, "unauthorized", http.StatusUnauthorized)
-		return
-	}
+
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
 
@@ -116,14 +96,14 @@ func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
 
 func (h *EventsHandler) get(w http.ResponseWriter, r *http.Request) {
 
-	allPosts, err := h.Repo.GetAllEvents()
+	allEvents, err := h.Repo.GetAllEvents()
 	if err != nil {
 		log.Println("Failed to get event in EventHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(allPosts)
+	err = json.NewEncoder(w).Encode(allEvents)
 	if err != nil {
 		log.Println("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

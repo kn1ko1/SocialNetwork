@@ -4,47 +4,27 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"socialnetwork/auth"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"strconv"
 )
 
-// Endpoint: /api/users/user/{userId}
-// Allowed methods: GET, DELETE
+// Endpoint: /api/users/{userId}
+// Allowed methods: GET, PUT, DELETE
 
-type UserByUserIdHandler struct {
+type UserByIdHandler struct {
 	Repo repo.IRepository
 }
 
 // Constructor with dependency injection of a repo implementation
-func NewUserByUserIdHandler(r repo.IRepository) *UserByUserIdHandler {
-	return &UserByUserIdHandler{Repo: r}
+func NewUserByIdHandler(r repo.IRepository) *UserByIdHandler {
+	return &UserByIdHandler{Repo: r}
 }
 
 // A UsersHandler instance implements the ServeHTTP interface, and thus
 // itself becomes an HTTPHandler
-func (h *UserByUserIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// Get Session Cookie
-	c, err := r.Cookie("Session")
-	if err != nil {
-		// Log Error
-		log.Println(err.Error())
-		// Return HTTP Status Unauthorized
-		//
-		// N.B. for simplicity of the example, we are simply returning
-		// an HTTP error. In the actual project, probably a JSON payload.
-		http.Error(w, "unauthorized", http.StatusUnauthorized)
-		return
-	}
-	// Authenticate Session Cookie - user variable discarded because user struct not used here...
-	_, err = auth.AuthenticateSessionCookie(c)
-	if err != nil {
-		// Same error as above - maker of request is unauthorized
-		log.Println(err.Error())
-		http.Error(w, "unauthorized", http.StatusUnauthorized)
-		return
-	}
+func (h *UserByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
 	case http.MethodGet:
@@ -62,7 +42,7 @@ func (h *UserByUserIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
-func (h *UserByUserIdHandler) get(w http.ResponseWriter, r *http.Request) {
+func (h *UserByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
 	postIdString := queryParams.Get("userId")
 	userId, userIdErr := strconv.Atoi(postIdString)
@@ -73,7 +53,7 @@ func (h *UserByUserIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	}
 	userUsers, err := h.Repo.GetUserById(userId)
 	if err != nil {
-		log.Println("Failed to get Users in GetUserByIdHandler. ", err)
+		log.Println("Failed to get Users in GetUserById. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -86,10 +66,10 @@ func (h *UserByUserIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Here are your Users"))
+	w.Write([]byte("Here is the User"))
 }
 
-func (h *UserByUserIdHandler) put(w http.ResponseWriter, r *http.Request) {
+func (h *UserByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 
 	var user models.User
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -137,10 +117,10 @@ func (h *UserByUserIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	}
 	// Correct HTTP header for a newly created resource:
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Post updated successfully!"))
+	w.Write([]byte("User updated successfully!"))
 }
 
-func (h *UserByUserIdHandler) delete(w http.ResponseWriter, r *http.Request) {
+func (h *UserByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
 	// look at penultimate id for userId
 

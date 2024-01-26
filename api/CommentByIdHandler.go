@@ -53,7 +53,7 @@ func (h *CommentByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	}
 	comment, err := h.Repo.GetCommentById(commentId)
 	if err != nil {
-		log.Println("Failed to get posts in GetCommentByIdHandler. ", err)
+		log.Println("Failed to get comments in GetCommentByIdHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
