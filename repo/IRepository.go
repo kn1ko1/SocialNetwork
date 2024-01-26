@@ -63,4 +63,10 @@ type IRepository interface {
 	DeleteMessagesBySenderId(senderId int) error
 	// DeleteMessagesByTargetId(targetId int) error
 	DeleteAllMessages() error
+
+	//Group
+	CreateGroup(group models.Group) (models.Group, error)
+	GetAllGroups() ([]models.Group, error)
+	UpdateGroupById(group models.Group) (models.Group, error)
+	DeleteAllGroups() error
 }
