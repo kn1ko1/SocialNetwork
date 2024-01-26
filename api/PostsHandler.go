@@ -9,6 +9,9 @@ import (
 )
 
 // Endpoint: /api/posts
+// GET /api/posts - Retrieves all posts from DB
+// POST /api/posts - Create a new post
+
 // Allowed methods: GET, POST
 
 type PostsHandler struct {
