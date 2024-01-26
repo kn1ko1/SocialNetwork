@@ -44,11 +44,13 @@ func addApiHandlers(rt *router.Router) {
 	postsHandler := api.NewPostsHandler(r)
 	commentsHandler := api.NewCommentsHandler(r)
 	eventsHandler := api.NewEventsHandler(r)
+	messagesHandler := api.NewMessagesHandler(r)
 	rt.AddHandler(regexp.MustCompile(`^/api/users$`), usersHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/groups$`), groupsHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/posts$`), postsHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/comments$`), commentsHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/events$`), eventsHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/messages$`), messagesHandler)
 }
 
 func addUIHandlers(rt *router.Router) {
