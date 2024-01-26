@@ -58,19 +58,6 @@ func TestCommentValidateValidExpectNil(t *testing.T) {
 	}
 }
 
-func GenerateValidComment() *Comment {
-	ctime := rand.Int63n(1000) + 1
-	idx := rand.Intn(len(sutBody))
-	c := &Comment{
-		Body:      sutBody[idx],
-		CreatedAt: ctime,
-		PostId:    rand.Intn(1000) + 1,
-		UpdatedAt: ctime,
-		UserId:    rand.Intn(1000) + 1,
-	}
-	return c
-}
-
 func generateMissingFieldComment() *Comment {
 	c := GenerateValidComment()
 	missingField := rand.Intn(5)
