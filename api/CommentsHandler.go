@@ -26,7 +26,6 @@ func (h *CommentsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
-	// HTTP GET logic
 	case http.MethodPost:
 		h.post(w, r)
 		return
@@ -36,10 +35,6 @@ func (h *CommentsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPut:
 		h.put(w, r)
 		return
-	// case http.MethodDelete:
-	// 	h.delete(w, r)
-	// 	return
-	// All unimplemented methods default to a "method not allowed" error
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -56,14 +51,6 @@ func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("Received comment:", comment.Body)
-
-	// Example Comment to test function
-	// comment := models.Comment{
-	// 	Body:      "Example Comment",
-	// 	CreatedAt: 1111111,
-	// 	PostId:    2,
-	// 	UpdatedAt: 1111111,
-	// 	UserId:    1}
 
 	// Validate the comment
 	if validationErr := comment.Validate(); validationErr != nil {
@@ -108,8 +95,6 @@ func (h *CommentsHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Here are your comments"))
 }
 
 func (h *CommentsHandler) put(w http.ResponseWriter, r *http.Request) {
@@ -122,14 +107,6 @@ func (h *CommentsHandler) put(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("Received comment:", comment.Body)
-
-	// Example Comment to test function
-	// comment := models.Comment{
-	// 	Body:      "Updated Comment",
-	// 	CreatedAt: 1111111,
-	// 	PostId:    2,
-	// 	UpdatedAt: 3333333,
-	// 	UserId:    1}
 
 	// Validate the comment
 	if validationErr := comment.Validate(); validationErr != nil {
@@ -157,16 +134,3 @@ func (h *CommentsHandler) put(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("Comment updated successfully!"))
 }
-
-// func (h *CommentsHandler) delete(w http.ResponseWriter, r *http.Request) {
-
-// 	err := h.Repo.DeleteAllComments()
-// 	if err != nil {
-// 		log.Println("Failed to delete all Comments. ", err)
-// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	w.WriteHeader(http.StatusOK)
-// 	w.Write([]byte("comments were deleted"))
-// }

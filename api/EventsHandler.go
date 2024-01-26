@@ -52,16 +52,6 @@ func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("Received event:", event.Title, event.Description)
 
-	// Example event to test function
-	// event := models.Event{
-	// 	CreatedAt:   111111,
-	// 	DateTime:    1212121212,
-	// 	Description: "example event description",
-	// 	GroupID:     1,
-	// 	UpdatedAt:   111111,
-	// 	Title:       "Magnificient Example Event",
-	// 	UserId:      2}
-
 	// Validate the event
 	if validationErr := event.Validate(); validationErr != nil {
 		log.Println("Validation failed:", validationErr)
@@ -77,16 +67,14 @@ func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Encode and write the response
+	w.WriteHeader(http.StatusCreated)
 	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
 		log.Println("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	// Correct HTTP header for a newly created resource:
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Event created successfully!"))
+
 }
 
 func (h *EventsHandler) get(w http.ResponseWriter, r *http.Request) {
@@ -104,7 +92,4 @@ func (h *EventsHandler) get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Here are your events"))
 }
