@@ -15,7 +15,7 @@ type SQLiteRepository struct {
 	identityDb *sql.DB
 }
 
-func NewDatabaseRepository() *SQLiteRepository {
+func NewSQLiteRepository() *SQLiteRepository {
 	ret := &SQLiteRepository{}
 	db, err := sql.Open(dbDriver, identityDbPath)
 	if err != nil {
