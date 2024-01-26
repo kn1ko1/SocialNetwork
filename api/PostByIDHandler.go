@@ -57,15 +57,13 @@ func (h *PostByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(userPosts)
 	if err != nil {
 		log.Println("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Here are your posts"))
 }
 
 func (h *PostByIdHandler) put(w http.ResponseWriter, r *http.Request) {
@@ -101,14 +99,10 @@ func (h *PostByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	// Correct HTTP header for a newly created resource:
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Post updated successfully!"))
+
 }
 
 func (h *PostByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
-
-	// look at penultimate id for userId
 
 	// figure out userID
 	queryParams := r.URL.Query()
@@ -121,9 +115,6 @@ func (h *PostByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("Received delete request for userID:", userID)
 
-	// example postId for testing
-	// postId := 1
-
 	err := h.Repo.DeletePostById(userID)
 	if err != nil {
 		log.Println("Failed to delete Posts. ", err)
@@ -132,5 +123,4 @@ func (h *PostByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("posts were deleted"))
 }
