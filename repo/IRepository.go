@@ -1,3 +1,6 @@
+// Message from Matt
+// Please do not touch this file
+
 package repo
 
 import "socialnetwork/models"
@@ -32,7 +35,7 @@ type IRepository interface {
 	GetCommentsByGroupId(groupId int) ([]models.Comment, error)
 	GetCommentsByUserId(userId int) ([]models.Comment, error)
 	GetCommentsByPostId(postId int) ([]models.Comment, error)
-	// UpdateCommentById(comment models.Comment) (models.Comment, error)
+	UpdateComment(comment models.Comment) (models.Comment, error)
 	DeleteCommentById(commentId int) error
 	DeleteCommentsByGroupId(groupId int) error
 	DeleteCommentsByUserId(userId int) error
@@ -45,7 +48,7 @@ type IRepository interface {
 	GetEventById(eventId int) (models.Event, error)
 	GetEventsByGroupId(groupId int) ([]models.Event, error)
 	GetEventsByUserId(userId int) ([]models.Event, error)
-	// UpdateEventById(event models.Event) (models.Event, error)
+	UpdateEvent(event models.Event) (models.Event, error)
 	DeleteEventById(eventId int) error
 	DeleteEventsByGroupId(groupId int) error
 	DeleteEventsByUserId(userId int) error
@@ -57,7 +60,7 @@ type IRepository interface {
 	// GetMessagesByType(messageType string) ([]models.Message, error)
 	GetMessageById(messageId int) (models.Message, error)
 	GetMessagesBySenderAndTargetIDs(senderId, targetId int) ([]models.Message, error)
-	// UpdateMessageById(message models.Message) (models.Message, error)
+	UpdateMessage(message models.Message) (models.Message, error)
 	// DeleteMessagesByType(messageType string) error
 	DeleteMessageById(messageId int) error
 	DeleteMessagesBySenderId(senderId int) error
@@ -65,8 +68,8 @@ type IRepository interface {
 	DeleteAllMessages() error
 
 	//Group
-	// CreateGroup(group models.Group) (models.Group, error)
-	// GetAllGroups() ([]models.Group, error)
-	// UpdateGroupById(group models.Group) (models.Group, error)
-	// DeleteAllGroups() error
+	CreateGroup(group models.Group) (models.Group, error)
+	GetAllGroups() ([]models.Group, error)
+	UpdateGroup(group models.Group) (models.Group, error)
+	DeleteAllGroups() error
 }

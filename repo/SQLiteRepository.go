@@ -1,6 +1,10 @@
+// Message from Matt
+// Please do not touch this file
+
 package repo
 
 import (
+	"errors"
 	"log"
 	"socialnetwork/models"
 	"socialnetwork/sqlite"
@@ -191,4 +195,20 @@ func (r *SQLiteRepository) DeleteMessagesByTargetId(targetId int) error {
 }
 func (r *SQLiteRepository) DeleteAllMessages() error {
 	return sqlite.DeleteAllMessages(r.businessDb)
+}
+
+func (r *SQLiteRepository) CreateGroup(group models.Group) (models.Group, error) {
+	return group, errors.New("not implemented")
+}
+
+func (r *SQLiteRepository) GetAllGroups() ([]models.Group, error) {
+	return nil, errors.New("not implemented")
+}
+
+func (r *SQLiteRepository) UpdateGroup(group models.Group) (models.Group, error) {
+	return group, errors.New("not implemented")
+}
+
+func (r *SQLiteRepository) DeleteAllGroups() error {
+	return errors.New("not implemented")
 }
