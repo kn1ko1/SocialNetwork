@@ -54,22 +54,6 @@ func TestEventValidateValidExpectNil(t *testing.T) {
 	}
 }
 
-func GenerateValidEvent() *Event {
-	ctime := rand.Int63n(1000) + 1
-	idxDesc := rand.Intn(len(sutDescriptions))
-	idxTitle := rand.Intn(len(sutTitles))
-	e := &Event{
-		CreatedAt:   ctime,
-		DateTime:    rand.Int63n(1000) + 1,
-		Description: sutDescriptions[idxDesc],
-		GroupId:     rand.Intn(1000) + 1,
-		Title:       sutTitles[idxTitle],
-		UpdatedAt:   ctime,
-		UserId:      rand.Intn(1000) + 1,
-	}
-	return e
-}
-
 func generateMissingFieldEvent() *Event {
 	e := GenerateValidEvent()
 	missingField := rand.Intn(7)
