@@ -9,37 +9,33 @@ import (
 func CreateGroup(database *sql.DB, group models.Group) (models.Group, error) {
 
 	query := `
-	INSERT INTO EVENTS (
+	INSERT INTO GROUPS (
 		CreatedAt,
-		DateTime,
+		CreatorID,
 		Description,
-		GroupId,
 		Title,
-		UpdatedAt,
-		UserId
-	) VALUES (?, ?, ?, ?, ?, ?, ?)
+		UpdatedAt
+	) VALUES (?, ?, ?, ?, ?)
 `
 
 	statement, err := database.Prepare(query)
 	if err != nil {
-		return event, err
+		return group, err
 	}
 	res, err := statement.Exec(
-		event.CreatedAt,
-		event.DateTime,
-		event.Description,
-		event.GroupId,
-		event.Title,
-		event.UpdatedAt,
-		event.UserId,
+		group.CreatedAt,
+		group.CreatorID,
+		group.Description,
+		group.Title,
+		group.UpdatedAt,
 	)
 	if err != nil {
-		return event, err
+		return group, err
 	}
 	id, err := res.LastInsertId()
 	if err != nil {
-		return event, err
+		return group, err
 	}
-	event.EventId = int(id)
-	return event, nil
+	group.GroupID = int(id)
+	return group, nil
 }
