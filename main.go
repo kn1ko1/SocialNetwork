@@ -38,7 +38,7 @@ func setupRouter(mux *http.ServeMux) {
 }
 
 func addApiHandlers(rt *router.Router) {
-	r := repo.NewSQLiteRepository()
+	r := repo.NewDummyRepository()
 	usersHandler := api.NewUsersHandler(r)
 	groupsHandler := api.NewGroupsHandler(r)
 	postsHandler := api.NewPostsHandler(r)
