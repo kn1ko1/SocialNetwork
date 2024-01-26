@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"socialnetwork/api"
+	"socialnetwork/repo"
 	"socialnetwork/router"
 	"socialnetwork/ui"
 )
@@ -32,6 +34,8 @@ func setupRouter(mux *http.ServeMux) {
 	rt := router.NewRouter()
 	// Dummy UI handler, as an example
 	rt.AddHandler(regexp.MustCompile(`^/$`), ui.NewDummyPageHandler())
+	r := repo.NewSQLiteRepository()
+	commentsHandler := api.NewCommentsHandler(r)
 	mux.Handle("/", rt)
 }
 
