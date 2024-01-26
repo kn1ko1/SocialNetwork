@@ -32,7 +32,7 @@ type IRepository interface {
 	CreateComment(comment models.Comment) (models.Comment, error)
 	GetAllComments() ([]models.Comment, error)
 	GetCommentById(commentId int) (models.Comment, error)
-	GetCommentsByGroupId(groupId int) ([]models.Comment, error)
+	// GetCommentsByGroupId(groupId int) ([]models.Comment, error)
 	GetCommentsByUserId(userId int) ([]models.Comment, error)
 	GetCommentsByPostId(postId int) ([]models.Comment, error)
 	UpdateComment(comment models.Comment) (models.Comment, error)

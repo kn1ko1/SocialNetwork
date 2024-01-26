@@ -102,9 +102,10 @@ func (r *SQLiteRepository) GetAllComments() ([]models.Comment, error) {
 func (r *SQLiteRepository) GetCommentById(commentId int) (models.Comment, error) {
 	return sqlite.GetCommentById(r.businessDb, commentId)
 }
-func (r *SQLiteRepository) GetCommentsByGroupId(groupId int) ([]models.Comment, error) {
-	return sqlite.GetCommentsByGroupId(r.businessDb, groupId)
-}
+
+//	func (r *SQLiteRepository) GetCommentsByGroupId(groupId int) ([]models.Comment, error) {
+//		return sqlite.GetCommentsByGroupId(r.businessDb, groupId)
+//	}
 func (r *SQLiteRepository) GetCommentsByUserId(userId int) ([]models.Comment, error) {
 	return sqlite.GetCommentsByUserId(r.businessDb, userId)
 }
