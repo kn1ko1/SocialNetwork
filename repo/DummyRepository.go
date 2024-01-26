@@ -2,7 +2,6 @@ package repo
 
 import (
 	"database/sql"
-	"errors"
 	"log"
 	"socialnetwork/models"
 	"socialnetwork/sqlite"
@@ -15,8 +14,12 @@ const (
 )
 
 var (
-	validUser = *models.GenerateValidUser()
-	validPost = *models.GenerateValidPost()
+	validUser    = *models.GenerateValidUser()
+	validPost    = *models.GenerateValidPost()
+	validComment = *models.GenerateValidComment()
+	validEvent   = *models.GenerateValidEvent()
+	validMessage = *models.GenerateValidMessage()
+	// validGroup   = *models.GenerateValidGroup()
 )
 
 // Field commented for implementation example reasons:
@@ -89,124 +92,212 @@ func (r *DummyRepository) DeleteAllUsers() error {
 
 // Post
 func (r *DummyRepository) CreatePost(post models.Post) (models.Post, error) {
-	return sqlite.CreatePost(r.businessDb, post)
+	post.PostId = 1
+	return post, nil
 }
+
 func (r *DummyRepository) GetAllPosts() ([]models.Post, error) {
-	return sqlite.GetAllPosts(r.businessDb)
+	posts := make([]models.Post, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		posts[i] = *models.GenerateValidPost()
+	}
+	return posts, nil
 }
+
 func (r *DummyRepository) GetPostById(postId int) (models.Post, error) {
-	return sqlite.GetPostById(r.businessDb, postId)
+	post := validPost
+	post.PostId = postId
+	return post, nil
 }
+
 func (r *DummyRepository) GetPostsByGroupId(groupId int) ([]models.Post, error) {
-	return sqlite.GetPostsByGroupId(r.businessDb, groupId)
+	posts := make([]models.Post, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		p := *models.GenerateValidPost()
+		p.GroupId = groupId
+		posts[i] = p
+	}
+	return posts, nil
 }
+
 func (r *DummyRepository) GetPostsByUserId(userId int) ([]models.Post, error) {
-	return sqlite.GetPostsByUserId(r.businessDb, userId)
+	posts := make([]models.Post, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		p := *models.GenerateValidPost()
+		p.UserId = userId
+		posts[i] = p
+	}
+	return posts, nil
 }
 func (r *DummyRepository) DeletePostById(postId int) error {
-	return sqlite.DeletePostById(r.businessDb, postId)
+	return nil
 }
 func (r *DummyRepository) UpdatePost(post models.Post) (models.Post, error) {
-	return sqlite.UpdatePost(r.businessDb, post)
+	return post, nil
 }
 func (r *DummyRepository) DeletePostByGroupId(groupId int) error {
-	return sqlite.DeletePostByGroupId(r.businessDb, groupId)
+	return nil
 }
 func (r *DummyRepository) DeletePostsByUserId(userId int) error {
-	return sqlite.DeletePostsByUserId(r.businessDb, userId)
+	return nil
 }
 func (r *DummyRepository) DeleteAllPosts() error {
-	return sqlite.DeleteAllPosts(r.businessDb)
+	return nil
 }
 
 // Comments
 func (r *DummyRepository) CreateComment(comment models.Comment) (models.Comment, error) {
-	return sqlite.CreateComment(r.businessDb, comment)
+	comment.CommentId = 1
+	return comment, nil
 }
 func (r *DummyRepository) GetAllComments() ([]models.Comment, error) {
-	return sqlite.GetAllComments(r.businessDb)
+	comments := make([]models.Comment, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		comments[i] = *models.GenerateValidComment()
+	}
+	return comments, nil
 }
+
 func (r *DummyRepository) GetCommentById(commentId int) (models.Comment, error) {
-	return sqlite.GetCommentById(r.businessDb, commentId)
+	comment := validComment
+	comment.CommentId = 1
+	return comment, nil
 }
-func (r *DummyRepository) GetCommentsByGroupId(groupId int) ([]models.Comment, error) {
-	return sqlite.GetCommentsByGroupId(r.businessDb, groupId)
-}
+
 func (r *DummyRepository) GetCommentsByUserId(userId int) ([]models.Comment, error) {
-	return sqlite.GetCommentsByUserId(r.businessDb, userId)
+	comments := make([]models.Comment, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		c := *models.GenerateValidComment()
+		c.UserId = userId
+		comments[i] = c
+	}
+	return comments, nil
 }
+
 func (r *DummyRepository) GetCommentsByPostId(postId int) ([]models.Comment, error) {
-	return sqlite.GetCommentsByPostId(r.businessDb, postId)
+	comments := make([]models.Comment, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		c := *models.GenerateValidComment()
+		c.PostId = postId
+		comments[i] = c
+	}
+	return comments, nil
 }
+
 func (r *DummyRepository) UpdateComment(comment models.Comment) (models.Comment, error) {
-	return sqlite.UpdateComment(r.businessDb, comment)
+	return comment, nil
 }
+
 func (r *DummyRepository) DeleteCommentById(commentId int) error {
-	return sqlite.DeleteCommentById(r.businessDb, commentId)
+	return nil
 }
+
 func (r *DummyRepository) DeleteCommentsByGroupId(groupId int) error {
-	return sqlite.DeleteCommentsByGroupId(r.businessDb, groupId)
+	return nil
 }
+
 func (r *DummyRepository) DeleteCommentsByUserId(userId int) error {
-	return sqlite.DeleteCommentsByUserId(r.businessDb, userId)
+	return nil
 }
+
 func (r *DummyRepository) DeleteCommentsByPostId(postId int) error {
-	return sqlite.DeleteCommentsByPostId(r.businessDb, postId)
+	return nil
 }
+
 func (r *DummyRepository) DeleteAllComments() error {
-	return sqlite.DeleteAllComments(r.businessDb)
+	return nil
 }
 
 // Event
 func (r *DummyRepository) CreateEvent(event models.Event) (models.Event, error) {
-	return sqlite.CreateEvent(r.businessDb, event)
+	event.EventId = 1
+	return event, nil
 }
 func (r *DummyRepository) GetAllEvents() ([]models.Event, error) {
-	return sqlite.GetAllEvents(r.businessDb)
+	events := make([]models.Event, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		events[i] = *models.GenerateValidEvent()
+	}
+	return events, nil
 }
+
 func (r *DummyRepository) GetEventById(eventId int) (models.Event, error) {
-	return sqlite.GetEventById(r.businessDb, eventId)
+	event := validEvent
+	event.EventId = eventId
+	return event, nil
 }
 func (r *DummyRepository) GetEventsByGroupId(groupId int) ([]models.Event, error) {
-	return sqlite.GetEventsByGroupId(r.businessDb, groupId)
+	events := make([]models.Event, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		e := *models.GenerateValidEvent()
+		e.GroupId = groupId
+		events[i] = e
+	}
+	return events, nil
 }
 func (r *DummyRepository) GetEventsByUserId(userId int) ([]models.Event, error) {
-	return sqlite.GetEventsByUserId(r.businessDb, userId)
+	events := make([]models.Event, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		e := *models.GenerateValidEvent()
+		e.UserId = userId
+		events[i] = e
+	}
+	return events, nil
 }
 func (r *DummyRepository) UpdateEvent(event models.Event) (models.Event, error) {
-	return sqlite.UpdateEvent(r.businessDb, event)
+	return event, nil
 }
 func (r *DummyRepository) DeleteEventById(eventId int) error {
-	return sqlite.DeleteEventById(r.businessDb, eventId)
+	return nil
 }
 func (r *DummyRepository) DeleteEventsByGroupId(groupId int) error {
-	return sqlite.DeleteEventsByGroupId(r.businessDb, groupId)
+	return nil
 }
 func (r *DummyRepository) DeleteEventsByUserId(userId int) error {
-	return sqlite.DeleteEventsByUserId(r.businessDb, userId)
+	return nil
 }
 func (r *DummyRepository) DeleteAllEvents() error {
-	return sqlite.DeleteAllEvents(r.businessDb)
+	return nil
 }
 
 // Message
 func (r *DummyRepository) CreateMessage(message models.Message) (models.Message, error) {
-	return sqlite.CreateMessage(r.businessDb, message)
+	message.MessageId = 1
+	return message, nil
 }
 func (r *DummyRepository) GetAllMessages() ([]models.Message, error) {
-	return sqlite.GetAllMessages(r.businessDb)
+	messages := make([]models.Message, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		messages[i] = *models.GenerateValidMessage()
+	}
+	return messages, nil
 }
 func (r *DummyRepository) GetMessagesByType(messageType string) ([]models.Message, error) {
-	return sqlite.GetMessagesByType(r.businessDb, messageType)
+	messages := make([]models.Message, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		m := *models.GenerateValidMessage()
+		m.MessageType = messageType
+		messages[i] = m
+	}
+	return messages, nil
 }
 func (r *DummyRepository) GetMessageById(messageId int) (models.Message, error) {
-	return sqlite.GetMessageById(r.businessDb, messageId)
+	message := validMessage
+	message.MessageId = messageId
+	return message, nil
 }
 func (r *DummyRepository) GetMessagesBySenderAndTargetIDs(senderId, targetId int) ([]models.Message, error) {
-	return sqlite.GetMessagesBySenderAndTargetIDs(r.businessDb, senderId, targetId)
+	messages := make([]models.Message, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		m := *models.GenerateValidMessage()
+		m.SenderId = senderId
+		m.TargetId = targetId
+		messages[i] = m
+	}
+	return messages, nil
 }
 func (r *DummyRepository) UpdateMessage(message models.Message) (models.Message, error) {
-	return sqlite.UpdateMessage(r.businessDb, message)
+	return message, nil
 }
 func (r *DummyRepository) DeleteMessagesByType(messageType string) error {
 	return nil
@@ -225,17 +316,22 @@ func (r *DummyRepository) DeleteAllMessages() error {
 }
 
 func (r *DummyRepository) CreateGroup(group models.Group) (models.Group, error) {
-	return group, errors.New("not implemented")
+	group.GroupID = 1
+	return group, nil
 }
 
 func (r *DummyRepository) GetAllGroups() ([]models.Group, error) {
-	return nil, errors.New("not implemented")
+	groups := make([]models.Group, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		groups[i] = *models.GenerateValidGroup()
+	}
+	return groups, nil
 }
 
 func (r *DummyRepository) UpdateGroup(group models.Group) (models.Group, error) {
-	return group, errors.New("not implemented")
+	return group, nil
 }
 
 func (r *DummyRepository) DeleteAllGroups() error {
-	return errors.New("not implemented")
+	return nil
 }
