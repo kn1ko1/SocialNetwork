@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"log"
 	"socialnetwork/models"
-	"socialnetwork/sqlite"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -19,8 +18,17 @@ var (
 	validComment = *models.GenerateValidComment()
 	validEvent   = *models.GenerateValidEvent()
 	validMessage = *models.GenerateValidMessage()
-	// validGroup   = *models.GenerateValidGroup()
+	validGroup   = *models.GenerateValidGroup()
 )
+
+func init() {
+	validUser.UserId = 1
+	validPost.PostId = 1
+	validComment.CommentId = 1
+	validEvent.EventId = 1
+	validMessage.MessageId = 1
+	validGroup.GroupID = 1
+}
 
 // Field commented for implementation example reasons:
 // Should take as a field a private DB instance
@@ -56,7 +64,9 @@ func (r *DummyRepository) CreateUser(user models.User) (models.User, error) {
 func (r *DummyRepository) GetAllUsers() ([]models.User, error) {
 	users := make([]models.User, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
-		users[i] = *models.GenerateValidUser()
+		u := *models.GenerateValidUser()
+		u.UserId = i + 1
+		users[i] = u
 	}
 	return users, nil
 }
@@ -83,11 +93,11 @@ func (r *DummyRepository) UpdateUser(user models.User) (models.User, error) {
 }
 
 func (r *DummyRepository) DeleteUserById(userId int) error {
-	return sqlite.DeleteUserById(r.identityDb, userId)
+	return nil
 }
 
 func (r *DummyRepository) DeleteAllUsers() error {
-	return sqlite.DeleteAllUsers(r.identityDb)
+	return nil
 }
 
 // Post
@@ -99,7 +109,9 @@ func (r *DummyRepository) CreatePost(post models.Post) (models.Post, error) {
 func (r *DummyRepository) GetAllPosts() ([]models.Post, error) {
 	posts := make([]models.Post, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
-		posts[i] = *models.GenerateValidPost()
+		p := *models.GenerateValidPost()
+		p.PostId = i + 1
+		posts[i] = p
 	}
 	return posts, nil
 }
@@ -114,6 +126,7 @@ func (r *DummyRepository) GetPostsByGroupId(groupId int) ([]models.Post, error) 
 	posts := make([]models.Post, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
 		p := *models.GenerateValidPost()
+		p.PostId = i + 1
 		p.GroupId = groupId
 		posts[i] = p
 	}
@@ -124,6 +137,7 @@ func (r *DummyRepository) GetPostsByUserId(userId int) ([]models.Post, error) {
 	posts := make([]models.Post, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
 		p := *models.GenerateValidPost()
+		p.PostId = i + 1
 		p.UserId = userId
 		posts[i] = p
 	}
@@ -153,14 +167,15 @@ func (r *DummyRepository) CreateComment(comment models.Comment) (models.Comment,
 func (r *DummyRepository) GetAllComments() ([]models.Comment, error) {
 	comments := make([]models.Comment, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
-		comments[i] = *models.GenerateValidComment()
+		c := *models.GenerateValidComment()
+		c.CommentId = i + 1
 	}
 	return comments, nil
 }
 
 func (r *DummyRepository) GetCommentById(commentId int) (models.Comment, error) {
 	comment := validComment
-	comment.CommentId = 1
+	comment.CommentId = commentId
 	return comment, nil
 }
 
@@ -168,6 +183,7 @@ func (r *DummyRepository) GetCommentsByUserId(userId int) ([]models.Comment, err
 	comments := make([]models.Comment, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
 		c := *models.GenerateValidComment()
+		c.CommentId = i + 1
 		c.UserId = userId
 		comments[i] = c
 	}
@@ -178,6 +194,7 @@ func (r *DummyRepository) GetCommentsByPostId(postId int) ([]models.Comment, err
 	comments := make([]models.Comment, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
 		c := *models.GenerateValidComment()
+		c.CommentId = i + 1
 		c.PostId = postId
 		comments[i] = c
 	}
@@ -216,7 +233,9 @@ func (r *DummyRepository) CreateEvent(event models.Event) (models.Event, error) 
 func (r *DummyRepository) GetAllEvents() ([]models.Event, error) {
 	events := make([]models.Event, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
-		events[i] = *models.GenerateValidEvent()
+		e := *models.GenerateValidEvent()
+		e.EventId = i + 1
+		events[i] = e
 	}
 	return events, nil
 }
@@ -230,6 +249,7 @@ func (r *DummyRepository) GetEventsByGroupId(groupId int) ([]models.Event, error
 	events := make([]models.Event, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
 		e := *models.GenerateValidEvent()
+		e.EventId = i + 1
 		e.GroupId = groupId
 		events[i] = e
 	}
@@ -239,6 +259,7 @@ func (r *DummyRepository) GetEventsByUserId(userId int) ([]models.Event, error) 
 	events := make([]models.Event, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
 		e := *models.GenerateValidEvent()
+		e.EventId = i + 1
 		e.UserId = userId
 		events[i] = e
 	}
@@ -268,7 +289,9 @@ func (r *DummyRepository) CreateMessage(message models.Message) (models.Message,
 func (r *DummyRepository) GetAllMessages() ([]models.Message, error) {
 	messages := make([]models.Message, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
-		messages[i] = *models.GenerateValidMessage()
+		m := *models.GenerateValidMessage()
+		m.MessageId = i + 1
+		messages[i] = m
 	}
 	return messages, nil
 }
@@ -276,6 +299,7 @@ func (r *DummyRepository) GetMessagesByType(messageType string) ([]models.Messag
 	messages := make([]models.Message, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
 		m := *models.GenerateValidMessage()
+		m.MessageId = i + 1
 		m.MessageType = messageType
 		messages[i] = m
 	}
@@ -290,6 +314,7 @@ func (r *DummyRepository) GetMessagesBySenderAndTargetIDs(senderId, targetId int
 	messages := make([]models.Message, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
 		m := *models.GenerateValidMessage()
+		m.MessageId = i + 1
 		m.SenderId = senderId
 		m.TargetId = targetId
 		messages[i] = m
@@ -323,7 +348,9 @@ func (r *DummyRepository) CreateGroup(group models.Group) (models.Group, error) 
 func (r *DummyRepository) GetAllGroups() ([]models.Group, error) {
 	groups := make([]models.Group, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
-		groups[i] = *models.GenerateValidGroup()
+		g := *models.GenerateValidGroup()
+		g.GroupID = i + 1
+		groups[i] = g
 	}
 	return groups, nil
 }
