@@ -4,14 +4,9 @@ import (
 	"database/sql"
 	"log"
 	"socialnetwork/models"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
-)
-
-const (
-	dbDriver       = "sqlite3"
-	identityDbPath = "./sqlite/data/Identity.db"
-	businessDbPath = "./sqlite/data/Business.db"
 )
 
 // Field commented for implementation example reasons:
@@ -38,12 +33,43 @@ func NewDummyRepository() *DummyRepository {
 	return &DummyRepository{identityDb: identityDb, businessDb: businessDb}
 }
 
-func (r *DummyRepository) CreatePost(p models.Post) (models.Post, error) {
-	// Call the SQLite specific instance, for example:
-	//
-	// return sqlite.CreatePost(r.db, p)
+// Sim user creation
+func (r *DummyRepository) CreateUser(user models.User) (models.User, error) {
+	return user, nil
+}
 
-	// Since it is ommitted for simplicity, let's simulate it:
-	p.UserId = 1
-	return p, nil
+// Sim User retrieval
+func (r *DummyRepository) GetAllUsers() ([]models.User, error) {
+	ctime := time.Now().UTC().UnixMilli()
+	dummyUsers := []models.User{
+		{
+			UserId:            1,
+			Bio:               "I am cool",
+			CreatedAt:         ctime,
+			DOB:               ctime,
+			Email:             "a@b.com",
+			EncryptedPassword: "really safe",
+			FirstName:         "Test",
+			ImageUrl:          "example/url",
+			IsPublic:          false,
+			LastName:          "User",
+			UpdatedAt:         ctime,
+			Username:          "test",
+		},
+		{
+			UserId:            2,
+			Bio:               "I am not cool",
+			CreatedAt:         ctime,
+			DOB:               ctime,
+			Email:             "b@c.com",
+			EncryptedPassword: "really safe",
+			FirstName:         "Example",
+			ImageUrl:          "example/url/2",
+			IsPublic:          true,
+			LastName:          "User",
+			UpdatedAt:         ctime,
+			Username:          "example",
+		},
+	}
+	return dummyUsers, nil
 }
