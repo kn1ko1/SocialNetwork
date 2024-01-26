@@ -116,7 +116,7 @@ func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
 
 func (h *EventsHandler) get(w http.ResponseWriter, r *http.Request) {
 
-	allPosts, err := h.Repo.GetAllPosts()
+	allPosts, err := h.Repo.GetAllEvents()
 	if err != nil {
 		log.Println("Failed to get event in EventHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
