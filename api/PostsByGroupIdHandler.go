@@ -8,8 +8,8 @@ import (
 	"strconv"
 )
 
-// Endpoint: get/api/groupId/
-// Allowed methods: GET
+// Endpoint: get/api/posts/groupId/{groupId}
+// Allowed methods: GET, DELETE
 
 type PostsByGroupIdHandler struct {
 	Repo repo.IRepository
@@ -59,9 +59,6 @@ func (h *PostsByGroupIdHandler) get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Here are your posts"))
 }
 
 func (h *PostsByGroupIdHandler) delete(w http.ResponseWriter, r *http.Request) {
@@ -77,9 +74,6 @@ func (h *PostsByGroupIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("Received delete request for groupId:", groupId)
 
-	// example postId for testing
-	// postId := 1
-
 	err := h.Repo.DeletePostByGroupId(groupId)
 	if err != nil {
 		log.Println("Failed to delete Post. ", err)
@@ -88,5 +82,4 @@ func (h *PostsByGroupIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("post was deleted"))
 }

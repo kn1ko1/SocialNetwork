@@ -30,15 +30,7 @@ func (h *MessagesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		h.post(w, r)
 		return
-	// case http.MethodGet:
-	// 	h.get(w, r)
-	// 	return
-	// case http.MethodPut:
-	// 	h.put(w, r)
-	// 	return
-	// case http.MethodDelete:
-	// 	h.delete(w, r)
-	// 	return
+
 	// All unimplemented methods default to a "method not allowed" error
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)

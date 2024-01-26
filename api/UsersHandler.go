@@ -32,13 +32,6 @@ func (h *UsersHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		h.get(w, r)
 		return
-	// case http.MethodPut:
-	// 	h.put(w, r)
-	// 	return
-	// case http.MethodDelete:
-	// 	h.delete(w, r)
-	// 	return
-	// All unimplemented methods default to a "method not allowed" error
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -58,17 +51,6 @@ func (h *UsersHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("Received user:", user.Username)
 
-	// user := models.User{
-	// 	CreatedAt:         111111111,
-	// 	DOB:               2221111,
-	// 	Email:             "example@example.com",
-	// 	EncryptedPassword: "eXaMpLe",
-	// 	FirstName:         "Rupert",
-	// 	IsPublic:          true,
-	// 	LastName:          "Cheetham",
-	// 	UpdatedAt:         111111111,
-	// 	Username:          "Ardek"}
-
 	// Validate the user
 	if validationErr := user.Validate(); validationErr != nil {
 		log.Println("Validation failed:", validationErr)
@@ -85,15 +67,13 @@ func (h *UsersHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Encode and write the response
+	w.WriteHeader(http.StatusCreated)
 	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
 		log.Println("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	// Correct HTTP header for a newly created resource:
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("User created successfully!"))
 }
 
 func (h *UsersHandler) get(w http.ResponseWriter, r *http.Request) {
@@ -111,7 +91,4 @@ func (h *UsersHandler) get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Here is the User"))
 }

@@ -80,19 +80,6 @@ func (h *UserByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("Updating:", user.UserId, user.Username)
 
-	// Example User to test function
-	// 	// user := models.User{
-	// 	// Bio: "Bio (update)"
-	// 	// 	CreatedAt:         111111111,
-	// 	// 	DOB:               2221111,
-	// 	// 	Email:             "example@example.com",
-	// 	// 	EncryptedPassword: "eXaMpLe",
-	// 	// 	FirstName:         "Rupert",
-	// 	// 	IsPublic:          true,
-	// 	// 	LastName:          "Cheetham",
-	// 	// 	UpdatedAt:         3333333333,
-	// 	// 	Username:          "Ardek"}
-
 	// Validate the User <3
 	if validationErr := user.Validate(); validationErr != nil {
 		log.Println("Validation failed:", validationErr)
@@ -122,8 +109,6 @@ func (h *UserByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 
 func (h *UserByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-	// look at penultimate id for userId
-
 	// figure out userID
 	queryParams := r.URL.Query()
 	userIDString := queryParams.Get("userID")
@@ -135,9 +120,6 @@ func (h *UserByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("Received delete request for userID:", userID)
 
-	// example postId for testing
-	// postId := 1
-
 	err := h.Repo.DeleteUserById(userID)
 	if err != nil {
 		log.Println("Failed to delete Users. ", err)
@@ -146,5 +128,4 @@ func (h *UserByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Users were deleted"))
 }

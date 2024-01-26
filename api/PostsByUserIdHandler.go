@@ -66,8 +66,6 @@ func (h *PostsByUserIdHandler) get(w http.ResponseWriter, r *http.Request) {
 
 func (h *PostsByUserIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-	// look at penultimate id for userId
-
 	// figure out userID
 	queryParams := r.URL.Query()
 	userIDString := queryParams.Get("userID")
@@ -79,9 +77,6 @@ func (h *PostsByUserIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("Received delete request for userID:", userID)
 
-	// example postId for testing
-	// postId := 1
-
 	err := h.Repo.DeletePostsByUserId(userID)
 	if err != nil {
 		log.Println("Failed to delete Posts. ", err)
@@ -90,5 +85,4 @@ func (h *PostsByUserIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("posts were deleted"))
 }

@@ -9,6 +9,9 @@ import (
 	"strconv"
 )
 
+// Things to do with Matt, probably:
+// - Get id's from URL 'properly'
+
 // Endpoint: /api/comments/comment/{commentId}
 // Allowed methods: GET, PUT, DELETE
 
