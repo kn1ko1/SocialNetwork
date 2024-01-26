@@ -6,10 +6,6 @@ import (
 	"testing"
 )
 
-var (
-	sutImageURL = []string{"URL1", "URL2", "URL3"}
-)
-
 func TestPostValidateInvalidFieldExpectError(t *testing.T) {
 	var posts []*Post
 	for i := 0; i < tableRunCount; i++ {

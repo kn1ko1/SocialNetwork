@@ -10,10 +10,6 @@ const (
 	tableRunCount = 10
 )
 
-var (
-	sutBody = []string{"Hello, World", "Test", "Example"}
-)
-
 func TestCommentValidateInvalidFieldExpectError(t *testing.T) {
 	var comments []*Comment
 	for i := 0; i < tableRunCount; i++ {

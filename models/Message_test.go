@@ -6,10 +6,6 @@ import (
 	"testing"
 )
 
-var (
-	sutMessageTypes = []string{"GC", "DM"}
-)
-
 func TestMessageValidateInvalidFieldExpectError(t *testing.T) {
 	var messages []*Message
 	for i := 0; i < tableRunCount; i++ {

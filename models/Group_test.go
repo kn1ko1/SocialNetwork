@@ -6,10 +6,6 @@ import (
 	"testing"
 )
 
-var (
-	sutTitle = []string{"Family Time", "Our Group", "Cinema Trip"}
-)
-
 func TestGroupValidateInvalidFieldExpectError(t *testing.T) {
 	var groups []*Group
 	for i := 0; i < tableRunCount; i++ {

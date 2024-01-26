@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"math/rand"
 	"regexp"
 	"time"
 )
@@ -59,4 +60,32 @@ func (u *User) Validate() error {
 		return errors.New("invalid length of username")
 	}
 	return nil
+}
+
+func GenerateValidUser() *User {
+	idxBio := rand.Intn(len(sutBio))
+	idxDOB := rand.Intn(len(sutDOB))
+	ctime := rand.Int63n(1000) + 1
+	idxEmail := rand.Intn(len(sutEmail))
+	idxPassword := rand.Intn(len(sutPassword))
+	idxFirstName := rand.Intn(len(sutFirstName))
+	idxImageURL := rand.Intn(len(sutImageURL))
+	idxIsPublic := rand.Intn(len(sutIsPublic))
+	idxLastName := rand.Intn(len(sutLastName))
+	idxUsername := rand.Intn(len(sutUsername))
+
+	u := &User{
+		Bio:               sutBio[idxBio],
+		CreatedAt:         ctime,
+		DOB:               sutDOB[idxDOB],
+		Email:             sutEmail[idxEmail],
+		EncryptedPassword: sutPassword[idxPassword],
+		FirstName:         sutFirstName[idxFirstName],
+		ImageUrl:          sutImageURL[idxImageURL],
+		IsPublic:          sutIsPublic[idxIsPublic],
+		LastName:          sutLastName[idxLastName],
+		UpdatedAt:         ctime,
+		Username:          sutUsername[idxUsername],
+	}
+	return u
 }

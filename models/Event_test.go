@@ -6,15 +6,6 @@ import (
 	"testing"
 )
 
-// const (
-// 	tableRunCount = 10
-// )
-
-var (
-	sutDescriptions = []string{"Event 1", "Event 2", "Event 3"}
-	sutTitles       = []string{"Title 1", "Title 2", "Title 3"}
-)
-
 func TestEventValidateInvalidFieldExpectError(t *testing.T) {
 	var events []*Event
 	for i := 0; i < tableRunCount; i++ {

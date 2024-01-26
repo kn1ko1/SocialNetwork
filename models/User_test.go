@@ -4,21 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 	"testing"
-	"time"
-)
-
-// Test email addresses
-var (
-	sutBio = []string{"string 1", "string 2", ""}
-	sutDOB = []int64{int64((time.Date(1950, time.January, 1, 0, 0, 0, 0, time.UTC)).Unix()),
-		int64((time.Date(1975, time.May, 15, 0, 0, 0, 0, time.UTC)).Unix()),
-		int64((time.Date(1990, time.October, 30, 0, 0, 0, 0, time.UTC)).Unix())}
-	sutEmail     = []string{"john.doe@example.com", "another@email.co", "user@123.de"}
-	sutFirstName = []string{"Matthew", "Micheal", "Nikoi"}
-	sutIsPublic  = []bool{true, false}
-	sutLastName  = []string{"Cheetham", "Cornea", "Fenton"}
-	sutPassword  = []string{"Password123", "Password456", "Password789"}
-	sutUsername  = []string{"User123", "User456", "User789"}
 )
 
 func TestUserValidateInvalidFieldExpectError(t *testing.T) {
@@ -67,34 +52,6 @@ func TestUserValidateValidExpectNil(t *testing.T) {
 			}
 		})
 	}
-}
-
-func GenerateValidUser() *User {
-	idxBio := rand.Intn(len(sutBio))
-	idxDOB := rand.Intn(len(sutDOB))
-	ctime := rand.Int63n(1000) + 1
-	idxEmail := rand.Intn(len(sutEmail))
-	idxPassword := rand.Intn(len(sutPassword))
-	idxFirstName := rand.Intn(len(sutFirstName))
-	idxImageURL := rand.Intn(len(sutImageURL))
-	idxIsPublic := rand.Intn(len(sutIsPublic))
-	idxLastName := rand.Intn(len(sutLastName))
-	idxUsername := rand.Intn(len(sutUsername))
-
-	u := &User{
-		Bio:               sutBio[idxBio],
-		CreatedAt:         ctime,
-		DOB:               sutDOB[idxDOB],
-		Email:             sutEmail[idxEmail],
-		EncryptedPassword: sutPassword[idxPassword],
-		FirstName:         sutFirstName[idxFirstName],
-		ImageUrl:          sutImageURL[idxImageURL],
-		IsPublic:          sutIsPublic[idxIsPublic],
-		LastName:          sutLastName[idxLastName],
-		UpdatedAt:         ctime,
-		Username:          sutUsername[idxUsername],
-	}
-	return u
 }
 
 func generateMissingFieldUser() *User {
