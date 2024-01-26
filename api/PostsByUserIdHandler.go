@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-// Endpoint: /api/posts/user/{userId}
+// Endpoint: /api/users/{userId}/posts
 // Allowed methods: GET, DELETE
 
 type PostsByUserIdHandler struct {
