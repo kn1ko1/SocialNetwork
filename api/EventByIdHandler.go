@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-// Endpoint: /api/events/event/{eventId}
+// Endpoint: /api/events/{eventId}
 // Allowed methods: GET, PUT, DELETE
 
 type EventByUserIdHandler struct {
@@ -31,10 +31,6 @@ func (h *EventByUserIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 	case http.MethodPut:
 		h.put(w, r)
 		return
-	// case http.MethodDelete:
-	// 	h.delete(w, r)
-	// 	return
-	// All unimplemented methods default to a "method not allowed" error
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -46,18 +42,18 @@ func (h *EventByUserIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	eventIdString := queryParams.Get("eventId")
 	eventId, postIdErr := strconv.Atoi(eventIdString)
 	if postIdErr != nil {
-		log.Println("Problem with AtoI postId. ", postIdErr)
+		log.Println("Problem with AtoI eventId. ", postIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	userPosts, err := h.Repo.GetEventById(eventId)
+	event, err := h.Repo.GetEventById(eventId)
 	if err != nil {
 		log.Println("Failed to get posts in GetPostByIdHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(userPosts)
+	err = json.NewEncoder(w).Encode(event)
 	if err != nil {
 		log.Println("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
