@@ -1,10 +1,11 @@
 package repo
 
 import (
-	"database/sql"
 	"log"
 	"socialnetwork/models"
 	"socialnetwork/sqlite"
+
+	"database/sql"
 )
 
 type SQLiteRepository struct {
@@ -31,161 +32,161 @@ func NewDatabaseRepository() *SQLiteRepository {
 func (r *SQLiteRepository) CreateUser(user models.User) (models.User, error) {
 	return sqlite.CreateUser(r.identityDb, user)
 }
-func (r *SQLiteRepository) GetAllUsers(database *sql.DB) ([]models.User, error) {
-	return sqlite.GetAllUsers(database)
+func (r *SQLiteRepository) GetAllUsers() ([]models.User, error) {
+	return sqlite.GetAllUsers(r.identityDb)
 }
-func (r *SQLiteRepository) GetUserById(database *sql.DB, userId int) (models.User, error) {
-	return sqlite.GetUserById(database, userId)
+func (r *SQLiteRepository) GetUserById(userId int) (models.User, error) {
+	return sqlite.GetUserById(r.identityDb, userId)
 }
-func (r *SQLiteRepository) GetUserByEmail(database *sql.DB, email string) (models.User, error) {
-	return sqlite.GetUserByEmail(database, email)
+func (r *SQLiteRepository) GetUserByEmail(email string) (models.User, error) {
+	return sqlite.GetUserByEmail(r.identityDb, email)
 }
-func (r *SQLiteRepository) GetUserByUsername(database *sql.DB, username string) (models.User, error) {
-	return sqlite.GetUserByUsername(database, username)
+func (r *SQLiteRepository) GetUserByUsername(username string) (models.User, error) {
+	return sqlite.GetUserByUsername(r.identityDb, username)
 }
-func (r *SQLiteRepository) UpdateUser(database *sql.DB, user models.User) (models.User, error) {
-	return sqlite.UpdateUser(database, user)
+func (r *SQLiteRepository) UpdateUser(user models.User) (models.User, error) {
+	return sqlite.UpdateUser(r.identityDb, user)
 }
-func (r *SQLiteRepository) DeleteUserById(database *sql.DB, userId int) error {
-	return sqlite.DeleteUserById(database, userId)
+func (r *SQLiteRepository) DeleteUserById(userId int) error {
+	return sqlite.DeleteUserById(r.identityDb, userId)
 }
-func (r *SQLiteRepository) DeleteAllUsers(database *sql.DB) error {
-	return sqlite.DeleteAllUsers(database)
+func (r *SQLiteRepository) DeleteAllUsers() error {
+	return sqlite.DeleteAllUsers(r.identityDb)
 }
 
 // Post
-func (r *SQLiteRepository) CreatePost(database *sql.DB, post models.Post) (models.Post, error) {
-	return sqlite.CreatePost(database, post)
+func (r *SQLiteRepository) CreatePost(post models.Post) (models.Post, error) {
+	return sqlite.CreatePost(r.businessDb, post)
 }
-func (r *SQLiteRepository) GetAllPosts(database *sql.DB) ([]models.Post, error) {
-	return sqlite.GetAllPosts(database)
+func (r *SQLiteRepository) GetAllPosts() ([]models.Post, error) {
+	return sqlite.GetAllPosts(r.businessDb)
 }
-func (r *SQLiteRepository) GetPostById(database *sql.DB, postId int) (models.Post, error) {
-	return sqlite.GetPostById(database, postId)
+func (r *SQLiteRepository) GetPostById(postId int) (models.Post, error) {
+	return sqlite.GetPostById(r.businessDb, postId)
 }
-func (r *SQLiteRepository) GetPostsByGroupId(database *sql.DB, groupId int) ([]models.Post, error) {
-	return sqlite.GetPostsByGroupId(database, groupId)
+func (r *SQLiteRepository) GetPostsByGroupId(groupId int) ([]models.Post, error) {
+	return sqlite.GetPostsByGroupId(r.businessDb, groupId)
 }
-func (r *SQLiteRepository) GetPostsByUserId(database *sql.DB, userId int) ([]models.Post, error) {
-	return sqlite.GetPostsByUserId(database, userId)
+func (r *SQLiteRepository) GetPostsByUserId(userId int) ([]models.Post, error) {
+	return sqlite.GetPostsByUserId(r.businessDb, userId)
 }
-func (r *SQLiteRepository) DeletePostById(database *sql.DB, postId int) error {
-	return sqlite.DeletePostById(database, postId)
+func (r *SQLiteRepository) DeletePostById(postId int) error {
+	return sqlite.DeletePostById(r.businessDb, postId)
 }
-func (r *SQLiteRepository) UpdatePost(database *sql.DB, post models.Post) (models.Post, error) {
-	return sqlite.UpdatePost(database, post)
+func (r *SQLiteRepository) UpdatePost(post models.Post) (models.Post, error) {
+	return sqlite.UpdatePost(r.businessDb, post)
 }
-func (r *SQLiteRepository) DeletePostByGroupId(database *sql.DB, groupId int) error {
-	return sqlite.DeletePostByGroupId(database, groupId)
+func (r *SQLiteRepository) DeletePostByGroupId(groupId int) error {
+	return sqlite.DeletePostByGroupId(r.businessDb, groupId)
 }
-func (r *SQLiteRepository) DeletePostsByUserId(database *sql.DB, userId int) error {
-	return sqlite.DeletePostsByUserId(database, userId)
+func (r *SQLiteRepository) DeletePostsByUserId(userId int) error {
+	return sqlite.DeletePostsByUserId(r.businessDb, userId)
 }
-func (r *SQLiteRepository) DeleteAllPosts(database *sql.DB) error {
-	return sqlite.DeleteAllPosts(database)
+func (r *SQLiteRepository) DeleteAllPosts() error {
+	return sqlite.DeleteAllPosts(r.businessDb)
 }
 
 // Comments
-func (r *SQLiteRepository) CreateComment(database *sql.DB, comment models.Comment) (models.Comment, error) {
-	return sqlite.CreateComment(database, comment)
+func (r *SQLiteRepository) CreateComment(comment models.Comment) (models.Comment, error) {
+	return sqlite.CreateComment(r.businessDb, comment)
 }
-func (r *SQLiteRepository) GetAllComments(database *sql.DB) ([]models.Comment, error) {
-	return sqlite.GetAllComments(database)
+func (r *SQLiteRepository) GetAllComments() ([]models.Comment, error) {
+	return sqlite.GetAllComments(r.businessDb)
 }
-func (r *SQLiteRepository) GetCommentById(database *sql.DB, commentId int) (models.Comment, error) {
-	return sqlite.GetCommentById(database, commentId)
+func (r *SQLiteRepository) GetCommentById(commentId int) (models.Comment, error) {
+	return sqlite.GetCommentById(r.businessDb, commentId)
 }
-func (r *SQLiteRepository) GetCommentsByGroupId(database *sql.DB, groupId int) ([]models.Comment, error) {
-	return sqlite.GetCommentsByGroupId(database, groupId)
+func (r *SQLiteRepository) GetCommentsByGroupId(groupId int) ([]models.Comment, error) {
+	return sqlite.GetCommentsByGroupId(r.businessDb, groupId)
 }
-func (r *SQLiteRepository) GetCommentsByUserId(database *sql.DB, userId int) ([]models.Comment, error) {
-	return sqlite.GetCommentsByUserId(database, userId)
+func (r *SQLiteRepository) GetCommentsByUserId(userId int) ([]models.Comment, error) {
+	return sqlite.GetCommentsByUserId(r.businessDb, userId)
 }
-func (r *SQLiteRepository) GetCommentsByPostId(database *sql.DB, postId int) ([]models.Comment, error) {
-	return sqlite.GetCommentsByPostId(database, postId)
+func (r *SQLiteRepository) GetCommentsByPostId(postId int) ([]models.Comment, error) {
+	return sqlite.GetCommentsByPostId(r.businessDb, postId)
 }
-func (r *SQLiteRepository) UpdateComment(database *sql.DB, comment models.Comment) (models.Comment, error) {
-	return sqlite.UpdateComment(database, comment)
+func (r *SQLiteRepository) UpdateComment(comment models.Comment) (models.Comment, error) {
+	return sqlite.UpdateComment(r.businessDb, comment)
 }
-func (r *SQLiteRepository) DeleteCommentById(database *sql.DB, commentId int) error {
-	return sqlite.DeleteCommentById(database, commentId)
+func (r *SQLiteRepository) DeleteCommentById(commentId int) error {
+	return sqlite.DeleteCommentById(r.businessDb, commentId)
 }
-func (r *SQLiteRepository) DeleteCommentsByGroupId(database *sql.DB, groupId int) error {
-	return sqlite.DeleteCommentsByGroupId(database, groupId)
+func (r *SQLiteRepository) DeleteCommentsByGroupId(groupId int) error {
+	return sqlite.DeleteCommentsByGroupId(r.businessDb, groupId)
 }
-func (r *SQLiteRepository) DeleteCommentsByUserId(database *sql.DB, userId int) error {
-	return sqlite.DeleteCommentsByUserId(database, userId)
+func (r *SQLiteRepository) DeleteCommentsByUserId(userId int) error {
+	return sqlite.DeleteCommentsByUserId(r.businessDb, userId)
 }
-func (r *SQLiteRepository) DeleteCommentsByPostId(database *sql.DB, postId int) error {
-	return sqlite.DeleteCommentsByPostId(database, postId)
+func (r *SQLiteRepository) DeleteCommentsByPostId(postId int) error {
+	return sqlite.DeleteCommentsByPostId(r.businessDb, postId)
 }
-func (r *SQLiteRepository) DeleteAllComments(database *sql.DB) error {
-	return sqlite.DeleteAllComments(database)
+func (r *SQLiteRepository) DeleteAllComments() error {
+	return sqlite.DeleteAllComments(r.businessDb)
 }
 
 // Event
-func (r *SQLiteRepository) CreateEvent(database *sql.DB, event models.Event) (models.Event, error) {
-	return sqlite.CreateEvent(database, event)
+func (r *SQLiteRepository) CreateEvent(event models.Event) (models.Event, error) {
+	return sqlite.CreateEvent(r.businessDb, event)
 }
-func (r *SQLiteRepository) GetAllEvents(database *sql.DB) ([]models.Event, error) {
-	return sqlite.GetAllEvents(database)
+func (r *SQLiteRepository) GetAllEvents() ([]models.Event, error) {
+	return sqlite.GetAllEvents(r.businessDb)
 }
-func (r *SQLiteRepository) GetEventById(database *sql.DB, eventId int) (models.Event, error) {
-	return sqlite.GetEventById(database, eventId)
+func (r *SQLiteRepository) GetEventById(eventId int) (models.Event, error) {
+	return sqlite.GetEventById(r.businessDb, eventId)
 }
-func (r *SQLiteRepository) GetEventsByGroupId(database *sql.DB, groupId int) ([]models.Event, error) {
-	return sqlite.GetEventsByGroupId(database, groupId)
+func (r *SQLiteRepository) GetEventsByGroupId(groupId int) ([]models.Event, error) {
+	return sqlite.GetEventsByGroupId(r.businessDb, groupId)
 }
-func (r *SQLiteRepository) GetEventsByUserId(database *sql.DB, userId int) ([]models.Event, error) {
-	return sqlite.GetEventsByUserId(database, userId)
+func (r *SQLiteRepository) GetEventsByUserId(userId int) ([]models.Event, error) {
+	return sqlite.GetEventsByUserId(r.businessDb, userId)
 }
-func (r *SQLiteRepository) UpdateEvent(database *sql.DB, event models.Event) (models.Event, error) {
-	return sqlite.UpdateEvent(database, event)
+func (r *SQLiteRepository) UpdateEvent(event models.Event) (models.Event, error) {
+	return sqlite.UpdateEvent(r.businessDb, event)
 }
-func (r *SQLiteRepository) DeleteEventById(database *sql.DB, eventId int) error {
-	return sqlite.DeleteEventById(database, eventId)
+func (r *SQLiteRepository) DeleteEventById(eventId int) error {
+	return sqlite.DeleteEventById(r.businessDb, eventId)
 }
-func (r *SQLiteRepository) DeleteEventsByGroupId(database *sql.DB, groupId int) error {
-	return sqlite.DeleteEventsByGroupId(database, groupId)
+func (r *SQLiteRepository) DeleteEventsByGroupId(groupId int) error {
+	return sqlite.DeleteEventsByGroupId(r.businessDb, groupId)
 }
-func (r *SQLiteRepository) DeleteEventsByUserId(database *sql.DB, userId int) error {
-	return sqlite.DeleteEventsByUserId(database, userId)
+func (r *SQLiteRepository) DeleteEventsByUserId(userId int) error {
+	return sqlite.DeleteEventsByUserId(r.businessDb, userId)
 }
-func (r *SQLiteRepository) DeleteAllEvents(database *sql.DB) error {
-	return sqlite.DeleteAllEvents(database)
+func (r *SQLiteRepository) DeleteAllEvents() error {
+	return sqlite.DeleteAllEvents(r.businessDb)
 }
 
 // Message
-func (r *SQLiteRepository) CreateMessage(database *sql.DB, message models.Message) (models.Message, error) {
-	return sqlite.CreateMessage(database, message)
+func (r *SQLiteRepository) CreateMessage(message models.Message) (models.Message, error) {
+	return sqlite.CreateMessage(r.businessDb, message)
 }
-func (r *SQLiteRepository) GetAllMessages(database *sql.DB) ([]models.Message, error) {
-	return sqlite.GetAllMessages(database)
+func (r *SQLiteRepository) GetAllMessages() ([]models.Message, error) {
+	return sqlite.GetAllMessages(r.businessDb)
 }
-func (r *SQLiteRepository) GetMessagesByType(database *sql.DB, messageType string) ([]models.Message, error) {
-	return sqlite.GetMessagesByType(database, messageType)
+func (r *SQLiteRepository) GetMessagesByType(messageType string) ([]models.Message, error) {
+	return sqlite.GetMessagesByType(r.businessDb, messageType)
 }
-func (r *SQLiteRepository) GetMessageById(database *sql.DB, messageId int) (models.Message, error) {
-	return sqlite.GetMessageById(database, messageId)
+func (r *SQLiteRepository) GetMessageById(messageId int) (models.Message, error) {
+	return sqlite.GetMessageById(r.businessDb, messageId)
 }
-func (r *SQLiteRepository) GetMessagesBySenderAndTargetIDs(database *sql.DB, senderId, targetId int) ([]models.Message, error) {
-	return sqlite.GetMessagesBySenderAndTargetIDs(database, senderId, targetId)
+func (r *SQLiteRepository) GetMessagesBySenderAndTargetIDs(senderId, targetId int) ([]models.Message, error) {
+	return sqlite.GetMessagesBySenderAndTargetIDs(r.businessDb, senderId, targetId)
 }
-func (r *SQLiteRepository) UpdateMessage(database *sql.DB, message models.Message) (models.Message, error) {
-	return sqlite.UpdateMessage(database, message)
+func (r *SQLiteRepository) UpdateMessage(message models.Message) (models.Message, error) {
+	return sqlite.UpdateMessage(r.businessDb, message)
 }
-func (r *SQLiteRepository) DeleteMessagesByType(database *sql.DB, messageType string) error {
-	return sqlite.DeleteMessagesByType(database, messageType)
+func (r *SQLiteRepository) DeleteMessagesByType(messageType string) error {
+	return sqlite.DeleteMessagesByType(r.businessDb, messageType)
 }
-func (r *SQLiteRepository) DeleteMessageById(database *sql.DB, messageId int) error {
-	return sqlite.DeleteMessageById(database, messageId)
+func (r *SQLiteRepository) DeleteMessageById(messageId int) error {
+	return sqlite.DeleteMessageById(r.businessDb, messageId)
 }
-func (r *SQLiteRepository) DeleteMessagesBySenderId(database *sql.DB, senderId int) error {
-	return sqlite.DeleteMessagesBySenderId(database, senderId)
+func (r *SQLiteRepository) DeleteMessagesBySenderId(senderId int) error {
+	return sqlite.DeleteMessagesBySenderId(r.businessDb, senderId)
 }
-func (r *SQLiteRepository) DeleteMessagesByTargetId(database *sql.DB, targetId int) error {
-	return sqlite.DeleteMessagesByTargetId(database, targetId)
+func (r *SQLiteRepository) DeleteMessagesByTargetId(targetId int) error {
+	return sqlite.DeleteMessagesByTargetId(r.businessDb, targetId)
 }
-func (r *SQLiteRepository) DeleteAllMessages(database *sql.DB) error {
-	return sqlite.DeleteAllMessages(database)
+func (r *SQLiteRepository) DeleteAllMessages() error {
+	return sqlite.DeleteAllMessages(r.businessDb)
 }
