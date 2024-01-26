@@ -32,9 +32,6 @@ func (h *CommentsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		h.get(w, r)
 		return
-	case http.MethodPut:
-		h.put(w, r)
-		return
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -95,42 +92,4 @@ func (h *CommentsHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-}
-
-func (h *CommentsHandler) put(w http.ResponseWriter, r *http.Request) {
-
-	var comment models.Comment
-	err := json.NewDecoder(r.Body).Decode(&comment)
-	if err != nil {
-		log.Println("Failed to decode request body:", err)
-		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
-		return
-	}
-	log.Println("Received comment:", comment.Body)
-
-	// Validate the comment
-	if validationErr := comment.Validate(); validationErr != nil {
-		log.Println("Validation failed:", validationErr)
-		http.Error(w, "Validation failed", http.StatusBadRequest)
-		return
-	}
-
-	// Update comment in the repository
-	result, createErr := h.Repo.UpdateCommentById(comment)
-	if createErr != nil {
-		log.Println("Failed to update comment in the repository:", createErr)
-		http.Error(w, "Failed to update comment", http.StatusInternalServerError)
-		return
-	}
-
-	// Encode and write the response
-	err = json.NewEncoder(w).Encode(result)
-	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-	// Correct HTTP header for a newly created resource:
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Comment updated successfully!"))
 }

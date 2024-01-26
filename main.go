@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"socialnetwork/api"
+	"socialnetwork/repo"
 	"socialnetwork/router"
 	"socialnetwork/ui"
 )
@@ -30,9 +32,27 @@ func main() {
 
 func setupRouter(mux *http.ServeMux) {
 	rt := router.NewRouter()
-	// Dummy UI handler, as an example
-	rt.AddHandler(regexp.MustCompile(`^/$`), ui.NewDummyPageHandler())
+	addApiHandlers(rt)
+	addUIHandlers(rt)
 	mux.Handle("/", rt)
+}
+
+func addApiHandlers(rt *router.Router) {
+	r := repo.NewSQLiteRepository()
+	usersHandler := api.NewUsersHandler(r)
+	groupsHandler := api.NewGroupsHandler(r)
+	postsHandler := api.NewPostsHandler(r)
+	commentsHandler := api.NewCommentsHandler(r)
+	eventsHandler := api.NewEventsHandler(r)
+	rt.AddHandler(regexp.MustCompile(`^/api/users$`), usersHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/groups$`), groupsHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/posts$`), postsHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/comments$`), commentsHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/events$`), eventsHandler)
+}
+
+func addUIHandlers(rt *router.Router) {
+	rt.AddHandler(regexp.MustCompile(`^/$`), ui.NewDummyPageHandler())
 }
 
 func serveStaticFiles(mux *http.ServeMux) {

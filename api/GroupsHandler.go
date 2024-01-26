@@ -143,7 +143,7 @@ func (h *GroupsHandler) put(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create group in the repository
-	result, createErr := h.Repo.UpdateGroupById(group)
+	result, createErr := h.Repo.UpdateGroup(group)
 	if createErr != nil {
 		log.Println("Failed to update group in the repository:", createErr)
 		http.Error(w, "Failed to update group", http.StatusInternalServerError)

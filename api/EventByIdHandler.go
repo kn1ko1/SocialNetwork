@@ -81,7 +81,7 @@ func (h *EventByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create event in the repository
-	result, createErr := h.Repo.UpdateEventById(event)
+	result, createErr := h.Repo.UpdateEvent(event)
 	if createErr != nil {
 		log.Println("Failed to update event in the repository:", createErr)
 		http.Error(w, "Failed to update event", http.StatusInternalServerError)

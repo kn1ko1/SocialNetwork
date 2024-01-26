@@ -88,7 +88,7 @@ func (h *MessagetByGroupIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update post in the repository
-	result, createErr := h.Repo.UpdateMessageById(Message)
+	result, createErr := h.Repo.UpdateMessage(Message)
 	if createErr != nil {
 		log.Println("Failed to update post in the repository:", createErr)
 		http.Error(w, "Failed to update post", http.StatusInternalServerError)

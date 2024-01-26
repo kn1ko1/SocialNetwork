@@ -98,7 +98,7 @@ func (h *CommentByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update post in the repository
-	result, createErr := h.Repo.UpdateCommentById(comment)
+	result, createErr := h.Repo.UpdateComment(comment)
 	if createErr != nil {
 		log.Println("Failed to update post in the repository:", createErr)
 		http.Error(w, "Failed to update post", http.StatusInternalServerError)
