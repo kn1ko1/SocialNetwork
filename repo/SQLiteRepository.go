@@ -6,6 +6,8 @@ import (
 	"socialnetwork/sqlite"
 
 	"database/sql"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type SQLiteRepository struct {
