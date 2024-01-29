@@ -61,7 +61,7 @@ func generateMissingFieldGroup() *Group {
 	case 0:
 		g.CreatedAt = 0
 	case 1:
-		g.CreatorID = 0
+		g.CreatorId = 0
 	case 2:
 		g.Description = ""
 	case 3:
@@ -79,7 +79,7 @@ func generateInvalidGroup() *Group {
 	case 0:
 		g.CreatedAt = -g.CreatedAt
 	case 1:
-		g.CreatorID = -g.CreatorID
+		g.CreatorId = -g.CreatorId
 	case 2:
 		g.Description = ""
 	case 3:
