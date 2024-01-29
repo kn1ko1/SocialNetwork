@@ -7,14 +7,11 @@ import (
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"strconv"
+	"strings"
 )
 
-// Things to do with Matt, probably:
-// - Get id's from URL 'properly'
-
-// Endpoint: /api/comments/comment/{commentId}
+// Endpoint: /api/comments/{commentId}
 // Allowed methods: GET, PUT, DELETE
-
 type CommentByIdHandler struct {
 	Repo repo.IRepository
 }
@@ -27,7 +24,6 @@ func NewCommentByIdHandler(r repo.IRepository) *CommentByIdHandler {
 // A CommentsHandler instance implements the ServeHTTP interface, and thus
 // itself becomes an HTTPHandler
 func (h *CommentByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
 	case http.MethodGet:
@@ -46,34 +42,31 @@ func (h *CommentByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *CommentByIdHandler) get(w http.ResponseWriter, r *http.Request) {
-	queryParams := r.URL.Query()
-	commentIdString := queryParams.Get("commentId")
-	commentId, postIdErr := strconv.Atoi(commentIdString)
-	if postIdErr != nil {
-		log.Println("Problem with AtoI postId. ", postIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	// queryParams := r.URL.Query()
+	// commentIdString := queryParams.Get("commentId")
+	// commentId, postIdErr := strconv.Atoi(commentIdString)
+	fields := strings.Split(r.URL.Path, "/")
+	commentId, err := strconv.Atoi(fields[len(fields)-1])
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "bad request", http.StatusBadRequest)
 		return
 	}
 	comment, err := h.Repo.GetCommentById(commentId)
 	if err != nil {
-		log.Println("Failed to get comments in GetCommentByIdHandler. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		log.Println("Failed to get comments in GetCommentByIdHandler. ", err.Error())
+		http.Error(w, "failed to retrieve comment from db", http.StatusInternalServerError)
 		return
 	}
-
 	err = json.NewEncoder(w).Encode(comment)
 	if err != nil {
 		log.Println("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Here are your posts"))
 }
 
 func (h *CommentByIdHandler) put(w http.ResponseWriter, r *http.Request) {
-
 	var comment models.Comment
 	err := json.NewDecoder(r.Body).Decode(&comment)
 	if err != nil {
@@ -82,13 +75,6 @@ func (h *CommentByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("received comment to update:", comment.Body)
-
-	// Example Post to test function
-	// post := models.Post{
-	// 	Body: "Updated Example",
-	// 	CreatedAt: 111111,
-	// 	UpdatedAt: 333333,
-	// 	UserId: 2}
 
 	// Validate the comment
 	if validationErr := comment.Validate(); validationErr != nil {
@@ -106,15 +92,13 @@ func (h *CommentByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Encode and write the response
+	w.WriteHeader(http.StatusCreated)
 	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
 		log.Println("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	// Correct HTTP header for a newly created resource:
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Comment updated successfully!"))
 }
 
 func (h *CommentByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
@@ -131,9 +115,6 @@ func (h *CommentByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("Received delete request for userID:", userID)
-
-	// example postId for testing
-	// postId := 1
 
 	err := h.Repo.DeleteCommentById(userID)
 	if err != nil {
