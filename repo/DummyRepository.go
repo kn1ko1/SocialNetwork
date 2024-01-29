@@ -56,13 +56,10 @@ func NewDummyRepository() *DummyRepository {
 	return &DummyRepository{identityDb: identityDb, businessDb: businessDb}
 }
 
-// Sim user creation
 func (r *DummyRepository) CreateUser(user models.User) (models.User, error) {
 	user.UserId = 1
 	return user, nil
 }
-
-// Sim User retrieval
 func (r *DummyRepository) GetAllUsers() ([]models.User, error) {
 	users := make([]models.User, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
@@ -77,27 +74,22 @@ func (r *DummyRepository) GetUserById(userId int) (models.User, error) {
 	user.UserId = userId
 	return user, nil
 }
-
 func (r *DummyRepository) GetUserByEmail(email string) (models.User, error) {
 	user := validUser
 	user.Email = email
 	return user, nil
 }
-
 func (r *DummyRepository) GetUserByUsername(username string) (models.User, error) {
 	user := validUser
 	user.Username = username
 	return user, nil
 }
-
 func (r *DummyRepository) UpdateUser(user models.User) (models.User, error) {
 	return user, nil
 }
-
 func (r *DummyRepository) DeleteUserById(userId int) error {
 	return nil
 }
-
 func (r *DummyRepository) DeleteAllUsers() error {
 	return nil
 }
@@ -107,7 +99,6 @@ func (r *DummyRepository) CreatePost(post models.Post) (models.Post, error) {
 	post.PostId = 1
 	return post, nil
 }
-
 func (r *DummyRepository) GetAllPosts() ([]models.Post, error) {
 	posts := make([]models.Post, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
@@ -117,13 +108,11 @@ func (r *DummyRepository) GetAllPosts() ([]models.Post, error) {
 	}
 	return posts, nil
 }
-
 func (r *DummyRepository) GetPostById(postId int) (models.Post, error) {
 	post := validPost
 	post.PostId = postId
 	return post, nil
 }
-
 func (r *DummyRepository) GetPostsByGroupId(groupId int) ([]models.Post, error) {
 	posts := make([]models.Post, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
@@ -134,7 +123,6 @@ func (r *DummyRepository) GetPostsByGroupId(groupId int) ([]models.Post, error) 
 	}
 	return posts, nil
 }
-
 func (r *DummyRepository) GetPostsByUserId(userId int) ([]models.Post, error) {
 	posts := make([]models.Post, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
@@ -175,13 +163,11 @@ func (r *DummyRepository) GetAllComments() ([]models.Comment, error) {
 	}
 	return comments, nil
 }
-
 func (r *DummyRepository) GetCommentById(commentId int) (models.Comment, error) {
 	comment := validComment
 	comment.CommentId = commentId
 	return comment, nil
 }
-
 func (r *DummyRepository) GetCommentsByUserId(userId int) ([]models.Comment, error) {
 	comments := make([]models.Comment, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
@@ -192,7 +178,6 @@ func (r *DummyRepository) GetCommentsByUserId(userId int) ([]models.Comment, err
 	}
 	return comments, nil
 }
-
 func (r *DummyRepository) GetCommentsByPostId(postId int) ([]models.Comment, error) {
 	comments := make([]models.Comment, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
@@ -203,27 +188,21 @@ func (r *DummyRepository) GetCommentsByPostId(postId int) ([]models.Comment, err
 	}
 	return comments, nil
 }
-
 func (r *DummyRepository) UpdateComment(comment models.Comment) (models.Comment, error) {
 	return comment, nil
 }
-
 func (r *DummyRepository) DeleteCommentById(commentId int) error {
 	return nil
 }
-
 func (r *DummyRepository) DeleteCommentsByGroupId(groupId int) error {
 	return nil
 }
-
 func (r *DummyRepository) DeleteCommentsByUserId(userId int) error {
 	return nil
 }
-
 func (r *DummyRepository) DeleteCommentsByPostId(postId int) error {
 	return nil
 }
-
 func (r *DummyRepository) DeleteAllComments() error {
 	return nil
 }
@@ -242,7 +221,6 @@ func (r *DummyRepository) GetAllEvents() ([]models.Event, error) {
 	}
 	return events, nil
 }
-
 func (r *DummyRepository) GetEventById(eventId int) (models.Event, error) {
 	event := validEvent
 	event.EventId = eventId
@@ -281,6 +259,14 @@ func (r *DummyRepository) DeleteEventsByUserId(userId int) error {
 	return nil
 }
 func (r *DummyRepository) DeleteAllEvents() error {
+	return nil
+}
+
+// EventUsers
+func (r *DummyRepository) CreateEventUser(eventUser models.EventUser) (models.EventUser, error) {
+	return eventUser, nil
+}
+func (r *DummyRepository) DeleteAllEventUsers() error {
 	return nil
 }
 
@@ -343,11 +329,11 @@ func (r *DummyRepository) DeleteAllMessages() error {
 	return nil
 }
 
+// Group
 func (r *DummyRepository) CreateGroup(group models.Group) (models.Group, error) {
 	group.GroupId = 1
 	return group, nil
 }
-
 func (r *DummyRepository) GetAllGroups() ([]models.Group, error) {
 	groups := make([]models.Group, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
@@ -357,14 +343,14 @@ func (r *DummyRepository) GetAllGroups() ([]models.Group, error) {
 	}
 	return groups, nil
 }
-
 func (r *DummyRepository) UpdateGroup(group models.Group) (models.Group, error) {
 	return group, nil
 }
-
 func (r *DummyRepository) DeleteAllGroups() error {
 	return nil
 }
+
+// GroupUser
 func (r *DummyRepository) CreateGroupUser(groupUser models.GroupUser) (models.GroupUser, error) {
 	return groupUser, errors.New("not implemented")
 }
@@ -387,7 +373,6 @@ func (r *DummyRepository) GetGroupUsersByUserId(userId int) ([]models.GroupUser,
 	}
 	return groupUsers, errors.New("not implemented")
 }
-
 func (r *DummyRepository) GetGroupUsersByGroupId(groupId int) ([]models.GroupUser, error) {
 	ctime := time.Now().UTC().UnixMilli()
 	var groupUsers []models.GroupUser
@@ -406,6 +391,9 @@ func (r *DummyRepository) GetGroupUsersByGroupId(groupId int) ([]models.GroupUse
 		UserId:      1,
 	}
 	return groupUsers, errors.New("not implemented")
+}
+func (r *DummyRepository) DeleteGroupUsersByUserId(UserId int) error {
+	return errors.New("dummy deleted groupusers by userid")
 }
 func (r *DummyRepository) DeleteAllGroupUsers() error {
 	return nil

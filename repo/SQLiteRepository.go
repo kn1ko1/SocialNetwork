@@ -163,6 +163,14 @@ func (r *SQLiteRepository) DeleteAllEvents() error {
 	return sqlite.DeleteAllEvents(r.businessDb)
 }
 
+// EventUser
+func (r *SQLiteRepository) CreateEventUser(eventUser models.EventUser) (models.EventUser, error) {
+	return sqlite.CreateEventUser(r.businessDb, eventUser)
+}
+func (r *SQLiteRepository) DeleteAllEventUsers() error {
+	return sqlite.DeleteAllEventUsers(r.businessDb)
+}
+
 // Message
 func (r *SQLiteRepository) CreateMessage(message models.Message) (models.Message, error) {
 	return sqlite.CreateMessage(r.businessDb, message)
@@ -225,6 +233,9 @@ func (r *SQLiteRepository) GetGroupUsersByUserId(userId int) ([]models.GroupUser
 }
 func (r *SQLiteRepository) GetGroupUsersByGroupId(groupId int) ([]models.GroupUser, error) {
 	return sqlite.GetGroupUsersByGroupId(r.businessDb, groupId)
+}
+func (r *SQLiteRepository) DeleteGroupUsersbyUserId(UserId int) error {
+	return sqlite.DeleteGroupUsersByUserId(r.businessDb, UserId)
 }
 func (r *SQLiteRepository) DeleteAllGroupUsers() error {
 	return sqlite.DeleteAllGroupUsers(r.businessDb)

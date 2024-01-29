@@ -54,6 +54,10 @@ type IRepository interface {
 	DeleteEventsByUserId(userId int) error
 	DeleteAllEvents() error
 
+	//EventUser
+	CreateEventUser(event models.EventUser) (models.EventUser, error)
+	DeleteAllEventUsers() error
+
 	// Message
 	CreateMessage(message models.Message) (models.Message, error)
 	// GetAllMessages() ([]models.Message, error)
@@ -73,10 +77,11 @@ type IRepository interface {
 	UpdateGroup(group models.Group) (models.Group, error)
 	DeleteAllGroups() error
 
-	//Group_User
+	//GroupUser
 	CreateGroupUser(groupUser models.GroupUser) (models.GroupUser, error)
 	GetGroupUsersByUserId(userId int) ([]models.GroupUser, error)
 	GetGroupUsersByGroupId(groupId int) ([]models.GroupUser, error)
+	DeleteGroupUsersByUserId(UserId int) error
 	DeleteAllGroupUsers() error
 
 	//Notification
