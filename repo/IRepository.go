@@ -75,7 +75,7 @@ type IRepository interface {
 
 	//Group_User
 	CreateGroup_User(groupUser models.GroupUser) (models.GroupUser, error)
-	GetGroup_UserByUserId(userId int) (models.GroupUser, error)
+	GetGroup_UsersByUserId(userId int) ([]models.GroupUser, error)
 
 	//Notification
 	CreateNotification(notification models.Notification) (models.Notification, error)

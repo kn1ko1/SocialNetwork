@@ -219,10 +219,9 @@ func (r *SQLiteRepository) DeleteAllGroups() error {
 func (r *SQLiteRepository) CreateGroup_User(groupUser models.GroupUser) (models.GroupUser, error) {
 	return groupUser, errors.New("not implemented")
 }
-func (r *SQLiteRepository) GetGroup_UserByUserId(userId int) (models.GroupUser, error) {
-	var groupUser models.GroupUser
-	groupUser.UserId = userId
-	return groupUser, errors.New("not implemented")
+func (r *SQLiteRepository) GetGroup_UsersByUserId(userId int) ([]models.GroupUser, error) {
+	var groupUsers []models.GroupUser
+	return groupUsers, errors.New("not implemented")
 }
 
 // Notification

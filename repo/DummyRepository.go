@@ -368,16 +368,24 @@ func (r *DummyRepository) DeleteAllGroups() error {
 func (r *DummyRepository) CreateGroup_User(groupUser models.GroupUser) (models.GroupUser, error) {
 	return groupUser, errors.New("not implemented")
 }
-func (r *DummyRepository) GetGroup_UserByUserId(userId int) (models.GroupUser, error) {
+func (r *DummyRepository) GetGroup_UsersByUserId(userId int) ([]models.GroupUser, error) {
 	ctime := time.Now().UTC().UnixMilli()
-	groupUser := models.GroupUser{
-		GroupUserId: 3,
+	var groupUsers []models.GroupUser
+	groupUsers[1] = models.GroupUser{
+		GroupUserId: 1,
 		CreatedAt:   ctime,
 		GroupId:     1,
 		UpdatedAt:   ctime,
 		UserId:      1,
 	}
-	return groupUser, errors.New("not implemented")
+	groupUsers[2] = models.GroupUser{
+		GroupUserId: 2,
+		CreatedAt:   ctime,
+		GroupId:     4,
+		UpdatedAt:   ctime,
+		UserId:      1,
+	}
+	return groupUsers, errors.New("not implemented")
 }
 
 func (r *DummyRepository) CreateNotification(notification models.Notification) (models.Notification, error) {
