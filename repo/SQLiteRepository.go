@@ -227,7 +227,7 @@ func (r *SQLiteRepository) GetGroupUsersByGroupId(groupId int) ([]models.GroupUs
 	return sqlite.GetGroupUsersByGroupId(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) DeleteAllGroupUsers() error {
-	return sqlite.DeleteAllGroupUsers()
+	return sqlite.DeleteAllGroupUsers(r.businessDb)
 }
 
 // Notification

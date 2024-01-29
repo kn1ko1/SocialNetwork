@@ -407,7 +407,11 @@ func (r *DummyRepository) GetGroupUsersByGroupId(groupId int) ([]models.GroupUse
 	}
 	return groupUsers, errors.New("not implemented")
 }
+func (r *DummyRepository) DeleteAllGroupUsers() error {
+	return nil
+}
 
+// Notifications
 func (r *DummyRepository) CreateNotification(notification models.Notification) (models.Notification, error) {
 	return notification, nil
 }
