@@ -11,7 +11,7 @@ func CreateGroup(database *sql.DB, group models.Group) (models.Group, error) {
 	query := `
 	INSERT INTO GROUPS (
 		CreatedAt,
-		CreatorID,
+		CreatorId,
 		Description,
 		Title,
 		UpdatedAt
