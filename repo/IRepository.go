@@ -56,6 +56,9 @@ type IRepository interface {
 
 	//EventUser
 	CreateEventUser(event models.EventUser) (models.EventUser, error)
+	GetEventUsersByUserId(userId int) ([]models.EventUser, error)
+	GetEventUsersByEventId(eventId int) ([]models.EventUser, error)
+	DeleteEventUsersByUserId(userId int) error
 	DeleteAllEventUsers() error
 
 	// Message

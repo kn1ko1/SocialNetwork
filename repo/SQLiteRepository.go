@@ -167,6 +167,15 @@ func (r *SQLiteRepository) DeleteAllEvents() error {
 func (r *SQLiteRepository) CreateEventUser(eventUser models.EventUser) (models.EventUser, error) {
 	return sqlite.CreateEventUser(r.businessDb, eventUser)
 }
+func (r *SQLiteRepository) GetEventUserbyUserId(userId int) ([]models.EventUser, error) {
+	return sqlite.GetEventUsersByUserId(r.businessDb, userId)
+}
+func (r *SQLiteRepository) GetEventUsersByEventId(eventId int) ([]models.EventUser, error) {
+	return sqlite.GetEventUsersByUserId(r.businessDb, eventId)
+}
+func (r *SQLiteRepository) DeleteEventUsersbyUserId(userId int) error {
+	return sqlite.DeleteEventUsersByUserId(r.businessDb, userId)
+}
 func (r *SQLiteRepository) DeleteAllEventUsers() error {
 	return sqlite.DeleteAllEventUsers(r.businessDb)
 }

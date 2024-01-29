@@ -266,6 +266,53 @@ func (r *DummyRepository) DeleteAllEvents() error {
 func (r *DummyRepository) CreateEventUser(eventUser models.EventUser) (models.EventUser, error) {
 	return eventUser, nil
 }
+func (r *DummyRepository) GetEventUserbyUserId(userId int) ([]models.EventUser, error) {
+	ctime := time.Now().UTC().UnixMilli()
+	eventUsers := []models.EventUser{}
+	user1 := models.EventUser{
+		EventUserId: 1,
+		CreatedAt:   ctime,
+		EventId:     1,
+		UpdatedAt:   ctime,
+		UserId:      userId,
+	}
+
+	user2 := models.EventUser{
+		EventUserId: 2,
+		CreatedAt:   ctime,
+		EventId:     2,
+		UpdatedAt:   ctime,
+		UserId:      userId,
+	}
+	eventUsers = append(eventUsers, user1, user2)
+
+	return eventUsers, nil
+}
+func (r *DummyRepository) GetEventUsersByEventId(eventId int) ([]models.EventUser, error) {
+	ctime := time.Now().UTC().UnixMilli()
+	eventUsers := []models.EventUser{}
+	user1 := models.EventUser{
+		EventUserId: 1,
+		CreatedAt:   ctime,
+		EventId:     eventId,
+		UpdatedAt:   ctime,
+		UserId:      1,
+	}
+
+	user2 := models.EventUser{
+		EventUserId: 2,
+		CreatedAt:   ctime,
+		EventId:     eventId,
+		UpdatedAt:   ctime,
+		UserId:      3,
+	}
+	eventUsers = append(eventUsers, user1, user2)
+
+	return eventUsers, nil
+}
+func (r *DummyRepository) DeleteEventUsersByUserId(userId int) error {
+	return nil
+}
 func (r *DummyRepository) DeleteAllEventUsers() error {
 	return nil
 }
