@@ -16,7 +16,7 @@ func TestMessageValidateInvalidFieldExpectError(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			err := m.Validate()
 			if err == nil {
-				t.Error("expect error for invalid event field")
+				t.Error("expect error for invalid message field")
 			}
 		})
 	}
@@ -32,7 +32,7 @@ func TestMessageValidateMissingFieldExpectError(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			err := m.Validate()
 			if err == nil {
-				t.Error("expect error for missing event field")
+				t.Error("expect error for missing message field")
 			}
 		})
 	}
@@ -48,7 +48,7 @@ func TestMessageValidateValidExpectNil(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			err := m.Validate()
 			if err != nil {
-				t.Error("expect nil for valid event")
+				t.Error("expect nil for valid message")
 			}
 		})
 	}

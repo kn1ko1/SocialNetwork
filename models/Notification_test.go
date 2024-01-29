@@ -16,7 +16,7 @@ func TestNotificationValidateInvalidFieldExpectError(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			err := n.Validate()
 			if err == nil {
-				t.Error("expect error for invalid comment field")
+				t.Error("expect error for invalid notification field")
 			}
 		})
 	}
@@ -32,7 +32,7 @@ func TestNotificationValidateMissingFieldExpectError(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			err := n.Validate()
 			if err == nil {
-				t.Error("expect error for missing comment field")
+				t.Error("expect error for missing notification field")
 			}
 		})
 	}
@@ -48,7 +48,7 @@ func TestNotificationValidateValidExpectNil(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			err := n.Validate()
 			if err != nil {
-				t.Error("expect nil for valid comment")
+				t.Error("expect nil for valid notification")
 			}
 		})
 	}
@@ -76,7 +76,7 @@ func generateMissingFieldNotification() *Notification {
 
 func generateInvalidNotification() *Notification {
 	n := GenerateValidNotification()
-	invalidField := rand.Intn(5)
+	invalidField := rand.Intn(6)
 	switch invalidField {
 	case 0:
 		n.CreatedAt = -n.CreatedAt
