@@ -102,3 +102,24 @@ func (r *DummyRepository) GetAllPosts() ([]models.Post, error) {
 	}
 	return dummyPosts, nil
 }
+
+func (r *DummyRepository) CreateNotification(notification models.Notification) (models.Notification, error) {
+	return notification, nil
+}
+
+func (r *DummyRepository) GetNotificationById(notificationId int) (models.Notification, error) {
+	ctime := time.Now().UTC().UnixMilli()
+
+	notification := models.Notification{
+		NotificationId:   notificationId,
+		CreatedAt:        ctime,
+		NotificationType: "dummy type",
+		ObjectId:         1,
+		SenderId:         1,
+		Status:           "dummy status",
+		TargetId:         2,
+		UpdatedAt:        ctime,
+	}
+
+	return notification, nil
+}

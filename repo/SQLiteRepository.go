@@ -216,3 +216,13 @@ func (r *SQLiteRepository) DeleteAllGroups() error {
 func (r *SQLiteRepository) CreateNotification(notification models.Notification) (models.Notification, error) {
 	return notification, errors.New("not implemented")
 }
+func (r *SQLiteRepository) GetNotificationById(notificationId int) (models.Notification, error) {
+	var emptyNotification models.Notification
+	return emptyNotification, errors.New("not implemented")
+}
+func (r *SQLiteRepository) UpdateNotification(notification models.Notification) (models.Notification, error) {
+	return notification, errors.New("not implemented")
+}
+func (r *SQLiteRepository) DeleteNotificationById(notificationId int) error {
+	return errors.New("not implemented")
+}
