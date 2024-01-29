@@ -313,6 +313,9 @@ func (r *DummyRepository) GetEventUsersByEventId(eventId int) ([]models.EventUse
 func (r *DummyRepository) DeleteEventUsersByUserId(userId int) error {
 	return nil
 }
+func (r *DummyRepository) DeleteEventUsersByEventId(eventId int) error {
+	return nil
+}
 func (r *DummyRepository) DeleteAllEventUsers() error {
 	return nil
 }

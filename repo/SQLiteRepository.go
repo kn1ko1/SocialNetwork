@@ -176,6 +176,9 @@ func (r *SQLiteRepository) GetEventUsersByEventId(eventId int) ([]models.EventUs
 func (r *SQLiteRepository) DeleteEventUsersByUserId(userId int) error {
 	return sqlite.DeleteEventUsersByUserId(r.businessDb, userId)
 }
+func (r *SQLiteRepository) DeleteEventUsersByEventId(eventId int) error {
+	return sqlite.DeleteEventUsersByEventId(r.businessDb, eventId)
+}
 func (r *SQLiteRepository) DeleteAllEventUsers() error {
 	return sqlite.DeleteAllEventUsers(r.businessDb)
 }
@@ -194,7 +197,7 @@ func (r *SQLiteRepository) GetMessageById(messageId int) (models.Message, error)
 	return sqlite.GetMessageById(r.businessDb, messageId)
 }
 func (r *SQLiteRepository) GetMessagesBySenderAndTargetIDs(senderId, targetId int) ([]models.Message, error) {
-	return sqlite.GetMessagesBySenderAndTargetIDs(r.businessDb, senderId, targetId)
+	return sqlite.GetMessagesBySenderAndTargetIds(r.businessDb, senderId, targetId)
 }
 func (r *SQLiteRepository) UpdateMessage(message models.Message) (models.Message, error) {
 	return sqlite.UpdateMessage(r.businessDb, message)
