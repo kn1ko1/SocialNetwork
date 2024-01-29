@@ -216,12 +216,15 @@ func (r *SQLiteRepository) DeleteAllGroups() error {
 }
 
 // Group_User
-func (r *SQLiteRepository) CreateGroup_User(groupUser models.GroupUser) (models.GroupUser, error) {
+func (r *SQLiteRepository) CreateGroupUser(groupUser models.GroupUser) (models.GroupUser, error) {
 	return groupUser, errors.New("not implemented")
 }
-func (r *SQLiteRepository) GetGroup_UsersByUserId(userId int) ([]models.GroupUser, error) {
+func (r *SQLiteRepository) GetGroupUsersByUserId(userId int) ([]models.GroupUser, error) {
 	var groupUsers []models.GroupUser
 	return groupUsers, errors.New("not implemented")
+}
+func (r *SQLiteRepository) GetGroupUsersByGroupId(groupId int) ([]models.GroupUser, error) {
+	return sqlite.GetGroupUsersByGroupId(r.businessDb, groupId)
 }
 
 // Notification
