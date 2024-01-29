@@ -167,13 +167,13 @@ func (r *SQLiteRepository) DeleteAllEvents() error {
 func (r *SQLiteRepository) CreateEventUser(eventUser models.EventUser) (models.EventUser, error) {
 	return sqlite.CreateEventUser(r.businessDb, eventUser)
 }
-func (r *SQLiteRepository) GetEventUserbyUserId(userId int) ([]models.EventUser, error) {
+func (r *SQLiteRepository) GetEventUsersByUserId(userId int) ([]models.EventUser, error) {
 	return sqlite.GetEventUsersByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) GetEventUsersByEventId(eventId int) ([]models.EventUser, error) {
 	return sqlite.GetEventUsersByUserId(r.businessDb, eventId)
 }
-func (r *SQLiteRepository) DeleteEventUsersbyUserId(userId int) error {
+func (r *SQLiteRepository) DeleteEventUsersByUserId(userId int) error {
 	return sqlite.DeleteEventUsersByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) DeleteAllEventUsers() error {
@@ -243,8 +243,11 @@ func (r *SQLiteRepository) GetGroupUsersByUserId(userId int) ([]models.GroupUser
 func (r *SQLiteRepository) GetGroupUsersByGroupId(groupId int) ([]models.GroupUser, error) {
 	return sqlite.GetGroupUsersByGroupId(r.businessDb, groupId)
 }
-func (r *SQLiteRepository) DeleteGroupUsersbyUserId(UserId int) error {
+func (r *SQLiteRepository) DeleteGroupUsersByUserId(UserId int) error {
 	return sqlite.DeleteGroupUsersByUserId(r.businessDb, UserId)
+}
+func (r *SQLiteRepository) DeleteGroupUserByGroupId(groupId int) error {
+	return sqlite.DeleteGroupUserByGroupId(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) DeleteAllGroupUsers() error {
 	return sqlite.DeleteAllGroupUsers(r.businessDb)

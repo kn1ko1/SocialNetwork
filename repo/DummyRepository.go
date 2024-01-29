@@ -266,7 +266,7 @@ func (r *DummyRepository) DeleteAllEvents() error {
 func (r *DummyRepository) CreateEventUser(eventUser models.EventUser) (models.EventUser, error) {
 	return eventUser, nil
 }
-func (r *DummyRepository) GetEventUserbyUserId(userId int) ([]models.EventUser, error) {
+func (r *DummyRepository) GetEventUsersByUserId(userId int) ([]models.EventUser, error) {
 	ctime := time.Now().UTC().UnixMilli()
 	eventUsers := []models.EventUser{}
 	user1 := models.EventUser{
@@ -422,7 +422,7 @@ func (r *DummyRepository) GetGroupUsersByUserId(userId int) ([]models.GroupUser,
 }
 func (r *DummyRepository) GetGroupUsersByGroupId(groupId int) ([]models.GroupUser, error) {
 	ctime := time.Now().UTC().UnixMilli()
-	var groupUsers []models.GroupUser
+	groupUsers := make([]models.GroupUser, 2)
 	groupUsers[1] = models.GroupUser{
 		GroupUserId: 1,
 		CreatedAt:   ctime,
@@ -442,6 +442,9 @@ func (r *DummyRepository) GetGroupUsersByGroupId(groupId int) ([]models.GroupUse
 func (r *DummyRepository) DeleteGroupUsersByUserId(UserId int) error {
 	return errors.New("dummy deleted groupusers by userid")
 }
+func (r *DummyRepository) DeleteGroupUserByGroupId(groupId int) error {
+	return nil
+}
 func (r *DummyRepository) DeleteAllGroupUsers() error {
 	return nil
 }
@@ -450,7 +453,6 @@ func (r *DummyRepository) DeleteAllGroupUsers() error {
 func (r *DummyRepository) CreateNotification(notification models.Notification) (models.Notification, error) {
 	return notification, nil
 }
-
 func (r *DummyRepository) GetNotificationById(notificationId int) (models.Notification, error) {
 	ctime := time.Now().UTC().UnixMilli()
 
@@ -467,7 +469,6 @@ func (r *DummyRepository) GetNotificationById(notificationId int) (models.Notifi
 
 	return notification, nil
 }
-
 func (r *DummyRepository) UpdateNotification(notification models.Notification) (models.Notification, error) {
 	ctime := time.Now().UTC().UnixMilli()
 
@@ -477,7 +478,6 @@ func (r *DummyRepository) UpdateNotification(notification models.Notification) (
 
 	return notification, nil
 }
-
 func (r *DummyRepository) DeleteNotificationById(notificationId int) error {
 	return nil
 }
