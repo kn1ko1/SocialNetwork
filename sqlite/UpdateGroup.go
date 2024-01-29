@@ -25,7 +25,7 @@ func UpdateGroup(database *sql.DB, group models.Group) (models.Group, error) {
 		group.Description,
 		group.Title,
 		group.UpdatedAt,
-		group.GroupID,
+		group.GroupId,
 	)
 
 	if err != nil {

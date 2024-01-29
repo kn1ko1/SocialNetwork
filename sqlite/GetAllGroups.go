@@ -18,7 +18,7 @@ func GetAllGroups(database *sql.DB) ([]models.Group, error) {
 	for rows.Next() {
 		var group models.Group
 		err := rows.Scan(
-			&group.GroupID,
+			&group.GroupId,
 			&group.CreatedAt,
 			&group.Description,
 			&group.Title,

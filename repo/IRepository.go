@@ -74,5 +74,5 @@ type IRepository interface {
 	DeleteAllGroups() error
 
 	//Notification
-	CreateNotification(notification models.Notification) (models.Notification, error)
+	// CreateNotification(notification models.Notification) (models.Notification, error)
 }
