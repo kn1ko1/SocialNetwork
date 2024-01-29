@@ -6,12 +6,12 @@ import (
 )
 
 // Retrieves message with the relevant senderId from the MESSAGES table
-func GetMessagesBySenderAndTargetIDs(database *sql.DB, senderId, targetId int) ([]models.Message, error) {
+func GetMessagesBySenderAndTargetIds(database *sql.DB, senderId, targetId int) ([]models.Message, error) {
 
 	queryStr := `SELECT *
 	FROM "messages"
-	WHERE (SenderID = (?) AND TargetID = (?))
-	OR (SenderID = (?) AND TargetID = (?))
+	WHERE (SenderId = (?) AND TargetId = (?))
+	OR (SenderId = (?) AND TargetId = (?))
 	ORDER BY timestamp ASC;`
 
 	var messages []models.Message
