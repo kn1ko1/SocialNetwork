@@ -30,7 +30,7 @@ func (n *Notification) Validate() error {
 		return errors.New("notification status must not be empty")
 	}
 	if n.TargetId <= 0 {
-		return errors.New("invalid 'PostId' field")
+		return errors.New("invalid 'TargetId' field")
 	}
 	if n.UpdatedAt < n.CreatedAt {
 		return errors.New("invalid 'UpdatedAt' field. cannot be before 'CreatedAt' field")
