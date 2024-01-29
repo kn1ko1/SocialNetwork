@@ -212,3 +212,7 @@ func (r *SQLiteRepository) UpdateGroup(group models.Group) (models.Group, error)
 func (r *SQLiteRepository) DeleteAllGroups() error {
 	return errors.New("not implemented")
 }
+
+func (r *SQLiteRepository) CreateNotification(notification models.Notification) (models.Notification, error) {
+	return notification, errors.New("not implemented")
+}
