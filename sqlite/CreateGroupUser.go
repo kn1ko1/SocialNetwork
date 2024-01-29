@@ -25,7 +25,6 @@ func CreateGroupUser(database *sql.DB, groupUser models.GroupUser) (models.Group
 		groupUser.CreatedAt,
 		groupUser.GroupId,
 		groupUser.UpdatedAt,
-		groupUser.UpdatedAt,
 		groupUser.UserId,
 	)
 	if err != nil {
