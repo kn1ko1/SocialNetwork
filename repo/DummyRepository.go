@@ -2,6 +2,7 @@ package repo
 
 import (
 	"database/sql"
+	"errors"
 	"log"
 	"socialnetwork/models"
 	"time"
@@ -363,6 +364,20 @@ func (r *DummyRepository) UpdateGroup(group models.Group) (models.Group, error) 
 
 func (r *DummyRepository) DeleteAllGroups() error {
 	return nil
+}
+func (r *DummyRepository) CreateGroup_User(groupUser models.GroupUsers) (models.GroupUsers, error) {
+	return groupUser, errors.New("not implemented")
+}
+func (r *DummyRepository) GetGroup_UserByUserId(userId int) (models.GroupUsers, error) {
+	ctime := time.Now().UTC().UnixMilli()
+	groupUser := models.GroupUsers{
+		GroupUserId: 3,
+		CreatedAt:   ctime,
+		GroupId:     1,
+		UpdatedAt:   ctime,
+		UserId:      1,
+	}
+	return groupUser, errors.New("not implemented")
 }
 
 func (r *DummyRepository) CreateNotification(notification models.Notification) (models.Notification, error) {

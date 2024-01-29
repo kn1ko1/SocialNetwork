@@ -73,6 +73,10 @@ type IRepository interface {
 	UpdateGroup(group models.Group) (models.Group, error)
 	DeleteAllGroups() error
 
+	//Group_User
+	CreateGroup_User(groupUser models.GroupUsers) (models.GroupUsers, error)
+	GetGroup_UserByUserId(userId int) (models.GroupUsers, error)
+
 	//Notification
 	CreateNotification(notification models.Notification) (models.Notification, error)
 	GetNotificationById(notificationId int) (models.Notification, error)
