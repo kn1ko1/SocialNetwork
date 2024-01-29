@@ -365,12 +365,12 @@ func (r *DummyRepository) UpdateGroup(group models.Group) (models.Group, error) 
 func (r *DummyRepository) DeleteAllGroups() error {
 	return nil
 }
-func (r *DummyRepository) CreateGroup_User(groupUser models.GroupUsers) (models.GroupUsers, error) {
+func (r *DummyRepository) CreateGroup_User(groupUser models.GroupUser) (models.GroupUser, error) {
 	return groupUser, errors.New("not implemented")
 }
-func (r *DummyRepository) GetGroup_UserByUserId(userId int) (models.GroupUsers, error) {
+func (r *DummyRepository) GetGroup_UserByUserId(userId int) (models.GroupUser, error) {
 	ctime := time.Now().UTC().UnixMilli()
-	groupUser := models.GroupUsers{
+	groupUser := models.GroupUser{
 		GroupUserId: 3,
 		CreatedAt:   ctime,
 		GroupId:     1,
