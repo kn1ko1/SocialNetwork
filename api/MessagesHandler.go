@@ -67,7 +67,4 @@ func (h *MessagesHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	// Correct HTTP header for a newly created resource:
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Message created successfully!"))
 }

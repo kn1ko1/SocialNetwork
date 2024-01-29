@@ -11,7 +11,7 @@ func CreateGroup(database *sql.DB, group models.Group) (models.Group, error) {
 	query := `
 	INSERT INTO GROUPS (
 		CreatedAt,
-		CreatorID,
+		CreatorId,
 		Description,
 		Title,
 		UpdatedAt
@@ -24,7 +24,7 @@ func CreateGroup(database *sql.DB, group models.Group) (models.Group, error) {
 	}
 	res, err := statement.Exec(
 		group.CreatedAt,
-		group.CreatorID,
+		group.CreatorId,
 		group.Description,
 		group.Title,
 		group.UpdatedAt,
@@ -36,6 +36,6 @@ func CreateGroup(database *sql.DB, group models.Group) (models.Group, error) {
 	if err != nil {
 		return group, err
 	}
-	group.GroupID = int(id)
+	group.GroupId = int(id)
 	return group, nil
 }

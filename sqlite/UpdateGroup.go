@@ -13,7 +13,7 @@ func UpdateGroup(database *sql.DB, group models.Group) (models.Group, error) {
 			Description = ?,
 			Title = ?,
 			UpdatedAt = ?
-		WHERE GroupID = ?
+		WHERE GroupId = ?
 	`
 
 	statement, err := database.Prepare(query)
@@ -25,7 +25,7 @@ func UpdateGroup(database *sql.DB, group models.Group) (models.Group, error) {
 		group.Description,
 		group.Title,
 		group.UpdatedAt,
-		group.GroupID,
+		group.GroupId,
 	)
 
 	if err != nil {

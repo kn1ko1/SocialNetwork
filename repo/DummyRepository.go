@@ -27,7 +27,7 @@ func init() {
 	validComment.CommentId = 1
 	validEvent.EventId = 1
 	validMessage.MessageId = 1
-	validGroup.GroupID = 1
+	validGroup.GroupId = 1
 }
 
 // Field commented for implementation example reasons:
@@ -342,7 +342,7 @@ func (r *DummyRepository) DeleteAllMessages() error {
 }
 
 func (r *DummyRepository) CreateGroup(group models.Group) (models.Group, error) {
-	group.GroupID = 1
+	group.GroupId = 1
 	return group, nil
 }
 
@@ -350,7 +350,7 @@ func (r *DummyRepository) GetAllGroups() ([]models.Group, error) {
 	groups := make([]models.Group, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
 		g := *models.GenerateValidGroup()
-		g.GroupID = i + 1
+		g.GroupId = i + 1
 		groups[i] = g
 	}
 	return groups, nil
