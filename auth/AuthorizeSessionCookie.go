@@ -7,11 +7,11 @@ import (
 )
 
 var (
-	sessionMap map[string]*models.User
+	SessionMap map[string]*models.User
 )
 
 func init() {
-	sessionMap = make(map[string]*models.User)
+	SessionMap = make(map[string]*models.User)
 }
 
 // Not implemented - here we would authenticate the session cookie
@@ -21,7 +21,7 @@ func init() {
 // For the example, I am just ommitting all this logic and simulating
 // it successfully returning a 'Test' user
 func AuthenticateSessionCookie(c *http.Cookie) (*models.User, error) {
-	ret, exists := sessionMap[c.Value]
+	ret, exists := SessionMap[c.Value]
 	if !exists {
 		return nil, errors.New("session cookie invalid")
 	}
