@@ -9,7 +9,7 @@ import (
 func CreateEventUser(database *sql.DB, eventUser models.EventUser) (models.EventUser, error) {
 
 	query := `
-	INSERT INTO EVENTS (
+	INSERT INTO EVENT_USERS (
 		CreatedAt,
 		EventId,
 		UpdatedAt,

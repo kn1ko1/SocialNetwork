@@ -9,7 +9,7 @@ import (
 func CreateGroupUser(database *sql.DB, groupUser models.GroupUser) (models.GroupUser, error) {
 
 	query := `
-	INSERT INTO GROUPS (
+	INSERT INTO GROUP_USERS (
 		CreatedAt,
 		GroupId,
 		UpdatedAt,
