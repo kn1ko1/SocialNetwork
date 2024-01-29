@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"socialnetwork/models"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -383,4 +384,18 @@ func (r *DummyRepository) GetNotificationById(notificationId int) (models.Notifi
 	}
 
 	return notification, nil
+}
+
+func (r *DummyRepository) UpdateNotification(notification models.Notification) (models.Notification, error) {
+	ctime := time.Now().UTC().UnixMilli()
+
+	notification.NotificationType = "dummy type update"
+	notification.Status = "dummy status updated"
+	notification.UpdatedAt = ctime
+
+	return notification, nil
+}
+
+func (r *DummyRepository) DeleteNotificationById(notificationId int) error {
+	return nil
 }

@@ -198,6 +198,7 @@ func (r *SQLiteRepository) DeleteAllMessages() error {
 	return sqlite.DeleteAllMessages(r.businessDb)
 }
 
+// Group
 func (r *SQLiteRepository) CreateGroup(group models.Group) (models.Group, error) {
 	return group, errors.New("not implemented")
 }
@@ -214,6 +215,7 @@ func (r *SQLiteRepository) DeleteAllGroups() error {
 	return errors.New("not implemented")
 }
 
+// Notification
 func (r *SQLiteRepository) CreateNotification(notification models.Notification) (models.Notification, error) {
 	return notification, errors.New("not implemented")
 }
