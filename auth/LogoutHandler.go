@@ -12,6 +12,10 @@ type LogoutHandler struct {
 	Repo repo.IRepository
 }
 
+func NewLogoutHandler(r repo.IRepository) *LoginHandler {
+	return &LoginHandler{Repo: r}
+}
+
 func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
