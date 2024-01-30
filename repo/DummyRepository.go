@@ -316,6 +316,9 @@ func (r *DummyRepository) DeleteEventUsersByUserId(userId int) error {
 func (r *DummyRepository) DeleteEventUsersByEventId(eventId int) error {
 	return nil
 }
+func (r *DummyRepository) DeleteEventUserByUserIdAndEventId(userId, eventId int) error {
+	return nil
+}
 func (r *DummyRepository) DeleteAllEventUsers() error {
 	return nil
 }

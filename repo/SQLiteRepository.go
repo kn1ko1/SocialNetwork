@@ -179,6 +179,9 @@ func (r *SQLiteRepository) DeleteEventUsersByUserId(userId int) error {
 func (r *SQLiteRepository) DeleteEventUsersByEventId(eventId int) error {
 	return sqlite.DeleteEventUsersByEventId(r.businessDb, eventId)
 }
+func (r *SQLiteRepository) DeleteEventUserByUserIdAndEventId(userId, eventId int) error {
+	return sqlite.DeleteEventUserByUserIdAndEventId(r.businessDb, userId, eventId)
+}
 func (r *SQLiteRepository) DeleteAllEventUsers() error {
 	return sqlite.DeleteAllEventUsers(r.businessDb)
 }

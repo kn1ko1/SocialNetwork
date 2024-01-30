@@ -60,6 +60,7 @@ type IRepository interface {
 	GetEventUsersByEventId(eventId int) ([]models.EventUser, error)
 	DeleteEventUsersByUserId(userId int) error
 	DeleteEventUsersByEventId(eventId int) error
+	DeleteEventUserByUserIdAndEventId(userId, EventId int) error
 	DeleteAllEventUsers() error
 
 	// Message
