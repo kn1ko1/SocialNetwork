@@ -51,9 +51,12 @@ func addApiHandlers(rt *router.Router) {
 	eventsHandler := api.NewEventsHandler(r)
 	notificationsHandler := api.NewNotificationsHandler(r)
 	messagesHandler := api.NewMessagesHandler(r)
+
+	// Auth Handlers
 	rt.AddHandler(regexp.MustCompile(`^/auth/login$`), loginHandler)
 	rt.AddHandler(regexp.MustCompile(`^/auth/logoutn$`), logoutHandler)
 	rt.AddHandler(regexp.MustCompile(`^/auth/registration$`), registrationHandler)
+
 	rt.AddHandler(regexp.MustCompile(`^/api/users$`), usersHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/groups$`), groupsHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/groupUsers$`), groupUsersHandler)
