@@ -42,11 +42,18 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	err = user.Validate()
+
+	if err != nil {
+		http.Error(w, "validation failed for user registration", http.StatusBadRequest)
+	}
+
 	hashPassword, err := bcrypt.GenerateFromPassword([]byte(user.EncryptedPassword), bcrypt.DefaultCost)
-	user.EncryptedPassword = string(hashPassword)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
+
+	user.EncryptedPassword = string(hashPassword)
 
 	log.Println("Received user:", user)
 	// _, err = sqlite.CreateUser(db, user)
