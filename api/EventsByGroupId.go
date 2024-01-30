@@ -12,18 +12,18 @@ import (
 // Endpoint: /api/Messa s/Event/{EventId}
 // Allowed methods: GET, PUT, DELETE
 
-type EventByGroupIdHandler struct {
+type EventsByGroupIdHandler struct {
 	Repo repo.IRepository
 }
 
 // Constructor with dependency injection of a repo implementation
-func NewEventByGroupIdHandler(r repo.IRepository) *EventByGroupIdHandler {
-	return &EventByGroupIdHandler{Repo: r}
+func NewEventsByGroupIdHandler(r repo.IRepository) *EventsByGroupIdHandler {
+	return &EventsByGroupIdHandler{Repo: r}
 }
 
 // A EventsHandler instance implements the ServeHTTP interface, and thus
 // itself becomes an HTTPHandler
-func (h *EventByGroupIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *EventsByGroupIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
@@ -42,7 +42,7 @@ func (h *EventByGroupIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 	}
 }
 
-func (h *EventByGroupIdHandler) get(w http.ResponseWriter, r *http.Request) {
+func (h *EventsByGroupIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
 	groupIdString := queryParams.Get("groupId")
 	groupId, EventIdErr := strconv.Atoi(groupIdString)
@@ -69,7 +69,7 @@ func (h *EventByGroupIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Here are your posts"))
 }
 
-func (h *EventByGroupIdHandler) put(w http.ResponseWriter, r *http.Request) {
+func (h *EventsByGroupIdHandler) put(w http.ResponseWriter, r *http.Request) {
 
 	var Event models.Event
 	err := json.NewDecoder(r.Body).Decode(&Event)
@@ -107,7 +107,7 @@ func (h *EventByGroupIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Event updated successfully!"))
 }
 
-func (h *EventByGroupIdHandler) delete(w http.ResponseWriter, r *http.Request) {
+func (h *EventsByGroupIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
 	// look at penultimate id for userId
 
