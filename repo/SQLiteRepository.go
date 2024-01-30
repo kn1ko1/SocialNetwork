@@ -246,8 +246,8 @@ func (r *SQLiteRepository) DeleteAllGroups() error {
 func (r *SQLiteRepository) CreateGroupUser(groupUser models.GroupUser) (models.GroupUser, error) {
 	return groupUser, errors.New("not implemented")
 }
-func (r *SQLiteRepository) GetGroupUser(GroupUserId int) (models.GroupUser, error) {
-	return sqlite.GetGroupUser(r.businessDb, GroupUserId)
+func (r *SQLiteRepository) GetGroupUser(groupUserId int) (models.GroupUser, error) {
+	return sqlite.GetGroupUser(r.businessDb, groupUserId)
 }
 func (r *SQLiteRepository) GetGroupUsersByUserId(userId int) ([]models.GroupUser, error) {
 	var groupUsers []models.GroupUser
@@ -256,8 +256,8 @@ func (r *SQLiteRepository) GetGroupUsersByUserId(userId int) ([]models.GroupUser
 func (r *SQLiteRepository) GetGroupUsersByGroupId(groupId int) ([]models.GroupUser, error) {
 	return sqlite.GetGroupUsersByGroupId(r.businessDb, groupId)
 }
-func (r *SQLiteRepository) DeleteGroupUsersByUserId(UserId int) error {
-	return sqlite.DeleteGroupUsersByUserId(r.businessDb, UserId)
+func (r *SQLiteRepository) DeleteGroupUsersByUserId(userId int) error {
+	return sqlite.DeleteGroupUsersByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) DeleteGroupUserByGroupId(groupId int) error {
 	return sqlite.DeleteGroupUserByGroupId(r.businessDb, groupId)

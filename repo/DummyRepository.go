@@ -410,10 +410,10 @@ func (r *DummyRepository) GetGroup(groupId int) (models.Group, error) {
 	return group, nil
 }
 
-func (r *DummyRepository) GetGroupUser(GroupUserId int) (models.GroupUser, error) {
+func (r *DummyRepository) GetGroupUser(groupUserId int) (models.GroupUser, error) {
 	ctime := time.Now().UTC().UnixMilli()
 	groupUser := models.GroupUser{
-		GroupUserId: GroupUserId,
+		GroupUserId: groupUserId,
 		CreatedAt:   ctime,
 		GroupId:     2,
 		UpdatedAt:   ctime,
@@ -476,13 +476,13 @@ func (r *DummyRepository) GetGroupUsersByGroupId(groupId int) ([]models.GroupUse
 	}
 	return groupUsers, errors.New("not implemented")
 }
-func (r *DummyRepository) DeleteGroupUsersByUserId(UserId int) error {
+func (r *DummyRepository) DeleteGroupUsersByUserId(userId int) error {
 	return errors.New("dummy deleted groupusers by userid")
 }
 func (r *DummyRepository) DeleteGroupUserByGroupId(groupId int) error {
 	return nil
 }
-func (r *DummyRepository) DeleteGroupUserByUserIdAndGroupId(UserId, GroupId int) error {
+func (r *DummyRepository) DeleteGroupUserByUserIdAndGroupId(userId, groupId int) error {
 	return nil
 }
 func (r *DummyRepository) DeleteAllGroupUsers() error {
