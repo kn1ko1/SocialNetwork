@@ -229,11 +229,15 @@ func (r *SQLiteRepository) CreateGroup(group models.Group) (models.Group, error)
 func (r *SQLiteRepository) GetAllGroups() ([]models.Group, error) {
 	return nil, errors.New("not implemented")
 }
-
+func (r *SQLiteRepository) GetGroup(groupId int) (models.Group, error) {
+	return sqlite.GetGroup(r.businessDb, groupId)
+}
 func (r *SQLiteRepository) UpdateGroup(group models.Group) (models.Group, error) {
 	return group, errors.New("not implemented")
 }
-
+func (r *SQLiteRepository) DeleteGroup(groupId int) error {
+	return sqlite.DeleteGroup(r.businessDb, groupId)
+}
 func (r *SQLiteRepository) DeleteAllGroups() error {
 	return errors.New("not implemented")
 }

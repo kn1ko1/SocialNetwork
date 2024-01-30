@@ -396,8 +396,25 @@ func (r *DummyRepository) GetAllGroups() ([]models.Group, error) {
 	}
 	return groups, nil
 }
+func (r *DummyRepository) GetGroup(groupId int) (models.Group, error) {
+	ctime := time.Now().UTC().UnixMilli()
+
+	var group models.Group
+	group.GroupId = groupId
+	group.CreatedAt = ctime
+	group.CreatorId = 1
+	group.Description = "It's a Dummy Group"
+	group.Title = "Dummy Group"
+	group.UpdatedAt = ctime
+
+	return group, nil
+}
+
 func (r *DummyRepository) UpdateGroup(group models.Group) (models.Group, error) {
 	return group, nil
+}
+func (r *DummyRepository) DeleteGroup(groupId int) error {
+	return nil
 }
 func (r *DummyRepository) DeleteAllGroups() error {
 	return nil
