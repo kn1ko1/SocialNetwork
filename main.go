@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"regexp"
 	"socialnetwork/api"
-	"socialnetwork/auth"
+	"socialnetwork/repo"
 	"socialnetwork/router"
 	"socialnetwork/ui"
 )
@@ -32,16 +32,33 @@ func main() {
 
 func setupRouter(mux *http.ServeMux) {
 	rt := router.NewRouter()
-	// Dummy UI handler, as an example
-	rt.AddHandler(regexp.MustCompile(`^/$`), ui.NewDummyPageHandler())
-	rt.AddHandler(regexp.MustCompile(`^/login$`), &auth.LoginHandler{})
-	rt.AddHandler(regexp.MustCompile(`^/user$`), &api.UsersHandler{})
-	rt.AddHandler(regexp.MustCompile(`^/posts$`), &api.PostsHandler{})
-	rt.AddHandler(regexp.MustCompile(`^/message$`), &api.MessagesHandler{})
-	rt.AddHandler(regexp.MustCompile(`^/comment$`), &api.CommentsHandler{})
-	rt.AddHandler(regexp.MustCompile(`^/event$`), &api.EventsHandler{})
-
+	addApiHandlers(rt)
+	addUIHandlers(rt)
 	mux.Handle("/", rt)
+}
+
+func addApiHandlers(rt *router.Router) {
+	r := repo.NewDummyRepository()
+	usersHandler := api.NewUsersHandler(r)
+	groupsHandler := api.NewGroupsHandler(r)
+	groupUsersHandler := api.NewGroupUsersHandler(r)
+	postsHandler := api.NewPostsHandler(r)
+	commentsHandler := api.NewCommentsHandler(r)
+	eventsHandler := api.NewEventsHandler(r)
+	notificationsHandler := api.NewNotificationsHandler(r)
+	messagesHandler := api.NewMessagesHandler(r)
+	rt.AddHandler(regexp.MustCompile(`^/api/users$`), usersHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/groups$`), groupsHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/groupUsers$`), groupUsersHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/posts$`), postsHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/comments$`), commentsHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/events$`), eventsHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/notifications$`), notificationsHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/messages$`), messagesHandler)
+}
+
+func addUIHandlers(rt *router.Router) {
+	rt.AddHandler(regexp.MustCompile(`^/$`), ui.NewDummyPageHandler())
 }
 
 func serveStaticFiles(mux *http.ServeMux) {

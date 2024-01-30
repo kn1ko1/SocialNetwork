@@ -1,6 +1,9 @@
 package models
 
-import "errors"
+import (
+	"errors"
+	"math/rand"
+)
 
 type Post struct {
 	PostId    int
@@ -31,4 +34,20 @@ func (p *Post) Validate() error {
 		return errors.New("invalid 'UserId' field")
 	}
 	return nil
+}
+
+func GenerateValidPost() *Post {
+	ctime := rand.Int63n(1000) + 1
+	idxBody := rand.Intn(len(sutBody))
+	idxImageURL := rand.Intn(len(sutImageURL))
+
+	p := &Post{
+		Body:      sutBody[idxBody],
+		CreatedAt: ctime,
+		GroupId:   rand.Intn(1000) + 1,
+		ImageURL:  sutImageURL[idxImageURL],
+		UpdatedAt: ctime,
+		UserId:    rand.Intn(1000) + 1,
+	}
+	return p
 }

@@ -10,11 +10,7 @@ const (
 	tableRunCount = 10
 )
 
-var (
-	sutBody = []string{"Hello, World", "Test", "Example"}
-)
-
-func TestValidateInvalidFieldExpectError(t *testing.T) {
+func TestCommentValidateInvalidFieldExpectError(t *testing.T) {
 	var comments []*Comment
 	for i := 0; i < tableRunCount; i++ {
 		comments = append(comments, generateInvalidComment())
@@ -30,7 +26,7 @@ func TestValidateInvalidFieldExpectError(t *testing.T) {
 	}
 }
 
-func TestValidateMissingFieldExpectError(t *testing.T) {
+func TestCommentValidateMissingFieldExpectError(t *testing.T) {
 	var comments []*Comment
 	for i := 0; i < tableRunCount; i++ {
 		comments = append(comments, generateMissingFieldComment())
@@ -46,10 +42,10 @@ func TestValidateMissingFieldExpectError(t *testing.T) {
 	}
 }
 
-func TestValidateValidExpectNil(t *testing.T) {
+func TestCommentValidateValidExpectNil(t *testing.T) {
 	var comments []*Comment
 	for i := 0; i < tableRunCount; i++ {
-		comments = append(comments, generateValidComment())
+		comments = append(comments, GenerateValidComment())
 	}
 	for _, c := range comments {
 		name := fmt.Sprintf("%+v", *c)
@@ -62,21 +58,8 @@ func TestValidateValidExpectNil(t *testing.T) {
 	}
 }
 
-func generateValidComment() *Comment {
-	ctime := rand.Int63n(1000) + 1
-	idx := rand.Intn(len(sutBody))
-	c := &Comment{
-		Body:      sutBody[idx],
-		CreatedAt: ctime,
-		PostId:    rand.Intn(1000) + 1,
-		UpdatedAt: ctime,
-		UserId:    rand.Intn(1000) + 1,
-	}
-	return c
-}
-
 func generateMissingFieldComment() *Comment {
-	c := generateValidComment()
+	c := GenerateValidComment()
 	missingField := rand.Intn(5)
 	switch missingField {
 	case 0:
@@ -94,7 +77,7 @@ func generateMissingFieldComment() *Comment {
 }
 
 func generateInvalidComment() *Comment {
-	c := generateValidComment()
+	c := GenerateValidComment()
 	invalidField := rand.Intn(5)
 	switch invalidField {
 	case 0:

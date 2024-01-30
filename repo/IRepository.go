@@ -1,3 +1,6 @@
+// Message from Matt
+// Please do not touch this file
+
 package repo
 
 import "socialnetwork/models"
@@ -16,22 +19,22 @@ type IRepository interface {
 	// Post
 	CreatePost(post models.Post) (models.Post, error)
 	GetAllPosts() ([]models.Post, error)
-	GetPostById(postId int) ([]models.Post, error)
-	GetPostsByGroupId(groupId int) (models.Post, error)
-	GetPostsByUserId(userId int) (models.Post, error)
+	GetPostById(postId int) (models.Post, error)
+	GetPostsByGroupId(groupId int) ([]models.Post, error)
+	GetPostsByUserId(userId int) ([]models.Post, error)
 	UpdatePost(post models.Post) (models.Post, error)
 	DeletePostById(postId int) error
 	DeletePostByGroupId(groupId int) error
-	DeletePostByUserId(userId int) error
+	DeletePostsByUserId(userId int) error
 	DeleteAllPosts() error
 
 	// Comments
 	CreateComment(comment models.Comment) (models.Comment, error)
 	GetAllComments() ([]models.Comment, error)
 	GetCommentById(commentId int) (models.Comment, error)
-	GetCommentsByGroupId(groupId int) (models.Comment, error)
-	GetCommentsByUserId(userId int) (models.Comment, error)
-	GetCommentsByPostId(postId int) (models.Comment, error)
+	// GetCommentsByGroupId(groupId int) ([]models.Comment, error)
+	GetCommentsByUserId(userId int) ([]models.Comment, error)
+	GetCommentsByPostId(postId int) ([]models.Comment, error)
 	UpdateComment(comment models.Comment) (models.Comment, error)
 	DeleteCommentById(commentId int) error
 	DeleteCommentsByGroupId(groupId int) error
@@ -43,25 +46,54 @@ type IRepository interface {
 	CreateEvent(event models.Event) (models.Event, error)
 	GetAllEvents() ([]models.Event, error)
 	GetEventById(eventId int) (models.Event, error)
-	GetEventsByGroupId(groupId int) (models.Event, error)
-	GetEventsByUserId(userId int) (models.Event, error)
+	GetEventsByGroupId(groupId int) ([]models.Event, error)
+	GetEventsByUserId(userId int) ([]models.Event, error)
 	UpdateEvent(event models.Event) (models.Event, error)
 	DeleteEventById(eventId int) error
 	DeleteEventsByGroupId(groupId int) error
 	DeleteEventsByUserId(userId int) error
 	DeleteAllEvents() error
 
+	//EventUser
+	CreateEventUser(event models.EventUser) (models.EventUser, error)
+	GetEventUsersByUserId(userId int) ([]models.EventUser, error)
+	GetEventUsersByEventId(eventId int) ([]models.EventUser, error)
+	DeleteEventUsersByUserId(userId int) error
+	DeleteEventUsersByEventId(eventId int) error
+	DeleteEventUserByUserIdAndEventId(userId, EventId int) error
+	DeleteAllEventUsers() error
+
 	// Message
 	CreateMessage(message models.Message) (models.Message, error)
-	GetAllMessages() ([]models.Message, error)
-	GetMessagesByType(messageType string) ([]models.Message, error)
+	// GetAllMessages() ([]models.Message, error)
+	// GetMessagesByType(messageType string) ([]models.Message, error)
 	GetMessageById(messageId int) (models.Message, error)
-	GetMessagesBySenderId(senderId int) (models.Message, error)
-	GetMessagesByTargetId(targetId int) (models.Message, error)
+	GetMessagesBySenderAndTargetIDs(senderId, targetId int) ([]models.Message, error)
 	UpdateMessage(message models.Message) (models.Message, error)
-	DeleteMessagesByType(messageType string) error
+	// DeleteMessagesByType(messageType string) error
 	DeleteMessageById(messageId int) error
 	DeleteMessagesBySenderId(senderId int) error
-	DeleteMessagesByTargetId(targetId int) error
+	// DeleteMessagesByTargetId(targetId int) error
 	DeleteAllMessages() error
+
+	//Group
+	CreateGroup(group models.Group) (models.Group, error)
+	GetAllGroups() ([]models.Group, error)
+	UpdateGroup(group models.Group) (models.Group, error)
+	DeleteAllGroups() error
+
+	//GroupUser
+	CreateGroupUser(groupUser models.GroupUser) (models.GroupUser, error)
+	GetGroupUsersByUserId(userId int) ([]models.GroupUser, error)
+	GetGroupUsersByGroupId(groupId int) ([]models.GroupUser, error)
+	DeleteGroupUsersByUserId(UserId int) error
+	DeleteGroupUserByGroupId(groupId int) error
+	DeleteGroupUserByUserIdAndGroupId(UserId, GroupId int) error
+	DeleteAllGroupUsers() error
+
+	//Notification
+	CreateNotification(notification models.Notification) (models.Notification, error)
+	GetNotificationById(notificationId int) (models.Notification, error)
+	UpdateNotification(notification models.Notification) (models.Notification, error)
+	DeleteNotificationById(notificationId int) error
 }

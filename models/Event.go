@@ -1,6 +1,9 @@
 package models
 
-import "errors"
+import (
+	"errors"
+	"math/rand"
+)
 
 type Event struct {
 	EventId     int
@@ -37,4 +40,20 @@ func (e *Event) Validate() error {
 		return errors.New("invalid 'UserId' field")
 	}
 	return nil
+}
+
+func GenerateValidEvent() *Event {
+	ctime := rand.Int63n(1000) + 1
+	idxDesc := rand.Intn(len(sutDescriptions))
+	idxTitle := rand.Intn(len(sutTitles))
+	e := &Event{
+		CreatedAt:   ctime,
+		DateTime:    rand.Int63n(1000) + 1,
+		Description: sutDescriptions[idxDesc],
+		GroupId:     rand.Intn(1000) + 1,
+		Title:       sutTitles[idxTitle],
+		UpdatedAt:   ctime,
+		UserId:      rand.Intn(1000) + 1,
+	}
+	return e
 }

@@ -1,6 +1,9 @@
 package models
 
-import "errors"
+import (
+	"errors"
+	"math/rand"
+)
 
 type Message struct {
 	MessageId   int
@@ -33,4 +36,20 @@ func (m *Message) Validate() error {
 		return errors.New("invalid 'UpdatedAt' field")
 	}
 	return nil
+}
+
+func GenerateValidMessage() *Message {
+	ctime := rand.Int63n(1000) + 1
+	idxBody := rand.Intn(len(sutBody))
+	idxMessageType := rand.Intn(len(sutMessageTypes))
+
+	m := &Message{
+		Body:        sutBody[idxBody],
+		CreatedAt:   ctime,
+		MessageType: sutMessageTypes[idxMessageType],
+		SenderId:    rand.Intn(1000) + 1,
+		TargetId:    rand.Intn(1000) + 1,
+		UpdatedAt:   ctime,
+	}
+	return m
 }

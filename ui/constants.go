@@ -1,10 +1,18 @@
 package ui
 
-const (
-	layout     = "layout"
-	layoutPath = "./templates/_Layout.go.html"
+import (
+	"html/template"
+	"log"
 )
 
-const (
-	indexPath = "./templates/Index.go.html"
+var (
+	Template *template.Template
 )
+
+func init() {
+	tmpl, err := template.ParseGlob("./templates/*.go.html")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	Template = tmpl
+}

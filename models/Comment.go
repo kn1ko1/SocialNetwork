@@ -1,6 +1,9 @@
 package models
 
-import "errors"
+import (
+	"errors"
+	"math/rand"
+)
 
 type Comment struct {
 	CommentId int
@@ -30,4 +33,17 @@ func (c *Comment) Validate() error {
 	}
 
 	return nil
+}
+
+func GenerateValidComment() *Comment {
+	ctime := rand.Int63n(1000) + 1
+	idx := rand.Intn(len(sutBody))
+	c := &Comment{
+		Body:      sutBody[idx],
+		CreatedAt: ctime,
+		PostId:    rand.Intn(1000) + 1,
+		UpdatedAt: ctime,
+		UserId:    rand.Intn(1000) + 1,
+	}
+	return c
 }

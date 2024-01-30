@@ -30,6 +30,10 @@ type Session struct {
 
 // For the example, I am just ommitting all this logic and simulating
 // it successfully returning a 'Test' user
-func AuthenticateSessionCookie(c *http.Cookie) (models.User, error) {
-	return models.User{Username: "Test", EncryptedPassword: "abc"}, nil
+func AuthenticateSessionCookie(c *http.Cookie) (*models.User, error) {
+	// ret, exists := SessionMap[c.Value]
+	// if !exists {
+	// 	return nil, errors.New("session cookie invalid")
+	// }
+	return &models.User{}, nil
 }
