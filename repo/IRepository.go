@@ -86,11 +86,13 @@ type IRepository interface {
 
 	//GroupUser
 	CreateGroupUser(groupUser models.GroupUser) (models.GroupUser, error)
+	GetGroupUser(GroupUserId int) (models.GroupUser, error)
 	GetGroupUsersByUserId(userId int) ([]models.GroupUser, error)
 	GetGroupUsersByGroupId(groupId int) ([]models.GroupUser, error)
 	DeleteGroupUsersByUserId(UserId int) error
 	DeleteGroupUserByGroupId(groupId int) error
 	DeleteGroupUserByUserIdAndGroupId(UserId, GroupId int) error
+	DeleteGroupUser(groupUser int) error
 	DeleteAllGroupUsers() error
 
 	//Notification

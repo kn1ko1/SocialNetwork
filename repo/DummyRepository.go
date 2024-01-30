@@ -410,10 +410,24 @@ func (r *DummyRepository) GetGroup(groupId int) (models.Group, error) {
 	return group, nil
 }
 
+func (r *DummyRepository) GetGroupUser(GroupUserId int) (models.GroupUser, error) {
+	ctime := time.Now().UTC().UnixMilli()
+	groupUser := models.GroupUser{
+		GroupUserId: GroupUserId,
+		CreatedAt:   ctime,
+		GroupId:     2,
+		UpdatedAt:   ctime,
+		UserId:      3,
+	}
+	return groupUser, nil
+}
 func (r *DummyRepository) UpdateGroup(group models.Group) (models.Group, error) {
 	return group, nil
 }
 func (r *DummyRepository) DeleteGroup(groupId int) error {
+	return nil
+}
+func (r *DummyRepository) DeleteGroupUser(groupUser int) error {
 	return nil
 }
 func (r *DummyRepository) DeleteAllGroups() error {
