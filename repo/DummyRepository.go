@@ -448,6 +448,9 @@ func (r *DummyRepository) DeleteGroupUsersByUserId(UserId int) error {
 func (r *DummyRepository) DeleteGroupUserByGroupId(groupId int) error {
 	return nil
 }
+func (r *DummyRepository) DeleteGroupUserByUserIdAndGroupId(UserId, GroupId int) error {
+	return nil
+}
 func (r *DummyRepository) DeleteAllGroupUsers() error {
 	return nil
 }

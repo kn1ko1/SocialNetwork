@@ -252,6 +252,10 @@ func (r *SQLiteRepository) DeleteGroupUsersByUserId(UserId int) error {
 func (r *SQLiteRepository) DeleteGroupUserByGroupId(groupId int) error {
 	return sqlite.DeleteGroupUserByGroupId(r.businessDb, groupId)
 }
+func (r *SQLiteRepository) DeleteGroupUserByUserIdAndGroupId(UserId, GroupId int) error {
+	return sqlite.DeleteGroupUserByUserIdAndGroupId(r.businessDb, UserId, GroupId)
+}
+
 func (r *SQLiteRepository) DeleteAllGroupUsers() error {
 	return sqlite.DeleteAllGroupUsers(r.businessDb)
 }

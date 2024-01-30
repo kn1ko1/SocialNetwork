@@ -9,7 +9,7 @@ import (
 func GetMessagesBySenderAndTargetIds(database *sql.DB, senderId, targetId int) ([]models.Message, error) {
 
 	queryStr := `SELECT *
-	FROM "messages"
+	FROM MESSAGES
 	WHERE (SenderId = (?) AND TargetId = (?))
 	OR (SenderId = (?) AND TargetId = (?))
 	ORDER BY timestamp ASC;`
