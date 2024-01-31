@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
+	"socialnetwork/utils"
 	"strconv"
 )
 
@@ -46,13 +47,13 @@ func (h *PostByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	postIdString := queryParams.Get("postId")
 	postId, postIdErr := strconv.Atoi(postIdString)
 	if postIdErr != nil {
-		log.Println("Problem with AtoI postId. ", postIdErr)
+		utils.HandleError("Problem with AtoI postId. ", postIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	userPosts, err := h.Repo.GetPostById(postId)
 	if err != nil {
-		log.Println("Failed to get posts in GetPostByIdHandler. ", err)
+		utils.HandleError("Failed to get posts in GetPostByIdHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -60,7 +61,7 @@ func (h *PostByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(userPosts)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -71,7 +72,7 @@ func (h *PostByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	var post models.Post
 	err := json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
-		log.Println("Failed to decode request body:", err)
+		utils.HandleError("Failed to decode request body:", err)
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
@@ -79,7 +80,7 @@ func (h *PostByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 
 	// Validate the User <3
 	if validationErr := post.Validate(); validationErr != nil {
-		log.Println("Validation failed:", validationErr)
+		utils.HandleError("Validation failed:", validationErr)
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
@@ -87,7 +88,7 @@ func (h *PostByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	// Update user in the repository
 	result, createErr := h.Repo.UpdatePost(post)
 	if createErr != nil {
-		log.Println("Failed to update user in the repository:", createErr)
+		utils.HandleError("Failed to update user in the repository:", createErr)
 		http.Error(w, "Failed to update user", http.StatusInternalServerError)
 		return
 	}
@@ -95,7 +96,7 @@ func (h *PostByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	// Encode and write the response
 	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -109,7 +110,7 @@ func (h *PostByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 	userIDString := queryParams.Get("userID")
 	userID, userIDErr := strconv.Atoi(userIDString)
 	if userIDErr != nil {
-		log.Println("Problem with AtoI userID. ", userIDErr)
+		utils.HandleError("Problem with AtoI userID. ", userIDErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -117,7 +118,7 @@ func (h *PostByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
 	err := h.Repo.DeletePostById(userID)
 	if err != nil {
-		log.Println("Failed to delete Posts. ", err)
+		utils.HandleError("Failed to delete Posts. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

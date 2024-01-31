@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
+	"socialnetwork/utils"
 	"strconv"
 )
 
@@ -46,20 +47,20 @@ func (h *GroupByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	GroupIdString := queryParams.Get("GroupId")
 	GroupId, GroupIdErr := strconv.Atoi(GroupIdString)
 	if GroupIdErr != nil {
-		log.Println("Problem with AtoI GroupId. ", GroupIdErr)
+		utils.HandleError("Problem with AtoI GroupId. ", GroupIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	Group, err := h.Repo.GetGroup(GroupId)
 	if err != nil {
-		log.Println("Failed to get Group in GetGroupByIdHandler. ", err)
+		utils.HandleError("Failed to get Group in GetGroupByIdHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	err = json.NewEncoder(w).Encode(Group)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -70,7 +71,7 @@ func (h *GroupByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	var Group models.Group
 	err := json.NewDecoder(r.Body).Decode(&Group)
 	if err != nil {
-		log.Println("Failed to decode request body:", err)
+		utils.HandleError("Failed to decode request body:", err)
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
@@ -78,7 +79,7 @@ func (h *GroupByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 
 	// Validate the Group
 	if validationErr := Group.Validate(); validationErr != nil {
-		log.Println("Validation failed:", validationErr)
+		utils.HandleError("Validation failed:", validationErr)
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
@@ -86,7 +87,7 @@ func (h *GroupByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	// Update post in the repository
 	result, createErr := h.Repo.UpdateGroup(Group)
 	if createErr != nil {
-		log.Println("Failed to update group in the repository:", createErr)
+		utils.HandleError("Failed to update group in the repository:", createErr)
 		http.Error(w, "Failed to update group", http.StatusInternalServerError)
 		return
 	}
@@ -94,7 +95,7 @@ func (h *GroupByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	// Encode and write the response
 	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -106,7 +107,7 @@ func (h *GroupByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 	GroupIdString := queryParams.Get("GroupId")
 	GroupId, GroupIdErr := strconv.Atoi(GroupIdString)
 	if GroupIdErr != nil {
-		log.Println("Problem with AtoI GroupId. ", GroupIdErr)
+		utils.HandleError("Problem with AtoI GroupId. ", GroupIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -114,7 +115,7 @@ func (h *GroupByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
 	err := h.Repo.DeleteGroup(GroupId)
 	if err != nil {
-		log.Println("Failed to delete Groups. ", err)
+		utils.HandleError("Failed to delete Groups. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

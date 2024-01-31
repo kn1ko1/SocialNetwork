@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"socialnetwork/repo"
+	"socialnetwork/utils"
 	"strconv"
 )
 
@@ -42,14 +43,14 @@ func (h *EventUsersByEventIdAnduserIdHandler) delete(w http.ResponseWriter, r *h
 	eventIdString := queryParams.Get("eventId")
 	eventId, eventIdErr := strconv.Atoi(eventIdString)
 	if eventIdErr != nil {
-		log.Println("Problem with AtoI userId. ", eventIdErr)
+		utils.HandleError("Problem with AtoI userId. ", eventIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	userIdString := queryParams.Get("userId")
 	userId, userIdErr := strconv.Atoi(userIdString)
 	if userIdErr != nil {
-		log.Println("Problem with AtoI userId. ", userIdErr)
+		utils.HandleError("Problem with AtoI userId. ", userIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -57,7 +58,7 @@ func (h *EventUsersByEventIdAnduserIdHandler) delete(w http.ResponseWriter, r *h
 
 	err := h.Repo.DeleteEventUserByEventIdAndUserId(eventId, userId)
 	if err != nil {
-		log.Println("Failed to delete Events. ", err)
+		utils.HandleError("Failed to delete Events. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -72,29 +73,29 @@ func (h *EventUsersByEventIdAnduserIdHandler) delete(w http.ResponseWriter, r *h
 // 	eventIdString := queryParams.Get("eventId")
 // 	eventId, eventIdErr := strconv.Atoi(eventIdString)
 // 	if eventIdErr != nil {
-// 		log.Println("Problem with AtoI userId. ", eventIdErr)
+// 		utils.HandleError("Problem with AtoI userId. ", eventIdErr)
 // 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 // 		return
 // 	}
 // 	userIdString := queryParams.Get("userId")
 // 	userId, userIdErr := strconv.Atoi(userIdString)
 // 	if userIdErr != nil {
-// 		log.Println("Problem with AtoI userId. ", userIdErr)
+// 		utils.HandleError("Problem with AtoI userId. ", userIdErr)
 // 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 // 		return
 // 	}
-// 	log.Println("Received delete request for eventId", eventId, ", userId", userId)
+// 	utils.HandleError("Received delete request for eventId", eventId, ", userId", userId)
 
 // 	eventUser, err := h.Repo.GetEventUserByEventIdanduserId(eventId, userId)
 // 	if err != nil {
-// 		log.Println("Failed to get posts in GetEventsByGroupId. ", err)
+// 		utils.HandleError("Failed to get posts in GetEventsByGroupId. ", err)
 // 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 // 		return
 // 	}
 
 // 	err = json.NewEncoder(w).Encode(eventUser)
 // 	if err != nil {
-// 		log.Println("Failed to encode and write JSON response. ", err)
+// 		utils.HandleError("Failed to encode and write JSON response. ", err)
 // 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 // 		return
 // 	}

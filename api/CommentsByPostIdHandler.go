@@ -2,9 +2,9 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"socialnetwork/repo"
+	"socialnetwork/utils"
 	"strconv"
 )
 
@@ -44,7 +44,7 @@ func (h *CommentsByPostIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	postIDString := params.Get("postId")
 	postID, err := strconv.Atoi(postIDString)
 	if err != nil {
-		log.Println("Problem with AtoI postID. ", err)
+		utils.HandleError("Problem with AtoI postID. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -52,7 +52,7 @@ func (h *CommentsByPostIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	// Retrieve comments by post ID from the repository
 	comments, err := h.Repo.GetCommentsByPostId(postID)
 	if err != nil {
-		log.Println("Failed to get comments by post ID. ", err)
+		utils.HandleError("Failed to get comments by post ID. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -60,7 +60,7 @@ func (h *CommentsByPostIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	// Encode and write the response
 	err = json.NewEncoder(w).Encode(comments)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -75,7 +75,7 @@ func (h *CommentsByPostIdHandler) delete(w http.ResponseWriter, r *http.Request)
 	postIDString := params.Get("postId")
 	postID, err := strconv.Atoi(postIDString)
 	if err != nil {
-		log.Println("Problem with AtoI postID. ", err)
+		utils.HandleError("Problem with AtoI postID. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -83,7 +83,7 @@ func (h *CommentsByPostIdHandler) delete(w http.ResponseWriter, r *http.Request)
 	// Delete comments by post ID from the repository
 	err = h.Repo.DeleteCommentsByPostId(postID)
 	if err != nil {
-		log.Println("Failed to delete comments by post ID. ", err)
+		utils.HandleError("Failed to delete comments by post ID. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

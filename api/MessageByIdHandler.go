@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
+	"socialnetwork/utils"
 	"strconv"
 )
 
@@ -46,20 +47,20 @@ func (h *MessageByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	messageIdString := queryParams.Get("messageId")
 	messageId, messageIdErr := strconv.Atoi(messageIdString)
 	if messageIdErr != nil {
-		log.Println("Problem with AtoI messageId. ", messageIdErr)
+		utils.HandleError("Problem with AtoI messageId. ", messageIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	message, err := h.Repo.GetMessageById(messageId)
 	if err != nil {
-		log.Println("Failed to get message in GetMessageByIdHandler. ", err)
+		utils.HandleError("Failed to get message in GetMessageByIdHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	err = json.NewEncoder(w).Encode(message)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -70,7 +71,7 @@ func (h *MessageByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	var Message models.Message
 	err := json.NewDecoder(r.Body).Decode(&Message)
 	if err != nil {
-		log.Println("Failed to decode request body:", err)
+		utils.HandleError("Failed to decode request body:", err)
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
@@ -78,7 +79,7 @@ func (h *MessageByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 
 	// Validate the Message
 	if validationErr := Message.Validate(); validationErr != nil {
-		log.Println("Validation failed:", validationErr)
+		utils.HandleError("Validation failed:", validationErr)
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
@@ -86,7 +87,7 @@ func (h *MessageByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	// Update post in the repository
 	result, createErr := h.Repo.UpdateMessage(Message)
 	if createErr != nil {
-		log.Println("Failed to update post in the repository:", createErr)
+		utils.HandleError("Failed to update post in the repository:", createErr)
 		http.Error(w, "Failed to update post", http.StatusInternalServerError)
 		return
 	}
@@ -94,7 +95,7 @@ func (h *MessageByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	// Encode and write the response
 	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -106,7 +107,7 @@ func (h *MessageByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 	messageIdString := queryParams.Get("messageId")
 	messageId, messageIdErr := strconv.Atoi(messageIdString)
 	if messageIdErr != nil {
-		log.Println("Problem with AtoI messageId. ", messageIdErr)
+		utils.HandleError("Problem with AtoI messageId. ", messageIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -114,7 +115,7 @@ func (h *MessageByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
 	err := h.Repo.DeleteMessageById(messageId)
 	if err != nil {
-		log.Println("Failed to delete Messages. ", err)
+		utils.HandleError("Failed to delete Messages. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

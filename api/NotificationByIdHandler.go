@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
+	"socialnetwork/utils"
 	"strconv"
 )
 
@@ -46,20 +47,20 @@ func (h *NotificationByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	notificationIdString := queryParams.Get("notificationId")
 	notificationId, notificationIdErr := strconv.Atoi(notificationIdString)
 	if notificationIdErr != nil {
-		log.Println("Problem with AtoI notificationId. ", notificationIdErr)
+		utils.HandleError("Problem with AtoI notificationId. ", notificationIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	notification, err := h.Repo.GetNotificationById(notificationId)
 	if err != nil {
-		log.Println("Failed to get notification in GetNotificationByIdHandler. ", err)
+		utils.HandleError("Failed to get notification in GetNotificationByIdHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	err = json.NewEncoder(w).Encode(notification)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -70,7 +71,7 @@ func (h *NotificationByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	var Notification models.Notification
 	err := json.NewDecoder(r.Body).Decode(&Notification)
 	if err != nil {
-		log.Println("Failed to decode request body:", err)
+		utils.HandleError("Failed to decode request body:", err)
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
@@ -78,7 +79,7 @@ func (h *NotificationByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 
 	// // Validate the Notification
 	// if validationErr := Notification.Validate(); validationErr != nil {
-	// 	log.Println("Validation failed:", validationErr)
+	// 	utils.HandleError("Validation failed:", validationErr)
 	// 	http.Error(w, "Validation failed", http.StatusBadRequest)
 	// 	return
 	// }
@@ -86,7 +87,7 @@ func (h *NotificationByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	// Update post in the repository
 	result, createErr := h.Repo.UpdateNotification(Notification)
 	if createErr != nil {
-		log.Println("Failed to update post in the repository:", createErr)
+		utils.HandleError("Failed to update post in the repository:", createErr)
 		http.Error(w, "Failed to update post", http.StatusInternalServerError)
 		return
 	}
@@ -94,7 +95,7 @@ func (h *NotificationByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	// Encode and write the response
 	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -106,7 +107,7 @@ func (h *NotificationByIdHandler) delete(w http.ResponseWriter, r *http.Request)
 	notificationIdString := queryParams.Get("notificationId")
 	notificationId, notificationIdErr := strconv.Atoi(notificationIdString)
 	if notificationIdErr != nil {
-		log.Println("Problem with AtoI notificationId. ", notificationIdErr)
+		utils.HandleError("Problem with AtoI notificationId. ", notificationIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -114,7 +115,7 @@ func (h *NotificationByIdHandler) delete(w http.ResponseWriter, r *http.Request)
 
 	err := h.Repo.DeleteNotificationById(notificationId)
 	if err != nil {
-		log.Println("Failed to delete Notifications. ", err)
+		utils.HandleError("Failed to delete Notifications. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
