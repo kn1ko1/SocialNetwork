@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -18,6 +19,7 @@ func UpdateComment(database *sql.DB, comment models.Comment) (models.Comment, er
 
 	statement, err := database.Prepare(query)
 	if err != nil {
+		utils.HandleError("Error preparing statement in UpdateComment.", err)
 		return comment, err
 	}
 
@@ -29,6 +31,7 @@ func UpdateComment(database *sql.DB, comment models.Comment) (models.Comment, er
 	)
 
 	if err != nil {
+		utils.HandleError("Error executing query in UpdateComment.", err)
 		return comment, err
 	}
 

@@ -3,6 +3,7 @@ package sqlite
 import (
 	"database/sql"
 	"errors"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -22,8 +23,10 @@ func GetCommentById(database *sql.DB, commentId int) (models.Comment, error) {
 
 	switch {
 	case err == sql.ErrNoRows:
+		utils.HandleError("Comment not found in GetCommentById.", err)
 		return comment, errors.New("comment not found")
 	case err != nil:
+		utils.HandleError("Error retrieving comment by ID in GetCommentById.", err)
 		return comment, err
 	}
 

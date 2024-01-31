@@ -2,10 +2,11 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
-// Retrieves message with the relevant senderId from the MESSAGES table
+// Retrieves messages with the relevant senderId and targetId from the MESSAGES table
 func GetMessagesBySenderAndTargetIds(database *sql.DB, senderId, targetId int) ([]models.Message, error) {
 
 	queryStr := `SELECT *
@@ -17,8 +18,11 @@ func GetMessagesBySenderAndTargetIds(database *sql.DB, senderId, targetId int) (
 	var messages []models.Message
 	rows, err := database.Query(queryStr, senderId, targetId, targetId, senderId)
 	if err != nil {
+		utils.HandleError("Error executing query in GetMessagesBySenderAndTargetIds.", err)
 		return messages, err
 	}
+	defer rows.Close()
+
 	for rows.Next() {
 		var message models.Message
 		err := rows.Scan(
@@ -31,6 +35,7 @@ func GetMessagesBySenderAndTargetIds(database *sql.DB, senderId, targetId int) (
 			&message.UpdatedAt,
 		)
 		if err != nil {
+			utils.HandleError("Error scanning rows in GetMessagesBySenderAndTargetIds.", err)
 			return nil, err
 		}
 
@@ -38,6 +43,7 @@ func GetMessagesBySenderAndTargetIds(database *sql.DB, senderId, targetId int) (
 	}
 
 	if err := rows.Err(); err != nil {
+		utils.HandleError("Error iterating over rows in GetMessagesBySenderAndTargetIds.", err)
 		return nil, err
 	}
 

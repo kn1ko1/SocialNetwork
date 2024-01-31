@@ -3,13 +3,14 @@ package sqlite
 import (
 	"database/sql"
 	"errors"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
 // Retrieves post with the relevant postId from the POSTS table
-func GetPostById(database *sql.DB, groupId int) (models.Post, error) {
+func GetPostById(database *sql.DB, postId int) (models.Post, error) {
 	var post models.Post
-	err := database.QueryRow("SELECT * FROM POSTS WHERE PostId = ?", groupId).
+	err := database.QueryRow("SELECT * FROM POSTS WHERE PostId = ?", postId).
 		Scan(
 			&post.PostId,
 			&post.Body,
@@ -22,8 +23,10 @@ func GetPostById(database *sql.DB, groupId int) (models.Post, error) {
 
 	switch {
 	case err == sql.ErrNoRows:
+		utils.HandleError("Post not found.", err)
 		return post, errors.New("post not found")
 	case err != nil:
+		utils.HandleError("Error querying post by ID.", err)
 		return post, err
 	}
 

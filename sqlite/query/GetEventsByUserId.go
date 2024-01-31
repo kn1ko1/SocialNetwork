@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -9,6 +10,7 @@ import (
 func GetEventsByUserId(database *sql.DB, userId int) ([]models.Event, error) {
 	rows, err := database.Query("SELECT * FROM EVENTS WHERE UserId = ?", userId)
 	if err != nil {
+		utils.HandleError("Error executing SELECT * FROM EVENTS WHERE UserId = ? statement.", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -28,6 +30,7 @@ func GetEventsByUserId(database *sql.DB, userId int) ([]models.Event, error) {
 			&event.UserId,
 		)
 		if err != nil {
+			utils.HandleError("Error scanning rows in GetEventsByUserId.", err)
 			return nil, err
 		}
 
@@ -35,6 +38,7 @@ func GetEventsByUserId(database *sql.DB, userId int) ([]models.Event, error) {
 	}
 
 	if err := rows.Err(); err != nil {
+		utils.HandleError("Error iterating over rows in GetEventsByUserId.", err)
 		return nil, err
 	}
 

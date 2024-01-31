@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -9,6 +10,7 @@ import (
 func GetCommentsByGroupId(database *sql.DB, groupId int) ([]models.Comment, error) {
 	rows, err := database.Query("SELECT * FROM COMMENTS WHERE GroupId = ?", groupId)
 	if err != nil {
+		utils.HandleError("Error executing SELECT * FROM COMMENTS WHERE GroupId = ? statement.", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -27,6 +29,7 @@ func GetCommentsByGroupId(database *sql.DB, groupId int) ([]models.Comment, erro
 			&comment.UserId,
 		)
 		if err != nil {
+			utils.HandleError("Error scanning rows in GetCommentsByGroupId.", err)
 			return nil, err
 		}
 
@@ -34,6 +37,7 @@ func GetCommentsByGroupId(database *sql.DB, groupId int) ([]models.Comment, erro
 	}
 
 	if err := rows.Err(); err != nil {
+		utils.HandleError("Error iterating over rows in GetCommentsByGroupId.", err)
 		return nil, err
 	}
 

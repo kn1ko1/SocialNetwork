@@ -2,12 +2,14 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
 func GetGroupUsersByGroupId(database *sql.DB, groupId int) ([]models.GroupUser, error) {
 	rows, err := database.Query("SELECT * FROM GROUP_USERS WHERE GroupId = ?", groupId)
 	if err != nil {
+		utils.HandleError("Error executing SELECT * FROM GROUP_USERS WHERE GroupId = ? statement.", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -24,6 +26,7 @@ func GetGroupUsersByGroupId(database *sql.DB, groupId int) ([]models.GroupUser, 
 			&groupUser.GroupId,
 		)
 		if err != nil {
+			utils.HandleError("Error scanning rows in GetGroupUsersByGroupId.", err)
 			return nil, err
 		}
 
@@ -31,6 +34,7 @@ func GetGroupUsersByGroupId(database *sql.DB, groupId int) ([]models.GroupUser, 
 	}
 
 	if err := rows.Err(); err != nil {
+		utils.HandleError("Error iterating over rows in GetGroupUsersByGroupId.", err)
 		return nil, err
 	}
 
