@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -25,6 +26,7 @@ func UpdateUser(database *sql.DB, user models.User) (models.User, error) {
 
 	statement, err := database.Prepare(query)
 	if err != nil {
+		utils.HandleError("Error preparing db in UpdateUser.", err)
 		return user, err
 	}
 
@@ -43,6 +45,8 @@ func UpdateUser(database *sql.DB, user models.User) (models.User, error) {
 	)
 
 	if err != nil {
+		utils.HandleError("Error executing statement in UpdateUser.", err)
+
 		return user, err
 	}
 

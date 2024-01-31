@@ -3,6 +3,7 @@ package sqlite
 import (
 	"database/sql"
 	"socialnetwork/models"
+	// Assuming you have a utility package for error handling
 )
 
 // Updates message information in the MESSAGES table

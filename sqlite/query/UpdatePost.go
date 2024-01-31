@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -18,6 +19,8 @@ func UpdatePost(database *sql.DB, post models.Post) (models.Post, error) {
 
 	statement, err := database.Prepare(query)
 	if err != nil {
+		utils.HandleError("Error preparing database in UpdatePost.", err)
+
 		return post, err
 	}
 
@@ -29,6 +32,8 @@ func UpdatePost(database *sql.DB, post models.Post) (models.Post, error) {
 	)
 
 	if err != nil {
+		utils.HandleError("Error executing statement in UpdatePost.", err)
+
 		return post, err
 	}
 

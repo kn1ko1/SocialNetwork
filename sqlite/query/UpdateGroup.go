@@ -3,6 +3,7 @@ package sqlite
 import (
 	"database/sql"
 	"socialnetwork/models"
+	"socialnetwork/utils" // Assuming you have a utility package for error handling
 )
 
 // Updates group information in the GROUPS table
@@ -18,6 +19,7 @@ func UpdateGroup(database *sql.DB, group models.Group) (models.Group, error) {
 
 	statement, err := database.Prepare(query)
 	if err != nil {
+		utils.HandleError("Error preparing statement in UpdateGroup.", err)
 		return group, err
 	}
 
@@ -29,6 +31,7 @@ func UpdateGroup(database *sql.DB, group models.Group) (models.Group, error) {
 	)
 
 	if err != nil {
+		utils.HandleError("Error executing query in UpdateGroup.", err)
 		return group, err
 	}
 

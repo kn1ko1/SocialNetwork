@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -18,17 +19,19 @@ func UpdateNotification(database *sql.DB, notification models.Notification) (mod
 
 	statement, err := database.Prepare(query)
 	if err != nil {
+		utils.HandleError("Error preparing database in UpdateNotification.", err)
 		return notification, err
 	}
 
 	_, err = statement.Exec(
-		&notification.NotificationType,
-		&notification.Status,
-		&notification.UpdatedAt,
-		&notification.NotificationId,
+		notification.NotificationType,
+		notification.Status,
+		notification.UpdatedAt,
+		notification.NotificationId,
 	)
 
 	if err != nil {
+		utils.HandleError("Error executing statement in UpdateNotification.", err)
 		return notification, err
 	}
 
