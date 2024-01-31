@@ -25,6 +25,7 @@ func GetAllPosts(database *sql.DB) ([]models.Post, error) {
 			&post.CreatedAt,
 			&post.GroupId,
 			&post.ImageURL,
+			&post.Privacy,
 			&post.UpdatedAt,
 			&post.UserId,
 		)

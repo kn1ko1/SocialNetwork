@@ -17,6 +17,7 @@ func GetPostById(database *sql.DB, postId int) (models.Post, error) {
 			&post.CreatedAt,
 			&post.GroupId,
 			&post.ImageURL,
+			&post.Privacy,
 			&post.UpdatedAt,
 			&post.UserId,
 		)

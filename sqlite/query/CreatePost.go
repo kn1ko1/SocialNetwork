@@ -15,9 +15,10 @@ func CreatePost(database *sql.DB, post models.Post) (models.Post, error) {
 		CreatedAt,
 		GroupId,
 		ImageURL,
+		Privacy,
 		UpdatedAt,
 		UserId
-	) VALUES (?, ?, ?, ?, ?, ?)
+	) VALUES (?, ?, ?, ?, ?, ?, ?)
 `
 	statement, err := database.Prepare(query)
 	if err != nil {
@@ -29,6 +30,7 @@ func CreatePost(database *sql.DB, post models.Post) (models.Post, error) {
 		post.CreatedAt,
 		post.GroupId,
 		post.ImageURL,
+		post.Privacy,
 		post.UpdatedAt,
 		post.UserId)
 	if err != nil {

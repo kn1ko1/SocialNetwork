@@ -4,6 +4,7 @@ CREATE TABLE POSTS (
     CreatedAt BIGINT NOT NULL,
     GroupId INTEGER,
     ImageURL TEXT,
+    Privacy TEXT NOT NULL DEFAULT 'public',
     UpdatedAt BIGINT NOT NULL,
     UserId INTEGER NOT NULL
 );

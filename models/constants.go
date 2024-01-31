@@ -20,6 +20,7 @@ var (
 	sutTitle              = []string{"Family Time", "Our Group", "Cinema Trip"}
 	sutMessageTypes       = []string{"GC", "DM"}
 	sutImageURL           = []string{"URL1", "URL2", "URL3"}
+	sutPrivacy            = []string{"public", "private", "almost private"}
 	sutNotificationType   = []string{"Follow Request", "Group Invitation", "Message"}
 	sutNotificationStatus = []string{"Pending", "Accepted", "Rejected"}
 )

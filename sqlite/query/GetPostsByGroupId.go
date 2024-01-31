@@ -25,6 +25,7 @@ func GetPostsByGroupId(database *sql.DB, groupId int) ([]models.Post, error) {
 			&post.CreatedAt,
 			&post.GroupId,
 			&post.ImageURL,
+			&post.Privacy,
 			&post.UpdatedAt,
 			&post.UserId,
 		)

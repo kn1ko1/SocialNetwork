@@ -13,7 +13,8 @@ func UpdatePost(database *sql.DB, post models.Post) (models.Post, error) {
 		SET
 			Body = ?,
 			ImageUrl = ?,
-			UpdatedAt = ?
+			UpdatedAt = ?,
+			Privacy = ?
 		WHERE PostId = ?
 	`
 
@@ -28,6 +29,7 @@ func UpdatePost(database *sql.DB, post models.Post) (models.Post, error) {
 		post.Body,
 		post.ImageURL,
 		post.UpdatedAt,
+		post.Privacy,
 		post.PostId,
 	)
 
