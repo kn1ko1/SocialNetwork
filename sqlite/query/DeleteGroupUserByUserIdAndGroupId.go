@@ -4,7 +4,7 @@ import (
 	"database/sql"
 )
 
-func DeleteGroupUserByUserIdAndGroupId(database *sql.DB, userId, groupId int) error {
+func DeleteGroupUserByGroupIdAndUserId(database *sql.DB, groupId, userId int) error {
 
 	queryStr := `DELETE *
 	FROM GROUP_USERS

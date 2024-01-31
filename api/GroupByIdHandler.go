@@ -29,11 +29,11 @@ func (h *GroupByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		h.get(w, r)
 		return
-	case http.MethodDelete:
-		h.delete(w, r)
-		return
 	case http.MethodPut:
 		h.put(w, r)
+		return
+	case http.MethodDelete:
+		h.delete(w, r)
 		return
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)

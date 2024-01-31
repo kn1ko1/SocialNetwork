@@ -60,7 +60,7 @@ type IRepository interface {
 	GetEventUsersByEventId(eventId int) ([]models.EventUser, error)
 	DeleteEventUsersByUserId(userId int) error
 	DeleteEventUsersByEventId(eventId int) error
-	DeleteEventUserByUserIdAndEventId(userId, EventId int) error
+	DeleteEventUserByEventIdAndUserId(eventId, userId int) error
 	DeleteAllEventUsers() error
 
 	// Message
@@ -91,7 +91,7 @@ type IRepository interface {
 	GetGroupUsersByGroupId(groupId int) ([]models.GroupUser, error)
 	DeleteGroupUsersByUserId(UserId int) error
 	DeleteGroupUserByGroupId(groupId int) error
-	DeleteGroupUserByUserIdAndGroupId(UserId, GroupId int) error
+	DeleteGroupUserByGroupIdAndUserId(groupId, userId int) error
 	DeleteGroupUser(groupUser int) error
 	DeleteAllGroupUsers() error
 

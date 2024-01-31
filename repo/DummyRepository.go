@@ -316,7 +316,7 @@ func (r *DummyRepository) DeleteEventUsersByUserId(userId int) error {
 func (r *DummyRepository) DeleteEventUsersByEventId(eventId int) error {
 	return nil
 }
-func (r *DummyRepository) DeleteEventUserByUserIdAndEventId(userId, eventId int) error {
+func (r *DummyRepository) DeleteEventUserByEventIdAndUserId(eventId, userId int) error {
 	return nil
 }
 func (r *DummyRepository) DeleteAllEventUsers() error {
@@ -482,7 +482,7 @@ func (r *DummyRepository) DeleteGroupUsersByUserId(userId int) error {
 func (r *DummyRepository) DeleteGroupUserByGroupId(groupId int) error {
 	return nil
 }
-func (r *DummyRepository) DeleteGroupUserByUserIdAndGroupId(userId, groupId int) error {
+func (r *DummyRepository) DeleteGroupUserByGroupIdAndUserId(groupId, userId int) error {
 	return nil
 }
 func (r *DummyRepository) DeleteAllGroupUsers() error {
