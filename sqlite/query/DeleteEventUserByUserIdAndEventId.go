@@ -4,12 +4,12 @@ import (
 	"database/sql"
 )
 
-func DeleteEventUserByUserIdAndEventId(database *sql.DB, userId, eventId int) error {
+func DeleteEventUserByEventIdAndUserId(database *sql.DB, userId, eventId int) error {
 
 	queryStr := `DELETE *
 	FROM EVENT_USERS
-	WHERE (UserId = (?) AND GroupId = (?))
-	OR (GroupId = (?) AND UserId = (?))
+	WHERE (UserId = (?) AND EventId = (?))
+	OR (EventId = (?) AND UserId = (?))
 	ORDER BY timestamp ASC;`
 
 	_, err := database.Query(queryStr, userId, eventId, eventId, userId)

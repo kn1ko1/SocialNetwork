@@ -4,7 +4,6 @@
 package repo
 
 import (
-	"errors"
 	"log"
 	"socialnetwork/models"
 	sqlite "socialnetwork/sqlite/query"
@@ -179,8 +178,8 @@ func (r *SQLiteRepository) DeleteEventUsersByUserId(userId int) error {
 func (r *SQLiteRepository) DeleteEventUsersByEventId(eventId int) error {
 	return sqlite.DeleteEventUsersByEventId(r.businessDb, eventId)
 }
-func (r *SQLiteRepository) DeleteEventUserByUserIdAndEventId(userId, eventId int) error {
-	return sqlite.DeleteEventUserByUserIdAndEventId(r.businessDb, userId, eventId)
+func (r *SQLiteRepository) DeleteEventUserByEventIdAndUserId(eventId, userId int) error {
+	return sqlite.DeleteEventUserByEventIdAndUserId(r.businessDb, userId, eventId)
 }
 func (r *SQLiteRepository) DeleteAllEventUsers() error {
 	return sqlite.DeleteAllEventUsers(r.businessDb)
@@ -223,40 +222,49 @@ func (r *SQLiteRepository) DeleteAllMessages() error {
 
 // Group
 func (r *SQLiteRepository) CreateGroup(group models.Group) (models.Group, error) {
-	return group, errors.New("not implemented")
+	return sqlite.CreateGroup(r.businessDb, group)
 }
 
 func (r *SQLiteRepository) GetAllGroups() ([]models.Group, error) {
-	return nil, errors.New("not implemented")
+	return sqlite.GetAllGroups(r.businessDb)
 }
-
+func (r *SQLiteRepository) GetGroup(groupId int) (models.Group, error) {
+	return sqlite.GetGroup(r.businessDb, groupId)
+}
 func (r *SQLiteRepository) UpdateGroup(group models.Group) (models.Group, error) {
-	return group, errors.New("not implemented")
+	return sqlite.UpdateGroup(r.businessDb, group)
 }
-
+func (r *SQLiteRepository) DeleteGroup(groupId int) error {
+	return sqlite.DeleteGroup(r.businessDb, groupId)
+}
 func (r *SQLiteRepository) DeleteAllGroups() error {
-	return errors.New("not implemented")
+	return sqlite.DeleteAllGroups(r.businessDb)
 }
 
 // Group_User
 func (r *SQLiteRepository) CreateGroupUser(groupUser models.GroupUser) (models.GroupUser, error) {
-	return groupUser, errors.New("not implemented")
+	return sqlite.CreateGroupUser(r.businessDb, groupUser)
+}
+func (r *SQLiteRepository) GetGroupUser(groupUserId int) (models.GroupUser, error) {
+	return sqlite.GetGroupUser(r.businessDb, groupUserId)
 }
 func (r *SQLiteRepository) GetGroupUsersByUserId(userId int) ([]models.GroupUser, error) {
-	var groupUsers []models.GroupUser
-	return groupUsers, errors.New("not implemented")
+	return sqlite.GetGroupUsersByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) GetGroupUsersByGroupId(groupId int) ([]models.GroupUser, error) {
 	return sqlite.GetGroupUsersByGroupId(r.businessDb, groupId)
 }
-func (r *SQLiteRepository) DeleteGroupUsersByUserId(UserId int) error {
-	return sqlite.DeleteGroupUsersByUserId(r.businessDb, UserId)
+func (r *SQLiteRepository) DeleteGroupUsersByUserId(userId int) error {
+	return sqlite.DeleteGroupUsersByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) DeleteGroupUserByGroupId(groupId int) error {
 	return sqlite.DeleteGroupUserByGroupId(r.businessDb, groupId)
 }
-func (r *SQLiteRepository) DeleteGroupUserByUserIdAndGroupId(UserId, GroupId int) error {
-	return sqlite.DeleteGroupUserByUserIdAndGroupId(r.businessDb, UserId, GroupId)
+func (r *SQLiteRepository) DeleteGroupUserByGroupIdAndUserId(groupId, userId int) error {
+	return sqlite.DeleteGroupUserByGroupIdAndUserId(r.businessDb, groupId, userId)
+}
+func (r *SQLiteRepository) DeleteGroupUser(groupUserId int) error {
+	return sqlite.DeleteGroupUser(r.businessDb, groupUserId)
 }
 
 func (r *SQLiteRepository) DeleteAllGroupUsers() error {
@@ -265,15 +273,14 @@ func (r *SQLiteRepository) DeleteAllGroupUsers() error {
 
 // Notification
 func (r *SQLiteRepository) CreateNotification(notification models.Notification) (models.Notification, error) {
-	return notification, errors.New("not implemented")
+	return sqlite.CreateNotification(r.businessDb, notification)
 }
 func (r *SQLiteRepository) GetNotificationById(notificationId int) (models.Notification, error) {
-	var emptyNotification models.Notification
-	return emptyNotification, errors.New("not implemented")
+	return sqlite.GetNotificationById(r.businessDb, notificationId)
 }
 func (r *SQLiteRepository) UpdateNotification(notification models.Notification) (models.Notification, error) {
-	return notification, errors.New("not implemented")
+	return sqlite.UpdateNotification(r.businessDb, notification)
 }
 func (r *SQLiteRepository) DeleteNotificationById(notificationId int) error {
-	return errors.New("not implemented")
+	return sqlite.DeleteNotificationById(r.businessDb, notificationId)
 }

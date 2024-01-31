@@ -44,27 +44,70 @@ func addApiHandlers(rt *router.Router) {
 	logoutHandler := auth.NewLogoutHandler(r)
 	registrationHandler := auth.NewRegistrationHandler(r)
 	usersHandler := api.NewUsersHandler(r)
-	groupsHandler := api.NewGroupsHandler(r)
-	groupUsersHandler := api.NewGroupUsersHandler(r)
+	userByIdHandler := api.NewUserByIdHandler(r)
 	postsHandler := api.NewPostsHandler(r)
+	postByIdHandler := api.NewPostByIdHandler(r)
+	userPostsHandler := api.NewUserPostsHandler(r)
 	commentsHandler := api.NewCommentsHandler(r)
+	commentByIdHandler := api.NewCommentByIdHandler(r)
+	commentByPostIdHandler := api.NewCommentsByPostIdHandler(r)
 	eventsHandler := api.NewEventsHandler(r)
-	notificationsHandler := api.NewNotificationsHandler(r)
+	eventByIdHandler := api.NewEventByIdHandler(r)
+	eventsByGroupIdHandler := api.NewEventsByGroupIdHandler(r)
+	eventUsersHandler := api.NewEventUsersHandler(r)
+	eventUsersByEventIdHandler := api.NewEventUsersByEventIdHandler(r)
+	eventUsersByEventIdAndUserIdHandler := api.NewEventUserByEventIdAndUserIdHandler(r)
 	messagesHandler := api.NewMessagesHandler(r)
+	messageByIdHandler := api.NewMessageByIdHandler(r)
+	messagesByGroupIdHandler := api.NewMessagesByGroupIdHandler(r)
+	groupsHandler := api.NewGroupsHandler(r)
+	groupByIdHandler := api.NewGroupByIdHandler(r)
+	groupUsersHandler := api.NewGroupUsersHandler(r)
+	groupUserByIdHandler := api.NewGroupUserByIdHandler(r)
+	groupUserByGroupIdAndUserIdHandler := api.NewGroupUserByGroupIdAndUserIdHandler(r)
+	groupPostsHandler := api.NewGroupPostsHandler(r)
+	notificationsHandler := api.NewNotificationsHandler(r)
+	notificationByIdHandler := api.NewNotificationByIdHandler(r)
 
 	// Auth Handlers
 	rt.AddHandler(regexp.MustCompile(`^/auth/login$`), loginHandler)
 	rt.AddHandler(regexp.MustCompile(`^/auth/logoutn$`), logoutHandler)
 	rt.AddHandler(regexp.MustCompile(`^/auth/registration$`), registrationHandler)
 
+	// User Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/users$`), usersHandler)
-	rt.AddHandler(regexp.MustCompile(`^/api/groups$`), groupsHandler)
-	rt.AddHandler(regexp.MustCompile(`^/api/groupUsers$`), groupUsersHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/users/{userId}$`), userByIdHandler)
+	// Post Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/posts$`), postsHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/posts/{postId}$`), postByIdHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/user/{userId}/posts$`), userPostsHandler)
+	// Comment Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/comments$`), commentsHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/comments/{commentId}$`), commentByIdHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/posts/{postId}/comments$`), commentByPostIdHandler)
+	// Event Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/events$`), eventsHandler)
-	rt.AddHandler(regexp.MustCompile(`^/api/notifications$`), notificationsHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/events/{eventId}$`), eventByIdHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/groups/{groupId}/events$`), eventsByGroupIdHandler)
+	// EventUser Handlers
+	rt.AddHandler(regexp.MustCompile(`^/api/eventUsers$`), eventUsersHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/events/{eventId}/eventUsers$`), eventUsersByEventIdHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/events/{eventId}/eventUsers/users/{userId}$`), eventUsersByEventIdAndUserIdHandler)
+	// Message Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/messages$`), messagesHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/messages/{messageId$`), messageByIdHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/groups/{groupId}/messages$`), messagesByGroupIdHandler)
+	// Group Handlers
+	rt.AddHandler(regexp.MustCompile(`^/api/groups$`), groupsHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/groups/{groupId$`), groupByIdHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/groups/{groupId}/posts$`), groupPostsHandler)
+	// GroupUser Handlers
+	rt.AddHandler(regexp.MustCompile(`^/api/groupUsers$`), groupUsersHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/groupUsers/{groupUserId$`), groupUserByIdHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/groups/{groupId}/eventUsers/users/{userId}$`), groupUserByGroupIdAndUserIdHandler)
+	// Notification Handlers
+	rt.AddHandler(regexp.MustCompile(`^/api/notifications$`), notificationsHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/notifications/{notificationId}$`), notificationByIdHandler)
 }
 
 func addUIHandlers(rt *router.Router) {

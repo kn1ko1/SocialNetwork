@@ -316,7 +316,7 @@ func (r *DummyRepository) DeleteEventUsersByUserId(userId int) error {
 func (r *DummyRepository) DeleteEventUsersByEventId(eventId int) error {
 	return nil
 }
-func (r *DummyRepository) DeleteEventUserByUserIdAndEventId(userId, eventId int) error {
+func (r *DummyRepository) DeleteEventUserByEventIdAndUserId(eventId, userId int) error {
 	return nil
 }
 func (r *DummyRepository) DeleteAllEventUsers() error {
@@ -396,8 +396,39 @@ func (r *DummyRepository) GetAllGroups() ([]models.Group, error) {
 	}
 	return groups, nil
 }
+func (r *DummyRepository) GetGroup(groupId int) (models.Group, error) {
+	ctime := time.Now().UTC().UnixMilli()
+
+	var group models.Group
+	group.GroupId = groupId
+	group.CreatedAt = ctime
+	group.CreatorId = 1
+	group.Description = "It's a Dummy Group"
+	group.Title = "Dummy Group"
+	group.UpdatedAt = ctime
+
+	return group, nil
+}
+
+func (r *DummyRepository) GetGroupUser(groupUserId int) (models.GroupUser, error) {
+	ctime := time.Now().UTC().UnixMilli()
+	groupUser := models.GroupUser{
+		GroupUserId: groupUserId,
+		CreatedAt:   ctime,
+		GroupId:     2,
+		UpdatedAt:   ctime,
+		UserId:      3,
+	}
+	return groupUser, nil
+}
 func (r *DummyRepository) UpdateGroup(group models.Group) (models.Group, error) {
 	return group, nil
+}
+func (r *DummyRepository) DeleteGroup(groupId int) error {
+	return nil
+}
+func (r *DummyRepository) DeleteGroupUser(groupUser int) error {
+	return nil
 }
 func (r *DummyRepository) DeleteAllGroups() error {
 	return nil
@@ -445,13 +476,13 @@ func (r *DummyRepository) GetGroupUsersByGroupId(groupId int) ([]models.GroupUse
 	}
 	return groupUsers, errors.New("not implemented")
 }
-func (r *DummyRepository) DeleteGroupUsersByUserId(UserId int) error {
+func (r *DummyRepository) DeleteGroupUsersByUserId(userId int) error {
 	return errors.New("dummy deleted groupusers by userid")
 }
 func (r *DummyRepository) DeleteGroupUserByGroupId(groupId int) error {
 	return nil
 }
-func (r *DummyRepository) DeleteGroupUserByUserIdAndGroupId(UserId, GroupId int) error {
+func (r *DummyRepository) DeleteGroupUserByGroupIdAndUserId(groupId, userId int) error {
 	return nil
 }
 func (r *DummyRepository) DeleteAllGroupUsers() error {

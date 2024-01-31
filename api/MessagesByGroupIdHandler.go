@@ -12,18 +12,18 @@ import (
 // Endpoint: /api/Messa s/Message/{MessageId}
 // Allowed methods: GET, PUT, DELETE
 
-type MessagetByGroupIdHandler struct {
+type MessagesByGroupIdHandler struct {
 	Repo repo.IRepository
 }
 
 // Constructor with dependency injection of a repo implementation
-func NewMessagetByGroupIdHandler(r repo.IRepository) *MessagetByGroupIdHandler {
-	return &MessagetByGroupIdHandler{Repo: r}
+func NewMessagesByGroupIdHandler(r repo.IRepository) *MessagesByGroupIdHandler {
+	return &MessagesByGroupIdHandler{Repo: r}
 }
 
 // A MessagesHandler instance implements the ServeHTTP interface, and thus
 // itself becomes an HTTPHandler
-func (h *MessagetByGroupIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *MessagesByGroupIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
@@ -42,7 +42,7 @@ func (h *MessagetByGroupIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Requ
 	}
 }
 
-func (h *MessagetByGroupIdHandler) get(w http.ResponseWriter, r *http.Request) {
+func (h *MessagesByGroupIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
 	MessageIdString := queryParams.Get("postId")
 	MessageId, MessageIdErr := strconv.Atoi(MessageIdString)
@@ -69,7 +69,7 @@ func (h *MessagetByGroupIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Here are your posts"))
 }
 
-func (h *MessagetByGroupIdHandler) put(w http.ResponseWriter, r *http.Request) {
+func (h *MessagesByGroupIdHandler) put(w http.ResponseWriter, r *http.Request) {
 
 	var Message models.Message
 	err := json.NewDecoder(r.Body).Decode(&Message)
@@ -107,7 +107,7 @@ func (h *MessagetByGroupIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Message updated successfully!"))
 }
 
-func (h *MessagetByGroupIdHandler) delete(w http.ResponseWriter, r *http.Request) {
+func (h *MessagesByGroupIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
 	// look at penultimate id for userId
 
