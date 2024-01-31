@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -9,6 +10,7 @@ import (
 func GetAllMessages(database *sql.DB) ([]models.Message, error) {
 	rows, err := database.Query("SELECT * FROM MESSAGES")
 	if err != nil {
+		utils.HandleError("Error executing SELECT * FROM MESSAGES statement.", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -27,6 +29,7 @@ func GetAllMessages(database *sql.DB) ([]models.Message, error) {
 			&message.UpdatedAt,
 		)
 		if err != nil {
+			utils.HandleError("Error scanning rows in GetAllMessages.", err)
 			return nil, err
 		}
 
@@ -34,6 +37,7 @@ func GetAllMessages(database *sql.DB) ([]models.Message, error) {
 	}
 
 	if err := rows.Err(); err != nil {
+		utils.HandleError("Error iterating over rows in GetAllMessages.", err)
 		return nil, err
 	}
 

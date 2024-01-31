@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -22,6 +23,7 @@ func CreateNotification(database *sql.DB, notification models.Notification) (mod
 
 	statement, err := database.Prepare(query)
 	if err != nil {
+		utils.HandleError("Error preparing db query.", err)
 		return notification, err
 	}
 	res, err := statement.Exec(
@@ -35,10 +37,12 @@ func CreateNotification(database *sql.DB, notification models.Notification) (mod
 	)
 
 	if err != nil {
+		utils.HandleError("Error executing statement.", err)
 		return notification, err
 	}
 	id, err := res.LastInsertId()
 	if err != nil {
+		utils.HandleError("Error getting last insert from table.", err)
 		return notification, err
 	}
 	notification.NotificationId = int(id)

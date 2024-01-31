@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -9,6 +10,7 @@ import (
 func GetAllPosts(database *sql.DB) ([]models.Post, error) {
 	rows, err := database.Query("SELECT * FROM POSTS")
 	if err != nil {
+		utils.HandleError("Error executing SELECT * FROM POSTS statement.", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -27,6 +29,7 @@ func GetAllPosts(database *sql.DB) ([]models.Post, error) {
 			&post.UserId,
 		)
 		if err != nil {
+			utils.HandleError("Error scanning rows in GetAllPosts.", err)
 			return nil, err
 		}
 
@@ -34,6 +37,7 @@ func GetAllPosts(database *sql.DB) ([]models.Post, error) {
 	}
 
 	if err := rows.Err(); err != nil {
+		utils.HandleError("Error iterating over rows in GetAllPosts.", err)
 		return nil, err
 	}
 

@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -9,6 +10,7 @@ import (
 func GetAllGroups(database *sql.DB) ([]models.Group, error) {
 	rows, err := database.Query("SELECT * FROM GROUPS")
 	if err != nil {
+		utils.HandleError("Error executing SELECT * FROM GROUPS statement.", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -25,6 +27,7 @@ func GetAllGroups(database *sql.DB) ([]models.Group, error) {
 			&group.UpdatedAt,
 		)
 		if err != nil {
+			utils.HandleError("Error scanning rows in GetAllGroups.", err)
 			return nil, err
 		}
 
@@ -32,6 +35,7 @@ func GetAllGroups(database *sql.DB) ([]models.Group, error) {
 	}
 
 	if err := rows.Err(); err != nil {
+		utils.HandleError("Error iterating over rows in GetAllGroups.", err)
 		return nil, err
 	}
 

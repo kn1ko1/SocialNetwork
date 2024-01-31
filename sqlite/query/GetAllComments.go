@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -9,6 +10,7 @@ import (
 func GetAllComments(database *sql.DB) ([]models.Comment, error) {
 	rows, err := database.Query("SELECT * FROM COMMENTS")
 	if err != nil {
+		utils.HandleError("Error executing SELECT * FROM COMMENTS statement.", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -27,6 +29,7 @@ func GetAllComments(database *sql.DB) ([]models.Comment, error) {
 			&comment.UserId,
 		)
 		if err != nil {
+			utils.HandleError("Error scanning rows in GetAllComments.", err)
 			return nil, err
 		}
 
@@ -34,6 +37,7 @@ func GetAllComments(database *sql.DB) ([]models.Comment, error) {
 	}
 
 	if err := rows.Err(); err != nil {
+		utils.HandleError("Error iterating over rows in GetAllComments.", err)
 		return nil, err
 	}
 

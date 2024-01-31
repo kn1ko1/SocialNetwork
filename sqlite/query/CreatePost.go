@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -20,6 +21,7 @@ func CreatePost(database *sql.DB, post models.Post) (models.Post, error) {
 `
 	statement, err := database.Prepare(query)
 	if err != nil {
+		utils.HandleError("Error preparing db query.", err)
 		return post, err
 	}
 	res, err := statement.Exec(
@@ -30,10 +32,12 @@ func CreatePost(database *sql.DB, post models.Post) (models.Post, error) {
 		post.UpdatedAt,
 		post.UserId)
 	if err != nil {
+		utils.HandleError("Error executing statement.", err)
 		return post, err
 	}
 	id, err := res.LastInsertId()
 	if err != nil {
+		utils.HandleError("Error getting last insert from table.", err)
 		return post, err
 	}
 	post.PostId = int(id)

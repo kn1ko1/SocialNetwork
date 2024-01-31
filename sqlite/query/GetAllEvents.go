@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -9,6 +10,7 @@ import (
 func GetAllEvents(database *sql.DB) ([]models.Event, error) {
 	rows, err := database.Query("SELECT * FROM EVENTS")
 	if err != nil {
+		utils.HandleError("Error executing SELECT * FROM EVENTS statement.", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -27,6 +29,7 @@ func GetAllEvents(database *sql.DB) ([]models.Event, error) {
 			&event.UserId,
 		)
 		if err != nil {
+			utils.HandleError("Error scanning rows in GetAllEvents.", err)
 			return nil, err
 		}
 
@@ -34,6 +37,7 @@ func GetAllEvents(database *sql.DB) ([]models.Event, error) {
 	}
 
 	if err := rows.Err(); err != nil {
+		utils.HandleError("Error iterating over rows in GetAllEvents.", err)
 		return nil, err
 	}
 

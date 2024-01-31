@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 )
 
 func DeleteGroupUserByGroupIdAndUserId(database *sql.DB, groupId, userId int) error {
@@ -14,6 +15,7 @@ func DeleteGroupUserByGroupIdAndUserId(database *sql.DB, groupId, userId int) er
 
 	_, err := database.Query(queryStr, userId, groupId, groupId, userId)
 	if err != nil {
+		utils.HandleError("Error executing delete group users by group Id and user ID statement.", err)
 		return err
 	}
 	return nil

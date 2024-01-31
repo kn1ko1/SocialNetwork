@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -22,6 +23,7 @@ func CreateEvent(database *sql.DB, event models.Event) (models.Event, error) {
 
 	statement, err := database.Prepare(query)
 	if err != nil {
+		utils.HandleError("Error preparing db query.", err)
 		return event, err
 	}
 	res, err := statement.Exec(
@@ -34,10 +36,12 @@ func CreateEvent(database *sql.DB, event models.Event) (models.Event, error) {
 		event.UserId,
 	)
 	if err != nil {
+		utils.HandleError("Error executing statement.", err)
 		return event, err
 	}
 	id, err := res.LastInsertId()
 	if err != nil {
+		utils.HandleError("Error getting last insert from table.", err)
 		return event, err
 	}
 	event.EventId = int(id)
