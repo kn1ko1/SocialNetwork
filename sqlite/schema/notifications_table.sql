@@ -6,5 +6,7 @@ CREATE TABLE NOTIFICATIONS (
 	SenderId         INTEGER NOT NULL,  
 	Status           TEXT NOT NULL,
 	TargetId         INTEGER NOT NULL,
-	UpdatedAt        BIGINT NOT NULL
+	UpdatedAt        BIGINT NOT NULL,
+	FOREIGN KEY (SenderId) REFERENCES USERS(UserId),
+    FOREIGN KEY (TargetId) REFERENCES USERS(UserId)
 );
