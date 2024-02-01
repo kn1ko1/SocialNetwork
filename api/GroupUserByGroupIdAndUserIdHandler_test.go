@@ -1,6 +1,8 @@
 package api
 
 import (
+	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -9,8 +11,14 @@ import (
 func TestGroupUserByGroupIdAndUserIdHandler_Delete(t *testing.T) {
 
 	handler := NewGroupUserByGroupIdAndUserIdHandler(R)
+
 	err := handler.Repo.DeleteGroupUserByGroupIdAndUserId(GroupExample.GroupId, GroupExample.CreatorId)
 
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	groupJSON, err := json.Marshal(GroupExample)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -18,7 +26,7 @@ func TestGroupUserByGroupIdAndUserIdHandler_Delete(t *testing.T) {
 	URL := "/api/groups"
 
 	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodDelete, URL, nil)
+	req, err := http.NewRequest(http.MethodDelete, URL, bytes.NewBuffer(groupJSON))
 	if err != nil {
 		t.Fatal(err)
 	}
