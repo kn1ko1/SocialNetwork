@@ -7,16 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"socialnetwork/models"
 )
-
-// Create a new instance of commentByIdHandler with the mock repository
-
-// MockRepository is a mock implementation of IRepository for testing purposes
-type MockCommentByIdHandlerRepository struct {
-	Comment models.Comment
-}
 
 func TestCommentByIdHandler_Get(t *testing.T) {
 	handler := NewCommentByIdHandler(R)
@@ -45,15 +36,13 @@ func TestCommentByIdHandler_Get(t *testing.T) {
 	if recorder.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
 	}
-	// Add additional assertions as needed for your specific use case
 }
 
 func TestCommentByIdHandler_Put(t *testing.T) {
 	handler := NewCommentByIdHandler(R)
 	comment, _ := handler.Repo.GetCommentById(1)
-	ucomment, _ := handler.Repo.UpdateComment(comment)
 
-	commentJSON, err := json.Marshal(ucomment)
+	commentJSON, err := json.Marshal(comment)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -76,7 +65,6 @@ func TestCommentByIdHandler_Put(t *testing.T) {
 	if recorder.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
 	}
-	// Add additional assertions as needed for your specific use case
 }
 
 func TestCommentByIdHandler_Delete(t *testing.T) {
@@ -111,5 +99,4 @@ func TestCommentByIdHandler_Delete(t *testing.T) {
 	if recorder.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
 	}
-	// Add additional assertions as needed for your specific use case
 }

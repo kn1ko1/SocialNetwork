@@ -7,14 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"socialnetwork/models"
 )
-
-// MockRepository is a mock implementation of IRepository for testing purposes
-type MockCommentsByPostIdHandlerRepository struct {
-	Comment models.Comment
-}
 
 func TestCommentsByPostIdHandler_Get(t *testing.T) {
 
@@ -40,14 +33,13 @@ func TestCommentsByPostIdHandler_Get(t *testing.T) {
 	// Create a response recorder to capture the response
 	recorder := httptest.NewRecorder()
 
-	// Serve the HTTP request using the GetCommentsByPostId
+	// Serve the HTTP request using the handler
 	handler.ServeHTTP(recorder, req)
 
 	// Check the response status code
 	if recorder.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
 	}
-	// Add additional assertions as needed for your specific use case
 }
 
 func TestCommentsByPostIdHandler_Delete(t *testing.T) {
@@ -72,12 +64,11 @@ func TestCommentsByPostIdHandler_Delete(t *testing.T) {
 	// Create a response recorder to capture the response
 	recorder := httptest.NewRecorder()
 
-	// Serve the HTTP request using the commentByIdHandler
+	// Serve the HTTP request using the handler
 	handler.ServeHTTP(recorder, req)
 
 	// Check the response status code
 	if recorder.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
 	}
-	// Add additional assertions as needed for your specific use case
 }
