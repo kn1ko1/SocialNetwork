@@ -2,7 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
-	utils "socialnetwork/helper"
+	"socialnetwork/utils"
 )
 
 // deletes message of MessageId from the MESSAGES table

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	apiTestVars "socialnetwork/api/apiTestVars"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"testing"
@@ -25,9 +24,9 @@ func TestEventUsersHandler_Post(t *testing.T) {
 
 	eventUser1 := models.EventUser{
 		EventUserId: 1,
-		CreatedAt:   apiTestVars.Timestamp,
+		CreatedAt:   Timestamp,
 		EventId:     1,
-		UpdatedAt:   apiTestVars.Timestamp,
+		UpdatedAt:   Timestamp,
 		UserId:      1,
 	}
 

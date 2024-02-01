@@ -2,7 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
-	utils "socialnetwork/helper"
+	"socialnetwork/utils"
 )
 
 func DeleteGroupUserByGroupIdAndUserId(database *sql.DB, groupId, userId int) error {

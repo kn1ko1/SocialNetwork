@@ -3,8 +3,8 @@ package sqlite
 import (
 	"database/sql"
 	"errors"
-	utils "socialnetwork/helper"
 	"socialnetwork/models"
+	"socialnetwork/utils"
 )
 
 // Retrieves user with the relevant userId from the USERS table

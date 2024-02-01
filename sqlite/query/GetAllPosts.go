@@ -2,8 +2,8 @@ package sqlite
 
 import (
 	"database/sql"
-	utils "socialnetwork/helper"
 	"socialnetwork/models"
+	"socialnetwork/utils"
 )
 
 // Retrieves all posts from the POSTS table

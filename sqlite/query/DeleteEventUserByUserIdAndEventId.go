@@ -2,7 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
-	utils "socialnetwork/helper"
+	"socialnetwork/utils"
 )
 
 func DeleteEventUserByEventIdAndUserId(database *sql.DB, userId, eventId int) error {

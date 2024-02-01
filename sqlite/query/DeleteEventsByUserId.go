@@ -2,7 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
-	utils "socialnetwork/helper"
+	"socialnetwork/utils"
 )
 
 // deletes events related to UserId from the EVENTS table

@@ -2,7 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
-	utils "socialnetwork/helper"
+	"socialnetwork/utils"
 )
 
 // deletes posts related to groupId from the EVENT_USERS table

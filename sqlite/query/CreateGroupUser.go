@@ -2,8 +2,8 @@ package sqlite
 
 import (
 	"database/sql"
-	utils "socialnetwork/helper"
 	"socialnetwork/models"
+	"socialnetwork/utils"
 )
 
 // Adds groupUser into the given database

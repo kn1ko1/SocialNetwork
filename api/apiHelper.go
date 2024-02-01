@@ -4,4 +4,4 @@ import "time"
 
 var currentTime = time.Now()
 
-var timestamp = currentTime.Unix()
+var Timestamp = currentTime.Unix()

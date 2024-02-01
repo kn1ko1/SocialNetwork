@@ -77,10 +77,10 @@ func TestCommentByIdHandler_Delete(t *testing.T) {
 	dcomment := &models.Comment{
 		CommentId: 1,
 		Body:      "suicide squad",
-		CreatedAt: timestamp,
+		CreatedAt: Timestamp,
 		ImageURL:  "imageurl",
 		PostId:    1,
-		UpdatedAt: timestamp,
+		UpdatedAt: Timestamp,
 		UserId:    1,
 	}
 

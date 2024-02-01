@@ -3,8 +3,8 @@ package sqlite
 import (
 	"database/sql"
 	"errors"
-	utils "socialnetwork/helper"
 	"socialnetwork/models"
+	"socialnetwork/utils"
 )
 
 // Retrieves group with the relevant groupId from the GROUPS table

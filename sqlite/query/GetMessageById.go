@@ -3,8 +3,8 @@ package sqlite
 import (
 	"database/sql"
 	"errors"
-	utils "socialnetwork/helper"
 	"socialnetwork/models"
+	"socialnetwork/utils"
 )
 
 // Retrieves message with the relevant messageId from the MESSAGES table

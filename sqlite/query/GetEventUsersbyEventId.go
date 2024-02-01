@@ -2,8 +2,8 @@ package sqlite
 
 import (
 	"database/sql"
-	utils "socialnetwork/helper"
 	"socialnetwork/models"
+	"socialnetwork/utils"
 )
 
 func GetEventUsersByEventId(database *sql.DB, eventId int) ([]models.EventUser, error) {

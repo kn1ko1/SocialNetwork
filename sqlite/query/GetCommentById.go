@@ -3,8 +3,8 @@ package sqlite
 import (
 	"database/sql"
 	"errors"
-	utils "socialnetwork/helper"
 	"socialnetwork/models"
+	"socialnetwork/utils"
 )
 
 // Retrieves comment with the relevant commentId from the COMMENTS table
