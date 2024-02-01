@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	utils "socialnetwork/helper"
 	"socialnetwork/models"
 	"socialnetwork/repo"
+	"socialnetwork/utils"
 
 	"golang.org/x/crypto/bcrypt"
 )

@@ -2,8 +2,8 @@ package sqlite
 
 import (
 	"database/sql"
-	utils "socialnetwork/helper"
 	"socialnetwork/models"
+	"socialnetwork/utils"
 )
 
 func GetGroupUsersByGroupId(database *sql.DB, groupId int) ([]models.GroupUser, error) {

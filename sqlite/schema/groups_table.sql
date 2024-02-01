@@ -4,5 +4,5 @@ CREATE TABLE GROUPS (
     CreatorId INTEGER NOT NULL,
     Description TEXT NOT NULL,
     Title TEXT NOT NULL,
-    UpdatedAt BIGINT NOT NULL
+    UpdatedAt BIGINT NOT NULL,
 );
