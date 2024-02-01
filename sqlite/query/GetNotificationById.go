@@ -3,10 +3,11 @@ package sqlite
 import (
 	"database/sql"
 	"errors"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
-// Retrieves notification with the relevant notificationId from the NOTIFICATION table
+// Retrieves notification with the relevant notificationId from the NOTIFICATIONS table
 func GetNotificationById(database *sql.DB, notificationId int) (models.Notification, error) {
 	var notification models.Notification
 	err := database.QueryRow("SELECT * FROM NOTIFICATIONS WHERE NotificationId = ?", notificationId).
@@ -22,8 +23,10 @@ func GetNotificationById(database *sql.DB, notificationId int) (models.Notificat
 
 	switch {
 	case err == sql.ErrNoRows:
+		utils.HandleError("Notification not found.", err)
 		return notification, errors.New("notification not found")
 	case err != nil:
+		utils.HandleError("Error querying notification by ID.", err)
 		return notification, err
 	}
 

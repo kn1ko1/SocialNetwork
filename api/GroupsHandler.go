@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"socialnetwork/auth"
 	"socialnetwork/models"
 	"socialnetwork/repo"
+	"socialnetwork/utils"
 )
 
 // Endpoint: /api/groups
@@ -24,26 +24,7 @@ func NewGroupsHandler(r repo.IRepository) *GroupsHandler {
 // A PostsHandler instance implements the ServeHTTP interface, and thus
 // itself becomes an HTTPHandler
 func (h *GroupsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// Get Session Cookie
-	c, err := r.Cookie("Session")
-	if err != nil {
-		// Log Error
-		log.Println(err.Error())
-		// Return HTTP Status Unauthorized
-		//
-		// N.B. for simplicity of the example, we are simply returning
-		// an HTTP error. In the actual project, probably a JSON payload.
-		http.Error(w, "unauthorized", http.StatusUnauthorized)
-		return
-	}
-	// Authenticate Session Cookie - user variable discarded because user struct not used here...
-	_, err = auth.AuthenticateSessionCookie(c)
-	if err != nil {
-		// Same error as above - maker of request is unauthorized
-		log.Println(err.Error())
-		http.Error(w, "unauthorized", http.StatusUnauthorized)
-		return
-	}
+
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
 
@@ -71,7 +52,7 @@ func (h *GroupsHandler) post(w http.ResponseWriter, r *http.Request) {
 	var group models.Group
 	err := json.NewDecoder(r.Body).Decode(&group)
 	if err != nil {
-		log.Println("Failed to decode request body:", err)
+		utils.HandleError("Failed to decode request body:", err)
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
@@ -79,7 +60,7 @@ func (h *GroupsHandler) post(w http.ResponseWriter, r *http.Request) {
 
 	// Validate the group
 	if validationErr := group.Validate(); validationErr != nil {
-		log.Println("Validation failed:", validationErr)
+		utils.HandleError("Validation failed:", validationErr)
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
@@ -87,7 +68,7 @@ func (h *GroupsHandler) post(w http.ResponseWriter, r *http.Request) {
 	// Create group in the repository
 	result, createErr := h.Repo.CreateGroup(group)
 	if createErr != nil {
-		log.Println("Failed to create group in the repository:", createErr)
+		utils.HandleError("Failed to create group in the repository:", createErr)
 		http.Error(w, "Failed to create group", http.StatusInternalServerError)
 		return
 	}
@@ -95,7 +76,7 @@ func (h *GroupsHandler) post(w http.ResponseWriter, r *http.Request) {
 	// Encode and write the response
 	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -108,14 +89,14 @@ func (h *GroupsHandler) get(w http.ResponseWriter, r *http.Request) {
 
 	allGroups, err := h.Repo.GetAllGroups()
 	if err != nil {
-		log.Println("Failed to get group in GroupHandler. ", err)
+		utils.HandleError("Failed to get group in GroupHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	err = json.NewEncoder(w).Encode(allGroups)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -129,7 +110,7 @@ func (h *GroupsHandler) put(w http.ResponseWriter, r *http.Request) {
 	var group models.Group
 	err := json.NewDecoder(r.Body).Decode(&group)
 	if err != nil {
-		log.Println("Failed to decode request body:", err)
+		utils.HandleError("Failed to decode request body:", err)
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
@@ -137,7 +118,7 @@ func (h *GroupsHandler) put(w http.ResponseWriter, r *http.Request) {
 
 	// Validate the group
 	if validationErr := group.Validate(); validationErr != nil {
-		log.Println("Validation failed:", validationErr)
+		utils.HandleError("Validation failed:", validationErr)
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
@@ -145,7 +126,7 @@ func (h *GroupsHandler) put(w http.ResponseWriter, r *http.Request) {
 	// Create group in the repository
 	result, createErr := h.Repo.UpdateGroup(group)
 	if createErr != nil {
-		log.Println("Failed to update group in the repository:", createErr)
+		utils.HandleError("Failed to update group in the repository:", createErr)
 		http.Error(w, "Failed to update group", http.StatusInternalServerError)
 		return
 	}
@@ -153,7 +134,7 @@ func (h *GroupsHandler) put(w http.ResponseWriter, r *http.Request) {
 	// Encode and write the response
 	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -166,7 +147,7 @@ func (h *GroupsHandler) delete(w http.ResponseWriter, r *http.Request) {
 
 	err := h.Repo.DeleteAllGroups()
 	if err != nil {
-		log.Println("Failed to delete all groups. ", err)
+		utils.HandleError("Failed to delete all groups. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

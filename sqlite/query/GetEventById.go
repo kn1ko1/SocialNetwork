@@ -3,6 +3,7 @@ package sqlite
 import (
 	"database/sql"
 	"errors"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -23,8 +24,10 @@ func GetEventById(database *sql.DB, eventId int) (models.Event, error) {
 
 	switch {
 	case err == sql.ErrNoRows:
+		utils.HandleError("Event not found in GetEventById.", err)
 		return event, errors.New("event not found")
 	case err != nil:
+		utils.HandleError("Error retrieving event by ID in GetEventById.", err)
 		return event, err
 	}
 

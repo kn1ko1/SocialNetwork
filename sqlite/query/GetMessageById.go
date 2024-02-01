@@ -3,6 +3,7 @@ package sqlite
 import (
 	"database/sql"
 	"errors"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -22,8 +23,10 @@ func GetMessageById(database *sql.DB, messageId int) (models.Message, error) {
 
 	switch {
 	case err == sql.ErrNoRows:
+		utils.HandleError("Message not found in GetMessageById.", err)
 		return message, errors.New("message not found")
 	case err != nil:
+		utils.HandleError("Error retrieving message by ID in GetMessageById.", err)
 		return message, err
 	}
 

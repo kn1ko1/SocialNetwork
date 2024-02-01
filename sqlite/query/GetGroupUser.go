@@ -3,6 +3,7 @@ package sqlite
 import (
 	"database/sql"
 	"errors"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -20,8 +21,10 @@ func GetGroupUser(database *sql.DB, groupUserId int) (models.GroupUser, error) {
 
 	switch {
 	case err == sql.ErrNoRows:
+		utils.HandleError("GroupUser not found in GetGroupUser.", err)
 		return groupUser, errors.New("groupUser not found")
 	case err != nil:
+		utils.HandleError("Error retrieving groupUser by ID in GetGroupUser.", err)
 		return groupUser, err
 	}
 

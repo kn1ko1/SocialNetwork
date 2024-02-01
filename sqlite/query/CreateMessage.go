@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -21,6 +22,7 @@ func CreateMessage(database *sql.DB, message models.Message) (models.Message, er
 
 	statement, err := database.Prepare(query)
 	if err != nil {
+		utils.HandleError("Error preparing db query.", err)
 		return message, err
 	}
 	res, err := statement.Exec(
@@ -32,10 +34,12 @@ func CreateMessage(database *sql.DB, message models.Message) (models.Message, er
 		message.UpdatedAt,
 	)
 	if err != nil {
+		utils.HandleError("Error executing statement.", err)
 		return message, err
 	}
 	id, err := res.LastInsertId()
 	if err != nil {
+		utils.HandleError("Error getting last insert from table.", err)
 		return message, err
 	}
 	message.MessageId = int(id)

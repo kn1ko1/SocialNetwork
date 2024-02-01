@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"socialnetwork/repo"
+	"socialnetwork/utils"
 	"strconv"
 )
 
@@ -42,20 +43,20 @@ func (h *GroupUserByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	GroupUserIdString := queryParams.Get("GroupUserId")
 	GroupUserId, GroupUserIdErr := strconv.Atoi(GroupUserIdString)
 	if GroupUserIdErr != nil {
-		log.Println("Problem with AtoI GroupUserId. ", GroupUserIdErr)
+		utils.HandleError("Problem with AtoI GroupUserId. ", GroupUserIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	GroupUser, err := h.Repo.GetGroupUser(GroupUserId)
 	if err != nil {
-		log.Println("Failed to get GroupUser in GetGroupUserByIdHandler. ", err)
+		utils.HandleError("Failed to get GroupUser in GetGroupUserByIdHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	err = json.NewEncoder(w).Encode(GroupUser)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -67,7 +68,7 @@ func (h *GroupUserByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 	GroupUserIdString := queryParams.Get("GroupUserId")
 	GroupUserId, GroupUserIdErr := strconv.Atoi(GroupUserIdString)
 	if GroupUserIdErr != nil {
-		log.Println("Problem with AtoI GroupUserId. ", GroupUserIdErr)
+		utils.HandleError("Problem with AtoI GroupUserId. ", GroupUserIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -75,7 +76,7 @@ func (h *GroupUserByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
 	err := h.Repo.DeleteGroupUser(GroupUserId)
 	if err != nil {
-		log.Println("Failed to delete GroupUsers. ", err)
+		utils.HandleError("Failed to delete GroupUsers. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

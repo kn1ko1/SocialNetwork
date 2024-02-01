@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
+	"socialnetwork/utils"
 	"strconv"
 )
 
@@ -47,20 +48,20 @@ func (h *MessagesByGroupIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	MessageIdString := queryParams.Get("postId")
 	MessageId, MessageIdErr := strconv.Atoi(MessageIdString)
 	if MessageIdErr != nil {
-		log.Println("Problem with AtoI MessageId. ", MessageIdErr)
+		utils.HandleError("Problem with AtoI MessageId. ", MessageIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	userMessages, err := h.Repo.GetMessageById(MessageId)
 	if err != nil {
-		log.Println("Failed to get posts in GetMessageByIdHandler. ", err)
+		utils.HandleError("Failed to get posts in GetMessageByIdHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	err = json.NewEncoder(w).Encode(userMessages)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -74,7 +75,7 @@ func (h *MessagesByGroupIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	var Message models.Message
 	err := json.NewDecoder(r.Body).Decode(&Message)
 	if err != nil {
-		log.Println("Failed to decode request body:", err)
+		utils.HandleError("Failed to decode request body:", err)
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
@@ -82,7 +83,7 @@ func (h *MessagesByGroupIdHandler) put(w http.ResponseWriter, r *http.Request) {
 
 	// Validate the Message
 	if validationErr := Message.Validate(); validationErr != nil {
-		log.Println("Validation failed:", validationErr)
+		utils.HandleError("Validation failed:", validationErr)
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
@@ -90,7 +91,7 @@ func (h *MessagesByGroupIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	// Update post in the repository
 	result, createErr := h.Repo.UpdateMessage(Message)
 	if createErr != nil {
-		log.Println("Failed to update post in the repository:", createErr)
+		utils.HandleError("Failed to update post in the repository:", createErr)
 		http.Error(w, "Failed to update post", http.StatusInternalServerError)
 		return
 	}
@@ -98,7 +99,7 @@ func (h *MessagesByGroupIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	// Encode and write the response
 	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -116,7 +117,7 @@ func (h *MessagesByGroupIdHandler) delete(w http.ResponseWriter, r *http.Request
 	userIDString := queryParams.Get("userID")
 	userID, userIDErr := strconv.Atoi(userIDString)
 	if userIDErr != nil {
-		log.Println("Problem with AtoI userID. ", userIDErr)
+		utils.HandleError("Problem with AtoI userID. ", userIDErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -127,7 +128,7 @@ func (h *MessagesByGroupIdHandler) delete(w http.ResponseWriter, r *http.Request
 
 	err := h.Repo.DeleteMessageById(userID)
 	if err != nil {
-		log.Println("Failed to delete Messages. ", err)
+		utils.HandleError("Failed to delete Messages. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

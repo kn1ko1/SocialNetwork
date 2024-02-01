@@ -6,11 +6,12 @@ import (
 	"socialnetwork/models"
 )
 
-// Retrieves posts with the relevant groupId from the POSTS table
-func GetPostsByGroupId(database *sql.DB, groupId int) ([]models.Post, error) {
-	rows, err := database.Query("SELECT * FROM POSTS WHERE GroupId = ?", groupId)
+// Retrieves posts with the relevant Privacy from the POSTS table
+// Should really only be used to retrieve Public
+func GetPostsByPrivacy(database *sql.DB, privacy string) ([]models.Post, error) {
+	rows, err := database.Query("SELECT * FROM POSTS WHERE Privacy = ?", privacy)
 	if err != nil {
-		utils.HandleError("Error querying posts by GroupId.", err)
+		utils.HandleError("Error querying posts by Privacy.", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -30,7 +31,7 @@ func GetPostsByGroupId(database *sql.DB, groupId int) ([]models.Post, error) {
 			&post.UserId,
 		)
 		if err != nil {
-			utils.HandleError("Error scanning row in GetPostsByGroupId.", err)
+			utils.HandleError("Error scanning row in GetPostsByPrivacy.", err)
 			return nil, err
 		}
 
@@ -38,7 +39,7 @@ func GetPostsByGroupId(database *sql.DB, groupId int) ([]models.Post, error) {
 	}
 
 	if err := rows.Err(); err != nil {
-		utils.HandleError("Error iterating over rows in GetPostsByGroupId.", err)
+		utils.HandleError("Error iterating over rows in GetPostsByPrivacy.", err)
 		return nil, err
 	}
 

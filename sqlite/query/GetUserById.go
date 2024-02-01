@@ -3,6 +3,7 @@ package sqlite
 import (
 	"database/sql"
 	"errors"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -26,8 +27,10 @@ func GetUserById(database *sql.DB, userId int) (models.User, error) {
 
 	switch {
 	case err == sql.ErrNoRows:
+		utils.HandleError("user not found", err)
 		return user, errors.New("user not found")
 	case err != nil:
+		utils.HandleError("Error retrieving user by userId", err)
 		return user, err
 	}
 

@@ -2,13 +2,15 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
-// Retrieves message with the relevant messageType from the MESSAGES table
+// Retrieves messages with the relevant messageType from the MESSAGES table
 func GetMessagesByType(database *sql.DB, messageType string) ([]models.Message, error) {
 	rows, err := database.Query("SELECT * FROM MESSAGES WHERE MessageType = ?", messageType)
 	if err != nil {
+		utils.HandleError("Error executing query in GetMessagesByType.", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -27,6 +29,7 @@ func GetMessagesByType(database *sql.DB, messageType string) ([]models.Message, 
 			&message.UpdatedAt,
 		)
 		if err != nil {
+			utils.HandleError("Error scanning rows in GetMessagesByType.", err)
 			return nil, err
 		}
 
@@ -34,6 +37,7 @@ func GetMessagesByType(database *sql.DB, messageType string) ([]models.Message, 
 	}
 
 	if err := rows.Err(); err != nil {
+		utils.HandleError("Error iterating over rows in GetMessagesByType.", err)
 		return nil, err
 	}
 

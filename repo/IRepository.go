@@ -22,6 +22,7 @@ type IRepository interface {
 	GetPostById(postId int) (models.Post, error)
 	GetPostsByGroupId(groupId int) ([]models.Post, error)
 	GetPostsByUserId(userId int) ([]models.Post, error)
+	GetPostsByPrivacy(privacy string) ([]models.Post, error)
 	UpdatePost(post models.Post) (models.Post, error)
 	DeletePostById(postId int) error
 	DeletePostByGroupId(groupId int) error

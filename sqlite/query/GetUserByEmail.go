@@ -3,6 +3,7 @@ package sqlite
 import (
 	"database/sql"
 	"errors"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -11,6 +12,7 @@ func GetUserByEmail(database *sql.DB, email string) (models.User, error) {
 	var user models.User
 	err := database.QueryRow("SELECT * FROM USERS WHERE Email = ?", email).
 		Scan(
+			&user.UserId,
 			&user.Bio,
 			&user.CreatedAt,
 			&user.DOB,
@@ -26,8 +28,10 @@ func GetUserByEmail(database *sql.DB, email string) (models.User, error) {
 
 	switch {
 	case err == sql.ErrNoRows:
+		utils.HandleError("User not found.", err)
 		return user, errors.New("user not found")
 	case err != nil:
+		utils.HandleError("Error retrieving user by email", err)
 		return user, err
 	}
 

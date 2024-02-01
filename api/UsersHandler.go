@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
+	"socialnetwork/utils"
 )
 
 // Endpoint: /api/users
@@ -43,7 +44,7 @@ func (h *UsersHandler) post(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		log.Println("Failed to decode request body:", err)
+		utils.HandleError("Failed to decode request body:", err)
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
@@ -51,7 +52,7 @@ func (h *UsersHandler) post(w http.ResponseWriter, r *http.Request) {
 
 	// Validate the user
 	if validationErr := user.Validate(); validationErr != nil {
-		log.Println("Validation failed:", validationErr)
+		utils.HandleError("Validation failed:", validationErr)
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
@@ -59,7 +60,7 @@ func (h *UsersHandler) post(w http.ResponseWriter, r *http.Request) {
 	// Create post in the repository
 	result, createErr := h.Repo.CreateUser(user)
 	if createErr != nil {
-		log.Println("Failed to create user in the repository:", createErr)
+		utils.HandleError("Failed to create user in the repository:", createErr)
 		http.Error(w, "Failed to create user", http.StatusInternalServerError)
 		return
 	}
@@ -68,7 +69,7 @@ func (h *UsersHandler) post(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -78,14 +79,14 @@ func (h *UsersHandler) get(w http.ResponseWriter, r *http.Request) {
 
 	userUsers, err := h.Repo.GetAllUsers()
 	if err != nil {
-		log.Println("Failed to get all Users. ", err)
+		utils.HandleError("Failed to get all Users. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	err = json.NewEncoder(w).Encode(userUsers)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

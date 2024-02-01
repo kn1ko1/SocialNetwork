@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -19,6 +20,7 @@ func CreateGroupUser(database *sql.DB, groupUser models.GroupUser) (models.Group
 
 	statement, err := database.Prepare(query)
 	if err != nil {
+		utils.HandleError("Error preparing db query.", err)
 		return groupUser, err
 	}
 	res, err := statement.Exec(
@@ -28,10 +30,13 @@ func CreateGroupUser(database *sql.DB, groupUser models.GroupUser) (models.Group
 		groupUser.UserId,
 	)
 	if err != nil {
+		utils.HandleError("Error executing statement.", err)
 		return groupUser, err
 	}
 	id, err := res.LastInsertId()
 	if err != nil {
+		utils.HandleError("Error getting last insert from table.", err)
+
 		return groupUser, err
 	}
 	groupUser.GroupUserId = int(id)

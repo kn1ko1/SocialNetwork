@@ -2,18 +2,18 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 )
 
 func DeleteEventUserByEventIdAndUserId(database *sql.DB, userId, eventId int) error {
 
-	queryStr := `DELETE *
-	FROM EVENT_USERS
-	WHERE (UserId = (?) AND EventId = (?))
-	OR (EventId = (?) AND UserId = (?))
-	ORDER BY timestamp ASC;`
+	queryStr := `DELETE FROM EVENT_USERS
+	WHERE (UserId = ? AND EventId = ?)
+	OR (EventId = ? AND UserId = ?);`
 
-	_, err := database.Query(queryStr, userId, eventId, eventId, userId)
+	_, err := database.Exec(queryStr, userId, eventId, eventId, userId)
 	if err != nil {
+		utils.HandleError("Error executing delete event user statement.", err)
 		return err
 	}
 	return nil

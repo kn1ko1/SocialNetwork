@@ -2,9 +2,9 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"socialnetwork/repo"
+	"socialnetwork/utils"
 )
 
 // Endpoint: /api/users/posts
@@ -43,14 +43,14 @@ func (h *UserPostsHandler) get(w http.ResponseWriter, r *http.Request) {
 	}
 	userPosts, err := h.Repo.GetPostsByUserId(user.UserId)
 	if err != nil {
-		log.Println("Failed to get posts in GetPostsByIdHandler. ", err)
+		utils.HandleError("Failed to get posts in GetPostsByIdHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(userPosts)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -63,10 +63,10 @@ func (h *UserPostsHandler) get(w http.ResponseWriter, r *http.Request) {
 // 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 // 		return
 // 	}
-// 	// log.Println("Received delete request for userID:", userID)
+// 	// utils.HandleError("Received delete request for userID:", userID)
 // 	err = h.Repo.DeletePostsByUserId(user.UserId)
 // 	if err != nil {
-// 		log.Println("Failed to delete Posts. ", err)
+// 		utils.HandleError("Failed to delete Posts. ", err)
 // 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 // 		return
 // 	}

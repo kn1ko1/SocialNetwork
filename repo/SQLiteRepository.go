@@ -75,6 +75,9 @@ func (r *SQLiteRepository) GetPostsByGroupId(groupId int) ([]models.Post, error)
 func (r *SQLiteRepository) GetPostsByUserId(userId int) ([]models.Post, error) {
 	return sqlite.GetPostsByUserId(r.businessDb, userId)
 }
+func (r *SQLiteRepository) GetPostsByPrivacy(privacy string) ([]models.Post, error) {
+	return sqlite.GetPostsByPrivacy(r.businessDb, privacy)
+}
 func (r *SQLiteRepository) DeletePostById(postId int) error {
 	return sqlite.DeletePostById(r.businessDb, postId)
 }

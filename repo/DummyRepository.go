@@ -133,6 +133,17 @@ func (r *DummyRepository) GetPostsByUserId(userId int) ([]models.Post, error) {
 	}
 	return posts, nil
 }
+func (r *DummyRepository) GetPostsByPrivacy(privacy string) ([]models.Post, error) {
+	posts := make([]models.Post, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		p := *models.GenerateValidPost()
+		p.Privacy = privacy
+		p.PostId = i + 1
+		posts[i] = p
+	}
+	return posts, nil
+}
+
 func (r *DummyRepository) DeletePostById(postId int) error {
 	return nil
 }

@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -23,6 +24,7 @@ func CreateUser(database *sql.DB, User models.User) (models.User, error) {
 		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 	statement, err := database.Prepare(query)
 	if err != nil {
+		utils.HandleError("Error preparing db query.", err)
 		return User, err
 	}
 	res, err := statement.Exec(
@@ -38,10 +40,13 @@ func CreateUser(database *sql.DB, User models.User) (models.User, error) {
 		User.UpdatedAt,
 		User.Username)
 	if err != nil {
+		utils.HandleError("Error executing statement.", err)
+
 		return User, err
 	}
 	id, err := res.LastInsertId()
 	if err != nil {
+		utils.HandleError("Error getting last insert from table.", err)
 		return User, err
 	}
 	User.UserId = int(id)

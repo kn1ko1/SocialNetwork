@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	utils "socialnetwork/helper"
 	"socialnetwork/models"
 )
 
@@ -31,10 +32,12 @@ func CreateComment(database *sql.DB, comment models.Comment) (models.Comment, er
 		comment.UserId,
 	)
 	if err != nil {
+		utils.HandleError("Error executing statement.", err)
 		return comment, err
 	}
 	id, err := res.LastInsertId()
 	if err != nil {
+		utils.HandleError("Error retrieving last insert from table.", err)
 		return comment, err
 	}
 	comment.CommentId = int(id)

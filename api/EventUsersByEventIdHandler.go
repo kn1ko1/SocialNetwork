@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"socialnetwork/repo"
+	"socialnetwork/utils"
 	"strconv"
 )
 
@@ -45,20 +46,20 @@ func (h *EventUsersByEventIdHandler) get(w http.ResponseWriter, r *http.Request)
 	eventIdString := queryParams.Get("eventId")
 	eventId, eventIdErr := strconv.Atoi(eventIdString)
 	if eventIdErr != nil {
-		log.Println("Failed to Atoi eventId in EventUserByEventIdHandler. ", eventIdErr)
+		utils.HandleError("Failed to Atoi eventId in EventUserByEventIdHandler. ", eventIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	eventUsers, err := h.Repo.GetEventUsersByEventId(eventId)
 	if err != nil {
-		log.Println("Failed to get eventUsers in EventUserByEventIdHandler. ", err)
+		utils.HandleError("Failed to get eventUsers in EventUserByEventIdHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	err = json.NewEncoder(w).Encode(eventUsers)
 	if err != nil {
-		log.Println("Failed to encode and write JSON response. ", err)
+		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -70,7 +71,7 @@ func (h *EventUsersByEventIdHandler) delete(w http.ResponseWriter, r *http.Reque
 	eventIdString := queryParams.Get("eventId")
 	eventId, eventIdErr := strconv.Atoi(eventIdString)
 	if eventIdErr != nil {
-		log.Println("Problem with AtoI messageId. ", eventId)
+		utils.HandleError("Problem with AtoI messageId. ", eventIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -78,7 +79,7 @@ func (h *EventUsersByEventIdHandler) delete(w http.ResponseWriter, r *http.Reque
 
 	err := h.Repo.DeleteEventUsersByEventId(eventId)
 	if err != nil {
-		log.Println("Failed to delete eventUsers. ", err)
+		utils.HandleError("Failed to delete eventUsers. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
