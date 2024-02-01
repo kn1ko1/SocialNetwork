@@ -6,15 +6,10 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 
 	"socialnetwork/models"
 	"socialnetwork/repo"
 )
-
-var currentTime = time.Now()
-
-var timestamp = currentTime.Unix()
 
 // MockRepository is a mock implementation of IRepository for testing purposes
 type MockRepository struct {
