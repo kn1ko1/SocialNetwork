@@ -10,16 +10,16 @@ import (
 	"testing"
 )
 
-func TestNotificationByIdHandler_Get(t *testing.T) {
-	handler := NewNotificationByIdHandler(R)
-	notification, _ := handler.Repo.GetNotificationById(1)
+func TestMessageByIdHandler_Get(t *testing.T) {
+	handler := NewMessageByIdHandler(R)
+	message, _ := handler.Repo.GetMessageById(1)
 
-	userJSON, err := json.Marshal(notification)
+	userJSON, err := json.Marshal(message)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	URL := "/api/notifications/1"
+	URL := "/api/messages"
 
 	// Create a new HTTP request with the encoded JSON as the request body
 	req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(userJSON))
@@ -39,15 +39,15 @@ func TestNotificationByIdHandler_Get(t *testing.T) {
 	}
 }
 
-func TestNotificationByIdHandler_Put(t *testing.T) {
-	handler := NewNotificationByIdHandler(R)
-	notifcation, _ := handler.Repo.UpdateNotification(*models.GenerateValidNotification())
+func TestMessageByIdHandler_Put(t *testing.T) {
+	handler := NewMessageByIdHandler(R)
+	notifcation, _ := handler.Repo.UpdateMessage(*models.GenerateValidMessage())
 	notifcationJSON, err := json.Marshal(notifcation)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	URL := "/api/notifications/" + fmt.Sprint(notifcation.NotificationId)
+	URL := "/api/comments/" + fmt.Sprint(notifcation.MessageId)
 
 	// Create a new HTTP request with the encoded JSON as the request body
 	req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(notifcationJSON))

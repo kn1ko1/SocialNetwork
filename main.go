@@ -60,7 +60,6 @@ func addApiHandlers(rt *router.Router) {
 	eventUsersByEventIdAndUserIdHandler := api.NewEventUserByEventIdAndUserIdHandler(r)
 	messagesHandler := api.NewMessagesHandler(r)
 	messageByIdHandler := api.NewMessageByIdHandler(r)
-	messagesByGroupIdHandler := api.NewMessagesByGroupIdHandler(r)
 	groupsHandler := api.NewGroupsHandler(r)
 	groupByIdHandler := api.NewGroupByIdHandler(r)
 	groupUsersHandler := api.NewGroupUsersHandler(r)
@@ -98,7 +97,6 @@ func addApiHandlers(rt *router.Router) {
 	// Message Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/messages$`), messagesHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/messages/{messageId$`), messageByIdHandler)
-	rt.AddHandler(regexp.MustCompile(`^/api/groups/{groupId}/messages$`), messagesByGroupIdHandler)
 	// Group Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/groups$`), groupsHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/groups/{groupId$`), groupByIdHandler)
