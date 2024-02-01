@@ -1,4 +1,4 @@
-package api_test
+package api
 
 import (
 	"bytes"
@@ -7,14 +7,13 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"socialnetwork/api"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 )
 
 // Create a new instance of commentByIdHandler with the mock repository
 var r = repo.NewDummyRepository()
-var handler = api.NewCommentByIdHandler(r)
+var handler = NewCommentByIdHandler(r)
 var comment, _ = handler.Repo.GetCommentById(1)
 
 // MockRepository is a mock implementation of IRepository for testing purposes
