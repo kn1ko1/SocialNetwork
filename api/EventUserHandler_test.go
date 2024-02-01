@@ -5,11 +5,10 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"testing"
-
 	apiTestVars "socialnetwork/api/apiTestVars"
 	"socialnetwork/models"
 	"socialnetwork/repo"
+	"testing"
 )
 
 // MockEventUserRepository is a mock implementation of IRepository for testing purposes

@@ -1,4 +1,4 @@
-package apiTestvars
+package api
 
 import "time"
 
