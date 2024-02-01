@@ -1,7 +1,12 @@
 package api
 
-import "time"
+import (
+	"socialnetwork/repo"
+	"time"
+)
 
-var currentTime = time.Now()
+var CurrentTime = time.Now()
 
-var timestamp = currentTime.Unix()
+var Timestamp = CurrentTime.Unix()
+
+var R = repo.NewDummyRepository()

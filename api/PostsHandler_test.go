@@ -34,10 +34,10 @@ func TestPostsHandler_Post(t *testing.T) {
 	post := models.Post{
 		PostId:    1,
 		Body:      "Test body",
-		CreatedAt: timestamp,
+		CreatedAt: Timestamp,
 		GroupId:   1,
 		ImageURL:  "poop",
-		UpdatedAt: timestamp,
+		UpdatedAt: Timestamp,
 		UserId:    1,
 	}
 

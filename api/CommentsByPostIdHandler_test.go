@@ -8,20 +8,19 @@ import (
 	"testing"
 
 	"socialnetwork/models"
-	"socialnetwork/repo"
 )
 
-// Create a new instance of commentByIdHandler with the mock repository
-var r = repo.NewDummyRepository()
-var handler = NewCommentByIdHandler(r)
-var comment, _ = handler.Repo.GetCommentById(1)
-
 // MockRepository is a mock implementation of IRepository for testing purposes
-type MockCommentByIdHandlerRepository struct {
+type MockCommentByPostIdHandlerRepository struct {
 	Comment models.Comment
 }
 
-func TestCommentByIdHandler_Get(t *testing.T) {
+func TestCommentByPostIdHandler_Get(t *testing.T) {
+
+	// Create a new instance of commentByIdHandler with the mock repository
+	handler := NewCommentsByPostIdHandler(R)
+	comment, _ := handler.Repo.GetCommentById(1)
+
 	commentJSON, err := json.Marshal(comment)
 	if err != nil {
 		t.Fatal(err)
@@ -45,10 +44,11 @@ func TestCommentByIdHandler_Get(t *testing.T) {
 	}
 	// Add additional assertions as needed for your specific use case
 }
-func TestCommentByIdHandler_Put(t *testing.T) {
-	updatedComment, _ := handler.Repo.UpdateComment(comment)
+func TestCommentByPostIdHandler_Put(t *testing.T) {
+	handler := NewCommentsByPostIdHandler(R)
+	comment, _ := handler.Repo.GetCommentById(1)
 
-	commentJSON, err := json.Marshal(updatedComment)
+	commentJSON, err := json.Marshal(comment)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -72,15 +72,16 @@ func TestCommentByIdHandler_Put(t *testing.T) {
 	// Add additional assertions as needed for your specific use case
 }
 
-func TestCommentByIdHandler_Delete(t *testing.T) {
+func TestCommentByPostIdHandler_Delete(t *testing.T) {
+	handler := NewCommentsByPostIdHandler(R)
 	// err := handler.Repo.DeleteCommentById(comment)
 	dcomment := &models.Comment{
 		CommentId: 1,
 		Body:      "suicide squad",
-		CreatedAt: timestamp,
+		CreatedAt: Timestamp,
 		ImageURL:  "imageurl",
 		PostId:    1,
-		UpdatedAt: timestamp,
+		UpdatedAt: Timestamp,
 		UserId:    1,
 	}
 
