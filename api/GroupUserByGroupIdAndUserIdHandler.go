@@ -56,7 +56,7 @@ func (h *GroupUserByGroupIdAndUserIdHandler) delete(w http.ResponseWriter, r *ht
 	}
 	log.Println("Received delete request for eventId", eventId, ", userId", userId)
 
-	err := h.Repo.DeleteEventUserByEventIdAndUserId(eventId, userId)
+	err := h.Repo.DeleteGroupUserByGroupIdAndUserId(eventId, userId)
 	if err != nil {
 		utils.HandleError("Failed to delete Events. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
