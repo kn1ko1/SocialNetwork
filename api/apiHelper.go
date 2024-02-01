@@ -21,3 +21,14 @@ var CommentExample = &models.Comment{
 	UpdatedAt: Timestamp,
 	UserId:    1,
 }
+
+var EventExample = &models.Event{
+	EventId:     1,
+	CreatedAt:   Timestamp,
+	DateTime:    Timestamp,
+	Description: "Event",
+	GroupId:     1,
+	Title:       "Event",
+	UpdatedAt:   Timestamp,
+	UserId:      1,
+}
