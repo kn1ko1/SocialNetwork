@@ -40,3 +40,12 @@ var EventUserExample = &models.EventUser{
 	UpdatedAt:   Timestamp,
 	UserId:      1,
 }
+
+var GroupExample = &models.Group{
+	GroupId:     1,
+	CreatedAt:   Timestamp,
+	CreatorId:   1,
+	Description: "Group Example",
+	Title:       "Group",
+	UpdatedAt:   Timestamp,
+}
