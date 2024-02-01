@@ -50,9 +50,10 @@ func TestCommentByIdHandler_Get(t *testing.T) {
 
 func TestCommentByIdHandler_Put(t *testing.T) {
 	handler := NewCommentByIdHandler(R)
-	comment, _ := handler.Repo.UpdateComment(*CommentExample)
+	comment, _ := handler.Repo.GetCommentById(1)
+	ucomment, _ := handler.Repo.UpdateComment(comment)
 
-	commentJSON, err := json.Marshal(comment)
+	commentJSON, err := json.Marshal(ucomment)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -80,9 +81,14 @@ func TestCommentByIdHandler_Put(t *testing.T) {
 
 func TestCommentByIdHandler_Delete(t *testing.T) {
 	handler := NewCommentByIdHandler(R)
-	comment, _ := handler.Repo.UpdateComment(*CommentExample)
+	comment, _ := handler.Repo.GetCommentById(1)
+	err := handler.Repo.DeleteCommentById(comment.CommentId)
 
-	commentJSON, err := json.Marshal(CommentExample)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	commentJSON, err := json.Marshal(comment)
 	if err != nil {
 		t.Fatal(err)
 	}
