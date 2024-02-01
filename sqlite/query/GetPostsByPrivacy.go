@@ -2,8 +2,8 @@ package sqlite
 
 import (
 	"database/sql"
-	utils "socialnetwork/helper"
 	"socialnetwork/models"
+	"socialnetwork/utils"
 )
 
 // Retrieves posts with the relevant Privacy from the POSTS table
