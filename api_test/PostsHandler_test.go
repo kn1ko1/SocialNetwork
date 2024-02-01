@@ -1,4 +1,4 @@
-package api
+package api_test
 
 import (
 	"bytes"
@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	apiTestVars "socialnetwork/api/apiTestVars"
+	"socialnetwork/api"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 )
@@ -29,16 +29,16 @@ func (m *MockRepository) GetAllPosts() ([]models.Post, error) {
 func TestPostsHandler_Post(t *testing.T) {
 	// Create a new instance of PostsHandler with the mock repository
 	r := repo.NewDummyRepository()
-	handler := NewPostsHandler(r)
+	handler := api.NewPostsHandler(r)
 
 	// Create a sample post to send in the request body
 	post := models.Post{
 		PostId:    1,
 		Body:      "Test body",
-		CreatedAt: apiTestVars.Timestamp,
+		CreatedAt: Timestamp,
 		GroupId:   1,
 		ImageURL:  "poop",
-		UpdatedAt: apiTestVars.Timestamp,
+		UpdatedAt: Timestamp,
 		UserId:    1,
 	}
 
@@ -69,7 +69,7 @@ func TestPostsHandler_Post(t *testing.T) {
 func TestPostsHandler_Get(t *testing.T) {
 	// Create a new instance of PostsHandler with the mock repository
 	r := repo.NewDummyRepository()
-	handler := NewPostsHandler(r)
+	handler := api.NewPostsHandler(r)
 
 	// Create a new HTTP request for a GET to "/api/posts"
 	req, err := http.NewRequest(http.MethodGet, "/api/posts", nil)

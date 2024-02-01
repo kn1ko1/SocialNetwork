@@ -106,6 +106,7 @@ func (h *CommentByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
 	// figure out userID
 	queryParams := r.URL.Query()
+	// fmt.Println(queryParams)
 	userIDString := queryParams.Get("userID")
 	userID, userIDErr := strconv.Atoi(userIDString)
 	if userIDErr != nil {
