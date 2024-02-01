@@ -109,9 +109,9 @@ func (r *DummyRepository) GetAllPosts() ([]models.Post, error) {
 	return posts, nil
 }
 func (r *DummyRepository) GetPostById(postId int) (models.Post, error) {
-	post := validPost
+	post := models.GenerateValidPost()
 	post.PostId = postId
-	return post, nil
+	return *post, nil
 }
 func (r *DummyRepository) GetPostsByGroupId(groupId int) ([]models.Post, error) {
 	posts := make([]models.Post, sutTableRuns)

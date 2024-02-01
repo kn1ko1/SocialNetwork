@@ -11,20 +11,6 @@ import (
 	"socialnetwork/repo"
 )
 
-// MockRepository is a mock implementation of IRepository for testing purposes
-type MockRepository struct {
-	Posts []models.Post
-}
-
-func (m *MockRepository) CreatePost(post models.Post) (models.Post, error) {
-	m.Posts = append(m.Posts, post)
-	return post, nil
-}
-
-func (m *MockRepository) GetAllPosts() ([]models.Post, error) {
-	return m.Posts, nil
-}
-
 func TestPostsHandler_Post(t *testing.T) {
 	// Create a new instance of PostsHandler with the mock repository
 	r := repo.NewDummyRepository()
