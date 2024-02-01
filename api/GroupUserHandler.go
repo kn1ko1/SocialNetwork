@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-// Endpoint: /api/Messa s/Message/{MessageId}
+// Endpoint: /api/groupUsers
 // Allowed methods: GET, PUT, DELETE
 
 type GroupUsersHandler struct {
