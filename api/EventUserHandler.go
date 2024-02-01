@@ -9,7 +9,7 @@ import (
 	"socialnetwork/utils"
 )
 
-// Endpoint: /api/event/{eventId}/eventUser   ?
+// Endpoint: /api/event/{eventId}/eventUser
 // Allowed methods: GET, POST
 
 type EventUsersHandler struct {

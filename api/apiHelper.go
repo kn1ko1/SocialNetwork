@@ -32,3 +32,11 @@ var EventExample = &models.Event{
 	UpdatedAt:   Timestamp,
 	UserId:      1,
 }
+
+var EventUserExample = &models.EventUser{
+	EventUserId: 1,
+	CreatedAt:   Timestamp,
+	EventId:     1,
+	UpdatedAt:   Timestamp,
+	UserId:      1,
+}
