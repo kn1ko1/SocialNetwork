@@ -10,18 +10,18 @@ import (
 // Endpoint: /api/posts/{postId}
 // Allowed methods: GET
 
-type PostByPrivacyHandler struct {
+type PostsByPrivacyHandler struct {
 	Repo repo.IRepository
 }
 
 // Constructor with dependency injection of a repo implementation
-func NewPostByPrivacyHandler(r repo.IRepository) *PostByPrivacyHandler {
-	return &PostByPrivacyHandler{Repo: r}
+func NewPostsByPrivacyHandler(r repo.IRepository) *PostsByPrivacyHandler {
+	return &PostsByPrivacyHandler{Repo: r}
 }
 
 // A PostsHandler instance implements the ServeHTTP interface, and thus
 // itself becomes an HTTPHandler
-func (h *PostByPrivacyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *PostsByPrivacyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
@@ -33,12 +33,12 @@ func (h *PostByPrivacyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 	}
 }
 
-func (h *PostByPrivacyHandler) get(w http.ResponseWriter, r *http.Request) {
+func (h *PostsByPrivacyHandler) get(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
 	privacyString := queryParams.Get("privacy")
 	userPosts, err := h.Repo.GetPostsByPrivacy(privacyString)
 	if err != nil {
-		utils.HandleError("Failed to get posts in GetPostByPrivacyHandler. ", err)
+		utils.HandleError("Failed to get posts in GetPostsByPrivacyHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

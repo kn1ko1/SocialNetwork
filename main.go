@@ -48,7 +48,7 @@ func addApiHandlers(rt *router.Router) {
 	postsHandler := api.NewPostsHandler(r)
 	postByIdHandler := api.NewPostByIdHandler(r)
 	userPostsHandler := api.NewUserPostsHandler(r)
-	postByPrivacyHandler := api.NewPostByPrivacyHandler(r)
+	postByPrivacyHandler := api.NewPostsByPrivacyHandler(r)
 	commentsHandler := api.NewCommentsHandler(r)
 	commentByIdHandler := api.NewCommentByIdHandler(r)
 	commentByPostIdHandler := api.NewCommentsByPostIdHandler(r)
