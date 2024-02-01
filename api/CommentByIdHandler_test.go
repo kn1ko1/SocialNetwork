@@ -79,16 +79,18 @@ func TestCommentByIdHandler_Put(t *testing.T) {
 }
 
 func TestCommentByIdHandler_Delete(t *testing.T) {
-
 	handler := NewCommentByIdHandler(R)
+	comment, _ := handler.Repo.UpdateComment(*CommentExample)
 
 	commentJSON, err := json.Marshal(CommentExample)
 	if err != nil {
 		t.Fatal(err)
 	}
 
+	URL := "/api/comments/" + fmt.Sprint(comment.CommentId)
+
 	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodDelete, "/api/comments/1", bytes.NewBuffer(commentJSON))
+	req, err := http.NewRequest(http.MethodDelete, URL, bytes.NewBuffer(commentJSON))
 	if err != nil {
 		t.Fatal(err)
 	}
