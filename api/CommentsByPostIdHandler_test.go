@@ -11,15 +11,19 @@ import (
 )
 
 // MockRepository is a mock implementation of IRepository for testing purposes
-type MockCommentByPostIdHandlerRepository struct {
+type MockCommentsByPostIdHandlerRepository struct {
 	Comment models.Comment
 }
 
-func TestCommentByPostIdHandler_Get(t *testing.T) {
+func TestCommentsByPostIdHandler_Get(t *testing.T) {
 
 	// Create a new instance of commentByIdHandler with the mock repository
 	handler := NewCommentsByPostIdHandler(R)
-	comment, _ := handler.Repo.GetCommentById(1)
+	comment, err := handler.Repo.GetCommentsByPostId(1)
+
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	commentJSON, err := json.Marshal(comment)
 	if err != nil {
@@ -27,7 +31,7 @@ func TestCommentByPostIdHandler_Get(t *testing.T) {
 	}
 
 	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodGet, "/api/comments/1", bytes.NewBuffer(commentJSON))
+	req, err := http.NewRequest(http.MethodGet, "/api/posts/comment", bytes.NewBuffer(commentJSON))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -35,7 +39,7 @@ func TestCommentByPostIdHandler_Get(t *testing.T) {
 	// Create a response recorder to capture the response
 	recorder := httptest.NewRecorder()
 
-	// Serve the HTTP request using the commentByIdHandler
+	// Serve the HTTP request using the GetCommentsByPostId
 	handler.ServeHTTP(recorder, req)
 
 	// Check the response status code
@@ -44,35 +48,8 @@ func TestCommentByPostIdHandler_Get(t *testing.T) {
 	}
 	// Add additional assertions as needed for your specific use case
 }
-func TestCommentByPostIdHandler_Put(t *testing.T) {
-	handler := NewCommentsByPostIdHandler(R)
-	comment, _ := handler.Repo.GetCommentById(1)
 
-	commentJSON, err := json.Marshal(comment)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodPut, "/api/comments/1", bytes.NewBuffer(commentJSON))
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Create a response recorder to capture the response
-	recorder := httptest.NewRecorder()
-
-	// Serve the HTTP request using the commentByIdHandler
-	handler.ServeHTTP(recorder, req)
-
-	// Check the response status code
-	if recorder.Code != http.StatusCreated {
-		t.Errorf("Expected status code %d, but got %d", http.StatusCreated, recorder.Code)
-	}
-	// Add additional assertions as needed for your specific use case
-}
-
-func TestCommentByPostIdHandler_Delete(t *testing.T) {
+func TestCommentsByPostIdHandler_Delete(t *testing.T) {
 	handler := NewCommentsByPostIdHandler(R)
 	// err := handler.Repo.DeleteCommentById(comment)
 	dcomment := &models.Comment{
@@ -91,7 +68,7 @@ func TestCommentByPostIdHandler_Delete(t *testing.T) {
 	}
 
 	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodDelete, "/api/comments/1", bytes.NewBuffer(commentJSON))
+	req, err := http.NewRequest(http.MethodDelete, "/api/posts/1/comments", bytes.NewBuffer(commentJSON))
 	if err != nil {
 		t.Fatal(err)
 	}
