@@ -36,7 +36,7 @@ func (h *PostsByGroupIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 
 func (h *PostsByGroupIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	fields := strings.Split(r.URL.Path, "/")
-	groupId, err := strconv.Atoi(fields[len(fields)-1])
+	groupId, err := strconv.Atoi(fields[len(fields)-2])
 	if err != nil {
 		http.Error(w, "bad request", http.StatusBadRequest)
 		return
