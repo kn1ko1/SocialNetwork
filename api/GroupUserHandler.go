@@ -64,7 +64,8 @@ func (h *GroupUsersHandler) post(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		// Note: Do not return an HTTP error here, as the resource has already been created successfully.
+		// You may log the error or handle it as needed.
 		return
 	}
 
