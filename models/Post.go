@@ -28,6 +28,9 @@ func (p *Post) Validate() error {
 	if p.GroupId < 0 {
 		return errors.New("invalid 'GroupId' field")
 	}
+	if p.Privacy != "public" && p.Privacy != "private" && p.Privacy != "almost private" {
+		return errors.New("invalid 'Privacy' field")
+	}
 	if p.UpdatedAt < p.CreatedAt {
 		return errors.New("invalid 'UpdatedAt' field")
 	}
