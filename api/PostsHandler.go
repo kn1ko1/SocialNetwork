@@ -41,7 +41,6 @@ func (h *PostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
-
 	var post models.Post
 	err := json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
@@ -67,15 +66,13 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Encode and write the response
+	w.WriteHeader(http.StatusCreated)
 	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	// Correct HTTP header for a newly created resource:
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Post created successfully!"))
 }
 
 func (h *PostsHandler) get(w http.ResponseWriter, r *http.Request) {

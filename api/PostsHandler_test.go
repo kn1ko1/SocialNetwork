@@ -45,8 +45,8 @@ func TestPostsHandler_Post(t *testing.T) {
 	handler.ServeHTTP(recorder, req)
 
 	// Check the response status code
-	if recorder.Code != http.StatusOK {
-		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
+	if recorder.Code != http.StatusCreated {
+		t.Errorf("Expected status code %d, but got %d", http.StatusCreated, recorder.Code)
 	}
 	// Add additional assertions as needed for your specific use case
 }
