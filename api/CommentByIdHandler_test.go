@@ -7,16 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"socialnetwork/models"
 )
-
-// Create a new instance of commentByIdHandler with the mock repository
-
-// MockRepository is a mock implementation of IRepository for testing purposes
-type MockCommentByIdHandlerRepository struct {
-	Comment models.Comment
-}
 
 func TestCommentByIdHandler_Get(t *testing.T) {
 	handler := NewCommentByIdHandler(R)

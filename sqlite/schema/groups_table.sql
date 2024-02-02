@@ -5,4 +5,5 @@ CREATE TABLE GROUPS (
     Description TEXT NOT NULL,
     Title TEXT NOT NULL,
     UpdatedAt BIGINT NOT NULL,
+    FOREIGN KEY (CreatorId) REFERENCES USERS(UserId)
 );
