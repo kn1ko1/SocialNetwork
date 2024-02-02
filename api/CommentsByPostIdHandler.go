@@ -61,9 +61,13 @@ func (h *CommentsByPostIdHandler) get(w http.ResponseWriter, r *http.Request) {
 }
 
 // func (h *CommentsByPostIdHandler) delete(w http.ResponseWriter, r *http.Request) {
-// 	// Extract post ID from URL parameters
-// 	params := r.URL.Query()
-// 	postIDString := params.Get("postId")
+// fields := strings.Split(r.URL.Path, "/")
+// postId, err := strconv.Atoi(fields[len(fields)-2])
+// if err != nil {
+// 	utils.HandleError("Atoi Error.", err)
+// 	http.Error(w, "bad request", http.StatusBadRequest)
+// 	return
+// }
 // 	postID, err := strconv.Atoi(postIDString)
 // 	if err != nil {
 // 		utils.HandleError("Problem with AtoI postID. ", err)
