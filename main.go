@@ -42,8 +42,8 @@ func addApiHandlers(rt *router.Router) {
 	// loginHandler := auth.NewLoginHandler(r)
 	// logoutHandler := auth.NewLogoutHandler(r)
 	// registrationHandler := auth.NewRegistrationHandler(r)
-	// usersHandler := api.NewUsersHandler(r)
-	// userByIdHandler := api.NewUserByIdHandler(r)
+	usersHandler := api.NewUsersHandler(r)
+	userByIdHandler := api.NewUserByIdHandler(r)
 	// usersByPublicHandler := api.NewUsersByPublicHandler(r)
 	postsHandler := api.NewPostsHandler(r)
 	postByIdHandler := api.NewPostByIdHandler(r)
@@ -77,8 +77,8 @@ func addApiHandlers(rt *router.Router) {
 	// rt.AddHandler(regexp.MustCompile(`^/auth/registration$`), registrationHandler)
 
 	// // User Handlers
-	// rt.AddHandler(regexp.MustCompile(`^/api/users$`), usersHandler)
-	// rt.AddHandler(regexp.MustCompile(`^/api/users/{userId}$`), userByIdHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/users$`), usersHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/users/[0-9]+$`), userByIdHandler)
 	// rt.AddHandler(regexp.MustCompile(`^/api/users/privacy/public$`), usersByPublicHandler)
 	// // Post Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/posts$`), postsHandler)
