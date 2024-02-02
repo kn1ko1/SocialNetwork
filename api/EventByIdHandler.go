@@ -8,6 +8,7 @@ import (
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 	"strconv"
+	"strings"
 )
 
 // Endpoint: /api/events/{eventId}
@@ -39,11 +40,10 @@ func (h *EventByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *EventByIdHandler) get(w http.ResponseWriter, r *http.Request) {
-	queryParams := r.URL.Query()
-	eventIdString := queryParams.Get("eventId")
-	eventId, postIdErr := strconv.Atoi(eventIdString)
-	if postIdErr != nil {
-		utils.HandleError("Problem with AtoI eventId. ", postIdErr)
+	fields := strings.Split(r.URL.Path, "/")
+	eventId, err := strconv.Atoi(fields[len(fields)-1])
+	if err != nil {
+		utils.HandleError("Problem with AtoI eventId. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -53,14 +53,12 @@ func (h *EventByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
 	err = json.NewEncoder(w).Encode(event)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
 }
 
 func (h *EventByIdHandler) put(w http.ResponseWriter, r *http.Request) {

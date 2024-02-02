@@ -8,6 +8,7 @@ import (
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 	"strconv"
+	"strings"
 )
 
 // Allowed methods: GET, PUT, DELETE
@@ -43,15 +44,14 @@ func (h *GroupByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *GroupByIdHandler) get(w http.ResponseWriter, r *http.Request) {
-	queryParams := r.URL.Query()
-	GroupIdString := queryParams.Get("GroupId")
-	GroupId, GroupIdErr := strconv.Atoi(GroupIdString)
+	fields := strings.Split(r.URL.Path, "/")
+	groupId, GroupIdErr := strconv.Atoi(fields[len(fields)-1])
 	if GroupIdErr != nil {
 		utils.HandleError("Problem with AtoI GroupId. ", GroupIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	Group, err := h.Repo.GetGroup(GroupId)
+	Group, err := h.Repo.GetGroup(groupId)
 	if err != nil {
 		utils.HandleError("Failed to get Group in GetGroupByIdHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
