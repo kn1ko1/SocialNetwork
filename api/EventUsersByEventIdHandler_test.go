@@ -9,23 +9,21 @@ import (
 	"testing"
 )
 
-func TestCommentsByPostIdHandler_Get(t *testing.T) {
+func TestEventUsersByEventIdHandler_Get(t *testing.T) {
 
-	// Create a new instance of commentByIdHandler with the mock repository
-	handler := NewCommentsByPostIdHandler(R)
-	comment, _ := handler.Repo.GetAllComments()
+	handler := NewEventUsersByEventIdHandler(R)
+	event, _ := handler.Repo.GetAllEvents()
+	eventId := event[0].EventId
 
-	postId := comment[0].PostId
-
-	commentJSON, err := json.Marshal(comment)
+	eventJSON, err := json.Marshal(event)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	URL := "/api/posts/" + fmt.Sprint(postId) + "comments"
+	URL := "/api/events/" + fmt.Sprint(eventId) + "/eventUsers"
 
 	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(commentJSON))
+	req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(eventJSON))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -42,21 +40,21 @@ func TestCommentsByPostIdHandler_Get(t *testing.T) {
 	}
 }
 
-func TestCommentsByPostIdHandler_Delete(t *testing.T) {
-	handler := NewCommentsByPostIdHandler(R)
-	comment, _ := handler.Repo.GetAllComments()
+func TestEventUsersByEventIdHandler_Delete(t *testing.T) {
 
-	postId := comment[0].PostId
+	handler := NewEventUsersByEventIdHandler(R)
+	event, _ := handler.Repo.GetAllEvents()
+	eventId := event[0].EventId
 
-	commentJSON, err := json.Marshal(postId)
+	eventJSON, err := json.Marshal(event)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	URL := "/api/posts/" + fmt.Sprint(postId) + "comments"
+	URL := "/api/events/" + fmt.Sprint(eventId) + "/eventUsers"
 
 	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodDelete, URL, bytes.NewBuffer(commentJSON))
+	req, err := http.NewRequest(http.MethodDelete, URL, bytes.NewBuffer(eventJSON))
 	if err != nil {
 		t.Fatal(err)
 	}

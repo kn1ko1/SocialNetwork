@@ -9,7 +9,7 @@ import (
 	"socialnetwork/utils"
 )
 
-// Endpoint: /api/event/{eventId}/eventUser   ?
+// Endpoint: /api/event/{eventId}/eventUser
 // Allowed methods: GET, POST
 
 type EventUsersHandler struct {
@@ -27,11 +27,9 @@ func (h *EventUsersHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
-
 	case http.MethodPost:
 		h.post(w, r)
 		return
-
 	// All unimplemented methods default to a "method not allowed" error
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)

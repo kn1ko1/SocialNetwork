@@ -28,7 +28,7 @@ func (h *EventUsersByEventIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Re
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
 
-	case http.MethodPost:
+	case http.MethodGet:
 		h.get(w, r)
 		return
 	case http.MethodDelete:
@@ -63,6 +63,7 @@ func (h *EventUsersByEventIdHandler) get(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
+	w.WriteHeader(http.StatusOK)
 }
 
 func (h *EventUsersByEventIdHandler) delete(w http.ResponseWriter, r *http.Request) {

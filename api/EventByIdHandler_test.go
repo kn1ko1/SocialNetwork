@@ -9,23 +9,19 @@ import (
 	"testing"
 )
 
-func TestCommentsByPostIdHandler_Get(t *testing.T) {
+func TestEventsByIdHandler_Get(t *testing.T) {
+	handler := NewEventByIdHandler(R)
+	event, _ := handler.Repo.GetEventById(1)
 
-	// Create a new instance of commentByIdHandler with the mock repository
-	handler := NewCommentsByPostIdHandler(R)
-	comment, _ := handler.Repo.GetAllComments()
-
-	postId := comment[0].PostId
-
-	commentJSON, err := json.Marshal(comment)
+	eventJSON, err := json.Marshal(event)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	URL := "/api/posts/" + fmt.Sprint(postId) + "comments"
+	URL := "/api/events/" + fmt.Sprint(event.EventId)
 
 	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(commentJSON))
+	req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(eventJSON))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -40,23 +36,23 @@ func TestCommentsByPostIdHandler_Get(t *testing.T) {
 	if recorder.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
 	}
+	// Add additional assertions as needed for your specific use case
 }
 
-func TestCommentsByPostIdHandler_Delete(t *testing.T) {
-	handler := NewCommentsByPostIdHandler(R)
-	comment, _ := handler.Repo.GetAllComments()
+func TestEventsByIdHandler_Put(t *testing.T) {
 
-	postId := comment[0].PostId
+	handler := NewEventByIdHandler(R)
+	event, _ := handler.Repo.GetEventById(1)
 
-	commentJSON, err := json.Marshal(postId)
+	eventJSON, err := json.Marshal(event)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	URL := "/api/posts/" + fmt.Sprint(postId) + "comments"
+	URL := "/api/events/" + fmt.Sprint(event.EventId)
 
 	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodDelete, URL, bytes.NewBuffer(commentJSON))
+	req, err := http.NewRequest(http.MethodPut, URL, bytes.NewBuffer(eventJSON))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -71,4 +67,5 @@ func TestCommentsByPostIdHandler_Delete(t *testing.T) {
 	if recorder.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
 	}
+	// Add additional assertions as needed for your specific use case
 }

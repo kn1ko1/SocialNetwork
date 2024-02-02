@@ -9,19 +9,20 @@ import (
 	"testing"
 )
 
-func TestCommentByIdHandler_Get(t *testing.T) {
-	handler := NewCommentByIdHandler(R)
-	comment, _ := handler.Repo.GetCommentById(1)
+func TestEventsByGroupIdHandler_Get(t *testing.T) {
+	handler := NewEventsByGroupIdHandler(R)
+	event, _ := handler.Repo.GetEventById(1)
+	groupId := event.GroupId
 
-	commentJSON, err := json.Marshal(comment)
+	eventJSON, err := json.Marshal(groupId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	URL := "/api/comments/" + fmt.Sprint(comment.CommentId)
+	URL := "/api/groups/" + fmt.Sprint(groupId) + "/events"
 
 	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(commentJSON))
+	req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(eventJSON))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -29,28 +30,31 @@ func TestCommentByIdHandler_Get(t *testing.T) {
 	// Create a response recorder to capture the response
 	recorder := httptest.NewRecorder()
 
-	// Serve the HTTP request using the commentByIdHandler
+	// Serve the HTTP request using the handler
 	handler.ServeHTTP(recorder, req)
 
 	// Check the response status code
 	if recorder.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
 	}
+	// Add additional assertions as needed for your specific use case
 }
 
-func TestCommentByIdHandler_Put(t *testing.T) {
-	handler := NewCommentByIdHandler(R)
-	comment, _ := handler.Repo.GetCommentById(1)
+func TestEventsByGroupIdHandler_Put(t *testing.T) {
 
-	commentJSON, err := json.Marshal(comment)
+	handler := NewEventsByGroupIdHandler(R)
+	event, _ := handler.Repo.GetEventById(1)
+	groupId := event.GroupId
+
+	eventJSON, err := json.Marshal(event)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	URL := "/api/comments/" + fmt.Sprint(comment.CommentId)
+	URL := "/api/groups/" + fmt.Sprint(groupId) + "/events"
 
 	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(commentJSON))
+	req, err := http.NewRequest(http.MethodPut, URL, bytes.NewBuffer(eventJSON))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -58,33 +62,31 @@ func TestCommentByIdHandler_Put(t *testing.T) {
 	// Create a response recorder to capture the response
 	recorder := httptest.NewRecorder()
 
-	// Serve the HTTP request using the commentByIdHandler
+	// Serve the HTTP request using the handler
 	handler.ServeHTTP(recorder, req)
 
 	// Check the response status code
 	if recorder.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
 	}
+	// Add additional assertions as needed for your specific use case
 }
 
-func TestCommentByIdHandler_Delete(t *testing.T) {
-	handler := NewCommentByIdHandler(R)
-	comment, _ := handler.Repo.GetCommentById(1)
-	err := handler.Repo.DeleteCommentById(comment.CommentId)
+func TestEventsByGroupIdHandler_Delete(t *testing.T) {
 
+	handler := NewEventsByGroupIdHandler(R)
+	event, _ := handler.Repo.GetEventById(1)
+	groupId := event.GroupId
+
+	eventJSON, err := json.Marshal(groupId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	commentJSON, err := json.Marshal(comment)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	URL := "/api/comments/" + fmt.Sprint(comment.CommentId)
+	URL := "/api/groups/" + fmt.Sprint(groupId) + "/events"
 
 	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodDelete, URL, bytes.NewBuffer(commentJSON))
+	req, err := http.NewRequest(http.MethodDelete, URL, bytes.NewBuffer(eventJSON))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -92,11 +94,12 @@ func TestCommentByIdHandler_Delete(t *testing.T) {
 	// Create a response recorder to capture the response
 	recorder := httptest.NewRecorder()
 
-	// Serve the HTTP request using the commentByIdHandler
+	// Serve the HTTP request using the handler
 	handler.ServeHTTP(recorder, req)
 
 	// Check the response status code
 	if recorder.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
 	}
+	// Add additional assertions as needed for your specific use case
 }

@@ -9,23 +9,20 @@ import (
 	"testing"
 )
 
-func TestCommentsByPostIdHandler_Get(t *testing.T) {
+func TestNewGroupUserByIdHandler_Get(t *testing.T) {
 
-	// Create a new instance of commentByIdHandler with the mock repository
-	handler := NewCommentsByPostIdHandler(R)
-	comment, _ := handler.Repo.GetAllComments()
+	handler := NewGroupUserByIdHandler(R)
+	group, _ := handler.Repo.GetGroupUser(1)
 
-	postId := comment[0].PostId
-
-	commentJSON, err := json.Marshal(comment)
+	groupJSON, err := json.Marshal(group)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	URL := "/api/posts/" + fmt.Sprint(postId) + "comments"
+	URL := "/api/groupUsers/" + fmt.Sprint(group.UserId)
 
 	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(commentJSON))
+	req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(groupJSON))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -42,21 +39,25 @@ func TestCommentsByPostIdHandler_Get(t *testing.T) {
 	}
 }
 
-func TestCommentsByPostIdHandler_Delete(t *testing.T) {
-	handler := NewCommentsByPostIdHandler(R)
-	comment, _ := handler.Repo.GetAllComments()
+func TestNewGroupUserByIdHandler_Delete(t *testing.T) {
 
-	postId := comment[0].PostId
+	handler := NewGroupUserByIdHandler(R)
+	group, _ := handler.Repo.GetGroupUser(1)
+	err := handler.Repo.DeleteGroupUser(group.GroupId)
 
-	commentJSON, err := json.Marshal(postId)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	URL := "/api/posts/" + fmt.Sprint(postId) + "comments"
+	groupJSON, err := json.Marshal(group)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	URL := "/api/groupUsers/" + fmt.Sprint(group.UserId)
 
 	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodDelete, URL, bytes.NewBuffer(commentJSON))
+	req, err := http.NewRequest(http.MethodDelete, URL, bytes.NewBuffer(groupJSON))
 	if err != nil {
 		t.Fatal(err)
 	}
