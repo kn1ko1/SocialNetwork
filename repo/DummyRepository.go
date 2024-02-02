@@ -180,6 +180,9 @@ func (r *DummyRepository) GetPostUsersByUserId(userId int) ([]models.PostUser, e
 	var powerUsers []models.PostUser
 	return powerUsers, errors.New("not implimented yet")
 }
+func (r *DummyRepository) DeletePostUsersByUserId(userId int) error {
+	return nil
+}
 
 // Comments
 func (r *DummyRepository) CreateComment(comment models.Comment) (models.Comment, error) {

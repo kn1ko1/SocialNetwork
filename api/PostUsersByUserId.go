@@ -43,14 +43,14 @@ func (h *PostUsersByUserIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Requ
 
 func (h *PostUsersByUserIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
-	eventIdString := queryParams.Get("eventId")
-	eventId, eventIdErr := strconv.Atoi(eventIdString)
-	if eventIdErr != nil {
-		utils.HandleError("Failed to Atoi eventId in PostUserByUserIdHandler. ", eventIdErr)
+	userIdString := queryParams.Get("userId")
+	userId, userIdErr := strconv.Atoi(userIdString)
+	if userIdErr != nil {
+		utils.HandleError("Failed to Atoi userId in PostUserByUserIdHandler. ", userIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	eventUsers, err := h.Repo.GetPostUsersByUserId(eventId)
+	eventUsers, err := h.Repo.GetPostUsersByUserId(userId)
 	if err != nil {
 		utils.HandleError("Failed to get eventUsers in PostUserByUserIdHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -68,16 +68,16 @@ func (h *PostUsersByUserIdHandler) get(w http.ResponseWriter, r *http.Request) {
 func (h *PostUsersByUserIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
 	queryParams := r.URL.Query()
-	eventIdString := queryParams.Get("eventId")
-	eventId, eventIdErr := strconv.Atoi(eventIdString)
-	if eventIdErr != nil {
-		utils.HandleError("Problem with AtoI messageId. ", eventIdErr)
+	userIdString := queryParams.Get("userId")
+	userId, userIdErr := strconv.Atoi(userIdString)
+	if userIdErr != nil {
+		utils.HandleError("Problem with AtoI messageId. ", userIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	log.Println("Received delete request for messageId:", eventId)
+	log.Println("Received delete request for messageId:", userId)
 
-	err := h.Repo.DeletePostUsersByUserId(eventId)
+	err := h.Repo.DeletePostUsersByUserId(userId)
 	if err != nil {
 		utils.HandleError("Failed to delete eventUsers. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

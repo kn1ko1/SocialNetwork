@@ -33,6 +33,7 @@ type IRepository interface {
 	// PostUser
 	CreatePostUser(postUser models.PostUser) (models.PostUser, error)
 	GetPostUsersByUserId(userId int) ([]models.PostUser, error)
+	DeletePostUsersByUserId(userId int) error
 	// Comments
 	CreateComment(comment models.Comment) (models.Comment, error)
 	GetAllComments() ([]models.Comment, error)

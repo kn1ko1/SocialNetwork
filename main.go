@@ -67,7 +67,7 @@ func addApiHandlers(rt *router.Router) {
 	groupUsersHandler := api.NewGroupUsersHandler(r)
 	groupUserByIdHandler := api.NewGroupUserByIdHandler(r)
 	groupUserByGroupIdAndUserIdHandler := api.NewGroupUserByGroupIdAndUserIdHandler(r)
-	groupPostsHandler := api.NewGroupPostsHandler(r)
+	groupPostsHandler := api.NewPostsByGroupIdHandler(r)
 	notificationsHandler := api.NewNotificationsHandler(r)
 	notificationByIdHandler := api.NewNotificationByIdHandler(r)
 

@@ -104,6 +104,9 @@ func (r *SQLiteRepository) CreatePostUser(postUser models.PostUser) (models.Post
 func (r *SQLiteRepository) GetPostUsersByUserId(userId int) ([]models.PostUser, error) {
 	return sqlite.GetPostUsersByUserId(r.businessDb, userId)
 }
+func (r *SQLiteRepository) DeletePostUsersByUserId(userId int) error {
+	return sqlite.DeletePostUsersByUserId(r.businessDb, userId)
+}
 
 // Comments
 func (r *SQLiteRepository) CreateComment(comment models.Comment) (models.Comment, error) {
