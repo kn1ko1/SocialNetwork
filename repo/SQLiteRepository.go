@@ -40,6 +40,9 @@ func (r *SQLiteRepository) CreateUser(user models.User) (models.User, error) {
 func (r *SQLiteRepository) GetAllUsers() ([]models.User, error) {
 	return sqlite.GetAllUsers(r.identityDb)
 }
+func (r *SQLiteRepository) GetUsersByPublic() ([]models.User, error) {
+	return sqlite.GetUsersByPublic(r.identityDb)
+}
 func (r *SQLiteRepository) GetUserById(userId int) (models.User, error) {
 	return sqlite.GetUserById(r.identityDb, userId)
 }

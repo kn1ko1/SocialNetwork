@@ -9,6 +9,7 @@ type IRepository interface {
 	// User
 	CreateUser(user models.User) (models.User, error)
 	GetAllUsers() ([]models.User, error)
+	GetUsersByPublic() ([]models.User, error)
 	GetUserById(userId int) (models.User, error)
 	GetUserByEmail(email string) (models.User, error)
 	GetUserByUsername(username string) (models.User, error)
@@ -28,6 +29,8 @@ type IRepository interface {
 	DeletePostByGroupId(groupId int) error
 	DeletePostsByUserId(userId int) error
 	DeleteAllPosts() error
+
+	// PostUser
 
 	// Comments
 	CreateComment(comment models.Comment) (models.Comment, error)

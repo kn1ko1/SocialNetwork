@@ -33,9 +33,7 @@ func (h *UserPostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *UserPostsHandler) get(w http.ResponseWriter, r *http.Request) {
-	// queryParams := r.URL.Query()
-	// postIdString := queryParams.Get("postId")
-	// postId, postIdErr := strconv.Atoi(postIdString)
+
 	user, err := getUser(r)
 	if err != nil {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)

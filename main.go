@@ -45,6 +45,7 @@ func addApiHandlers(rt *router.Router) {
 	registrationHandler := auth.NewRegistrationHandler(r)
 	usersHandler := api.NewUsersHandler(r)
 	userByIdHandler := api.NewUserByIdHandler(r)
+	usersByPublicHandler := api.NewUsersByPublicHandler(r)
 	postsHandler := api.NewPostsHandler(r)
 	postByIdHandler := api.NewPostByIdHandler(r)
 	userPostsHandler := api.NewUserPostsHandler(r)
@@ -77,11 +78,13 @@ func addApiHandlers(rt *router.Router) {
 	// User Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/users$`), usersHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/users/{userId}$`), userByIdHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/users/privacy/public$`), usersByPublicHandler)
 	// Post Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/posts$`), postsHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/posts/{postId}$`), postByIdHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/user/{userId}/posts$`), userPostsHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/posts/privacy/{privacyStatus}$`), postByPrivacyHandler)
+	// PostUser Handlers
 	// Comment Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/comments$`), commentsHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/comments/{commentId}$`), commentByIdHandler)

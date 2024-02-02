@@ -74,6 +74,17 @@ func (r *DummyRepository) GetUserById(userId int) (models.User, error) {
 	user.UserId = userId
 	return user, nil
 }
+func (r *DummyRepository) GetUsersByPublic() ([]models.User, error) {
+	users := make([]models.User, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		u := *models.GenerateValidUser()
+		u.UserId = i + 1
+		u.IsPublic = true
+		users[i] = u
+	}
+	return users, nil
+}
+
 func (r *DummyRepository) GetUserByEmail(email string) (models.User, error) {
 	user := validUser
 	user.Email = email
