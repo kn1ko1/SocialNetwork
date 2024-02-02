@@ -104,8 +104,20 @@ func (r *SQLiteRepository) CreatePostUser(postUser models.PostUser) (models.Post
 func (r *SQLiteRepository) GetPostUsersByUserId(userId int) ([]models.PostUser, error) {
 	return sqlite.GetPostUsersByUserId(r.businessDb, userId)
 }
+func (r *SQLiteRepository) GetPostUsersByPostId(postId int) ([]models.PostUser, error) {
+	return sqlite.GetPostUsersByPostId(r.businessDb, postId)
+}
 func (r *SQLiteRepository) DeletePostUsersByUserId(userId int) error {
 	return sqlite.DeletePostUsersByUserId(r.businessDb, userId)
+}
+func (r *SQLiteRepository) DeletePostUsersByPostId(postId int) error {
+	return sqlite.DeletePostUsersByPostId(r.businessDb, postId)
+}
+func (r *SQLiteRepository) DeletePostUserByPostIdAndUserId(postId, userId int) error {
+	return sqlite.DeletePostUserByPostIdAndUserId(r.businessDb, postId, userId)
+}
+func (r *SQLiteRepository) DeleteAllPostUsers() error {
+	return sqlite.DeleteAllPostUsers(r.businessDb)
 }
 
 // Comments

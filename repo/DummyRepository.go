@@ -177,10 +177,28 @@ func (r *DummyRepository) CreatePostUser(postUser models.PostUser) (models.PostU
 	return postUser, nil
 }
 func (r *DummyRepository) GetPostUsersByUserId(userId int) ([]models.PostUser, error) {
-	var powerUsers []models.PostUser
-	return powerUsers, errors.New("not implimented yet")
+	var postUsers []models.PostUser
+	return postUsers, errors.New("not implimented yet")
 }
+
+func (r *DummyRepository) GetPostUsersByPostId(postId int) ([]models.PostUser, error) {
+	var postUsers []models.PostUser
+	return postUsers, errors.New("not implimented yet")
+}
+
 func (r *DummyRepository) DeletePostUsersByUserId(userId int) error {
+	return nil
+}
+
+func (r *DummyRepository) DeletePostUsersByPostId(postId int) error {
+	return nil
+}
+
+func (r *DummyRepository) DeletePostUserByPostIdAndUserId(postId, userId int) error {
+	return nil
+}
+
+func (r *DummyRepository) DeleteAllPostUsers() error {
 	return nil
 }
 
