@@ -51,8 +51,8 @@ func addApiHandlers(rt *router.Router) {
 	// postByPrivacyHandler := api.NewPostsByPrivacyHandler(r)
 	// postUserHandler := api.NewPostUsersHandler(r)
 	// postUserByUserIdHandler := api.NewPostUsersByUserIdHandler(r)
-	// commentsHandler := api.NewCommentsHandler(r)
-	// commentByIdHandler := api.NewCommentByIdHandler(r)
+	commentsHandler := api.NewCommentsHandler(r)
+	commentByIdHandler := api.NewCommentByIdHandler(r)
 	commentByPostIdHandler := api.NewCommentsByPostIdHandler(r)
 	eventsHandler := api.NewEventsHandler(r)
 	eventByIdHandler := api.NewEventByIdHandler(r)
@@ -89,8 +89,8 @@ func addApiHandlers(rt *router.Router) {
 	// rt.AddHandler(regexp.MustCompile(`^/api/postUsers/$`), postUserHandler)
 	// rt.AddHandler(regexp.MustCompile(`^/api/postUsers/users/{userId$`), postUserByUserIdHandler)
 	// // Comment Handlers
-	// rt.AddHandler(regexp.MustCompile(`^/api/comments$`), commentsHandler)
-	// rt.AddHandler(regexp.MustCompile(`^/api/comments/{commentId}$`), commentByIdHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/comments$`), commentsHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/comments/[0-9]+$`), commentByIdHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/posts/[0-9]+/comments$`), commentByPostIdHandler)
 	// // Event Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/events$`), eventsHandler)
