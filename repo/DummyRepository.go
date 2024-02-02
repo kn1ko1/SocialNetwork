@@ -562,6 +562,16 @@ func (r *DummyRepository) GetNotificationById(notificationId int) (models.Notifi
 
 	return notification, nil
 }
+func (r *DummyRepository) GetNotificationsByUserId(userId int) ([]models.Notification, error) {
+
+	notifications := make([]models.Notification, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		n := *models.GenerateValidNotification()
+		n.NotificationId = i + 1
+		n.TargetId = userId
+	}
+	return notifications, nil
+}
 func (r *DummyRepository) UpdateNotification(notification models.Notification) (models.Notification, error) {
 	ctime := time.Now().UTC().UnixMilli()
 

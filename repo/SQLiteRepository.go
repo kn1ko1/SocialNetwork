@@ -307,6 +307,10 @@ func (r *SQLiteRepository) CreateNotification(notification models.Notification) 
 func (r *SQLiteRepository) GetNotificationById(notificationId int) (models.Notification, error) {
 	return sqlite.GetNotificationById(r.businessDb, notificationId)
 }
+
+func (r *SQLiteRepository) GetNotificationsByUserId(userId int) ([]models.Notification, error) {
+	return sqlite.GetNotificationsByUserId(r.businessDb, userId)
+}
 func (r *SQLiteRepository) UpdateNotification(notification models.Notification) (models.Notification, error) {
 	return sqlite.UpdateNotification(r.businessDb, notification)
 }
