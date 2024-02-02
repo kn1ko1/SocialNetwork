@@ -6,6 +6,7 @@ import (
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 	"strconv"
+	"strings"
 )
 
 // Endpoint: /api/posts/{postId}/comments
@@ -29,9 +30,6 @@ func (h *CommentsByPostIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Reque
 	case http.MethodGet:
 		h.get(w, r)
 		return
-	case http.MethodDelete:
-		h.delete(w, r)
-		return
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -39,24 +37,20 @@ func (h *CommentsByPostIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Reque
 }
 
 func (h *CommentsByPostIdHandler) get(w http.ResponseWriter, r *http.Request) {
-	// Extract post ID from URL parameters
-	params := r.URL.Query()
-	postIDString := params.Get("postId")
-	postID, err := strconv.Atoi(postIDString)
+	fields := strings.Split(r.URL.Path, "/")
+	postId, err := strconv.Atoi(fields[len(fields)-2])
 	if err != nil {
 		utils.HandleError("Problem with AtoI postID. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
 	// Retrieve comments by post ID from the repository
-	comments, err := h.Repo.GetCommentsByPostId(postID)
+	comments, err := h.Repo.GetCommentsByPostId(postId)
 	if err != nil {
 		utils.HandleError("Failed to get comments by post ID. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
 	// Encode and write the response
 	err = json.NewEncoder(w).Encode(comments)
 	if err != nil {
@@ -64,30 +58,27 @@ func (h *CommentsByPostIdHandler) get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Here are the comments for the post"))
 }
 
-func (h *CommentsByPostIdHandler) delete(w http.ResponseWriter, r *http.Request) {
-	// Extract post ID from URL parameters
-	params := r.URL.Query()
-	postIDString := params.Get("postId")
-	postID, err := strconv.Atoi(postIDString)
-	if err != nil {
-		utils.HandleError("Problem with AtoI postID. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
+// func (h *CommentsByPostIdHandler) delete(w http.ResponseWriter, r *http.Request) {
+// 	// Extract post ID from URL parameters
+// 	params := r.URL.Query()
+// 	postIDString := params.Get("postId")
+// 	postID, err := strconv.Atoi(postIDString)
+// 	if err != nil {
+// 		utils.HandleError("Problem with AtoI postID. ", err)
+// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 		return
+// 	}
 
-	// Delete comments by post ID from the repository
-	err = h.Repo.DeleteCommentsByPostId(postID)
-	if err != nil {
-		utils.HandleError("Failed to delete comments by post ID. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
+// 	// Delete comments by post ID from the repository
+// 	err = h.Repo.DeleteCommentsByPostId(postID)
+// 	if err != nil {
+// 		utils.HandleError("Failed to delete comments by post ID. ", err)
+// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 		return
+// 	}
 
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Comments for the post were deleted"))
-}
+// 	w.WriteHeader(http.StatusOK)
+// 	w.Write([]byte("Comments for the post were deleted"))
+// }
