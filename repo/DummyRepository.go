@@ -171,6 +171,16 @@ func (r *DummyRepository) DeleteAllPosts() error {
 	return nil
 }
 
+// Post_Users
+func (r *DummyRepository) CreatePostUser(postUser models.PostUser) (models.PostUser, error) {
+
+	return postUser, nil
+}
+func (r *DummyRepository) GetPostUsersByUserId(userId int) ([]models.PostUser, error) {
+	var powerUsers []models.PostUser
+	return powerUsers, errors.New("not implimented yet")
+}
+
 // Comments
 func (r *DummyRepository) CreateComment(comment models.Comment) (models.Comment, error) {
 	comment.CommentId = 1
