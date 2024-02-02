@@ -53,20 +53,3 @@ func (h *PostUsersHandler) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-
-// LEAVE UNIMPLEMENTED IN SWITCH CASE
-// func (h *PostUsersHandler) delete(w http.ResponseWriter, r *http.Request) {
-// 	user, err := getUser(r)
-// 	if err != nil {
-// 		http.Error(w, "unauthorized", http.StatusUnauthorized)
-// 		return
-// 	}
-// 	// utils.HandleError("Received delete request for userID:", userID)
-// 	err = h.Repo.DeletePostsByUserId(user.UserId)
-// 	if err != nil {
-// 		utils.HandleError("Failed to delete Posts. ", err)
-// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-// 		return
-// 	}
-// 	w.WriteHeader(http.StatusOK)
-// }
