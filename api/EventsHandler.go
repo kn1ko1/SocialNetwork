@@ -27,14 +27,12 @@ func (h *EventsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
-
 	case http.MethodPost:
 		h.post(w, r)
 		return
 	case http.MethodGet:
 		h.get(w, r)
 		return
-
 	// All unimplemented methods default to a "method not allowed" error
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -43,7 +41,6 @@ func (h *EventsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
-
 	var event models.Event
 	err := json.NewDecoder(r.Body).Decode(&event)
 	if err != nil {
@@ -52,7 +49,6 @@ func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("Received event:", event.Title, event.Description)
-
 	// Validate the event
 	if validationErr := event.Validate(); validationErr != nil {
 		utils.HandleError("Validation failed:", validationErr)
@@ -79,14 +75,12 @@ func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *EventsHandler) get(w http.ResponseWriter, r *http.Request) {
-
 	allEvents, err := h.Repo.GetAllEvents()
 	if err != nil {
 		utils.HandleError("Failed to get event in EventHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
 	err = json.NewEncoder(w).Encode(allEvents)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
