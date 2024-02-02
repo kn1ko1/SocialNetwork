@@ -9,6 +9,7 @@ type IRepository interface {
 	// User
 	CreateUser(user models.User) (models.User, error)
 	GetAllUsers() ([]models.User, error)
+	GetUsersByPublic() ([]models.User, error)
 	GetUserById(userId int) (models.User, error)
 	GetUserByEmail(email string) (models.User, error)
 	GetUserByUsername(username string) (models.User, error)
@@ -28,6 +29,15 @@ type IRepository interface {
 	DeletePostByGroupId(groupId int) error
 	DeletePostsByUserId(userId int) error
 	DeleteAllPosts() error
+
+	// PostUser
+	CreatePostUser(postUser models.PostUser) (models.PostUser, error)
+	GetPostUsersByUserId(userId int) ([]models.PostUser, error)
+	GetPostUsersByPostId(postId int) ([]models.PostUser, error)
+	DeletePostUsersByUserId(userId int) error
+	DeletePostUsersByPostId(postId int) error
+	DeletePostUserByPostIdAndUserId(postId, userId int) error
+	DeleteAllPostUsers() error
 
 	// Comments
 	CreateComment(comment models.Comment) (models.Comment, error)
@@ -99,6 +109,7 @@ type IRepository interface {
 	//Notification
 	CreateNotification(notification models.Notification) (models.Notification, error)
 	GetNotificationById(notificationId int) (models.Notification, error)
+	GetNotificationsByUserId(userId int) ([]models.Notification, error)
 	UpdateNotification(notification models.Notification) (models.Notification, error)
 	DeleteNotificationById(notificationId int) error
 }

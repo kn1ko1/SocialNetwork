@@ -56,15 +56,17 @@ func TestPostValidateValidExpectNil(t *testing.T) {
 
 func generateMissingFieldPost() *Post {
 	p := GenerateValidPost()
-	missingField := rand.Intn(4)
+	missingField := rand.Intn(5)
 	switch missingField {
 	case 0:
 		p.Body = ""
 	case 1:
 		p.CreatedAt = 0
 	case 2:
-		p.UpdatedAt = 0
+		p.Privacy = ""
 	case 3:
+		p.UpdatedAt = 0
+	case 4:
 		p.UserId = 0
 	}
 	return p
@@ -72,15 +74,17 @@ func generateMissingFieldPost() *Post {
 
 func generateInvalidPost() *Post {
 	p := GenerateValidPost()
-	invalidField := rand.Intn(4)
+	invalidField := rand.Intn(5)
 	switch invalidField {
 	case 0:
 		p.Body = ""
 	case 1:
 		p.CreatedAt = -p.CreatedAt
 	case 2:
-		p.UpdatedAt = -p.CreatedAt
+		p.Privacy = ""
 	case 3:
+		p.UpdatedAt = -p.UpdatedAt
+	case 4:
 		p.UserId = -p.UserId
 	}
 	return p

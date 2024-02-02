@@ -40,6 +40,9 @@ func (r *SQLiteRepository) CreateUser(user models.User) (models.User, error) {
 func (r *SQLiteRepository) GetAllUsers() ([]models.User, error) {
 	return sqlite.GetAllUsers(r.identityDb)
 }
+func (r *SQLiteRepository) GetUsersByPublic() ([]models.User, error) {
+	return sqlite.GetUsersByPublic(r.identityDb)
+}
 func (r *SQLiteRepository) GetUserById(userId int) (models.User, error) {
 	return sqlite.GetUserById(r.identityDb, userId)
 }
@@ -92,6 +95,29 @@ func (r *SQLiteRepository) DeletePostsByUserId(userId int) error {
 }
 func (r *SQLiteRepository) DeleteAllPosts() error {
 	return sqlite.DeleteAllPosts(r.businessDb)
+}
+
+// Post_Users
+func (r *SQLiteRepository) CreatePostUser(postUser models.PostUser) (models.PostUser, error) {
+	return sqlite.CreatePostUser(r.businessDb, postUser)
+}
+func (r *SQLiteRepository) GetPostUsersByUserId(userId int) ([]models.PostUser, error) {
+	return sqlite.GetPostUsersByUserId(r.businessDb, userId)
+}
+func (r *SQLiteRepository) GetPostUsersByPostId(postId int) ([]models.PostUser, error) {
+	return sqlite.GetPostUsersByPostId(r.businessDb, postId)
+}
+func (r *SQLiteRepository) DeletePostUsersByUserId(userId int) error {
+	return sqlite.DeletePostUsersByUserId(r.businessDb, userId)
+}
+func (r *SQLiteRepository) DeletePostUsersByPostId(postId int) error {
+	return sqlite.DeletePostUsersByPostId(r.businessDb, postId)
+}
+func (r *SQLiteRepository) DeletePostUserByPostIdAndUserId(postId, userId int) error {
+	return sqlite.DeletePostUserByPostIdAndUserId(r.businessDb, postId, userId)
+}
+func (r *SQLiteRepository) DeleteAllPostUsers() error {
+	return sqlite.DeleteAllPostUsers(r.businessDb)
 }
 
 // Comments
@@ -280,6 +306,10 @@ func (r *SQLiteRepository) CreateNotification(notification models.Notification) 
 }
 func (r *SQLiteRepository) GetNotificationById(notificationId int) (models.Notification, error) {
 	return sqlite.GetNotificationById(r.businessDb, notificationId)
+}
+
+func (r *SQLiteRepository) GetNotificationsByUserId(userId int) ([]models.Notification, error) {
+	return sqlite.GetNotificationsByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) UpdateNotification(notification models.Notification) (models.Notification, error) {
 	return sqlite.UpdateNotification(r.businessDb, notification)
