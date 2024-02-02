@@ -45,10 +45,13 @@ func addApiHandlers(rt *router.Router) {
 	registrationHandler := auth.NewRegistrationHandler(r)
 	usersHandler := api.NewUsersHandler(r)
 	userByIdHandler := api.NewUserByIdHandler(r)
+	usersByPublicHandler := api.NewUsersByPublicHandler(r)
 	postsHandler := api.NewPostsHandler(r)
 	postByIdHandler := api.NewPostByIdHandler(r)
 	userPostsHandler := api.NewUserPostsHandler(r)
 	postByPrivacyHandler := api.NewPostsByPrivacyHandler(r)
+	postUserHandler := api.NewPostUsersHandler(r)
+	postUserByUserIdHandler := api.NewPostUsersByUserIdHandler(r)
 	commentsHandler := api.NewCommentsHandler(r)
 	commentByIdHandler := api.NewCommentByIdHandler(r)
 	commentByPostIdHandler := api.NewCommentsByPostIdHandler(r)
@@ -65,7 +68,7 @@ func addApiHandlers(rt *router.Router) {
 	groupUsersHandler := api.NewGroupUsersHandler(r)
 	groupUserByIdHandler := api.NewGroupUserByIdHandler(r)
 	groupUserByGroupIdAndUserIdHandler := api.NewGroupUserByGroupIdAndUserIdHandler(r)
-	groupPostsHandler := api.NewGroupPostsHandler(r)
+	groupPostsHandler := api.NewPostsByGroupIdHandler(r)
 	notificationsHandler := api.NewNotificationsHandler(r)
 	notificationByIdHandler := api.NewNotificationByIdHandler(r)
 
@@ -77,11 +80,15 @@ func addApiHandlers(rt *router.Router) {
 	// User Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/users$`), usersHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/users/{userId}$`), userByIdHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/users/privacy/public$`), usersByPublicHandler)
 	// Post Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/posts$`), postsHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/posts/{postId}$`), postByIdHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/user/{userId}/posts$`), userPostsHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/posts/privacy/{privacyStatus}$`), postByPrivacyHandler)
+	// PostUser Handlers
+	rt.AddHandler(regexp.MustCompile(`^/api/postUsers/$`), postUserHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/postUsers/users/{userId$`), postUserByUserIdHandler)
 	// Comment Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/comments$`), commentsHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/comments/{commentId}$`), commentByIdHandler)

@@ -26,7 +26,6 @@ func NewUserByIdHandler(r repo.IRepository) *UserByIdHandler {
 // itself becomes an HTTPHandler
 func (h *UserByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
-	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
 	case http.MethodGet:
 		h.get(w, r)

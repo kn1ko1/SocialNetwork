@@ -10,21 +10,21 @@ import (
 // Endpoint: /api/users/posts
 // Allowed methods: GET
 
-type UserPostsHandler struct {
+type PostUsersHandler struct {
 	Repo repo.IRepository
 }
 
 // Constructor with dependency injection of a repo implementation
-func NewUserPostsHandler(r repo.IRepository) *UserPostsHandler {
-	return &UserPostsHandler{Repo: r}
+func NewPostUsersHandler(r repo.IRepository) *PostUsersHandler {
+	return &PostUsersHandler{Repo: r}
 }
 
 // A PostsHandler instance implements the ServeHTTP interface, and thus
 // itself becomes an HTTPHandler
-func (h *UserPostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *PostUsersHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		h.get(w, r)
+		h.post(w, r)
 		return
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -32,7 +32,7 @@ func (h *UserPostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *UserPostsHandler) get(w http.ResponseWriter, r *http.Request) {
+func (h *PostUsersHandler) post(w http.ResponseWriter, r *http.Request) {
 
 	user, err := getUser(r)
 	if err != nil {
@@ -53,20 +53,3 @@ func (h *UserPostsHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-
-// LEAVE UNIMPLEMENTED IN SWITCH CASE
-// func (h *UserPostsHandler) delete(w http.ResponseWriter, r *http.Request) {
-// 	user, err := getUser(r)
-// 	if err != nil {
-// 		http.Error(w, "unauthorized", http.StatusUnauthorized)
-// 		return
-// 	}
-// 	// utils.HandleError("Received delete request for userID:", userID)
-// 	err = h.Repo.DeletePostsByUserId(user.UserId)
-// 	if err != nil {
-// 		utils.HandleError("Failed to delete Posts. ", err)
-// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-// 		return
-// 	}
-// 	w.WriteHeader(http.StatusOK)
-// }
