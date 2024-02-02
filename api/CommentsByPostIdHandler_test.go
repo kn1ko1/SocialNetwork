@@ -31,7 +31,7 @@ func TestCommentsByPostIdHandler_Get(t *testing.T) {
 	}
 
 	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodGet, "/api/posts/comment", bytes.NewBuffer(commentJSON))
+	req, err := http.NewRequest(http.MethodGet, "/api/posts/1/comment", bytes.NewBuffer(commentJSON))
 	if err != nil {
 		t.Fatal(err)
 	}
