@@ -8,6 +8,7 @@ import (
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 	"strconv"
+	"strings"
 )
 
 // Endpoint: /api/posts/{postId}
@@ -25,7 +26,6 @@ func NewPostByIdHandler(r repo.IRepository) *PostByIdHandler {
 // A PostsHandler instance implements the ServeHTTP interface, and thus
 // itself becomes an HTTPHandler
 func (h *PostByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
 	switch r.Method {
 	case http.MethodGet:
 		h.get(w, r)
@@ -43,9 +43,8 @@ func (h *PostByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *PostByIdHandler) get(w http.ResponseWriter, r *http.Request) {
-	queryParams := r.URL.Query()
-	postIdString := queryParams.Get("postId")
-	postId, postIdErr := strconv.Atoi(postIdString)
+	fields := strings.Split(r.URL.Path, "/")
+	postId, postIdErr := strconv.Atoi(fields[len(fields)-1])
 	if postIdErr != nil {
 		utils.HandleError("Problem with AtoI postId. ", postIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
