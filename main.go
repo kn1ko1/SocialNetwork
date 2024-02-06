@@ -22,6 +22,7 @@ func main() {
 	serveStaticFiles(mux)
 	// Add handlers to router
 	setupRouter(mux)
+
 	// Listen and serve
 	fmt.Printf("server listening at address %s...\n", addr)
 	err := http.ListenAndServe(addr, mux)

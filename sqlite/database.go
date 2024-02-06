@@ -10,14 +10,11 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-//var Database *sql.DB
-
 func InitIdentityDatabase() {
 	// Initialization for identity.db
 	var err error
-	identityDatabasePath := "./sqlite/data/Identity.db"
 
-	identityDB, err := sql.Open("sqlite3", identityDatabasePath)
+	identityDB, err := sql.Open("sqlite3", "./sqlite/data/Identity.db")
 	if err != nil {
 		utils.HandleError("Unable to open identity database", err)
 	}
@@ -30,7 +27,7 @@ func InitIdentityDatabase() {
 		utils.HandleError("Error applying 'up' migrations for identity.db: ", err)
 	}
 
-	WipeDatabaseOnCommandNew(identityDB, identityDatabasePath)
+	WipeDatabaseOnCommandNew(identityDB, "sqlite/migrations/identity")
 
 	defer identityDB.Close()
 }
@@ -38,9 +35,8 @@ func InitIdentityDatabase() {
 func InitBusinessDatabase() {
 	// Initialization for business.db
 	var err error
-	businessDatabasePath := "./sqlite/data/Business.db"
 
-	businessDB, err := sql.Open("sqlite3", businessDatabasePath)
+	businessDB, err := sql.Open("sqlite3", "./sqlite/data/Business.db")
 	if err != nil {
 		utils.HandleError("Unable to open business database", err)
 	}
@@ -53,7 +49,7 @@ func InitBusinessDatabase() {
 		utils.HandleError("Error applying 'up' migrations for business.db: ", err)
 	}
 
-	WipeDatabaseOnCommandNew(businessDB, businessDatabasePath)
+	WipeDatabaseOnCommandNew(businessDB, "sqlite/migrations/business")
 
 	defer businessDB.Close()
 }
