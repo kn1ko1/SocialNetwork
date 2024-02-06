@@ -6,7 +6,7 @@ package repo
 import (
 	"log"
 	"socialnetwork/models"
-	sqlite "socialnetwork/sqlite/query"
+	"socialnetwork/sqlite"
 
 	"database/sql"
 

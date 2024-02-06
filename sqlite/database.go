@@ -10,7 +10,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func InitIdentityDatabase() {
+func InitIdentityDatabase() (*sql.DB, error) {
 	// Initialization for identity.db
 	var err error
 
@@ -20,19 +20,10 @@ func InitIdentityDatabase() {
 	}
 
 	log.Println("Connected to Identity SQLite database")
-
-	// Apply "up" migrations from SQL files for identity.db
-	RunMigrations(identityDB, "./sqlite/migrations/identity", "up")
-	if err != nil {
-		utils.HandleError("Error applying 'up' migrations for identity.db: ", err)
-	}
-
-	WipeDatabaseOnCommandNew(identityDB, "sqlite/migrations/identity")
-
-	defer identityDB.Close()
+	return identityDB, err
 }
 
-func InitBusinessDatabase() {
+func InitBusinessDatabase() (*sql.DB, error) {
 	// Initialization for business.db
 	var err error
 
@@ -43,15 +34,7 @@ func InitBusinessDatabase() {
 
 	log.Println("Connected to Business SQLite database")
 
-	// Apply "up" migrations from SQL files for business.db
-	RunMigrations(businessDB, "./sqlite/migrations/business", "up")
-	if err != nil {
-		utils.HandleError("Error applying 'up' migrations for business.db: ", err)
-	}
-
-	WipeDatabaseOnCommandNew(businessDB, "sqlite/migrations/business")
-
-	defer businessDB.Close()
+	return businessDB, err
 }
 
 func RunMigrations(Database *sql.DB, migrationDir, direction string) {
@@ -107,11 +90,9 @@ func isDownMigration(fileName string) bool {
 
 // This function will delete the database if "go run . new" is typed in command line.
 func WipeDatabaseOnCommandNew(database *sql.DB, path string) {
-	if len(os.Args) > 1 {
-		if os.Args[1] == "new" {
-			// Rollback the last migration (uncomment if needed)
-			RunMigrations(database, path, "down")
-			fmt.Println("Dropped all tables")
-		}
-	}
+
+	// Rollback the last migration (uncomment if needed)
+	RunMigrations(database, path, "down")
+	fmt.Println("Dropped all tables")
+
 }

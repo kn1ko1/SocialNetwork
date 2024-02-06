@@ -4,11 +4,15 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"regexp"
 	"socialnetwork/api"
+	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/router"
+	"socialnetwork/sqlite"
 	"socialnetwork/ui"
+	"socialnetwork/utils"
 )
 
 const (
@@ -22,6 +26,15 @@ func main() {
 	serveStaticFiles(mux)
 	// Add handlers to router
 	setupRouter(mux)
+
+	BusinessDB, BusinessDBErr := sqlite.InitBusinessDatabase()
+	if BusinessDBErr != nil {
+		utils.HandleError("Unable to open business database", BusinessDBErr)
+		os.Exit(1)
+	}
+	comment := models.GenerateValidComment()
+
+	sqlite.CreateComment(BusinessDB, *comment)
 
 	// Listen and serve
 	fmt.Printf("server listening at address %s...\n", addr)
