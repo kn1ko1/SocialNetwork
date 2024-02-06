@@ -10,5 +10,5 @@ CREATE TABLE IF NOT EXISTS USERS (
     IsPublic BIT NOT NULL, 
     LastName TEXT NOT NULL,
     UpdatedAt BIGINT NOT NULL,
-    Username TEXT NOT NULL,
+    Username TEXT NOT NULL
 );
