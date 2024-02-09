@@ -73,7 +73,7 @@ func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
 	//if file is given
 	if file != nil {
 		var imageHandlerErr error
-		comment.ImageURL, imageHandlerErr = ImageHandler(w, r, file, *fileHeader)
+		comment.ImageURL, imageHandlerErr = ImageProcessing(w, r, file, *fileHeader)
 		if imageHandlerErr != nil {
 			utils.HandleError("Error with ImageHandler", imageHandlerErr)
 		}

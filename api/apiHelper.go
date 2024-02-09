@@ -67,7 +67,7 @@ var supportedFileTypes = map[string]bool{
 	"image/gif":  true,
 }
 
-func ImageHandler(w http.ResponseWriter, r *http.Request, file multipart.File, fileHeader multipart.FileHeader) (string, error) {
+func ImageProcessing(w http.ResponseWriter, r *http.Request, file multipart.File, fileHeader multipart.FileHeader) (string, error) {
 	if fileHeader.Size > maxFileSize {
 		fileHeaderErr := errors.New("file is too big")
 		utils.HandleError("File is too big!!", fileHeaderErr)

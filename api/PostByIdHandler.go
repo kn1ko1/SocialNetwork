@@ -99,7 +99,7 @@ func (h *PostByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	//if file is given
 	if file != nil {
 		var imageHandlerErr error
-		post.ImageURL, imageHandlerErr = ImageHandler(w, r, file, *fileHeader)
+		post.ImageURL, imageHandlerErr = ImageProcessing(w, r, file, *fileHeader)
 		if imageHandlerErr != nil {
 			utils.HandleError("Error with ImageHandler", imageHandlerErr)
 		}
