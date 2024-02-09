@@ -81,11 +81,32 @@ func (h *CommentByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	parseMultipartFormErr := r.ParseMultipartForm(10 << 20)
+	if parseMultipartFormErr != nil {
+		utils.HandleError("Unable to Parse Multipart Form.", parseMultipartFormErr)
+	}
+
+	file, fileHeader, formFileErr := r.FormFile("image")
+	if formFileErr != nil {
+		utils.HandleError("Error reading image.", formFileErr)
+	}
+
+	defer file.Close()
+
+	//if file is given
+	if file != nil {
+		var imageHandlerErr error
+		comment.ImageURL, imageHandlerErr = ImageHandler(w, r, file, *fileHeader)
+		if imageHandlerErr != nil {
+			utils.HandleError("Error with ImageHandler", imageHandlerErr)
+		}
+	}
+
 	// Update post in the repository
 	result, createErr := h.Repo.UpdateComment(comment)
 	if createErr != nil {
-		utils.HandleError("Failed to update post in the repository:", createErr)
-		http.Error(w, "Failed to update post", http.StatusInternalServerError)
+		utils.HandleError("Failed to update comment in the repository:", createErr)
+		http.Error(w, "Failed to update comment", http.StatusInternalServerError)
 		return
 	}
 

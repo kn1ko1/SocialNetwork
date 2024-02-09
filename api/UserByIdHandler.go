@@ -87,6 +87,26 @@ func (h *UserByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	parseMultipartFormErr := r.ParseMultipartForm(10 << 20)
+	if parseMultipartFormErr != nil {
+		utils.HandleError("Unable to Parse Multipart Form.", parseMultipartFormErr)
+	}
+
+	file, fileHeader, formFileErr := r.FormFile("image")
+	if formFileErr != nil {
+		utils.HandleError("Error reading image.", formFileErr)
+	}
+
+	defer file.Close()
+
+	//if file is given
+	if file != nil {
+		var imageHandlerErr error
+		user.ImageURL, imageHandlerErr = ImageHandler(w, r, file, *fileHeader)
+		if imageHandlerErr != nil {
+			utils.HandleError("Error with ImageHandler", imageHandlerErr)
+		}
+	}
 	// Update user in the repository
 	result, createErr := h.Repo.UpdateUser(user)
 	if createErr != nil {

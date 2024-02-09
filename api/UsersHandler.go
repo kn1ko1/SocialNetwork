@@ -8,6 +8,8 @@ import (
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 // Endpoint: /api/users
@@ -57,6 +59,13 @@ func (h *UsersHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
+
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(user.EncryptedPassword), bcrypt.DefaultCost)
+	if err != nil {
+		utils.HandleError("error in encryption", err)
+	}
+
+	user.EncryptedPassword = string(hashPassword)
 
 	parseMultipartFormErr := r.ParseMultipartForm(10 << 20)
 	if parseMultipartFormErr != nil {
