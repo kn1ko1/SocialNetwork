@@ -77,14 +77,13 @@ func (h *UsersHandler) post(w http.ResponseWriter, r *http.Request) {
 		utils.HandleError("Error reading image.", formFileErr)
 	}
 
-	defer file.Close()
-
 	//if file is given
 	if file != nil {
-		var imageHandlerErr error
-		user.ImageURL, imageHandlerErr = ImageProcessing(w, r, file, *fileHeader)
-		if imageHandlerErr != nil {
-			utils.HandleError("Error with ImageHandler", imageHandlerErr)
+		defer file.Close()
+		var ImageProcessingrErr error
+		user.ImageURL, ImageProcessingrErr = ImageProcessing(w, r, file, *fileHeader)
+		if ImageProcessingrErr != nil {
+			utils.HandleError("Error with ImageHandler", ImageProcessingrErr)
 		}
 		fmt.Println("USER INSERTED WITH FILE")
 	} else {

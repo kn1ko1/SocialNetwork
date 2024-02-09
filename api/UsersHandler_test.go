@@ -11,13 +11,12 @@ import (
 	"socialnetwork/repo"
 )
 
-func TestUsersHandler_Post(t *testing.T) {
+func TestUsersHandlerValidUserExpectPass_Post(t *testing.T) {
 	// Create a new instance of UsersHandler with the mock repository
 	r := repo.NewDummyRepository()
 	handler := NewUsersHandler(r)
 
 	// Create a sample eventUser to send in the request body
-
 	user1 := models.GenerateValidUser()
 
 	eventUserJSON, err := json.Marshal(user1)
@@ -39,7 +38,15 @@ func TestUsersHandler_Post(t *testing.T) {
 
 	// Check the response status code
 	if recorder.Code != http.StatusCreated {
-		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
+		t.Errorf("Expected status code %d, but got %d", http.StatusCreated, recorder.Code)
+		return
 	}
-	// Add additional assertions as needed for your specific use case
+
+	// Parse the response body to check if the user object is returned without an image URL
+	var createdUser models.User
+	err = json.Unmarshal(recorder.Body.Bytes(), &createdUser)
+	if err != nil {
+		t.Fatal("Error decoding response body:", err)
+	}
+
 }

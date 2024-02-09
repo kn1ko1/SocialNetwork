@@ -17,7 +17,7 @@ type MockPostsByPrivacyHandlerRepository struct {
 	User models.User
 }
 
-func TestPostsByPrivacyHandler_Get(t *testing.T) {
+func TestPostsByPrivacyHandlerExpectPass_Get(t *testing.T) {
 	handler := NewPostsByPrivacyHandler(R)
 	posts, _ := handler.Repo.GetPostsByPrivacy("public")
 

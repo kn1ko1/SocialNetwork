@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestUsersByPublicHandler_Get(t *testing.T) {
+func TestUsersByPublicHandlerValidUserExpectPass_Get(t *testing.T) {
 	handler := NewUsersByPublicHandler(R)
 	users, _ := handler.Repo.GetUsersByPublic()
 

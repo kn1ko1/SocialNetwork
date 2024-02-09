@@ -13,7 +13,7 @@ import (
 
 // Create a new instance of userByIdHandler with the mock repository
 
-func TestUserPostsHandler_Get(t *testing.T) {
+func TestUserPostsHandlerExpectPass_Get(t *testing.T) {
 	handler := NewUserPostsHandler(R)
 	post, _ := handler.Repo.GetPostsByUserId(1)
 

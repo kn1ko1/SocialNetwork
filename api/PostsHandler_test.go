@@ -11,21 +11,13 @@ import (
 	"socialnetwork/repo"
 )
 
-func TestPostsHandler_Post(t *testing.T) {
+func TestPostsHandlerValidPostExpectPass_Post(t *testing.T) {
 	// Create a new instance of PostsHandler with the mock repository
 	r := repo.NewDummyRepository()
 	handler := NewPostsHandler(r)
 
 	// Create a sample post to send in the request body
-	post := models.Post{
-		PostId:    1,
-		Body:      "Test body",
-		CreatedAt: Timestamp,
-		GroupId:   1,
-		ImageURL:  "poop",
-		UpdatedAt: Timestamp,
-		UserId:    1,
-	}
+	post := models.GenerateValidPost()
 
 	postJSON, err := json.Marshal(post)
 	if err != nil {
@@ -51,7 +43,7 @@ func TestPostsHandler_Post(t *testing.T) {
 	// Add additional assertions as needed for your specific use case
 }
 
-func TestPostsHandler_Get(t *testing.T) {
+func TestPostsHandlerExpectPass_Get(t *testing.T) {
 	// Create a new instance of PostsHandler with the mock repository
 	r := repo.NewDummyRepository()
 	handler := NewPostsHandler(r)
