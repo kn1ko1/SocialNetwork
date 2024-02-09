@@ -18,7 +18,7 @@ func GetUserById(database *sql.DB, userId int) (models.User, error) {
 			&user.Email,
 			&user.EncryptedPassword,
 			&user.FirstName,
-			&user.ImageUrl,
+			&user.ImageURL,
 			&user.IsPublic,
 			&user.LastName,
 			&user.UpdatedAt,

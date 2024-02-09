@@ -27,7 +27,7 @@ func GetAllUsers(database *sql.DB) ([]models.User, error) {
 			&user.Email,
 			&user.EncryptedPassword,
 			&user.FirstName,
-			&user.ImageUrl,
+			&user.ImageURL,
 			&user.IsPublic,
 			&user.LastName,
 			&user.UpdatedAt,

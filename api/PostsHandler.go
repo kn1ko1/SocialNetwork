@@ -13,17 +13,6 @@ import (
 // Endpoint: /api/posts
 // Allowed methods: POST
 
-const (
-	maxFileSize = 20 << 20 // 20MB
-	dirPath     = "static/uploadFiles/images"
-)
-
-var supportedFileTypes = map[string]bool{
-	"image/jpeg": true,
-	"image/png":  true,
-	"image/gif":  true,
-}
-
 type PostsHandler struct {
 	Repo repo.IRepository
 }

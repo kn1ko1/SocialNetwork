@@ -15,7 +15,7 @@ type User struct {
 	Email             string
 	EncryptedPassword string
 	FirstName         string
-	ImageUrl          string
+	ImageURL          string
 	IsPublic          bool
 	LastName          string
 	UpdatedAt         int64
@@ -81,7 +81,7 @@ func GenerateValidUser() *User {
 		Email:             sutEmail[idxEmail],
 		EncryptedPassword: sutPassword[idxPassword],
 		FirstName:         sutFirstName[idxFirstName],
-		ImageUrl:          sutImageURL[idxImageURL],
+		ImageURL:          sutImageURL[idxImageURL],
 		IsPublic:          sutIsPublic[idxIsPublic],
 		LastName:          sutLastName[idxLastName],
 		UpdatedAt:         ctime,

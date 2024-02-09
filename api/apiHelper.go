@@ -56,6 +56,17 @@ var GroupExample = &models.Group{
 	UpdatedAt:   Timestamp,
 }
 
+const (
+	maxFileSize = 20 << 20 // 20MB
+	dirPath     = "static/uploadFiles/images"
+)
+
+var supportedFileTypes = map[string]bool{
+	"image/jpeg": true,
+	"image/png":  true,
+	"image/gif":  true,
+}
+
 func ImageHandler(w http.ResponseWriter, r *http.Request, file multipart.File, fileHeader multipart.FileHeader) (string, error) {
 	if fileHeader.Size > maxFileSize {
 		fileHeaderErr := errors.New("file is too big")
