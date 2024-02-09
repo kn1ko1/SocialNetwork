@@ -39,7 +39,7 @@ func TestPostByIdHandler_Get(t *testing.T) {
 	}
 }
 
-func TestPostByIdHandler_Put(t *testing.T) {
+func TestPostByIdHandlerValidPostExpectPass_Put(t *testing.T) {
 	handler := NewPostByIdHandler(R)
 	comment, _ := handler.Repo.UpdateComment(*models.GenerateValidComment())
 

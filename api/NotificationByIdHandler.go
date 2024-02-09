@@ -8,6 +8,7 @@ import (
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 	"strconv"
+	"strings"
 )
 
 // Allowed methods: GET, PUT, DELETE
@@ -43,11 +44,10 @@ func (h *NotificationByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Reque
 }
 
 func (h *NotificationByIdHandler) get(w http.ResponseWriter, r *http.Request) {
-	queryParams := r.URL.Query()
-	notificationIdString := queryParams.Get("notificationId")
-	notificationId, notificationIdErr := strconv.Atoi(notificationIdString)
-	if notificationIdErr != nil {
-		utils.HandleError("Problem with AtoI notificationId. ", notificationIdErr)
+	fields := strings.Split(r.URL.Path, "/")
+	notificationId, postIdErr := strconv.Atoi(fields[len(fields)-1])
+	if postIdErr != nil {
+		utils.HandleError("Problem with AtoI postId. ", postIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

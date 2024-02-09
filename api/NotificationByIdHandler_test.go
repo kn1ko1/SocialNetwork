@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func TestNotificationByIdHandler_Get(t *testing.T) {
+func TestNotificationByIdHandlerValidRequestExpectPass_Get(t *testing.T) {
 	handler := NewNotificationByIdHandler(R)
 	notification, _ := handler.Repo.GetNotificationById(1)
 
