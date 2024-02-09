@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
+	"strings"
 )
 
 // Endpoint: /api/posts/{postId}
@@ -34,8 +35,9 @@ func (h *PostsByPrivacyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 }
 
 func (h *PostsByPrivacyHandler) get(w http.ResponseWriter, r *http.Request) {
-	queryParams := r.URL.Query()
-	privacyString := queryParams.Get("privacy")
+	fields := strings.Split(r.URL.Path, "/")
+	privacyString := (fields[len(fields)-1])
+
 	userPosts, err := h.Repo.GetPostsByPrivacy(privacyString)
 	if err != nil {
 		utils.HandleError("Failed to get posts in GetPostsByPrivacyHandler. ", err)
