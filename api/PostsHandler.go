@@ -2,12 +2,9 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
-	"os"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
@@ -70,8 +67,6 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Create post in the repository
-
 	parseMultipartFormErr := r.ParseMultipartForm(10 << 20)
 	if parseMultipartFormErr != nil {
 		utils.HandleError("Unable to Parse Multipart Form.", parseMultipartFormErr)
@@ -86,30 +81,11 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 
 	//if file is given
 	if file != nil {
-		if fileHeader.Size > maxFileSize {
-			utils.HandleError("File is too big!!", errors.New("file is too big"))
-			return
-		} else if !supportedFileTypes[fileHeader.Header.Get("Content-Type")] {
-			utils.HandleError("File type is not supported!!", errors.New("file type is not supported"))
-			return
+		var imageHandlerErr error
+		post.ImageURL, imageHandlerErr = ImageHandler(w, r, file, *fileHeader)
+		if imageHandlerErr != nil {
+			utils.HandleError("Error with ImageHandler", imageHandlerErr)
 		}
-		//create a file in the given directory with the suffix .jpg
-		osFile, createTempErr := os.CreateTemp(dirPath, "*.jp*g, *.png, *.gif")
-		if createTempErr != nil {
-			utils.HandleError("Error creating file: ", createTempErr)
-			http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
-			return
-		}
-		defer osFile.Close()
-		//copy the contents of the file to the file created above
-		_, copyErr := io.Copy(osFile, file)
-		if copyErr != nil {
-			utils.HandleError("Error copying file: ", copyErr)
-			http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
-			return
-		}
-
-		post.ImageURL = osFile.Name()
 		fmt.Println("POST INSERTED WITH FILE")
 	} else {
 		fmt.Println("POST INSERTED WITHOUT FILE")

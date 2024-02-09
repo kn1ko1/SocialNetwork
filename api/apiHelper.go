@@ -1,8 +1,14 @@
 package api
 
 import (
+	"errors"
+	"io"
+	"mime/multipart"
+	"net/http"
+	"os"
 	"socialnetwork/models"
 	"socialnetwork/repo"
+	"socialnetwork/utils"
 	"time"
 )
 
@@ -48,4 +54,32 @@ var GroupExample = &models.Group{
 	Description: "Group Example",
 	Title:       "Group",
 	UpdatedAt:   Timestamp,
+}
+
+func ImageHandler(w http.ResponseWriter, r *http.Request, file multipart.File, fileHeader multipart.FileHeader) (string, error) {
+	if fileHeader.Size > maxFileSize {
+		fileHeaderErr := errors.New("file is too big")
+		utils.HandleError("File is too big!!", fileHeaderErr)
+		return "", fileHeaderErr
+	} else if !supportedFileTypes[fileHeader.Header.Get("Content-Type")] {
+		supportedFileTypesErr := errors.New("file type is not supported")
+		utils.HandleError("File type is not supported!!", errors.New("file type is not supported"))
+		return "", supportedFileTypesErr
+	}
+	//create a file in the given directory with the suffix .jpg
+	osFile, createTempErr := os.CreateTemp(dirPath, "*.jp*g, *.png, *.gif")
+	if createTempErr != nil {
+		utils.HandleError("Error creating file: ", createTempErr)
+		http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
+		return "", createTempErr
+	}
+	defer osFile.Close()
+	//copy the contents of the file to the file created above
+	_, copyErr := io.Copy(osFile, file)
+	if copyErr != nil {
+		utils.HandleError("Error copying file: ", copyErr)
+		http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
+		return "", copyErr
+	}
+	return osFile.Name(), nil
 }

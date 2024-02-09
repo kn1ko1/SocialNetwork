@@ -10,29 +10,48 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func InitIdentityDatabase() error {
+func InitIdentityDatabase() {
 	// Initialization for identity.db
+	var err error
 
-	_, err := sql.Open("sqlite3", "./sqlite/data/Identity.db")
+	identityDB, err := sql.Open("sqlite3", "./sqlite/data/Identity.db")
 	if err != nil {
 		utils.HandleError("Unable to open identity database", err)
 	}
 
 	log.Println("Connected to Identity SQLite database")
-	return err
+
+	// Apply "up" migrations from SQL files for identity.db
+	RunMigrations(identityDB, "./sqlite/migrations/identity", "up")
+	if err != nil {
+		utils.HandleError("Error applying 'up' migrations for identity.db: ", err)
+	}
+
+	WipeDatabaseOnCommandNew(identityDB, "sqlite/migrations/identity")
+
+	defer identityDB.Close()
 }
 
-func InitBusinessDatabase() error {
+func InitBusinessDatabase() {
 	// Initialization for business.db
+	var err error
 
-	_, err := sql.Open("sqlite3", "./sqlite/data/Business.db")
+	businessDB, err := sql.Open("sqlite3", "./sqlite/data/Business.db")
 	if err != nil {
 		utils.HandleError("Unable to open business database", err)
 	}
 
 	log.Println("Connected to Business SQLite database")
 
-	return err
+	// Apply "up" migrations from SQL files for business.db
+	RunMigrations(businessDB, "./sqlite/migrations/business", "up")
+	if err != nil {
+		utils.HandleError("Error applying 'up' migrations for business.db: ", err)
+	}
+
+	WipeDatabaseOnCommandNew(businessDB, "sqlite/migrations/business")
+
+	defer businessDB.Close()
 }
 
 func RunMigrations(Database *sql.DB, migrationDir, direction string) {
@@ -88,9 +107,11 @@ func isDownMigration(fileName string) bool {
 
 // This function will delete the database if "go run . new" is typed in command line.
 func WipeDatabaseOnCommandNew(database *sql.DB, path string) {
-
-	// Rollback the last migration (uncomment if needed)
-	RunMigrations(database, path, "down")
-	fmt.Println("Dropped all tables")
-
+	if len(os.Args) > 1 {
+		if os.Args[1] == "new" {
+			// Rollback the last migration (uncomment if needed)
+			RunMigrations(database, path, "down")
+			fmt.Println("Dropped all tables")
+		}
+	}
 }
