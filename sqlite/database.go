@@ -10,31 +10,29 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func InitIdentityDatabase() (*sql.DB, error) {
+func InitIdentityDatabase() error {
 	// Initialization for identity.db
-	var err error
 
-	identityDB, err := sql.Open("sqlite3", "./sqlite/data/Identity.db")
+	_, err := sql.Open("sqlite3", "./sqlite/data/Identity.db")
 	if err != nil {
 		utils.HandleError("Unable to open identity database", err)
 	}
 
 	log.Println("Connected to Identity SQLite database")
-	return identityDB, err
+	return err
 }
 
-func InitBusinessDatabase() (*sql.DB, error) {
+func InitBusinessDatabase() error {
 	// Initialization for business.db
-	var err error
 
-	businessDB, err := sql.Open("sqlite3", "./sqlite/data/Business.db")
+	_, err := sql.Open("sqlite3", "./sqlite/data/Business.db")
 	if err != nil {
 		utils.HandleError("Unable to open business database", err)
 	}
 
 	log.Println("Connected to Business SQLite database")
 
-	return businessDB, err
+	return err
 }
 
 func RunMigrations(Database *sql.DB, migrationDir, direction string) {
