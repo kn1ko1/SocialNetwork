@@ -103,17 +103,17 @@ func (h *GroupByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 
 func (h *GroupByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-	queryParams := r.URL.Query()
-	GroupIdString := queryParams.Get("GroupId")
-	GroupId, GroupIdErr := strconv.Atoi(GroupIdString)
-	if GroupIdErr != nil {
-		utils.HandleError("Problem with AtoI GroupId. ", GroupIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	fields := strings.Split(r.URL.Path, "/")
+	eventIdStr := fields[len(fields)-2]
+	groupId, err := strconv.Atoi(eventIdStr)
+	if err != nil {
+		utils.HandleError("Invalid Group ID. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
-	log.Println("Received delete request for GroupId:", GroupId)
+	log.Println("Received delete request for GroupId:", groupId)
 
-	err := h.Repo.DeleteGroup(GroupId)
+	err = h.Repo.DeleteGroup(groupId)
 	if err != nil {
 		utils.HandleError("Failed to delete Groups. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

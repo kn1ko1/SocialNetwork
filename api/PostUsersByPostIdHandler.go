@@ -2,11 +2,11 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 	"strconv"
+	"strings"
 )
 
 // Endpoint: /api/event/{postId}/eventUser   ?
@@ -42,11 +42,10 @@ func (h *PostUsersByPostIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Requ
 }
 
 func (h *PostUsersByPostIdHandler) get(w http.ResponseWriter, r *http.Request) {
-	queryParams := r.URL.Query()
-	postIdString := queryParams.Get("postId")
-	postId, postIdErr := strconv.Atoi(postIdString)
+	fields := strings.Split(r.URL.Path, "/")
+	postId, postIdErr := strconv.Atoi(fields[len(fields)-1])
 	if postIdErr != nil {
-		utils.HandleError("Failed to Atoi postId in PostUserByPostIdHandler. ", postIdErr)
+		utils.HandleError("Problem with AtoI postId. ", postIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -67,15 +66,13 @@ func (h *PostUsersByPostIdHandler) get(w http.ResponseWriter, r *http.Request) {
 
 func (h *PostUsersByPostIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-	queryParams := r.URL.Query()
-	postIdString := queryParams.Get("postId")
-	postId, postIdErr := strconv.Atoi(postIdString)
+	fields := strings.Split(r.URL.Path, "/")
+	postId, postIdErr := strconv.Atoi(fields[len(fields)-1])
 	if postIdErr != nil {
-		utils.HandleError("Problem with AtoI PostId. ", postIdErr)
+		utils.HandleError("Problem with AtoI postId. ", postIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	log.Println("Received delete request for messageId:", postId)
 
 	err := h.Repo.DeletePostUsersByPostId(postId)
 	if err != nil {

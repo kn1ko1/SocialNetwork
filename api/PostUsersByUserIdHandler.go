@@ -7,6 +7,7 @@ import (
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 	"strconv"
+	"strings"
 )
 
 // Endpoint: /api/postsUsers/users/{userId}   ?
@@ -42,12 +43,13 @@ func (h *PostUsersByUserIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Requ
 }
 
 func (h *PostUsersByUserIdHandler) get(w http.ResponseWriter, r *http.Request) {
-	queryParams := r.URL.Query()
-	userIdString := queryParams.Get("userId")
-	userId, userIdErr := strconv.Atoi(userIdString)
-	if userIdErr != nil {
-		utils.HandleError("Failed to Atoi userId in PostUserByUserIdHandler. ", userIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	fields := strings.Split(r.URL.Path, "/")
+	userIdStr := fields[len(fields)-1]
+
+	userId, err := strconv.Atoi(userIdStr)
+	if err != nil {
+		utils.HandleError("Invalid Group ID. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
 	eventUsers, err := h.Repo.GetPostUsersByUserId(userId)

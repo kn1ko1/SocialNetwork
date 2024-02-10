@@ -45,12 +45,15 @@ func (h *NotificationByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Reque
 
 func (h *NotificationByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	fields := strings.Split(r.URL.Path, "/")
-	notificationId, postIdErr := strconv.Atoi(fields[len(fields)-1])
-	if postIdErr != nil {
-		utils.HandleError("Problem with AtoI postId. ", postIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	notificationStr := fields[len(fields)-1]
+
+	notificationId, err := strconv.Atoi(notificationStr)
+	if err != nil {
+		utils.HandleError("Invalid Group ID. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
+	log.Println("Received delete request for notificationId:", notificationId)
 	notification, err := h.Repo.GetNotificationById(notificationId)
 	if err != nil {
 		utils.HandleError("Failed to get notification in GetNotificationByIdHandler. ", err)

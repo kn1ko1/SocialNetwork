@@ -6,6 +6,7 @@ import (
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 	"strconv"
+	"strings"
 )
 
 // Allowed methods: GET, PUT, DELETE
@@ -38,25 +39,26 @@ func (h *GroupUserByGroupIdAndUserIdHandler) ServeHTTP(w http.ResponseWriter, r 
 }
 func (h *GroupUserByGroupIdAndUserIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-	// figure out userId
-	queryParams := r.URL.Query()
-	eventIdString := queryParams.Get("eventId")
-	eventId, eventIdErr := strconv.Atoi(eventIdString)
-	if eventIdErr != nil {
-		utils.HandleError("Problem with AtoI userId. ", eventIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-	userIdString := queryParams.Get("userId")
-	userId, userIdErr := strconv.Atoi(userIdString)
-	if userIdErr != nil {
-		utils.HandleError("Problem with AtoI userId. ", userIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-	log.Println("Received delete request for eventId", eventId, ", userId", userId)
+	fields := strings.Split(r.URL.Path, "/")
+	groupIdStr := fields[len(fields)-3]
+	userIdStr := fields[len(fields)-1]
 
-	err := h.Repo.DeleteGroupUserByGroupIdAndUserId(eventId, userId)
+	groupId, err := strconv.Atoi(groupIdStr)
+	if err != nil {
+		utils.HandleError("Invalid Group ID. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
+		return
+	}
+
+	userId, err := strconv.Atoi(userIdStr)
+	if err != nil {
+		utils.HandleError("Invalid Group ID. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
+		return
+	}
+	log.Println("Received delete request for eventId", groupId, ", userId", userId)
+
+	err = h.Repo.DeleteGroupUserByGroupIdAndUserId(groupId, userId)
 	if err != nil {
 		utils.HandleError("Failed to delete Events. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -68,31 +70,33 @@ func (h *GroupUserByGroupIdAndUserIdHandler) delete(w http.ResponseWriter, r *ht
 }
 
 // func (h *GroupUserByGroupIdAndUserIdHandler) get(w http.ResponseWriter, r *http.Request) {
-// 	// figure out userId
-// 	queryParams := r.URL.Query()
-// 	eventIdString := queryParams.Get("eventId")
-// 	eventId, eventIdErr := strconv.Atoi(eventIdString)
-// 	if eventIdErr != nil {
-// 		utils.HandleError("Problem with AtoI userId. ", eventIdErr)
-// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-// 		return
-// 	}
-// 	userIdString := queryParams.Get("userId")
-// 	userId, userIdErr := strconv.Atoi(userIdString)
-// 	if userIdErr != nil {
-// 		utils.HandleError("Problem with AtoI userId. ", userIdErr)
-// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-// 		return
-// 	}
-// 	utils.HandleError("Received delete request for eventId", eventId, ", userId", userId)
+// 	fields := strings.Split(r.URL.Path, "/")
+// 	groupIdStr := fields[len(fields)-2]
+// 	userIdStr := fields[len(fields)-2]
 
-// 	eventUser, err := h.Repo.GetEventUserByEventIdanduserId(eventId, userId)
+// 	groupId, err := strconv.Atoi(groupIdStr)
+// 	if err != nil {
+// 		utils.HandleError("Invalid Group ID. ", err)
+// 		http.Error(w, "internal server errror", http.StatusInternalServerError)
+// 		return
+// 	}
+
+// 	userId, err := strconv.Atoi(userIdStr)
+// 	if err != nil {
+// 		utils.HandleError("Invalid Group ID. ", err)
+// 		http.Error(w, "internal server errror", http.StatusInternalServerError)
+// 		return
+// 	}
+// 	log.Println("Received get request for eventId", groupId, ", userId", userId)
+
+// 	eventUser, err := h.Repo.GetGroupUserByGroupIdAndUserId(groupId, userId)
 // 	if err != nil {
 // 		utils.HandleError("Failed to get posts in GetEventsByGroupId. ", err)
 // 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 // 		return
 // 	}
 
+// 	w.WriteHeader(http.StatusOK)
 // 	err = json.NewEncoder(w).Encode(eventUser)
 // 	if err != nil {
 // 		utils.HandleError("Failed to encode and write JSON response. ", err)
@@ -100,6 +104,5 @@ func (h *GroupUserByGroupIdAndUserIdHandler) delete(w http.ResponseWriter, r *ht
 // 		return
 // 	}
 
-// 	w.WriteHeader(http.StatusOK)
-// 	w.Write([]byte("Here are your posts"))
+// 	w.Write([]byte("Here are your eventUsers"))
 // }

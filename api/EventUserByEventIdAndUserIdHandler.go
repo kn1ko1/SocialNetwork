@@ -6,6 +6,7 @@ import (
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 	"strconv"
+	"strings"
 )
 
 // Allowed methods: GET, PUT, DELETE
@@ -38,25 +39,25 @@ func (h *EventUsersByEventIdAnduserIdHandler) ServeHTTP(w http.ResponseWriter, r
 }
 func (h *EventUsersByEventIdAnduserIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-	// figure out userId
-	queryParams := r.URL.Query()
-	eventIdString := queryParams.Get("eventId")
-	eventId, eventIdErr := strconv.Atoi(eventIdString)
-	if eventIdErr != nil {
-		utils.HandleError("Problem with AtoI userId. ", eventIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	fields := strings.Split(r.URL.Path, "/")
+	eventIdStr := fields[len(fields)-2]
+	eventId, err := strconv.Atoi(eventIdStr)
+	if err != nil {
+		utils.HandleError("Invalid Group ID. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
-	userIdString := queryParams.Get("userId")
-	userId, userIdErr := strconv.Atoi(userIdString)
-	if userIdErr != nil {
-		utils.HandleError("Problem with AtoI userId. ", userIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	fields = strings.Split(r.URL.Path, "/")
+	userIdStr := fields[len(fields)-2]
+	userId, err := strconv.Atoi(userIdStr)
+	if err != nil {
+		utils.HandleError("Invalid Group ID. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
 	log.Println("Received delete request for eventId", eventId, ", userId", userId)
 
-	err := h.Repo.DeleteEventUserByEventIdAndUserId(eventId, userId)
+	err = h.Repo.DeleteEventUserByEventIdAndUserId(eventId, userId)
 	if err != nil {
 		utils.HandleError("Failed to delete Events. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -68,23 +69,25 @@ func (h *EventUsersByEventIdAnduserIdHandler) delete(w http.ResponseWriter, r *h
 }
 
 // func (h *EventUsersByEventIdAnduserIdHandler) get(w http.ResponseWriter, r *http.Request) {
-// 	// figure out userId
-// 	queryParams := r.URL.Query()
-// 	eventIdString := queryParams.Get("eventId")
-// 	eventId, eventIdErr := strconv.Atoi(eventIdString)
-// 	if eventIdErr != nil {
-// 		utils.HandleError("Problem with AtoI userId. ", eventIdErr)
-// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 	fields := strings.Split(r.URL.Path, "/")
+// 	eventIdStr := fields[len(fields)-3]
+// 	userIdStr := fields[len(fields)-1]
+
+// 	eventId, err := strconv.Atoi(eventIdStr)
+// 	if err != nil {
+// 		utils.HandleError("Invalid eventId. ", err)
+// 		http.Error(w, "internal server error", http.StatusInternalServerError)
 // 		return
 // 	}
-// 	userIdString := queryParams.Get("userId")
-// 	userId, userIdErr := strconv.Atoi(userIdString)
-// 	if userIdErr != nil {
-// 		utils.HandleError("Problem with AtoI userId. ", userIdErr)
-// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+
+// 	userId, err := strconv.Atoi(userIdStr)
+// 	if err != nil {
+// 		utils.HandleError("Invalid userId. ", err)
+// 		http.Error(w, "internal server error", http.StatusInternalServerError)
 // 		return
 // 	}
-// 	utils.HandleError("Received delete request for eventId", eventId, ", userId", userId)
+
+// 	log.Println("Received delete request for eventId", eventId, ", userId", userId)
 
 // 	eventUser, err := h.Repo.GetEventUserByEventIdanduserId(eventId, userId)
 // 	if err != nil {

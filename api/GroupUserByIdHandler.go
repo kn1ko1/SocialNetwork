@@ -7,6 +7,7 @@ import (
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 	"strconv"
+	"strings"
 )
 
 // Allowed methods: GET, DELETE
@@ -64,17 +65,18 @@ func (h *GroupUserByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 
 func (h *GroupUserByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-	queryParams := r.URL.Query()
-	GroupUserIdString := queryParams.Get("GroupUserId")
-	GroupUserId, GroupUserIdErr := strconv.Atoi(GroupUserIdString)
-	if GroupUserIdErr != nil {
-		utils.HandleError("Problem with AtoI GroupUserId. ", GroupUserIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	fields := strings.Split(r.URL.Path, "/")
+	groupIdStr := fields[len(fields)-1]
+
+	groupUserId, err := strconv.Atoi(groupIdStr)
+	if err != nil {
+		utils.HandleError("Invalid Group ID. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
-	log.Println("Received delete request for GroupUserId:", GroupUserId)
+	log.Println("Received delete request for GroupUserId:", groupUserId)
 
-	err := h.Repo.DeleteGroupUser(GroupUserId)
+	err = h.Repo.DeleteGroupUser(groupUserId)
 	if err != nil {
 		utils.HandleError("Failed to delete GroupUsers. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

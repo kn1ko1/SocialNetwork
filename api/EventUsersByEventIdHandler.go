@@ -7,6 +7,7 @@ import (
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 	"strconv"
+	"strings"
 )
 
 // Endpoint: /api/event/{eventId}/eventUser   ?
@@ -42,12 +43,12 @@ func (h *EventUsersByEventIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Re
 }
 
 func (h *EventUsersByEventIdHandler) get(w http.ResponseWriter, r *http.Request) {
-	queryParams := r.URL.Query()
-	eventIdString := queryParams.Get("eventId")
-	eventId, eventIdErr := strconv.Atoi(eventIdString)
-	if eventIdErr != nil {
-		utils.HandleError("Failed to Atoi eventId in EventUserByEventIdHandler. ", eventIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	fields := strings.Split(r.URL.Path, "/")
+	eventIdStr := fields[len(fields)-2]
+	eventId, err := strconv.Atoi(eventIdStr)
+	if err != nil {
+		utils.HandleError("Invalid eventId. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
 	eventUsers, err := h.Repo.GetEventUsersByEventId(eventId)
@@ -68,17 +69,17 @@ func (h *EventUsersByEventIdHandler) get(w http.ResponseWriter, r *http.Request)
 
 func (h *EventUsersByEventIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-	queryParams := r.URL.Query()
-	eventIdString := queryParams.Get("eventId")
-	eventId, eventIdErr := strconv.Atoi(eventIdString)
-	if eventIdErr != nil {
-		utils.HandleError("Problem with AtoI messageId. ", eventIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	fields := strings.Split(r.URL.Path, "/")
+	eventIdStr := fields[len(fields)-2]
+	eventId, err := strconv.Atoi(eventIdStr)
+	if err != nil {
+		utils.HandleError("Invalid eventID. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
 	log.Println("Received delete request for messageId:", eventId)
 
-	err := h.Repo.DeleteEventUsersByEventId(eventId)
+	err = h.Repo.DeleteEventUsersByEventId(eventId)
 	if err != nil {
 		utils.HandleError("Failed to delete eventUsers. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
