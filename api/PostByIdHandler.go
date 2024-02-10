@@ -44,12 +44,15 @@ func (h *PostByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (h *PostByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	fields := strings.Split(r.URL.Path, "/")
-	postId, postIdErr := strconv.Atoi(fields[len(fields)-1])
-	if postIdErr != nil {
-		utils.HandleError("Problem with AtoI postId. ", postIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	postIdStr := fields[len(fields)-1]
+
+	postId, err := strconv.Atoi(postIdStr)
+	if err != nil {
+		utils.HandleError("Invalid post ID. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
+	log.Println("Received get request for post Id:", postId)
 	userPosts, err := h.Repo.GetPostById(postId)
 	if err != nil {
 		utils.HandleError("Failed to get posts in GetPostByIdHandler. ", err)

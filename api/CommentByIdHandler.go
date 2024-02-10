@@ -121,19 +121,16 @@ func (h *CommentByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 
 func (h *CommentByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-	// figure out userID
-	queryParams := r.URL.Query()
-	// fmt.Println(queryParams)
-	userIDString := queryParams.Get("userID")
-	userID, userIDErr := strconv.Atoi(userIDString)
-	if userIDErr != nil {
-		utils.HandleError("Problem with AtoI userID. ", userIDErr)
+	fields := strings.Split(r.URL.Path, "/")
+	userId, userIdErr := strconv.Atoi(fields[len(fields)-1])
+	if userIdErr != nil {
+		utils.HandleError("Problem with AtoI userId. ", userIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	log.Println("Received delete request for userID:", userID)
+	log.Println("Received delete request for userID:", userId)
 
-	err := h.Repo.DeleteCommentById(userID)
+	err := h.Repo.DeleteCommentById(userId)
 	if err != nil {
 		utils.HandleError("Failed to delete Comments. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

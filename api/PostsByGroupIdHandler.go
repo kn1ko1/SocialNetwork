@@ -57,16 +57,16 @@ func (h *PostsByGroupIdHandler) get(w http.ResponseWriter, r *http.Request) {
 
 // func (h *PostsByGroupIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-// 	// figure out postId
-// 	queryParams := r.URL.Query()
-// 	groupIdString := queryParams.Get("groupId")
-// 	groupId, postIdErr := strconv.Atoi(groupIdString)
-// 	if postIdErr != nil {
-// 		utils.HandleError("Problem with AtoI groupId. ", postIdErr)
-// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-// 		return
-// 	}
-// 	utils.HandleError("Received delete request for groupId:", groupId)
+// fields := strings.Split(r.URL.Path, "/")
+// groupIdStr := fields[len(fields)-1]
+
+// groupId, err := strconv.Atoi(groupIdStr)
+// if err != nil {
+// 	utils.HandleError("Invalid Group ID. ", err)
+// 	http.Error(w, "internal server errror", http.StatusInternalServerError)
+// 	return
+// }
+// log.Println("Received delete request for GroupId:", groupId)
 
 // 	err := h.Repo.DeletePostByGroupId(groupId)
 // 	if err != nil {

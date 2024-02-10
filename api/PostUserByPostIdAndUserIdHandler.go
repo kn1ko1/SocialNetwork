@@ -6,6 +6,7 @@ import (
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 	"strconv"
+	"strings"
 )
 
 // Allowed methods: GET, PUT, DELETE
@@ -36,27 +37,29 @@ func (h *PostUserByPostIdAndUserIdHandler) ServeHTTP(w http.ResponseWriter, r *h
 		return
 	}
 }
+
 func (h *PostUserByPostIdAndUserIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-	// figure out userId
-	queryParams := r.URL.Query()
-	postIdString := queryParams.Get("postId")
-	postId, postIdErr := strconv.Atoi(postIdString)
-	if postIdErr != nil {
-		utils.HandleError("Problem with AtoI userId. ", postIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	fields := strings.Split(r.URL.Path, "/")
+	postIdStr := fields[len(fields)-1]
+	userIdStr := fields[len(fields)-3]
+
+	postId, err := strconv.Atoi(postIdStr)
+	if err != nil {
+		utils.HandleError("Invalid Group ID. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
-	userIdString := queryParams.Get("userId")
-	userId, userIdErr := strconv.Atoi(userIdString)
-	if userIdErr != nil {
-		utils.HandleError("Problem with AtoI userId. ", userIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+
+	userId, err := strconv.Atoi(userIdStr)
+	if err != nil {
+		utils.HandleError("Invalid User ID. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
 	log.Println("Received delete request for postId", postId, ", userId", userId)
 
-	err := h.Repo.DeletePostUserByPostIdAndUserId(postId, userId)
+	err = h.Repo.DeletePostUserByPostIdAndUserId(postId, userId)
 	if err != nil {
 		utils.HandleError("Failed to delete posts. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

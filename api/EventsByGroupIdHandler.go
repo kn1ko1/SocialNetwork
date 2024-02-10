@@ -59,63 +59,23 @@ func (h *EventsByGroupIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// func (h *EventsByGroupIdHandler) put(w http.ResponseWriter, r *http.Request) {
-
-// 	var Event models.Event
-// 	err := json.NewDecoder(r.Body).Decode(&Event)
-// 	if err != nil {
-// 		utils.HandleError("Failed to decode request body:", err)
-// 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
-// 		return
-// 	}
-// 	log.Println("received Event to update:", Event.Title)
-
-// 	// Validate the Event
-// 	if validationErr := Event.Validate(); validationErr != nil {
-// 		utils.HandleError("Validation failed:", validationErr)
-// 		http.Error(w, "Validation failed", http.StatusBadRequest)
-// 		return
-// 	}
-
-// 	// Update post in the repository
-// 	result, createErr := h.Repo.UpdateEvent(Event)
-// 	if createErr != nil {
-// 		utils.HandleError("Failed to update post in the repository:", createErr)
-// 		http.Error(w, "Failed to update post", http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	// Encode and write the response
-// 	err = json.NewEncoder(w).Encode(result)
-// 	if err != nil {
-// 		utils.HandleError("Failed to encode and write JSON response. ", err)
-// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-// 		return
-// 	}
-// 	// Correct HTTP header for a newly created resource:
-// 	w.WriteHeader(http.StatusCreated)
-// 	w.Write([]byte("Event updated successfully!"))
-// }
-
 // func (h *EventsByGroupIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
 // 	// look at penultimate id for userId
 
-// 	// figure out userID
-// 	queryParams := r.URL.Query()
-// 	userIDString := queryParams.Get("userID")
-// 	userID, userIDErr := strconv.Atoi(userIDString)
-// 	if userIDErr != nil {
-// 		utils.HandleError("Problem with AtoI userID. ", userIDErr)
+// 	fields := strings.Split(r.URL.Path, "/")
+// 	groupId, userIdErr := strconv.Atoi(fields[len(fields)-1])
+// 	if userIdErr != nil {
+// 		utils.HandleError("Problem with AtoI groupId. ", userIdErr)
 // 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 // 		return
 // 	}
-// 	log.Println("Received delete request for userID:", userID)
+// 	log.Println("Received delete request for groupId:", groupId)
 
 // 	// example postId for testing
 // 	// postId := 1
 
-// 	err := h.Repo.DeleteEventById(userID)
+// 	err := h.Repo.DeleteEventsByGroupId(groupId)
 // 	if err != nil {
 // 		utils.HandleError("Failed to delete Events. ", err)
 // 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

@@ -8,6 +8,7 @@ import (
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 	"strconv"
+	"strings"
 )
 
 // Allowed methods: GET, PUT, DELETE
@@ -43,14 +44,16 @@ func (h *NotificationByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Reque
 }
 
 func (h *NotificationByIdHandler) get(w http.ResponseWriter, r *http.Request) {
-	queryParams := r.URL.Query()
-	notificationIdString := queryParams.Get("notificationId")
-	notificationId, notificationIdErr := strconv.Atoi(notificationIdString)
-	if notificationIdErr != nil {
-		utils.HandleError("Problem with AtoI notificationId. ", notificationIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	fields := strings.Split(r.URL.Path, "/")
+	notificationStr := fields[len(fields)-1]
+
+	notificationId, err := strconv.Atoi(notificationStr)
+	if err != nil {
+		utils.HandleError("Invalid Group ID. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
+	log.Println("Received delete request for notificationId:", notificationId)
 	notification, err := h.Repo.GetNotificationById(notificationId)
 	if err != nil {
 		utils.HandleError("Failed to get notification in GetNotificationByIdHandler. ", err)

@@ -8,6 +8,7 @@ import (
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 	"strconv"
+	"strings"
 )
 
 // Allowed methods: GET, PUT, DELETE
@@ -43,14 +44,16 @@ func (h *MessageByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *MessageByIdHandler) get(w http.ResponseWriter, r *http.Request) {
-	queryParams := r.URL.Query()
-	messageIdString := queryParams.Get("messageId")
-	messageId, messageIdErr := strconv.Atoi(messageIdString)
-	if messageIdErr != nil {
-		utils.HandleError("Problem with AtoI messageId. ", messageIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	fields := strings.Split(r.URL.Path, "/")
+	messageIdStr := fields[len(fields)-1]
+
+	messageId, err := strconv.Atoi(messageIdStr)
+	if err != nil {
+		utils.HandleError("Invalid Group ID. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
+	log.Println("Received delete request for message Id:", messageId)
 	message, err := h.Repo.GetMessageById(messageId)
 	if err != nil {
 		utils.HandleError("Failed to get message in GetMessageByIdHandler. ", err)
@@ -103,17 +106,18 @@ func (h *MessageByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 
 func (h *MessageByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-	queryParams := r.URL.Query()
-	messageIdString := queryParams.Get("messageId")
-	messageId, messageIdErr := strconv.Atoi(messageIdString)
-	if messageIdErr != nil {
-		utils.HandleError("Problem with AtoI messageId. ", messageIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	fields := strings.Split(r.URL.Path, "/")
+	messageIdStr := fields[len(fields)-1]
+
+	messageId, err := strconv.Atoi(messageIdStr)
+	if err != nil {
+		utils.HandleError("Invalid Group ID. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
 	log.Println("Received delete request for messageId:", messageId)
 
-	err := h.Repo.DeleteMessageById(messageId)
+	err = h.Repo.DeleteMessageById(messageId)
 	if err != nil {
 		utils.HandleError("Failed to delete Messages. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
