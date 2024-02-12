@@ -2,7 +2,6 @@ package models
 
 import (
 	"fmt"
-	"math/rand"
 	"testing"
 )
 
@@ -13,7 +12,7 @@ const (
 func TestCommentValidateInvalidFieldExpectError(t *testing.T) {
 	var comments []*Comment
 	for i := 0; i < tableRunCount; i++ {
-		comments = append(comments, generateInvalidComment())
+		comments = append(comments, GenerateInvalidComment())
 	}
 	for _, c := range comments {
 		name := fmt.Sprintf("%+v", *c)
@@ -29,7 +28,7 @@ func TestCommentValidateInvalidFieldExpectError(t *testing.T) {
 func TestCommentValidateMissingFieldExpectError(t *testing.T) {
 	var comments []*Comment
 	for i := 0; i < tableRunCount; i++ {
-		comments = append(comments, generateMissingFieldComment())
+		comments = append(comments, GenerateMissingFieldComment())
 	}
 	for _, c := range comments {
 		name := fmt.Sprintf("%+v", *c)
@@ -56,40 +55,4 @@ func TestCommentValidateValidExpectNil(t *testing.T) {
 			}
 		})
 	}
-}
-
-func generateMissingFieldComment() *Comment {
-	c := GenerateValidComment()
-	missingField := rand.Intn(5)
-	switch missingField {
-	case 0:
-		c.Body = ""
-	case 1:
-		c.CreatedAt = 0
-	case 2:
-		c.PostId = 0
-	case 3:
-		c.UpdatedAt = 0
-	case 4:
-		c.UserId = 0
-	}
-	return c
-}
-
-func generateInvalidComment() *Comment {
-	c := GenerateValidComment()
-	invalidField := rand.Intn(5)
-	switch invalidField {
-	case 0:
-		c.Body = ""
-	case 1:
-		c.CreatedAt = -c.CreatedAt
-	case 2:
-		c.PostId = -c.PostId
-	case 3:
-		c.UpdatedAt = -c.UpdatedAt
-	case 4:
-		c.UserId = -c.UserId
-	}
-	return c
 }

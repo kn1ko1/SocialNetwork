@@ -2,14 +2,13 @@ package models
 
 import (
 	"fmt"
-	"math/rand"
 	"testing"
 )
 
 func TestPostUserValidateInvalidFieldExpectError(t *testing.T) {
 	var postUsers []*PostUser
 	for i := 0; i < tableRunCount; i++ {
-		postUsers = append(postUsers, generateInvalidPostUser())
+		postUsers = append(postUsers, GenerateInvalidPostUser())
 	}
 	for _, pu := range postUsers {
 		name := fmt.Sprintf("%+v", *pu)
@@ -25,7 +24,7 @@ func TestPostUserValidateInvalidFieldExpectError(t *testing.T) {
 func TestPostUserValidateMissingFieldExpectError(t *testing.T) {
 	var postUsers []*PostUser
 	for i := 0; i < tableRunCount; i++ {
-		postUsers = append(postUsers, generateMissingFieldPostUser())
+		postUsers = append(postUsers, GenerateMissingFieldPostUser())
 	}
 	for _, pu := range postUsers {
 		name := fmt.Sprintf("%+v", *pu)
@@ -52,36 +51,4 @@ func TestPostUserValidateValidExpectNil(t *testing.T) {
 			}
 		})
 	}
-}
-
-func generateMissingFieldPostUser() *PostUser {
-	pu := GenerateValidPostUser()
-	missingField := rand.Intn(4)
-	switch missingField {
-	case 0:
-		pu.CreatedAt = 0
-	case 1:
-		pu.PostId = 0
-	case 2:
-		pu.UpdatedAt = 0
-	case 3:
-		pu.UserId = 0
-	}
-	return pu
-}
-
-func generateInvalidPostUser() *PostUser {
-	pu := GenerateValidPostUser()
-	invalidField := rand.Intn(4)
-	switch invalidField {
-	case 0:
-		pu.CreatedAt = -pu.CreatedAt
-	case 1:
-		pu.PostId = -pu.PostId
-	case 2:
-		pu.UpdatedAt = -pu.UpdatedAt
-	case 3:
-		pu.UserId = -pu.UserId
-	}
-	return pu
 }

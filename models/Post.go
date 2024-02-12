@@ -57,3 +57,39 @@ func GenerateValidPost() *Post {
 	}
 	return p
 }
+
+func GenerateMissingFieldPost() *Post {
+	p := GenerateValidPost()
+	missingField := rand.Intn(5)
+	switch missingField {
+	case 0:
+		p.Body = ""
+	case 1:
+		p.CreatedAt = 0
+	case 2:
+		p.Privacy = ""
+	case 3:
+		p.UpdatedAt = 0
+	case 4:
+		p.UserId = 0
+	}
+	return p
+}
+
+func GenerateInvalidPost() *Post {
+	p := GenerateValidPost()
+	invalidField := rand.Intn(5)
+	switch invalidField {
+	case 0:
+		p.Body = ""
+	case 1:
+		p.CreatedAt = -p.CreatedAt
+	case 2:
+		p.Privacy = ""
+	case 3:
+		p.UpdatedAt = -p.UpdatedAt
+	case 4:
+		p.UserId = -p.UserId
+	}
+	return p
+}

@@ -2,14 +2,13 @@ package models
 
 import (
 	"fmt"
-	"math/rand"
 	"testing"
 )
 
 func TestPostValidateInvalidFieldExpectError(t *testing.T) {
 	var posts []*Post
 	for i := 0; i < tableRunCount; i++ {
-		posts = append(posts, generateInvalidPost())
+		posts = append(posts, GenerateInvalidPost())
 	}
 	for _, p := range posts {
 		name := fmt.Sprintf("%+v", *p)
@@ -25,7 +24,7 @@ func TestPostValidateInvalidFieldExpectError(t *testing.T) {
 func TestPostValidateMissingFieldExpectError(t *testing.T) {
 	var posts []*Post
 	for i := 0; i < tableRunCount; i++ {
-		posts = append(posts, generateMissingFieldPost())
+		posts = append(posts, GenerateMissingFieldPost())
 	}
 	for _, p := range posts {
 		name := fmt.Sprintf("%+v", *p)
@@ -52,40 +51,4 @@ func TestPostValidateValidExpectNil(t *testing.T) {
 			}
 		})
 	}
-}
-
-func generateMissingFieldPost() *Post {
-	p := GenerateValidPost()
-	missingField := rand.Intn(5)
-	switch missingField {
-	case 0:
-		p.Body = ""
-	case 1:
-		p.CreatedAt = 0
-	case 2:
-		p.Privacy = ""
-	case 3:
-		p.UpdatedAt = 0
-	case 4:
-		p.UserId = 0
-	}
-	return p
-}
-
-func generateInvalidPost() *Post {
-	p := GenerateValidPost()
-	invalidField := rand.Intn(5)
-	switch invalidField {
-	case 0:
-		p.Body = ""
-	case 1:
-		p.CreatedAt = -p.CreatedAt
-	case 2:
-		p.Privacy = ""
-	case 3:
-		p.UpdatedAt = -p.UpdatedAt
-	case 4:
-		p.UserId = -p.UserId
-	}
-	return p
 }

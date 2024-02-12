@@ -89,3 +89,49 @@ func GenerateValidUser() *User {
 	}
 	return u
 }
+
+func GenerateInvalidUser() *User {
+	u := GenerateValidUser()
+	invalidField := rand.Intn(8)
+	switch invalidField {
+	case 0:
+		u.CreatedAt = -u.CreatedAt
+	case 1:
+		u.DOB = -631238400
+	case 2:
+		u.Email = ""
+	case 3:
+		u.EncryptedPassword = ""
+	case 4:
+		u.FirstName = ""
+	case 5:
+		u.LastName = ""
+	case 6:
+		u.UpdatedAt = -u.UpdatedAt
+	case 7:
+		u.Username = ""
+	}
+	return u
+}
+
+func GenerateMissingFieldUser() *User {
+	u := GenerateValidUser()
+	missingField := rand.Intn(7)
+	switch missingField {
+	case 0:
+		u.CreatedAt = 0
+	case 1:
+		u.Email = ""
+	case 2:
+		u.EncryptedPassword = ""
+	case 3:
+		u.FirstName = ""
+	case 4:
+		u.LastName = ""
+	case 5:
+		u.UpdatedAt = 0
+	case 6:
+		u.Username = ""
+	}
+	return u
+}

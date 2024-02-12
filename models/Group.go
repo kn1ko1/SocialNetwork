@@ -47,3 +47,39 @@ func GenerateValidGroup() *Group {
 	}
 	return g
 }
+
+func GenerateMissingFieldGroup() *Group {
+	g := GenerateValidGroup()
+	missingField := rand.Intn(5)
+	switch missingField {
+	case 0:
+		g.CreatedAt = 0
+	case 1:
+		g.CreatorId = 0
+	case 2:
+		g.Description = ""
+	case 3:
+		g.Title = ""
+	case 4:
+		g.UpdatedAt = 0
+	}
+	return g
+}
+
+func GenerateInvalidGroup() *Group {
+	g := GenerateValidGroup()
+	invalidField := rand.Intn(5)
+	switch invalidField {
+	case 0:
+		g.CreatedAt = -g.CreatedAt
+	case 1:
+		g.CreatorId = -g.CreatorId
+	case 2:
+		g.Description = ""
+	case 3:
+		g.Title = ""
+	case 4:
+		g.UpdatedAt = -g.UpdatedAt
+	}
+	return g
+}

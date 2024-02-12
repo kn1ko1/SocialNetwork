@@ -39,3 +39,35 @@ func GenerateValidPostUser() *PostUser {
 	}
 	return pu
 }
+
+func GenerateMissingFieldPostUser() *PostUser {
+	pu := GenerateValidPostUser()
+	missingField := rand.Intn(4)
+	switch missingField {
+	case 0:
+		pu.CreatedAt = 0
+	case 1:
+		pu.PostId = 0
+	case 2:
+		pu.UpdatedAt = 0
+	case 3:
+		pu.UserId = 0
+	}
+	return pu
+}
+
+func GenerateInvalidPostUser() *PostUser {
+	pu := GenerateValidPostUser()
+	invalidField := rand.Intn(4)
+	switch invalidField {
+	case 0:
+		pu.CreatedAt = -pu.CreatedAt
+	case 1:
+		pu.PostId = -pu.PostId
+	case 2:
+		pu.UpdatedAt = -pu.UpdatedAt
+	case 3:
+		pu.UserId = -pu.UserId
+	}
+	return pu
+}
