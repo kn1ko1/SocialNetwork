@@ -4,99 +4,110 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
 
-func TestCommentByIdHandler_Get(t *testing.T) {
-	handler := NewCommentByIdHandler(R)
-	comment, _ := handler.Repo.GetCommentById(1)
+// TestUsersHandlerValidUserExpectPass_Post
+func TestCommentByIdHandlerValidIdExpectPass_Get(t *testing.T) {
+	for i := 0; i < 10; i++ {
 
-	commentJSON, err := json.Marshal(comment)
-	if err != nil {
-		t.Fatal(err)
-	}
+		handler := NewCommentByIdHandler(R)
+		comment, _ := handler.Repo.GetCommentById(rand.Intn(101))
 
-	URL := "/api/comments/" + fmt.Sprint(comment.CommentId)
+		commentJSON, err := json.Marshal(comment)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(commentJSON))
-	if err != nil {
-		t.Fatal(err)
-	}
+		URL := "/api/comments/" + fmt.Sprint(comment.CommentId)
 
-	// Create a response recorder to capture the response
-	recorder := httptest.NewRecorder()
+		// Create a new HTTP request with the encoded JSON as the request body
+		req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(commentJSON))
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	// Serve the HTTP request using the commentByIdHandler
-	handler.ServeHTTP(recorder, req)
+		// Create a response recorder to capture the response
+		recorder := httptest.NewRecorder()
 
-	// Check the response status code
-	if recorder.Code != http.StatusOK {
-		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
-	}
-}
+		// Serve the HTTP request using the commentByIdHandler
+		handler.ServeHTTP(recorder, req)
 
-func TestCommentByIdHandler_Put(t *testing.T) {
-	handler := NewCommentByIdHandler(R)
-	comment, _ := handler.Repo.GetCommentById(1)
-
-	commentJSON, err := json.Marshal(comment)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	URL := "/api/comments/" + fmt.Sprint(comment.CommentId)
-
-	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(commentJSON))
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Create a response recorder to capture the response
-	recorder := httptest.NewRecorder()
-
-	// Serve the HTTP request using the commentByIdHandler
-	handler.ServeHTTP(recorder, req)
-
-	// Check the response status code
-	if recorder.Code != http.StatusOK {
-		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
+		// Check the response status code
+		if recorder.Code != http.StatusOK {
+			t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
+		}
 	}
 }
 
-func TestCommentByIdHandler_Delete(t *testing.T) {
-	handler := NewCommentByIdHandler(R)
-	comment, _ := handler.Repo.GetCommentById(1)
-	err := handler.Repo.DeleteCommentById(comment.CommentId)
+func TestCommentByIdHandlerValidIdExpectPass_Put(t *testing.T) {
+	for i := 0; i < 10; i++ {
 
-	if err != nil {
-		t.Fatal(err)
+		handler := NewCommentByIdHandler(R)
+		comment, _ := handler.Repo.GetCommentById(1)
+
+		commentJSON, err := json.Marshal(comment)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		URL := "/api/comments/" + fmt.Sprint(comment.CommentId)
+
+		// Create a new HTTP request with the encoded JSON as the request body
+		req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(commentJSON))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// Create a response recorder to capture the response
+		recorder := httptest.NewRecorder()
+
+		// Serve the HTTP request using the commentByIdHandler
+		handler.ServeHTTP(recorder, req)
+
+		// Check the response status code
+		if recorder.Code != http.StatusOK {
+			t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
+		}
 	}
+}
 
-	commentJSON, err := json.Marshal(comment)
-	if err != nil {
-		t.Fatal(err)
-	}
+func TestCommentByIdHandlerValidIdExpectPass_Delete(t *testing.T) {
+	for i := 0; i < 10; i++ {
 
-	URL := "/api/comments/" + fmt.Sprint(comment.CommentId)
+		handler := NewCommentByIdHandler(R)
+		comment, _ := handler.Repo.GetCommentById(1)
+		err := handler.Repo.DeleteCommentById(comment.CommentId)
 
-	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodDelete, URL, bytes.NewBuffer(commentJSON))
-	if err != nil {
-		t.Fatal(err)
-	}
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	// Create a response recorder to capture the response
-	recorder := httptest.NewRecorder()
+		commentJSON, err := json.Marshal(comment)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	// Serve the HTTP request using the commentByIdHandler
-	handler.ServeHTTP(recorder, req)
+		URL := "/api/comments/" + fmt.Sprint(comment.CommentId)
 
-	// Check the response status code
-	if recorder.Code != http.StatusOK {
-		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
+		// Create a new HTTP request with the encoded JSON as the request body
+		req, err := http.NewRequest(http.MethodDelete, URL, bytes.NewBuffer(commentJSON))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// Create a response recorder to capture the response
+		recorder := httptest.NewRecorder()
+
+		// Serve the HTTP request using the commentByIdHandler
+		handler.ServeHTTP(recorder, req)
+
+		// Check the response status code
+		if recorder.Code != http.StatusOK {
+			t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
+		}
 	}
 }

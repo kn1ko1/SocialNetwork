@@ -11,33 +11,36 @@ import (
 )
 
 func TestCommentsHandlerValidPostExpectPass_Post(t *testing.T) {
-	// Create a new instance of PostsHandler with the mock repository
-	r := repo.NewDummyRepository()
-	handler := NewCommentsHandler(r)
+	for i := 0; i < 10; i++ {
 
-	// Create a sample post to send in the request body
-	comment := models.GenerateValidComment()
+		// Create a new instance of PostsHandler with the mock repository
+		r := repo.NewDummyRepository()
+		handler := NewCommentsHandler(r)
 
-	commentJSON, err := json.Marshal(comment)
-	if err != nil {
-		t.Fatal(err)
-	}
+		// Create a sample post to send in the request body
+		comment := models.GenerateValidComment()
 
-	req, err := http.NewRequest(http.MethodPost, "/api/comments", bytes.NewBuffer(commentJSON))
-	if err != nil {
-		t.Fatal(err)
-	}
-	req.Header.Set("Content-Type", "application/json") // Set Content-Type to application/json
+		commentJSON, err := json.Marshal(comment)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	// Create a response recorder to capture the response
-	recorder := httptest.NewRecorder()
+		req, err := http.NewRequest(http.MethodPost, "/api/comments", bytes.NewBuffer(commentJSON))
+		if err != nil {
+			t.Fatal(err)
+		}
+		req.Header.Set("Content-Type", "application/json") // Set Content-Type to application/json
 
-	// Serve the HTTP request using the PostsHandler
-	handler.ServeHTTP(recorder, req)
+		// Create a response recorder to capture the response
+		recorder := httptest.NewRecorder()
 
-	// Check the response status code
-	if recorder.Code != http.StatusCreated {
-		t.Errorf("Expected status code %d, but got %d", http.StatusCreated, recorder.Code)
+		// Serve the HTTP request using the PostsHandler
+		handler.ServeHTTP(recorder, req)
+
+		// Check the response status code
+		if recorder.Code != http.StatusCreated {
+			t.Errorf("Expected status code %d, but got %d", http.StatusCreated, recorder.Code)
+		}
 	}
 }
 
