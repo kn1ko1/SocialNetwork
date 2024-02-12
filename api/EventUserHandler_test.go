@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"socialnetwork/models"
 	"testing"
 )
 
@@ -12,9 +13,9 @@ func TestEventUsersHandler_Post(t *testing.T) {
 	for i := 0; i < 10; i++ {
 
 		handler := NewEventUsersHandler(R)
-		event, _ := handler.Repo.CreateEventUser(*EventUserExample)
+		eventUser := models.GenerateValidEventUser()
 
-		eventJSON, err := json.Marshal(event)
+		eventJSON, err := json.Marshal(eventUser)
 		if err != nil {
 			t.Fatal(err)
 		}

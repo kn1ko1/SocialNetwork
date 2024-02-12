@@ -5,13 +5,14 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"socialnetwork/models"
 	"testing"
 )
 
 func TestGroupsHandler_Post(t *testing.T) {
 
 	handler := NewGroupsHandler(R)
-	group, _ := handler.Repo.CreateGroup(*GroupExample)
+	group := models.GenerateValidGroup()
 
 	groupJSON, err := json.Marshal(group)
 	if err != nil {
