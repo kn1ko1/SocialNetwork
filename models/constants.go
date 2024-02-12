@@ -12,6 +12,7 @@ var (
 	sutEmail              = []string{"john.doe@example.com", "another@email.co", "user@123.de"}
 	sutFirstName          = []string{"Matthew", "Micheal", "Nikoi"}
 	sutIsPublic           = []bool{true, false}
+	sutIsGoing            = []bool{true, false}
 	sutLastName           = []string{"Cheetham", "Cornea", "Fenton"}
 	sutPassword           = []string{"Password123", "Password456", "Password789"}
 	sutUsername           = []string{"User123", "User456", "User789"}

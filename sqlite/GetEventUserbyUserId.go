@@ -23,6 +23,7 @@ func GetEventUsersByUserId(database *sql.DB, userId int) ([]models.EventUser, er
 			&eventUser.EventUserId,
 			&eventUser.CreatedAt,
 			&eventUser.EventId,
+			&eventUser.IsGoing,
 			&eventUser.UpdatedAt,
 			&eventUser.UserId,
 		)

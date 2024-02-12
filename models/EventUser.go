@@ -9,6 +9,7 @@ type EventUser struct {
 	EventUserId int
 	CreatedAt   int64
 	EventId     int
+	IsGoing     bool
 	UpdatedAt   int64
 	UserId      int
 }
@@ -31,9 +32,11 @@ func (eu *EventUser) Validate() error {
 
 func GenerateValidEventUser() *EventUser {
 	ctime := rand.Int63n(1000) + 1
+	idxIsGoing := rand.Intn(len(sutIsGoing))
 	eu := &EventUser{
 		CreatedAt: ctime,
 		EventId:   rand.Intn(1000) + 1,
+		IsGoing:   sutIsGoing[idxIsGoing],
 		UpdatedAt: ctime,
 		UserId:    rand.Intn(1000) + 1,
 	}
