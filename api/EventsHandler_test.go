@@ -5,14 +5,15 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"socialnetwork/models"
 	"testing"
 )
 
 func TestEventsHandlerValidEventExpectPass_Post(t *testing.T) {
 	for i := 0; i < 10; i++ {
 
-		// 	handler := NewEventsHandler(R)
-		// 	event := models.GenerateValidEvent()
+		handler := NewEventsHandler(R)
+		event := models.GenerateValidEvent()
 
 		eventJSON, err := json.Marshal(event)
 		if err != nil {
