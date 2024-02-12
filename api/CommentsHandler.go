@@ -25,23 +25,21 @@ func NewCommentsHandler(r repo.IRepository) *CommentsHandler {
 // A CommentsHandler instance implements the ServeHTTP interface, and thus
 // itself becomes an HTTPHandler
 func (h *CommentsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	http.Error(w, "unauthorized", http.StatusUnauthorized)
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
 	case http.MethodPost:
 		h.post(w, r)
 		return
-		// case http.MethodGet:
-		// 	h.get(w, r)
-		// 	return
-		// default:
-		// 	http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		// 	return
+	// case http.MethodGet:
+	// 	h.get(w, r)
+	// 	return
+	default:
+		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		return
 	}
 }
 
 func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
-
 	var comment models.Comment
 	err := json.NewDecoder(r.Body).Decode(&comment)
 	if err != nil {
@@ -49,9 +47,9 @@ func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
-	log.Println("Received comment:", comment.Body)
+	log.Println("Received post:", comment.UserId, comment.Body)
 
-	// Validate the comment
+	// Validate the post
 	if validationErr := comment.Validate(); validationErr != nil {
 		utils.HandleError("Validation failed:", validationErr)
 		http.Error(w, "Validation failed", http.StatusBadRequest)
@@ -62,7 +60,6 @@ func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
 	if parseMultipartFormErr != nil {
 		utils.HandleError("Unable to Parse Multipart Form.", parseMultipartFormErr)
 	}
-
 	file, fileHeader, formFileErr := r.FormFile("image")
 	if formFileErr != nil {
 		utils.HandleError("Error reading image.", formFileErr)
@@ -76,29 +73,26 @@ func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
 		if ImageProcessingrErr != nil {
 			utils.HandleError("Error with ImageHandler", ImageProcessingrErr)
 		}
-		fmt.Println("COMMENT INSERTED WITH FILE")
+		fmt.Println("POST INSERTED WITH FILE")
 	} else {
-		fmt.Println("COMMENT INSERTED WITHOUT FILE")
+		fmt.Println("POST INSERTED WITHOUT FILE")
 	}
 
-	// Create comment in the repository
 	result, createErr := h.Repo.CreateComment(comment)
 	if createErr != nil {
-		utils.HandleError("Failed to create comment in the repository:", createErr)
-		http.Error(w, "Failed to create comment", http.StatusInternalServerError)
+		utils.HandleError("Failed to create post in the repository:", createErr)
+		http.Error(w, "Failed to create post", http.StatusInternalServerError)
 		return
 	}
 
 	// Encode and write the response
+	w.WriteHeader(http.StatusCreated)
 	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	// Correct HTTP header for a newly created resource:
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Comment created successfully!"))
 }
 
 // func (h *CommentsHandler) get(w http.ResponseWriter, r *http.Request) {

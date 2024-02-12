@@ -23,12 +23,12 @@ func TestPostsHandlerValidPostExpectPass_Post(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	// Create a new HTTP request with the encoded JSON as the request body
 	req, err := http.NewRequest(http.MethodPost, "/api/posts", bytes.NewBuffer(postJSON))
 	if err != nil {
 		t.Fatal(err)
 	}
+	req.Header.Set("Content-Type", "multipart/form-data")
 
 	// Create a response recorder to capture the response
 	recorder := httptest.NewRecorder()
@@ -40,7 +40,6 @@ func TestPostsHandlerValidPostExpectPass_Post(t *testing.T) {
 	if recorder.Code != http.StatusCreated {
 		t.Errorf("Expected status code %d, but got %d", http.StatusCreated, recorder.Code)
 	}
-	// Add additional assertions as needed for your specific use case
 }
 
 func TestPostsHandlerExpectPass_Get(t *testing.T) {
