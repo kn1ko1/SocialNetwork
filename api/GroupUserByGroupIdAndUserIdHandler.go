@@ -40,7 +40,7 @@ func (h *GroupUserByGroupIdAndUserIdHandler) ServeHTTP(w http.ResponseWriter, r 
 func (h *GroupUserByGroupIdAndUserIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
 	fields := strings.Split(r.URL.Path, "/")
-	groupIdStr := fields[len(fields)-3]
+	groupIdStr := fields[len(fields)-4]
 	userIdStr := fields[len(fields)-1]
 
 	groupId, err := strconv.Atoi(groupIdStr)

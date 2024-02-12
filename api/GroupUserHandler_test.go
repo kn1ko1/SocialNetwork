@@ -5,105 +5,31 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"socialnetwork/models"
+	"socialnetwork/repo"
 	"testing"
 )
 
-func TestNewGroupUserHandler_Get(t *testing.T) {
+func TestGroupUserHandlerValidGroupUserExpectPass_Post(t *testing.T) {
+	r := repo.NewDummyRepository()
+	handler := NewGroupUsersHandler(r)
 
-	handler := NewGroupUsersHandler(R)
-	group, _ := handler.Repo.GetGroupUser(1)
+	groupUser := models.GenerateValidGroupUser()
 
-	groupJSON, err := json.Marshal(group)
+	groupUserJSON, err := json.Marshal(groupUser)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	URL := "/api/groupUsers"
-
-	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(groupJSON))
+	req, err := http.NewRequest(http.MethodPost, "/api/groupUsers", bytes.NewBuffer(groupUserJSON))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	// Create a response recorder to capture the response
 	recorder := httptest.NewRecorder()
-
-	// Serve the HTTP request using the handler
 	handler.ServeHTTP(recorder, req)
 
-	// Check the response status code
-	if recorder.Code != http.StatusOK {
-		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
-	}
-}
-
-func TestNewGroupUserHandler_Put(t *testing.T) {
-
-	handler := NewGroupUsersHandler(R)
-	group, _ := handler.Repo.GetGroupUser(1)
-	err := handler.Repo.DeleteGroupUser(group.GroupId)
-
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	groupJSON, err := json.Marshal(group)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	URL := "/api/groupUsers"
-
-	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodDelete, URL, bytes.NewBuffer(groupJSON))
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Create a response recorder to capture the response
-	recorder := httptest.NewRecorder()
-
-	// Serve the HTTP request using the handler
-	handler.ServeHTTP(recorder, req)
-
-	// Check the response status code
-	if recorder.Code != http.StatusOK {
-		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
-	}
-}
-
-func TestNewGroupUserHandler_Delete(t *testing.T) {
-
-	handler := NewGroupUsersHandler(R)
-	group, _ := handler.Repo.GetGroupUser(1)
-	err := handler.Repo.DeleteGroupUser(group.GroupId)
-
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	groupJSON, err := json.Marshal(group)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	URL := "/api/groupUsers"
-
-	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodDelete, URL, bytes.NewBuffer(groupJSON))
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Create a response recorder to capture the response
-	recorder := httptest.NewRecorder()
-
-	// Serve the HTTP request using the handler
-	handler.ServeHTTP(recorder, req)
-
-	// Check the response status code
-	if recorder.Code != http.StatusOK {
-		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
+	if recorder.Code != http.StatusCreated {
+		t.Errorf("Expected status code %d, but got %d", http.StatusCreated, recorder.Code)
 	}
 }

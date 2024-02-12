@@ -1,28 +1,24 @@
 package api
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 )
 
 func TestNewGroupUserByIdHandler_Get(t *testing.T) {
+	groupUserId := rand.Intn(101)
+	groupUserIdStr := strconv.Itoa(groupUserId)
 
 	handler := NewGroupUserByIdHandler(R)
-	group, _ := handler.Repo.GetGroupUser(1)
 
-	groupJSON, err := json.Marshal(group)
-	if err != nil {
-		t.Fatal(err)
-	}
+	URL := "/api/groupUsers/" + groupUserIdStr
 
-	URL := "/api/groupUsers/" + fmt.Sprint(group.UserId)
-
-	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(groupJSON))
+	// Create a new HTTP request without a request body
+	req, err := http.NewRequest(http.MethodGet, URL, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -37,10 +33,11 @@ func TestNewGroupUserByIdHandler_Get(t *testing.T) {
 	if recorder.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
 	}
+
+	// You may also want to check the response body here if necessary
 }
 
 func TestNewGroupUserByIdHandler_Delete(t *testing.T) {
-
 	handler := NewGroupUserByIdHandler(R)
 	group, _ := handler.Repo.GetGroupUser(1)
 	err := handler.Repo.DeleteGroupUser(group.GroupId)
@@ -49,15 +46,10 @@ func TestNewGroupUserByIdHandler_Delete(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	groupJSON, err := json.Marshal(group)
-	if err != nil {
-		t.Fatal(err)
-	}
-
 	URL := "/api/groupUsers/" + fmt.Sprint(group.UserId)
 
-	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodDelete, URL, bytes.NewBuffer(groupJSON))
+	// Create a new HTTP request without a request body
+	req, err := http.NewRequest(http.MethodDelete, URL, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -72,4 +64,6 @@ func TestNewGroupUserByIdHandler_Delete(t *testing.T) {
 	if recorder.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
 	}
+
+	// You may also want to check the response body here if necessary
 }

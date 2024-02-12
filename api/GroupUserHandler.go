@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
@@ -43,7 +42,6 @@ func (h *GroupUsersHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
-	log.Println("Received groupUser: User -", groupUser.UserId, "for group -", groupUser.GroupId)
 
 	// Validate the groupUser
 	if validationErr := groupUser.Validate(); validationErr != nil {
