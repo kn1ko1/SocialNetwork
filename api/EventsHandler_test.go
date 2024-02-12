@@ -1,6 +1,8 @@
 package api
 
 // func TestEventsHandlerValidEventExpectPass_Post(t *testing.T) {
+// for i := 0; i < 10; i++ {
+
 // 	r := repo.NewDummyRepository()
 // 	handler := NewEventsHandler(r)
 // 	event := models.GenerateValidEvent()
@@ -29,4 +31,5 @@ package api
 // 		t.Errorf("Expected status code %d, but got %d", http.StatusCreated, recorder.Code)
 // 	}
 // 	// Add additional assertions as needed for your specific use case
+// }
 // }

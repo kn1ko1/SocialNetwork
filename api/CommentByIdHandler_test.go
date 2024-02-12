@@ -47,7 +47,7 @@ func TestCommentByIdHandlerValidIdExpectPass_Put(t *testing.T) {
 	for i := 0; i < 10; i++ {
 
 		handler := NewCommentByIdHandler(R)
-		comment, _ := handler.Repo.GetCommentById(1)
+		comment, _ := handler.Repo.GetCommentById(rand.Intn(101))
 
 		commentJSON, err := json.Marshal(comment)
 		if err != nil {
@@ -79,7 +79,7 @@ func TestCommentByIdHandlerValidIdExpectPass_Delete(t *testing.T) {
 	for i := 0; i < 10; i++ {
 
 		handler := NewCommentByIdHandler(R)
-		comment, _ := handler.Repo.GetCommentById(1)
+		comment, _ := handler.Repo.GetCommentById(rand.Intn(101))
 		err := handler.Repo.DeleteCommentById(comment.CommentId)
 
 		if err != nil {

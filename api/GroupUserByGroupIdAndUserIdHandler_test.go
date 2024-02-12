@@ -8,25 +8,28 @@ import (
 	"testing"
 )
 
-func TestGroupUserByGroupIdAndUserIdHandlerEndpointExpectPass_Delete(t *testing.T) {
-	handler := NewGroupUserByGroupIdAndUserIdHandler(R)
+func TestGroupUserByGroupIdAndUserIdHandlerValidIdsExpectPass_Delete(t *testing.T) {
+	for i := 0; i < 10; i++ {
 
-	groupId := rand.Intn(101)
-	groupIdStr := strconv.Itoa(groupId)
-	userId := rand.Intn(101)
-	userIdStr := strconv.Itoa(userId)
-	URL := "/api/groups/" + groupIdStr + "/eventUsers/users/" + userIdStr
+		handler := NewGroupUserByGroupIdAndUserIdHandler(R)
 
-	req, err := http.NewRequest(http.MethodDelete, URL, nil)
-	if err != nil {
-		t.Fatal(err)
-	}
+		groupId := rand.Intn(101)
+		groupIdStr := strconv.Itoa(groupId)
+		userId := rand.Intn(101)
+		userIdStr := strconv.Itoa(userId)
+		URL := "/api/groups/" + groupIdStr + "/eventUsers/users/" + userIdStr
 
-	recorder := httptest.NewRecorder()
+		req, err := http.NewRequest(http.MethodDelete, URL, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	handler.ServeHTTP(recorder, req)
+		recorder := httptest.NewRecorder()
 
-	if recorder.Code != http.StatusOK {
-		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
+		handler.ServeHTTP(recorder, req)
+
+		if recorder.Code != http.StatusOK {
+			t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
+		}
 	}
 }

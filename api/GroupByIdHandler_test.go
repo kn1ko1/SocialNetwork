@@ -41,54 +41,59 @@ func TestGroupByIdHandler_Get(t *testing.T) {
 	}
 }
 
-func TestGroupByIdHandler_Put(t *testing.T) {
+func TestGroupByIdHandlerValidIdExpectPass_Put(t *testing.T) {
+	for i := 0; i < 10; i++ {
 
-	handler := NewGroupByIdHandler(R)
-	group, _ := handler.Repo.GetGroup(1)
+		handler := NewGroupByIdHandler(R)
+		group, _ := handler.Repo.GetGroup(1)
 
-	groupJSON, err := json.Marshal(group)
-	if err != nil {
-		t.Fatal(err)
-	}
+		groupJSON, err := json.Marshal(group)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	URL := "/api/groups/" + fmt.Sprint(group.GroupId)
+		URL := "/api/groups/" + fmt.Sprint(group.GroupId)
 
-	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodPut, URL, bytes.NewBuffer(groupJSON))
-	if err != nil {
-		t.Fatal(err)
-	}
+		// Create a new HTTP request with the encoded JSON as the request body
+		req, err := http.NewRequest(http.MethodPut, URL, bytes.NewBuffer(groupJSON))
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	// Create a response recorder to capture the response
-	recorder := httptest.NewRecorder()
+		// Create a response recorder to capture the response
+		recorder := httptest.NewRecorder()
 
-	// Serve the HTTP request using the handler
-	handler.ServeHTTP(recorder, req)
+		// Serve the HTTP request using the handler
+		handler.ServeHTTP(recorder, req)
 
-	// Check the response status code
-	if recorder.Code != http.StatusOK {
-		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
+		// Check the response status code
+		if recorder.Code != http.StatusOK {
+			t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
+		}
 	}
 }
 
-func TestGroupByIdHandler_Delete(t *testing.T) {
-	handler := NewGroupByIdHandler(R)
+func TestGroupByIdHandlerValidIdExpectPass_Delete(t *testing.T) {
+	for i := 0; i < 10; i++ {
 
-	groupId := rand.Intn(101)
-	groupIdStr := strconv.Itoa(groupId)
-	URL := "/api/groups/" + groupIdStr
+		handler := NewGroupByIdHandler(R)
 
-	req, err := http.NewRequest(http.MethodDelete, URL, nil)
-	if err != nil {
-		t.Fatal(err)
-	}
+		groupId := rand.Intn(101)
+		groupIdStr := strconv.Itoa(groupId)
+		URL := "/api/groups/" + groupIdStr
 
-	recorder := httptest.NewRecorder()
+		req, err := http.NewRequest(http.MethodDelete, URL, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	handler.ServeHTTP(recorder, req)
+		recorder := httptest.NewRecorder()
 
-	// Check the response status code
-	if recorder.Code != http.StatusOK {
-		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
+		handler.ServeHTTP(recorder, req)
+
+		// Check the response status code
+		if recorder.Code != http.StatusOK {
+			t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
+		}
 	}
 }

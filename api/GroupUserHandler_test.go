@@ -11,25 +11,28 @@ import (
 )
 
 func TestGroupUserHandlerValidGroupUserExpectPass_Post(t *testing.T) {
-	r := repo.NewDummyRepository()
-	handler := NewGroupUsersHandler(r)
+	for i := 0; i < 10; i++ {
 
-	groupUser := models.GenerateValidGroupUser()
+		r := repo.NewDummyRepository()
+		handler := NewGroupUsersHandler(r)
 
-	groupUserJSON, err := json.Marshal(groupUser)
-	if err != nil {
-		t.Fatal(err)
-	}
+		groupUser := models.GenerateValidGroupUser()
 
-	req, err := http.NewRequest(http.MethodPost, "/api/groupUsers", bytes.NewBuffer(groupUserJSON))
-	if err != nil {
-		t.Fatal(err)
-	}
+		groupUserJSON, err := json.Marshal(groupUser)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	recorder := httptest.NewRecorder()
-	handler.ServeHTTP(recorder, req)
+		req, err := http.NewRequest(http.MethodPost, "/api/groupUsers", bytes.NewBuffer(groupUserJSON))
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	if recorder.Code != http.StatusCreated {
-		t.Errorf("Expected status code %d, but got %d", http.StatusCreated, recorder.Code)
+		recorder := httptest.NewRecorder()
+		handler.ServeHTTP(recorder, req)
+
+		if recorder.Code != http.StatusCreated {
+			t.Errorf("Expected status code %d, but got %d", http.StatusCreated, recorder.Code)
+		}
 	}
 }
