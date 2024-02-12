@@ -44,7 +44,7 @@ func TestNewGroupUserByIdHandlerValidIdExpectPass_Delete(t *testing.T) {
 	for i := 0; i < 10; i++ {
 
 		handler := NewGroupUserByIdHandler(R)
-		group, _ := handler.Repo.GetGroupUser(1)
+		group, _ := handler.Repo.GetGroupUser(rand.Intn(101))
 		err := handler.Repo.DeleteGroupUser(group.GroupId)
 
 		if err != nil {
