@@ -33,7 +33,7 @@ export default function Login(props) {
   };
 
   if (redirectVar) {
-    return navigate("/"); // This is still iffy!!! ????????????
+    return navigate("/"); // 
   }
 
   return (
