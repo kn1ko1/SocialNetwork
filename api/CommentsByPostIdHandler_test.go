@@ -1,11 +1,10 @@
 package api
 
 import (
-	"bytes"
-	"encoding/json"
-	"fmt"
+	"math/rand"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 )
 
@@ -13,19 +12,13 @@ func TestCommentsByPostIdHandler_Get(t *testing.T) {
 
 	// Create a new instance of commentByIdHandler with the mock repository
 	handler := NewCommentsByPostIdHandler(R)
-	comment, _ := handler.Repo.GetAllComments()
+	postId := rand.Intn(101)
+	postIdStr := strconv.Itoa(postId)
 
-	postId := comment[0].PostId
-
-	commentJSON, err := json.Marshal(comment)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	URL := "/api/posts/" + fmt.Sprint(postId) + "comments"
+	URL := "/api/posts/" + postIdStr + "/comments"
 
 	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(commentJSON))
+	req, err := http.NewRequest(http.MethodGet, URL, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -44,19 +37,13 @@ func TestCommentsByPostIdHandler_Get(t *testing.T) {
 
 func TestCommentsByPostIdHandler_Delete(t *testing.T) {
 	handler := NewCommentsByPostIdHandler(R)
-	comment, _ := handler.Repo.GetAllComments()
+	postId := rand.Intn(101)
+	postIdStr := strconv.Itoa(postId)
 
-	postId := comment[0].PostId
-
-	commentJSON, err := json.Marshal(postId)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	URL := "/api/posts/" + fmt.Sprint(postId) + "comments"
+	URL := "/api/posts/" + postIdStr + "/comments"
 
 	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodDelete, URL, bytes.NewBuffer(commentJSON))
+	req, err := http.NewRequest(http.MethodDelete, URL, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
