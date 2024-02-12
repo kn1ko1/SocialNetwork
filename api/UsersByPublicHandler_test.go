@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"socialnetwork/models"
-	"socialnetwork/repo"
 	"testing"
 )
 
@@ -44,8 +43,7 @@ func TestUsersByPublicHandlerValidUserExpectPass_Get(t *testing.T) {
 func TestUsersByPublicHandlerInvalidUserExpectFail_Get(t *testing.T) {
 	// Create a new instance of UsersHandler with the mock repository
 	for i := 0; i < 10; i++ {
-		r := repo.NewDummyRepository()
-		handler := NewUsersHandler(r)
+		handler := NewUsersHandler(R)
 
 		user1 := models.GenerateInvalidUser()
 

@@ -6,15 +6,13 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"socialnetwork/models"
-	"socialnetwork/repo"
 	"testing"
 )
 
 func TestNotificationsHandlerValidNotificationExpectPass_Post(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		// Create a new instance of NotificationsHandler with the mock repository
-		r := repo.NewDummyRepository()
-		handler := NewNotificationsHandler(r)
+		handler := NewNotificationsHandler(R)
 
 		// Create a sample post to send in the request body
 		notification := models.GenerateValidNotification()

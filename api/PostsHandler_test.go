@@ -8,14 +8,12 @@ import (
 	"testing"
 
 	"socialnetwork/models"
-	"socialnetwork/repo"
 )
 
 func TestPostsHandlerValidPostExpectPass_Post(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		// Create a new instance of PostsHandler with the mock repository
-		r := repo.NewDummyRepository()
-		handler := NewPostsHandler(r)
+
+		handler := NewPostsHandler(R)
 
 		// Create a sample post to send in the request body
 		post := models.GenerateValidPost()
@@ -46,9 +44,8 @@ func TestPostsHandlerValidPostExpectPass_Post(t *testing.T) {
 
 func TestPostsHandlerExpectPass_Get(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		// Create a new instance of PostsHandler with the mock repository
-		r := repo.NewDummyRepository()
-		handler := NewPostsHandler(r)
+
+		handler := NewPostsHandler(R)
 
 		// Create a new HTTP request for a GET to "/api/posts"
 		req, err := http.NewRequest(http.MethodGet, "/api/posts", nil)

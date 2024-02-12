@@ -8,14 +8,13 @@ import (
 	"testing"
 
 	"socialnetwork/models"
-	"socialnetwork/repo"
 )
 
 func TestUsersHandlerValidUserExpectPass_Post(t *testing.T) {
-	// Create a new instance of UsersHandler with the mock repository
+
 	for i := 0; i < 10; i++ {
-		r := repo.NewDummyRepository()
-		handler := NewUsersHandler(r)
+
+		handler := NewUsersHandler(R)
 
 		// Create a sample eventUser to send in the request body
 		user1 := models.GenerateValidUser()
@@ -54,9 +53,8 @@ func TestUsersHandlerValidUserExpectPass_Post(t *testing.T) {
 
 func TestUsersHandlerInvalidUserExpectFail_Post(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		// Create a new instance of UsersHandler with the mock repository
-		r := repo.NewDummyRepository()
-		handler := NewUsersHandler(r)
+
+		handler := NewUsersHandler(R)
 
 		user1 := models.GenerateInvalidUser()
 

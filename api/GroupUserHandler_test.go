@@ -6,15 +6,13 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"socialnetwork/models"
-	"socialnetwork/repo"
 	"testing"
 )
 
 func TestGroupUserHandlerValidGroupUserExpectPass_Post(t *testing.T) {
 	for i := 0; i < 10; i++ {
 
-		r := repo.NewDummyRepository()
-		handler := NewGroupUsersHandler(r)
+		handler := NewGroupUsersHandler(R)
 
 		groupUser := models.GenerateValidGroupUser()
 

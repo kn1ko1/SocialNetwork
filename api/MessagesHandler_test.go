@@ -8,14 +8,12 @@ import (
 	"testing"
 
 	"socialnetwork/models"
-	"socialnetwork/repo"
 )
 
 func TestMessagesHandlerValidMessageExpectPass_Post(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		// Create a new instance of MessagesHandler with the mock repository
-		r := repo.NewDummyRepository()
-		handler := NewMessagesHandler(r)
+
+		handler := NewMessagesHandler(R)
 
 		// Create a sample post to send in the request body
 		message := models.GenerateValidMessage()
