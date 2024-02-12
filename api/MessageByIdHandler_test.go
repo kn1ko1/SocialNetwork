@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"net/http/httptest"
 	"socialnetwork/models"
+	"strconv"
 	"testing"
 )
 
@@ -19,7 +21,9 @@ func TestMessageByIdHandler_Get(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	URL := "/api/messages"
+	randomNumber := rand.Intn(5)
+	randomNumberStr := strconv.Itoa(randomNumber)
+	URL := "/api/messages/" + randomNumberStr
 
 	// Create a new HTTP request with the encoded JSON as the request body
 	req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(userJSON))

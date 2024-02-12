@@ -40,15 +40,16 @@ func (h *GroupUserByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *GroupUserByIdHandler) get(w http.ResponseWriter, r *http.Request) {
-	queryParams := r.URL.Query()
-	GroupUserIdString := queryParams.Get("GroupUserId")
-	GroupUserId, GroupUserIdErr := strconv.Atoi(GroupUserIdString)
-	if GroupUserIdErr != nil {
-		utils.HandleError("Problem with AtoI GroupUserId. ", GroupUserIdErr)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	fields := strings.Split(r.URL.Path, "/")
+	groupUserIdStr := fields[len(fields)-1]
+	groupUserId, err := strconv.Atoi(groupUserIdStr)
+	if err != nil {
+		utils.HandleError("Invalid GroupUser ID. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
-	GroupUser, err := h.Repo.GetGroupUser(GroupUserId)
+
+	GroupUser, err := h.Repo.GetGroupUser(groupUserId)
 	if err != nil {
 		utils.HandleError("Failed to get GroupUser in GetGroupUserByIdHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

@@ -40,15 +40,16 @@ func (h *EventUsersByEventIdAnduserIdHandler) ServeHTTP(w http.ResponseWriter, r
 func (h *EventUsersByEventIdAnduserIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
 	fields := strings.Split(r.URL.Path, "/")
-	eventIdStr := fields[len(fields)-2]
+	eventIdStr := fields[len(fields)-4]
+	userIdStr := fields[len(fields)-1]
+
 	eventId, err := strconv.Atoi(eventIdStr)
 	if err != nil {
 		utils.HandleError("Invalid Group ID. ", err)
 		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
-	fields = strings.Split(r.URL.Path, "/")
-	userIdStr := fields[len(fields)-2]
+
 	userId, err := strconv.Atoi(userIdStr)
 	if err != nil {
 		utils.HandleError("Invalid Group ID. ", err)

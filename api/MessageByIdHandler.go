@@ -49,7 +49,7 @@ func (h *MessageByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 
 	messageId, err := strconv.Atoi(messageIdStr)
 	if err != nil {
-		utils.HandleError("Invalid Group ID. ", err)
+		utils.HandleError("Invalid message ID. ", err)
 		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
@@ -111,7 +111,7 @@ func (h *MessageByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
 	messageId, err := strconv.Atoi(messageIdStr)
 	if err != nil {
-		utils.HandleError("Invalid Group ID. ", err)
+		utils.HandleError("Invalid message ID. ", err)
 		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}

@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 )
 
@@ -70,27 +72,19 @@ func TestGroupByIdHandler_Put(t *testing.T) {
 }
 
 func TestGroupByIdHandler_Delete(t *testing.T) {
-
 	handler := NewGroupByIdHandler(R)
-	group, _ := handler.Repo.GetGroup(1)
 
-	groupJSON, err := json.Marshal(group)
+	groupId := rand.Intn(101)
+	groupIdStr := strconv.Itoa(groupId)
+	URL := "/api/groups/" + groupIdStr
+
+	req, err := http.NewRequest(http.MethodDelete, URL, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	URL := "/api/groups/" + fmt.Sprint(group.GroupId)
-
-	// Create a new HTTP request with the encoded JSON as the request body
-	req, err := http.NewRequest(http.MethodDelete, URL, bytes.NewBuffer(groupJSON))
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Create a response recorder to capture the response
 	recorder := httptest.NewRecorder()
 
-	// Serve the HTTP request using the handler
 	handler.ServeHTTP(recorder, req)
 
 	// Check the response status code

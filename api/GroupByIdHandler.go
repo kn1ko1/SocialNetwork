@@ -104,7 +104,7 @@ func (h *GroupByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 func (h *GroupByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
 	fields := strings.Split(r.URL.Path, "/")
-	eventIdStr := fields[len(fields)-2]
+	eventIdStr := fields[len(fields)-1]
 	groupId, err := strconv.Atoi(eventIdStr)
 	if err != nil {
 		utils.HandleError("Invalid Group ID. ", err)

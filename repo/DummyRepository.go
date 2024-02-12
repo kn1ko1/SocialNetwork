@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"log"
+	"math/rand"
 	"socialnetwork/models"
 	"time"
 
@@ -401,9 +402,9 @@ func (r *DummyRepository) GetMessagesByType(messageType string) ([]models.Messag
 	return messages, nil
 }
 func (r *DummyRepository) GetMessageById(messageId int) (models.Message, error) {
-	message := validMessage
+	message := models.GenerateValidMessage()
 	message.MessageId = messageId
-	return message, nil
+	return *message, nil
 }
 func (r *DummyRepository) GetMessagesBySenderAndTargetIDs(senderId, targetId int) ([]models.Message, error) {
 	messages := make([]models.Message, sutTableRuns)
@@ -464,14 +465,8 @@ func (r *DummyRepository) GetGroup(groupId int) (models.Group, error) {
 }
 
 func (r *DummyRepository) GetGroupUser(groupUserId int) (models.GroupUser, error) {
-	ctime := time.Now().UTC().UnixMilli()
-	groupUser := models.GroupUser{
-		GroupUserId: groupUserId,
-		CreatedAt:   ctime,
-		GroupId:     2,
-		UpdatedAt:   ctime,
-		UserId:      3,
-	}
+	groupUser := *models.GenerateValidGroupUser()
+	groupUser.GroupUserId = groupUserId
 	return groupUser, nil
 }
 func (r *DummyRepository) UpdateGroup(group models.Group) (models.Group, error) {
@@ -489,7 +484,8 @@ func (r *DummyRepository) DeleteAllGroups() error {
 
 // GroupUser
 func (r *DummyRepository) CreateGroupUser(groupUser models.GroupUser) (models.GroupUser, error) {
-	return groupUser, errors.New("not implemented")
+	groupUser.GroupUserId = rand.Intn(101)
+	return groupUser, nil
 }
 func (r *DummyRepository) GetGroupUsersByUserId(userId int) ([]models.GroupUser, error) {
 	ctime := time.Now().UTC().UnixMilli()
