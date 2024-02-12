@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
@@ -29,6 +30,9 @@ func (h *EventsByGroupIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
 	switch r.Method {
 	case http.MethodGet:
 		h.get(w, r)
+		return
+	case http.MethodDelete:
+		h.delete(w, r)
 		return
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -59,29 +63,29 @@ func (h *EventsByGroupIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// func (h *EventsByGroupIdHandler) delete(w http.ResponseWriter, r *http.Request) {
+func (h *EventsByGroupIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-// 	// look at penultimate id for userId
+	// look at penultimate id for userId
 
-// 	fields := strings.Split(r.URL.Path, "/")
-// 	groupId, userIdErr := strconv.Atoi(fields[len(fields)-1])
-// 	if userIdErr != nil {
-// 		utils.HandleError("Problem with AtoI groupId. ", userIdErr)
-// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-// 		return
-// 	}
-// 	log.Println("Received delete request for groupId:", groupId)
+	fields := strings.Split(r.URL.Path, "/")
+	groupId, userIdErr := strconv.Atoi(fields[len(fields)-2])
+	if userIdErr != nil {
+		utils.HandleError("Problem with AtoI groupId. ", userIdErr)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	log.Println("Received delete request for groupId:", groupId)
 
-// 	// example postId for testing
-// 	// postId := 1
+	// example postId for testing
+	// postId := 1
 
-// 	err := h.Repo.DeleteEventsByGroupId(groupId)
-// 	if err != nil {
-// 		utils.HandleError("Failed to delete Events. ", err)
-// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-// 		return
-// 	}
+	err := h.Repo.DeleteEventsByGroupId(groupId)
+	if err != nil {
+		utils.HandleError("Failed to delete Events. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 
-// 	w.WriteHeader(http.StatusOK)
-// 	w.Write([]byte("posts were deleted"))
-// }
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("posts were deleted"))
+}

@@ -123,6 +123,12 @@ func (r *DummyRepository) GetAllPosts() ([]models.Post, error) {
 func (r *DummyRepository) GetPostById(postId int) (models.Post, error) {
 	post := models.GenerateValidPost()
 	post.PostId = postId
+	err := post.Validate()
+	log.Println("error in dummy GetPostById.", err)
+	if err != nil {
+		var emptypost models.Post
+		return emptypost, err
+	}
 	return *post, nil
 }
 func (r *DummyRepository) GetPostsByGroupId(groupId int) ([]models.Post, error) {
@@ -142,6 +148,12 @@ func (r *DummyRepository) GetPostsByUserId(userId int) ([]models.Post, error) {
 		p.PostId = i + 1
 		p.UserId = userId
 		posts[i] = p
+		err := p.Validate()
+		log.Println("error in dummy GetPostById.", err)
+		if err != nil {
+			var emptyposts []models.Post
+			return emptyposts, err
+		}
 	}
 	return posts, nil
 }

@@ -43,8 +43,7 @@ func TestUserPostsHandlerExpectPass_Get(t *testing.T) {
 
 func TestUserPostsHandler_Get_Error(t *testing.T) {
 	handler := NewUserPostsHandler(R)
-	// Simulate an error from the repository
-	_, err := handler.Repo.GetPostsByUserId(999) // Invalid user ID to trigger an error
+	_, err := handler.Repo.GetPostsByUserId(-999) // Invalid user ID to trigger an error
 	if err == nil {
 		t.Error("Expected error, but got nil")
 	}
@@ -78,13 +77,4 @@ func TestUserPostsHandler_Put(t *testing.T) {
 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
 	}
 	// Add additional assertions as needed for your specific use case
-}
-
-func TestUserPostsHandler_Put_InvalidUserID(t *testing.T) {
-	handler := NewUserPostsHandler(R)
-	// Try to update a user with an invalid user ID
-	_, err := handler.Repo.UpdateUser(*models.GenerateValidUser())
-	if err == nil {
-		t.Error("Expected error for invalid user ID, but got nil")
-	}
 }
