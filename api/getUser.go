@@ -1,6 +1,7 @@
 package api
 
 import (
+	"math/rand"
 	"net/http"
 	"socialnetwork/models"
 )
@@ -20,6 +21,7 @@ func getUser(r *http.Request) (*models.User, error) {
 	//
 	// For testing only
 	ret := models.GenerateValidUser()
+	ret.UserId = rand.Intn(101)
 	//
 	//
 
