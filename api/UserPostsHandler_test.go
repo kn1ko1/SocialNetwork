@@ -53,7 +53,7 @@ func TestUserPostsHandlerExpectError_Get(t *testing.T) {
 	}
 }
 
-func TestUserPostsHandler_Put(t *testing.T) {
+func TestUserPostsHandlerValdiUserExpectPass_Put(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		handler := NewUserPostsHandler(R)
 		user, _ := handler.Repo.UpdateUser(*models.GenerateValidUser())

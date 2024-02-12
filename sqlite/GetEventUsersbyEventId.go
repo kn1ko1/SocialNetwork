@@ -21,9 +21,10 @@ func GetEventUsersByEventId(database *sql.DB, eventId int) ([]models.EventUser, 
 		err := rows.Scan(
 			&eventUser.EventUserId,
 			&eventUser.CreatedAt,
+			&eventUser.EventId,
+			&eventUser.IsGoing,
 			&eventUser.UpdatedAt,
 			&eventUser.UserId,
-			&eventUser.EventId,
 		)
 		if err != nil {
 			utils.HandleError("Error scanning rows in GetEventUsersByEventId.", err)

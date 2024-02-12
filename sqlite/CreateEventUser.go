@@ -13,9 +13,10 @@ func CreateEventUser(database *sql.DB, eventUser models.EventUser) (models.Event
 	INSERT INTO EVENT_USERS (
 		CreatedAt,
 		EventId,
+		IsGoing,
 		UpdatedAt,
 		UserId
-	) VALUES (?, ?, ?, ?)
+	) VALUES (?, ?, ?, ?, ?)
 `
 
 	statement, err := database.Prepare(query)
@@ -26,6 +27,7 @@ func CreateEventUser(database *sql.DB, eventUser models.EventUser) (models.Event
 	res, err := statement.Exec(
 		eventUser.CreatedAt,
 		eventUser.EventId,
+		eventUser.IsGoing,
 		eventUser.UpdatedAt,
 		eventUser.UserId,
 	)
