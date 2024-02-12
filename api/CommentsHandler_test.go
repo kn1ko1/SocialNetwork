@@ -6,16 +6,13 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"socialnetwork/models"
-	"socialnetwork/repo"
 	"testing"
 )
 
 func TestCommentsHandlerValidPostExpectPass_Post(t *testing.T) {
 	for i := 0; i < 10; i++ {
 
-		// Create a new instance of PostsHandler with the mock repository
-		r := repo.NewDummyRepository()
-		handler := NewCommentsHandler(r)
+		handler := NewCommentsHandler(R)
 
 		// Create a sample post to send in the request body
 		comment := models.GenerateValidComment()
