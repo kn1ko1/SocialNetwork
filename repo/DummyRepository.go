@@ -17,6 +17,7 @@ const (
 
 var (
 	validUser      = *models.GenerateValidUser()
+	validUserUser  = *models.GenerateValidUserUser()
 	validPost      = *models.GenerateValidPost()
 	validComment   = *models.GenerateValidComment()
 	validEvent     = *models.GenerateValidEvent()
@@ -108,6 +109,9 @@ func (r *DummyRepository) DeleteAllUsers() error {
 }
 
 // UserUser
+func (r *DummyRepository) CreateUserUser(userUser models.UserUser) (models.UserUser, error) {
+	return validUserUser, nil
+}
 func (r *DummyRepository) GetUserUsersBySubjectId(subjectId int) ([]models.UserUser, error) {
 	var userUsers []models.UserUser
 	for i := 0; i < 5; i++ {
@@ -522,8 +526,7 @@ func (r *DummyRepository) DeleteAllGroups() error {
 }
 
 // GroupUser
-func (r *DummyRepository) CreateGroupUser(validGroupUser models.GroupUser) (models.GroupUser, error) {
-
+func (r *DummyRepository) CreateGroupUser(groupUser models.GroupUser) (models.GroupUser, error) {
 	return validGroupUser, nil
 }
 func (r *DummyRepository) GetGroupUser(groupUserId int) (models.GroupUser, error) {

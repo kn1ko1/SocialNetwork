@@ -63,7 +63,9 @@ func (r *SQLiteRepository) DeleteAllUsers() error {
 }
 
 // UserUser
-
+func (r *SQLiteRepository) CreateUserUser(userUser models.UserUser) (models.UserUser, error) {
+	return sqlite.CreateUserUser(r.businessDb, userUser)
+}
 func (r *SQLiteRepository) GetUserUsersBySubjectId(subjectId int) ([]models.UserUser, error) {
 	return sqlite.GetUserUsersBySubjectId(r.businessDb, subjectId)
 }

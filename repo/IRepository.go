@@ -18,6 +18,7 @@ type IRepository interface {
 	DeleteAllUsers() error
 
 	//UserUsers ... Yes, I know
+	CreateUserUser(userUser models.UserUser) (models.UserUser, error)
 	GetUserUsersBySubjectId(subjectId int) ([]models.UserUser, error)
 	GetUserUsersByFollowerId(followerId int) ([]models.UserUser, error)
 	DeleteUserUsersBySubjectId(subjectId int) error
