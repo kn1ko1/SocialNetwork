@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -19,12 +20,26 @@ func NewClient(conn *websocket.Conn) *Client {
 func (c *Client) Receive() {
 	for {
 		var wsm WebSocketMessage
-		err := c.Connection.ReadJSON(&wsm)
+		_, p, err := c.Connection.ReadMessage()
+		if err != nil {
+			log.Println(err.Error())
+			return
+		}
+		err = json.Unmarshal(p, &wsm)
 		if err != nil {
 			log.Println(err.Error())
 			return
 		}
 		fmt.Println(wsm)
+		switch wsm.Code {
+		case 1:
+			var t TestBody
+			err := json.Unmarshal([]byte(wsm.Body), &t)
+			if err != nil {
+				log.Println(err.Error())
+			}
+			fmt.Printf("%+v\n", t)
+		}
 	}
 }
 
