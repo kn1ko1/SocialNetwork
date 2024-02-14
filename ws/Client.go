@@ -30,16 +30,7 @@ func (c *Client) Receive() {
 			log.Println(err.Error())
 			return
 		}
-		fmt.Println(wsm)
-		switch wsm.Code {
-		case 1:
-			var t TestBody
-			err := json.Unmarshal([]byte(wsm.Body), &t)
-			if err != nil {
-				log.Println(err.Error())
-			}
-			fmt.Printf("%+v\n", t)
-		}
+		c.HandleMessage(wsm)
 	}
 }
 
@@ -50,5 +41,25 @@ func (c *Client) Send(v any) {
 			log.Println(err.Error())
 			return
 		}
+	}
+}
+
+func (c *Client) HandleMessage(msg WebSocketMessage) {
+	fmt.Println(msg)
+	switch msg.Code {
+	case 1:
+		var t TestBody
+		err := json.Unmarshal([]byte(msg.Body), &t)
+		if err != nil {
+			log.Println(err.Error())
+		}
+		fmt.Printf("%+v\n", t)
+	case 2:
+		var p Person
+		err := json.Unmarshal([]byte(msg.Body), &p)
+		if err != nil {
+			log.Println(err.Error())
+		}
+		fmt.Printf("%+v\n", p)
 	}
 }
