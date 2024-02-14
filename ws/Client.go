@@ -11,10 +11,11 @@ import (
 type Client struct {
 	ClientID   int
 	Connection *websocket.Conn
+	Groups     map[int]*Group
 }
 
 func NewClient(conn *websocket.Conn) *Client {
-	return &Client{Connection: conn}
+	return &Client{Connection: conn, Groups: make(map[int]*Group)}
 }
 
 func (c *Client) Receive() {
@@ -35,12 +36,10 @@ func (c *Client) Receive() {
 }
 
 func (c *Client) Send(v any) {
-	for {
-		err := c.Connection.WriteJSON(v)
-		if err != nil {
-			log.Println(err.Error())
-			return
-		}
+	err := c.Connection.WriteJSON(v)
+	if err != nil {
+		log.Println(err.Error())
+		return
 	}
 }
 
@@ -62,4 +61,5 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		}
 		fmt.Printf("%+v\n", p)
 	}
+	c.Groups[0].Broadcast <- msg
 }
