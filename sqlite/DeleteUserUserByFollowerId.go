@@ -6,7 +6,7 @@ import (
 )
 
 // deletes user users related to followerId from the USER_USERS table
-func DeleteUserUserByFollowerId(database *sql.DB, followerId int) error {
+func DeleteUserUsersByFollowerId(database *sql.DB, followerId int) error {
 	_, err := database.Exec("DELETE FROM USER_USERS WHERE FollowerId = ?", followerId)
 	if err != nil {
 		utils.HandleError("Error executing delete user users by follower Id.", err)

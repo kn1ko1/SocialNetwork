@@ -16,21 +16,22 @@ const (
 )
 
 var (
-	validUser    = *models.GenerateValidUser()
-	validPost    = *models.GenerateValidPost()
-	validComment = *models.GenerateValidComment()
-	validEvent   = *models.GenerateValidEvent()
-	validMessage = *models.GenerateValidMessage()
-	validGroup   = *models.GenerateValidGroup()
+	validUser      = *models.GenerateValidUser()
+	validPost      = *models.GenerateValidPost()
+	validComment   = *models.GenerateValidComment()
+	validEvent     = *models.GenerateValidEvent()
+	validMessage   = *models.GenerateValidMessage()
+	validGroup     = *models.GenerateValidGroup()
+	validGroupUser = *models.GenerateValidGroupUser()
 )
 
 func init() {
-	validUser.UserId = 1
-	validPost.PostId = 1
-	validComment.CommentId = 1
-	validEvent.EventId = 1
-	validMessage.MessageId = 1
-	validGroup.GroupId = 1
+	validUser.UserId = rand.Intn(101)
+	validPost.PostId = rand.Intn(101)
+	validComment.CommentId = rand.Intn(101)
+	validEvent.EventId = rand.Intn(101)
+	validMessage.MessageId = rand.Intn(101)
+	validGroup.GroupId = rand.Intn(101)
 }
 
 // Field commented for implementation example reasons:
@@ -103,6 +104,37 @@ func (r *DummyRepository) DeleteUserById(userId int) error {
 	return nil
 }
 func (r *DummyRepository) DeleteAllUsers() error {
+	return nil
+}
+
+// UserUser
+func (r *DummyRepository) GetUserUsersBySubjectId(subjectId int) ([]models.UserUser, error) {
+	var userUsers []models.UserUser
+	for i := 0; i < 5; i++ {
+		user := *models.GenerateValidUserUser()
+		user.SubjectId = subjectId
+		userUsers = append(userUsers, user)
+	}
+
+	return userUsers, nil
+}
+func (r *DummyRepository) GetUserUsersByFollowerId(followerId int) ([]models.UserUser, error) {
+	var userUsers []models.UserUser
+	for i := 0; i < 5; i++ {
+		user := *models.GenerateValidUserUser()
+		user.FollowerId = followerId
+		userUsers = append(userUsers, user)
+	}
+
+	return userUsers, nil
+}
+func (r *DummyRepository) DeleteUserUsersBySubjectId(subjectId int) error {
+	return nil
+}
+func (r *DummyRepository) DeleteUserUsersByFollowerId(followerId int) error {
+	return nil
+}
+func (r *DummyRepository) DeleteUserUserBySubjectIdAndFollowerId(subjectId, followerId int) error {
 	return nil
 }
 
@@ -476,11 +508,6 @@ func (r *DummyRepository) GetGroup(groupId int) (models.Group, error) {
 	return group, nil
 }
 
-func (r *DummyRepository) GetGroupUser(groupUserId int) (models.GroupUser, error) {
-	groupUser := *models.GenerateValidGroupUser()
-	groupUser.GroupUserId = groupUserId
-	return groupUser, nil
-}
 func (r *DummyRepository) UpdateGroup(group models.Group) (models.Group, error) {
 	return group, nil
 }
@@ -495,47 +522,36 @@ func (r *DummyRepository) DeleteAllGroups() error {
 }
 
 // GroupUser
-func (r *DummyRepository) CreateGroupUser(groupUser models.GroupUser) (models.GroupUser, error) {
-	groupUser.GroupUserId = rand.Intn(101)
+func (r *DummyRepository) CreateGroupUser(validGroupUser models.GroupUser) (models.GroupUser, error) {
+
+	return validGroupUser, nil
+}
+func (r *DummyRepository) GetGroupUser(groupUserId int) (models.GroupUser, error) {
+	groupUser := validGroupUser
+	groupUser.GroupUserId = groupUserId
 	return groupUser, nil
 }
 func (r *DummyRepository) GetGroupUsersByUserId(userId int) ([]models.GroupUser, error) {
-	ctime := time.Now().UTC().UnixMilli()
 	var groupUsers []models.GroupUser
-	groupUsers[1] = models.GroupUser{
-		GroupUserId: 1,
-		CreatedAt:   ctime,
-		GroupId:     1,
-		UpdatedAt:   ctime,
-		UserId:      1,
+
+	for i := 0; i < rand.Intn(6); i++ {
+		groupUser := validGroupUser
+		groupUser.UserId = userId
+		groupUsers = append(groupUsers, groupUser)
 	}
-	groupUsers[2] = models.GroupUser{
-		GroupUserId: 2,
-		CreatedAt:   ctime,
-		GroupId:     4,
-		UpdatedAt:   ctime,
-		UserId:      1,
-	}
-	return groupUsers, errors.New("not implemented")
+
+	return groupUsers, nil
 }
 func (r *DummyRepository) GetGroupUsersByGroupId(groupId int) ([]models.GroupUser, error) {
-	ctime := time.Now().UTC().UnixMilli()
-	groupUsers := make([]models.GroupUser, 2)
-	groupUsers[1] = models.GroupUser{
-		GroupUserId: 1,
-		CreatedAt:   ctime,
-		GroupId:     groupId,
-		UpdatedAt:   ctime,
-		UserId:      3,
+	var groupUsers []models.GroupUser
+
+	for i := 0; i < rand.Intn(6); i++ {
+		groupUser := validGroupUser
+		groupUser.GroupId = groupId
+		groupUsers = append(groupUsers, groupUser)
 	}
-	groupUsers[2] = models.GroupUser{
-		GroupUserId: 2,
-		CreatedAt:   ctime,
-		GroupId:     groupId,
-		UpdatedAt:   ctime,
-		UserId:      1,
-	}
-	return groupUsers, errors.New("not implemented")
+
+	return groupUsers, nil
 }
 func (r *DummyRepository) DeleteGroupUsersByUserId(userId int) error {
 	return errors.New("dummy deleted groupusers by userid")

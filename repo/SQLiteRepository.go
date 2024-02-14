@@ -62,6 +62,24 @@ func (r *SQLiteRepository) DeleteAllUsers() error {
 	return sqlite.DeleteAllUsers(r.identityDb)
 }
 
+// UserUser
+
+func (r *SQLiteRepository) GetUserUsersBySubjectId(subjectId int) ([]models.UserUser, error) {
+	return sqlite.GetUserUsersBySubjectId(r.businessDb, subjectId)
+}
+func (r *SQLiteRepository) GetUserUsersByFollowerId(followerId int) ([]models.UserUser, error) {
+	return sqlite.GetUserUsersByFollowerId(r.businessDb, followerId)
+}
+func (r *SQLiteRepository) DeleteUserUsersByFollowerId(followerId int) error {
+	return sqlite.DeleteUserUsersByFollowerId(r.businessDb, followerId)
+}
+func (r *SQLiteRepository) DeleteUserUsersBySubjectId(subjectId int) error {
+	return sqlite.DeleteUserUsersByFollowerId(r.businessDb, subjectId)
+}
+func (r *SQLiteRepository) DeleteUserUserBySubjectIdAndFollowerId(subjectId, followerId int) error {
+	return sqlite.DeleteUserUserBySubjectIdAndFollowerId(r.businessDb, subjectId, followerId)
+}
+
 // Post
 func (r *SQLiteRepository) CreatePost(post models.Post) (models.Post, error) {
 	return sqlite.CreatePost(r.businessDb, post)

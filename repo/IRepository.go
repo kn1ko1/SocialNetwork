@@ -17,6 +17,13 @@ type IRepository interface {
 	DeleteUserById(userId int) error
 	DeleteAllUsers() error
 
+	//UserUsers ... Yes, I know
+	GetUserUsersBySubjectId(subjectId int) ([]models.UserUser, error)
+	GetUserUsersByFollowerId(followerId int) ([]models.UserUser, error)
+	DeleteUserUsersBySubjectId(subjectId int) error
+	DeleteUserUsersByFollowerId(followerId int) error
+	DeleteUserUserBySubjectIdAndFollowerId(subjectId, followerId int) error
+
 	// Post
 	CreatePost(post models.Post) (models.Post, error)
 	GetAllPosts() ([]models.Post, error)
