@@ -18,10 +18,10 @@ window.addEventListener("load", () => {
     button.innerText = "Click";
     button.addEventListener("click", () => {
         const msg = {
-            code: 1,
+            code: 2,
             body: JSON.stringify({
-                id: 10,
-                message: "yoyoyoyo"
+                name: "Matt",
+                age: 27
             })
         }
         socket.send(JSON.stringify(msg))
