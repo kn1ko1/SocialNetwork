@@ -1,7 +1,6 @@
 package ws
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"socialnetwork/repo"
@@ -37,6 +36,11 @@ func (h *WebSocketHandler) get(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err.Error())
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
 	}
-	fmt.Println(conn)
+	client := NewClient(conn)
+	client.Groups[0] = manager.Groups[0]
+	go client.Receive()
+	manager.Groups[0].Enter <- client
 }

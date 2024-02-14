@@ -9,6 +9,7 @@ import (
 	"socialnetwork/repo"
 	"socialnetwork/router"
 	"socialnetwork/ui"
+	"socialnetwork/ws"
 )
 
 const (
@@ -34,6 +35,7 @@ func main() {
 func setupRouter(mux *http.ServeMux) {
 	rt := router.NewRouter()
 	addApiHandlers(rt)
+	addWSHandler(rt)
 	addUIHandlers(rt)
 	mux.Handle("/", rt)
 }
@@ -115,6 +117,10 @@ func addApiHandlers(rt *router.Router) {
 	// // Notification Handlers
 	// rt.AddHandler(regexp.MustCompile(`^/api/notifications$`), notificationsHandler)
 	// rt.AddHandler(regexp.MustCompile(`^/api/notifications/{notificationId}$`), notificationByIdHandler)
+}
+
+func addWSHandler(rt *router.Router) {
+	rt.AddHandler(regexp.MustCompile(`^/ws$`), ws.NewWebSocketHandler(repo.NewDummyRepository()))
 }
 
 func addUIHandlers(rt *router.Router) {
