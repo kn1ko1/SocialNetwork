@@ -38,5 +38,6 @@ func (h *WebSocketHandler) get(w http.ResponseWriter, r *http.Request) {
 		log.Println(err.Error())
 	}
 	client := NewClient(conn)
+	go client.Receive()
 	manager.Groups[0].Enter <- client
 }
