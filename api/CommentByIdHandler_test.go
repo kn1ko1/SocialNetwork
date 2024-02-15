@@ -44,7 +44,7 @@ func TestCommentByIdHandlerValidIdExpectPass_Get(t *testing.T) {
 	}
 }
 
-func TestCommentByIdHandlerInValidIdExpectPass_Get(t *testing.T) {
+func TestCommentByIdHandlerInValidMethodExpectPass_Get(t *testing.T) {
 	for i := 0; i < 10; i++ {
 
 		handler := NewCommentByIdHandler(R)
@@ -108,7 +108,7 @@ func TestCommentByIdHandlerValidIdExpectPass_Put(t *testing.T) {
 	}
 }
 
-func TestCommentByIdHandlerInValidIdExpectPass_Put(t *testing.T) {
+func TestCommentByIdHandlerInValidMethodExpectPass_Put(t *testing.T) {
 	for i := 0; i < 10; i++ {
 
 		handler := NewCommentByIdHandler(R)
@@ -177,7 +177,7 @@ func TestCommentByIdHandlerValidIdExpectPass_Delete(t *testing.T) {
 	}
 }
 
-func TestCommentByIdHandlerInValidIdExpectPass_Delete(t *testing.T) {
+func TestCommentByIdHandlerInValidMethodExpectPass_Delete(t *testing.T) {
 	for i := 0; i < 10; i++ {
 
 		handler := NewCommentByIdHandler(R)

@@ -95,20 +95,22 @@ func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// func (h *CommentsHandler) get(w http.ResponseWriter, r *http.Request) {
+/**
+func (h *CommentsHandler) get(w http.ResponseWriter, r *http.Request) {
 
-// 	allComments, err := h.Repo.GetAllComments()
-// 	if err != nil {
-// 		utils.HandleError("Failed to get comments in CommentHandler. ", err)
-// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-// 		return
-// 	}
+	allComments, err := h.Repo.GetAllComments()
+	if err != nil {
+		utils.HandleError("Failed to get comments in CommentHandler. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 
-// 	err = json.NewEncoder(w).Encode(allComments)
-// 	if err != nil {
-// 		utils.HandleError("Failed to encode and write JSON response. ", err)
-// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-// 		return
-// 	}
+	err = json.NewEncoder(w).Encode(allComments)
+	if err != nil {
+		utils.HandleError("Failed to encode and write JSON response. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 
-// }
+}
+**/
