@@ -55,7 +55,10 @@ func (h *CommentByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 		utils.HandleError("Failed to get comments in GetCommentByIdHandler. ", err)
 		http.Error(w, "failed to retrieve comment from db", http.StatusInternalServerError)
 		return
+
 	}
+
+	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(comment)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)

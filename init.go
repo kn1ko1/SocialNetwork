@@ -5,7 +5,6 @@ import (
 )
 
 func init() {
-
 	sqlite.InitIdentityDatabase()
 	sqlite.InitBusinessDatabase()
 }
