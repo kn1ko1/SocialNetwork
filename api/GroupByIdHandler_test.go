@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-func TestGroupByIdHandler_Get(t *testing.T) {
+func TestGroupByIdHandlerValidGroupIdExpectedPass_Get(t *testing.T) {
 
 	handler := NewGroupByIdHandler(R)
 	group, _ := handler.Repo.GetGroup(1)
@@ -38,6 +38,36 @@ func TestGroupByIdHandler_Get(t *testing.T) {
 	// Check the response status code
 	if recorder.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
+	}
+}
+
+func TestGroupByIdHandlerInValidMethodExpectedPass_Get(t *testing.T) {
+
+	handler := NewGroupByIdHandler(R)
+	group, _ := handler.Repo.GetGroup(1)
+
+	groupJSON, err := json.Marshal(group)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	URL := "/api/groups/" + fmt.Sprint(group.GroupId)
+
+	// Create a new HTTP request with the encoded JSON as the request body
+	req, err := http.NewRequest(http.MethodPost, URL, bytes.NewBuffer(groupJSON))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Create a response recorder to capture the response
+	recorder := httptest.NewRecorder()
+
+	// Serve the HTTP request using the handler
+	handler.ServeHTTP(recorder, req)
+
+	// Check the response status code
+	if recorder.Code != http.StatusMethodNotAllowed {
+		t.Errorf("Expected status code %d, but got %d", http.StatusMethodNotAllowed, recorder.Code)
 	}
 }
 
@@ -73,6 +103,38 @@ func TestGroupByIdHandlerValidIdExpectPass_Put(t *testing.T) {
 	}
 }
 
+func TestGroupByIdHandlerInValidMethodExpectPass_Put(t *testing.T) {
+	for i := 0; i < 10; i++ {
+
+		handler := NewGroupByIdHandler(R)
+		group, _ := handler.Repo.GetGroup(1)
+
+		groupJSON, err := json.Marshal(group)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		URL := "/api/groups/" + fmt.Sprint(group.GroupId)
+
+		// Create a new HTTP request with the encoded JSON as the request body
+		req, err := http.NewRequest(http.MethodPost, URL, bytes.NewBuffer(groupJSON))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// Create a response recorder to capture the response
+		recorder := httptest.NewRecorder()
+
+		// Serve the HTTP request using the handler
+		handler.ServeHTTP(recorder, req)
+
+		// Check the response status code
+		if recorder.Code != http.StatusMethodNotAllowed {
+			t.Errorf("Expected status code %d, but got %d", http.StatusMethodNotAllowed, recorder.Code)
+		}
+	}
+}
+
 func TestGroupByIdHandlerValidIdExpectPass_Delete(t *testing.T) {
 	for i := 0; i < 10; i++ {
 
@@ -94,6 +156,31 @@ func TestGroupByIdHandlerValidIdExpectPass_Delete(t *testing.T) {
 		// Check the response status code
 		if recorder.Code != http.StatusOK {
 			t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
+		}
+	}
+}
+
+func TestGroupByIdHandlerValidMethodExpectPass_Delete(t *testing.T) {
+	for i := 0; i < 10; i++ {
+
+		handler := NewGroupByIdHandler(R)
+
+		groupId := rand.Intn(101)
+		groupIdStr := strconv.Itoa(groupId)
+		URL := "/api/groups/" + groupIdStr
+
+		req, err := http.NewRequest(http.MethodPost, URL, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		recorder := httptest.NewRecorder()
+
+		handler.ServeHTTP(recorder, req)
+
+		// Check the response status code
+		if recorder.Code != http.StatusMethodNotAllowed {
+			t.Errorf("Expected status code %d, but got %d", http.StatusMethodNotAllowed, recorder.Code)
 		}
 	}
 }
