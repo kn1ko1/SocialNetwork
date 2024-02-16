@@ -7,7 +7,6 @@ import (
 	"socialnetwork/utils"
 )
 
-// Endpoint: /api/users
 // Allowed methods: GET, POST
 
 type UsersByPublicHandler struct {

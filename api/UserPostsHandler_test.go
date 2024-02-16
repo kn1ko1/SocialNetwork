@@ -23,7 +23,7 @@ func TestUserPostsHandlerExpectPass_Get(t *testing.T) {
 
 		URL := "/api/users/1"
 
-		// Create a new HTTP request with the encoded JSON as the request body
+		// Create a new HTTP request
 		req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(userJSON))
 		if err != nil {
 			t.Fatal(err)
@@ -39,7 +39,6 @@ func TestUserPostsHandlerExpectPass_Get(t *testing.T) {
 		if recorder.Code != http.StatusOK {
 			t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
 		}
-		// Add additional assertions as needed for your specific use case
 	}
 }
 
@@ -65,7 +64,7 @@ func TestUserPostsHandlerValdiUserExpectPass_Put(t *testing.T) {
 
 		URL := "/api/users/" + fmt.Sprint(user.UserId)
 
-		// Create a new HTTP request with the encoded JSON as the request body
+		// Create a new HTTP request
 		req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(userJSON))
 		if err != nil {
 			t.Fatal(err)
@@ -81,6 +80,5 @@ func TestUserPostsHandlerValdiUserExpectPass_Put(t *testing.T) {
 		if recorder.Code != http.StatusOK {
 			t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
 		}
-		// Add additional assertions as needed for your specific use case
 	}
 }
