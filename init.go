@@ -1,11 +1,9 @@
 package main
 
-import (
-	"socialnetwork/sqlite"
-)
+import "socialnetwork/utils"
 
 func init() {
 
-	sqlite.InitIdentityDatabase()
-	sqlite.InitBusinessDatabase()
+	utils.InitIdentityDatabase()
+	utils.InitBusinessDatabase()
 }
