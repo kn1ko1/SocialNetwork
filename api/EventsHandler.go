@@ -34,7 +34,7 @@ func (h *EventsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// 	return
 	// All unimplemented methods default to a "method not allowed" error
 	default:
-		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 }

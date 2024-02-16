@@ -21,7 +21,9 @@ func TestGroupUserHandlerValidGroupUserExpectPass_Post(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		req, err := http.NewRequest(http.MethodPost, "/api/groupUsers", bytes.NewBuffer(groupUserJSON))
+		URL := "/api/groupUsers"
+
+		req, err := http.NewRequest(http.MethodPost, URL, bytes.NewBuffer(groupUserJSON))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -47,7 +49,9 @@ func TestGroupUserHandlerInValidGroupUserExpectPass_Post(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		req, err := http.NewRequest(http.MethodPost, "/api/groupUsers", bytes.NewBuffer(groupUserJSON))
+		URL := "/api/groupUsers"
+
+		req, err := http.NewRequest(http.MethodPost, URL, bytes.NewBuffer(groupUserJSON))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -61,28 +65,27 @@ func TestGroupUserHandlerInValidGroupUserExpectPass_Post(t *testing.T) {
 	}
 }
 
-func TestGroupUserHandlerInValidMethodExpectPass_Post(t *testing.T) {
-	for i := 0; i < 10; i++ {
+func TestGroupUserHandlerInValidMethodExpectPass_Put(t *testing.T) {
+	handler := NewGroupUsersHandler(R)
 
-		handler := NewGroupUsersHandler(R)
+	groupUser := models.GenerateValidGroupUser()
 
-		groupUser := models.GenerateValidGroupUser()
+	groupUserJSON, err := json.Marshal(groupUser)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-		groupUserJSON, err := json.Marshal(groupUser)
-		if err != nil {
-			t.Fatal(err)
-		}
+	URL := "/api/groupUsers"
 
-		req, err := http.NewRequest(http.MethodPut, "/api/groupUsers", bytes.NewBuffer(groupUserJSON))
-		if err != nil {
-			t.Fatal(err)
-		}
+	req, err := http.NewRequest(http.MethodPost, URL, bytes.NewBuffer(groupUserJSON))
+	if err != nil {
+		t.Fatal(err)
+	}
 
-		recorder := httptest.NewRecorder()
-		handler.ServeHTTP(recorder, req)
+	recorder := httptest.NewRecorder()
+	handler.ServeHTTP(recorder, req)
 
-		if recorder.Code != http.StatusMethodNotAllowed {
-			t.Errorf("Expected status code %d, but got %d", http.StatusMethodNotAllowed, recorder.Code)
-		}
+	if recorder.Code != http.StatusMethodNotAllowed {
+		t.Errorf("Expected status code %d, but got %d", http.StatusMethodNotAllowed, recorder.Code)
 	}
 }

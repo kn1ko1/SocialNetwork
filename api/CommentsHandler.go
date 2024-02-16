@@ -34,7 +34,7 @@ func (h *CommentsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// 	h.get(w, r)
 	// 	return
 	default:
-		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 }

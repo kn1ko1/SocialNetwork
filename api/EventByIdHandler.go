@@ -33,7 +33,7 @@ func (h *EventByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.put(w, r)
 		return
 	default:
-		http.Error(w, "unauthorized", http.StatusMethodNotAllowed)
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 }

@@ -75,11 +75,10 @@ func TestCommentsHandlerInValidPostInvalidCommentExpectPass_Post(t *testing.T) {
 	}
 }
 
-func TestCommentsHandlerInValidPostInvalidMethodExpectPass_Post(t *testing.T) {
+func TestCommentsHandlerInValidPostInvalidMethodExpectPass_Put(t *testing.T) {
 	for i := 0; i < 10; i++ {
 
 		handler := NewCommentsHandler(R)
-
 		// Create a sample post to send in the request body
 		comment, _ := handler.Repo.CreateComment(*models.GenerateValidComment())
 
@@ -88,7 +87,7 @@ func TestCommentsHandlerInValidPostInvalidMethodExpectPass_Post(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		req, err := http.NewRequest(http.MethodGet, "/api/comments", bytes.NewBuffer(commentJSON))
+		req, err := http.NewRequest(http.MethodPut, "/api/comments", bytes.NewBuffer(commentJSON))
 		if err != nil {
 			t.Fatal(err)
 		}
