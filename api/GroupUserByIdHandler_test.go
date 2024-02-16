@@ -39,7 +39,7 @@ func TestNewGroupUserByIdHandlerValidIdExpectPass_Get(t *testing.T) {
 	}
 }
 
-func TestNewGroupUserByIdHandlerValidMethodExpectPass_Get(t *testing.T) {
+func TestNewGroupUserByIdHandlerInValidMethodExpectPass_Get(t *testing.T) {
 	for i := 0; i < 10; i++ {
 
 		handler := NewGroupUserByIdHandler(R)
@@ -103,7 +103,7 @@ func TestNewGroupUserByIdHandlerValidIdExpectPass_Delete(t *testing.T) {
 	}
 }
 
-func TestNewGroupUserByIdHandlerValidMethodExpectPass_Delete(t *testing.T) {
+func TestNewGroupUserByIdHandlerInValidMethodExpectPass_Delete(t *testing.T) {
 	for i := 0; i < 10; i++ {
 
 		handler := NewGroupUserByIdHandler(R)
