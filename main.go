@@ -73,6 +73,7 @@ func addApiHandlers(rt *router.Router) {
 	postsByGroupIdHandler := api.NewPostsByGroupIdHandler(r)
 	// notificationsHandler := api.NewNotificationsHandler(r)
 	// notificationByIdHandler := api.NewNotificationByIdHandler(r)
+	// notificationByUserIdHandler := api.NewNotificationByUserIdHandler()
 
 	// Auth Handlers
 	// rt.AddHandler(regexp.MustCompile(`^/auth/login$`), loginHandler)
