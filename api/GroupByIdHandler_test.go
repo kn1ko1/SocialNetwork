@@ -160,7 +160,7 @@ func TestGroupByIdHandlerValidIdExpectPass_Delete(t *testing.T) {
 	}
 }
 
-func TestGroupByIdHandlerValidMethodExpectPass_Delete(t *testing.T) {
+func TestGroupByIdHandlerInValidMethodExpectPass_Delete(t *testing.T) {
 	for i := 0; i < 10; i++ {
 
 		handler := NewGroupByIdHandler(R)
