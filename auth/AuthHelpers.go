@@ -12,19 +12,17 @@ const (
 	cookieName = "SessionID"
 )
 
-var cookieValue = GenerateNewUUID()
-
-var SessionExpiration = time.Now().Add(timeout)
-
-var sessionMap = map[string]*models.User{}
-
-var reflectedSessionMap = map[*models.User]string{}
+var (
+	cookieValue         = GenerateNewUUID()
+	SessionExpiration   = time.Now().Add(timeout)
+	sessionMap          map[string]*models.User
+	reflectedSessionMap map[*models.User]string
+)
 
 // generates a new UUID
 func GenerateNewUUID() string {
 	newUUID := uuid.New()
 	// Convert the UUID to a string for display
 	uuidString := newUUID.String()
-
 	return uuidString
 }
