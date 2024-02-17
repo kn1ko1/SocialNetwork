@@ -28,12 +28,15 @@ func (h *CommentByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
 	case http.MethodGet:
+		// Add auth - must be a comment on a post which user can see!
 		h.get(w, r)
 		return
 	case http.MethodDelete:
+		// Add auth - user must be creator
 		h.delete(w, r)
 		return
 	case http.MethodPut:
+		// Add auth - user must be creator
 		h.put(w, r)
 		return
 	default:
@@ -50,12 +53,12 @@ func (h *CommentByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "bad request", http.StatusBadRequest)
 		return
 	}
+
 	comment, err := h.Repo.GetCommentById(commentId)
 	if err != nil {
 		utils.HandleError("Failed to get comments in GetCommentByIdHandler. ", err)
 		http.Error(w, "failed to retrieve comment from db", http.StatusInternalServerError)
 		return
-
 	}
 
 	w.WriteHeader(http.StatusOK)
