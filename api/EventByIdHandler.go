@@ -25,12 +25,17 @@ func NewEventByIdHandler(r repo.IRepository) *EventByIdHandler {
 
 func (h *EventByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
-
 	case http.MethodGet:
+		// Add auth - must be a member of the event's group
 		h.get(w, r)
 		return
 	case http.MethodPut:
+		// Add auth - must be event creator
 		h.put(w, r)
+		return
+	case http.MethodDelete:
+		// Add auth must be event creator
+		h.delete(w, r)
 		return
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -48,7 +53,7 @@ func (h *EventByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	}
 	event, err := h.Repo.GetEventById(eventId)
 	if err != nil {
-		utils.HandleError("Failed to get posts in GetPostByIdHandler. ", err)
+		utils.HandleError("Failed to get event. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -61,7 +66,6 @@ func (h *EventByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *EventByIdHandler) put(w http.ResponseWriter, r *http.Request) {
-
 	var event models.Event
 	err := json.NewDecoder(r.Body).Decode(&event)
 	if err != nil {
@@ -70,14 +74,12 @@ func (h *EventByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("Updating event:", event.Title, event.Description)
-
 	// Validate the event
 	if validationErr := event.Validate(); validationErr != nil {
 		utils.HandleError("Validation failed:", validationErr)
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
-
 	// Create event in the repository
 	result, createErr := h.Repo.UpdateEvent(event)
 	if createErr != nil {
@@ -85,7 +87,6 @@ func (h *EventByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to update event", http.StatusInternalServerError)
 		return
 	}
-
 	// Encode and write the response
 	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
@@ -93,5 +94,22 @@ func (h *EventByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
+}
 
+func (h *EventByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
+	// auth stuff
+	fields := strings.Split(r.URL.Path, "/")
+	eventId, err := strconv.Atoi(fields[len(fields)-1])
+	if err != nil {
+		utils.HandleError("Problem with AtoI eventId. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	err = h.Repo.DeleteEventById(eventId)
+	if err != nil {
+		utils.HandleError("Failed to delete event. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
 }
