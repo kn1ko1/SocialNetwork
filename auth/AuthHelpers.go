@@ -15,8 +15,8 @@ const (
 var (
 	cookieValue         = GenerateNewUUID()
 	SessionExpiration   = time.Now().Add(timeout)
-	sessionMap          map[string]*models.User
-	reflectedSessionMap map[*models.User]string
+	sessionMap          = make(map[string]*models.User)
+	reflectedSessionMap = make(map[*models.User]string)
 )
 
 // generates a new UUID
