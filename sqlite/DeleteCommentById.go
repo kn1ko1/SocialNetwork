@@ -7,7 +7,7 @@ import (
 
 // deletes comments related to CommentId from the COMMENTS table
 func DeleteCommentById(db *sql.DB, commentId int) error {
-	query := `DELETE * FROM "COMMENTS" WHERE "CommentId" = (?)`
+	query := `DELETE FROM "COMMENTS" WHERE "CommentId" = (?)`
 	stmt, err := db.Prepare(query)
 	if err != nil {
 		utils.HandleError("Error preparing delete comment statement.", err)
