@@ -28,7 +28,7 @@ func (h *CommentByIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
 	case http.MethodGet:
-		// Add auth - must be a comment on a post which user can see!
+		// Add auth - must be creator
 		h.get(w, r)
 		return
 	case http.MethodDelete:
@@ -60,7 +60,9 @@ func (h *CommentByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "failed to retrieve comment from db", http.StatusInternalServerError)
 		return
 	}
-
+	// if comment.UserId != user.Id {
+	//		unauthorized error
+	//}
 	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(comment)
 	if err != nil {
@@ -126,17 +128,16 @@ func (h *CommentByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *CommentByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
-
 	fields := strings.Split(r.URL.Path, "/")
-	userId, userIdErr := strconv.Atoi(fields[len(fields)-1])
-	if userIdErr != nil {
-		utils.HandleError("Problem with AtoI userId. ", userIdErr)
+	commentId, commentIdErr := strconv.Atoi(fields[len(fields)-1])
+	if commentIdErr != nil {
+		utils.HandleError("Problem with AtoI commentId. ", commentIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	log.Println("Received delete request for userID:", userId)
+	log.Println("Received delete request for commentId:", commentId)
 
-	err := h.Repo.DeleteCommentById(userId)
+	err := h.Repo.DeleteCommentById(commentId)
 	if err != nil {
 		utils.HandleError("Failed to delete Comments. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
