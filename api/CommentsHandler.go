@@ -30,6 +30,9 @@ func (h *CommentsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		h.post(w, r)
 		return
+	case http.MethodGet:
+		h.get(w, r)
+		return
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -108,7 +111,6 @@ func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-/**
 func (h *CommentsHandler) get(w http.ResponseWriter, r *http.Request) {
 
 	allComments, err := h.Repo.GetAllComments()
@@ -126,4 +128,3 @@ func (h *CommentsHandler) get(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
-**/
