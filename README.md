@@ -2,6 +2,7 @@
 
 ## API Endpoints
 
+- /api/comments - POST (create a new comment)
 - /api/comments/{commentId} - GET (returns a single comment by Comment ID)
 
 - /api/events - POST (create a new event)
