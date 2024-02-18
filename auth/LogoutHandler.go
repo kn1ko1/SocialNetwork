@@ -19,7 +19,7 @@ func NewLogoutHandler(r repo.IRepository) *LoginHandler {
 func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
-	case http.MethodPost:
+	case http.MethodGet:
 		h.get(w, r)
 		return
 	// All unimplemented methods default to a "method not allowed" error
