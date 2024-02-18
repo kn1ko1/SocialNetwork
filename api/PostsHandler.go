@@ -8,6 +8,7 @@ import (
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
+	"time"
 )
 
 // Endpoint: /api/posts
@@ -30,24 +31,42 @@ func (h *PostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		h.post(w, r)
 		return
-		// case http.MethodGet:
-		// 	h.get(w, r)
-		// 	return
-		// default:
-		// 	http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		// 	return
+	case http.MethodGet:
+		h.get(w, r)
+		return
+	default:
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
 	}
 }
 
 func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
+	contentType := r.Header.Get("Content-Type")
 	var post models.Post
-	err := json.NewDecoder(r.Body).Decode(&post)
-	if err != nil {
-		utils.HandleError("Failed to decode request body:", err)
-		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
-		return
+	switch contentType {
+	case "application/json":
+		err := json.NewDecoder(r.Body).Decode(&post)
+		if err != nil {
+			utils.HandleError("Failed to decode request body:", err)
+			http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+			return
+		}
+	case "application/x-www-form-urlencoded":
+		err := r.ParseForm()
+		if err != nil {
+			utils.HandleError("Failed to parse form:", err)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+			return
+		}
+		ctime := time.Now().UTC().UnixMilli()
+		post.Body = r.PostFormValue("post-body")
+		post.CreatedAt = ctime
+		post.GroupId = 0
+		post.Privacy = r.PostFormValue("post-privacy")
+		// fmt.Println(post.Privacy)
+		post.UpdatedAt = ctime
+		post.UserId = 1
 	}
-	log.Println("Received post:", post.UserId, post.Body)
 
 	// Validate the post
 	if validationErr := post.Validate(); validationErr != nil {
@@ -55,7 +74,7 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
-
+	log.Println("Received post:", post.UserId, post.Body)
 	parseMultipartFormErr := r.ParseMultipartForm(10 << 20)
 	if parseMultipartFormErr != nil {
 		utils.HandleError("Unable to Parse Multipart Form.", parseMultipartFormErr)
@@ -88,7 +107,7 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 
 	// Encode and write the response
 	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode(result)
+	err := json.NewEncoder(w).Encode(result)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -96,19 +115,19 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// func (h *PostsHandler) get(w http.ResponseWriter, r *http.Request) {
+func (h *PostsHandler) get(w http.ResponseWriter, r *http.Request) {
 
-// 	allPosts, err := h.Repo.GetAllPosts()
-// 	if err != nil {
-// 		utils.HandleError("Failed to get posts in PostHandler. ", err)
-// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-// 		return
-// 	}
+	allPosts, err := h.Repo.GetAllPosts()
+	if err != nil {
+		utils.HandleError("Failed to get posts in PostHandler. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 
-// 	err = json.NewEncoder(w).Encode(allPosts)
-// 	if err != nil {
-// 		utils.HandleError("Failed to encode and write JSON response. ", err)
-// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-// 		return
-// 	}
-// }
+	err = json.NewEncoder(w).Encode(allPosts)
+	if err != nil {
+		utils.HandleError("Failed to encode and write JSON response. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+}
