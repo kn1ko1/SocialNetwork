@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"log"
 	"net/http"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
@@ -31,6 +32,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie(cookieName)
 	if err == nil {
+		log.Println("here")
 		_, exists := sessionMap[cookie.Value]
 		if exists {
 			utils.HandleError("Login failed - user already logged in:", err)
