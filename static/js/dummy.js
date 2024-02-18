@@ -13,9 +13,12 @@ window.addEventListener("load", () => {
     socket.onmessage = (e) => {
         console.log(e.data);
     }
+    const h1 = document.createElement("h1");
+    h1.innerText = "Send WebSocket Message";
+    main.appendChild(h1);
     const button = document.createElement("button");
     button.type = "button";
-    button.innerText = "Click";
+    button.innerText = "Send";
     button.addEventListener("click", () => {
         const msg = {
             code: 2,
