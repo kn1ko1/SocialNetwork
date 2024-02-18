@@ -4,6 +4,7 @@
 
 - /api/comments/{commentId} - GET (returns a single comment by Comment ID)
 
+- /api/events - POST (create a new event)
 - /api/events/{eventId} - GET (returns a single event by Event ID)
 
 - /api/groups - GET (returns a list of all groups)
