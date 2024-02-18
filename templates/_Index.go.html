@@ -14,6 +14,8 @@
                 By default, all all created with UserID '1'. The Comments have
                 PostID '1', the Events have GroupID '1' and the Posts have GroupID '0'.
             </h5>
+            {{template "SignupForm" .}}
+            {{template "LoginForm" .}}
             {{template "CreateGroupForm" .}}
             {{template "CreateEventForm" .}}
             {{template "CreatePostForm" .}}

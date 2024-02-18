@@ -1,9 +1,24 @@
 {{define "SignupForm"}}
 <div>
     <h1>Sign Up</h1>
-    <form>
+    <form method="post" action="/auth/registration">
+        <div>
+            <input type="text" name="first-name" placeholder="First Name" />
+        </div>
+        <div>
+            <input type="text" name="last-name" placeholder="Last Name" />
+        </div>
+        <div>
+            <input type="date" name="dob" />
+        </div>
         <div>
             <input type="text" name="username" placeholder="Username" />
+        </div>
+        <div>
+            <input type="text" name="email" placeholder="email@address.com" />
+        </div>
+        <div>
+            <input type="password" name="password" placeholder="Password" />
         </div>
         <div>
             <button type="submit">Sign Up</button>
