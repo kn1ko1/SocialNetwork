@@ -8,7 +8,7 @@
 - /api/events - POST (create a new event)
 - /api/events/{eventId} - GET (returns a single event by Event ID)
 
-- /api/groups - GET (returns a list of all groups)
+- /api/groups - GET (returns a list of all groups); POST (create a new group)
 - /api/groups/{groupId} - GET (returns a single group by Group ID)
 - /api/groups/{groupId}/events - GET (returns a list of events by Group ID)
 - /api/groups/{groupId}/posts - GET (returns a list of posts by Group ID)
