@@ -498,7 +498,7 @@ func (r *DummyRepository) GetAllGroups() ([]models.Group, error) {
 	}
 	return groups, nil
 }
-func (r *DummyRepository) GetGroup(groupId int) (models.Group, error) {
+func (r *DummyRepository) GetGroupById(groupId int) (models.Group, error) {
 	ctime := time.Now().UTC().UnixMilli()
 
 	var group models.Group
