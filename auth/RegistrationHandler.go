@@ -54,7 +54,7 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 		ctime := time.Now().UTC().UnixMilli()
 		user.Bio = r.PostFormValue("bio")
 		user.CreatedAt = ctime
-		t := fmt.Sprintf("%s%s", r.PostFormValue("dob"), "")
+		t := fmt.Sprintf("%s%s", r.PostFormValue("dob"), "T00:00:00Z")
 		dobtime, err := time.Parse(time.RFC3339, t)
 		if err != nil {
 			utils.HandleError("Failed to parse date-time data", err)
