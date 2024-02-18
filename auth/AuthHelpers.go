@@ -13,10 +13,11 @@ const (
 )
 
 var (
-	cookieValue         = GenerateNewUUID()
-	SessionExpiration   = time.Now().Add(timeout)
-	sessionMap          = make(map[string]*models.User)
-	reflectedSessionMap = make(map[*models.User]string)
+	cookieValue  = GenerateNewUUID()
+	sessionMap   = make(map[string]*models.User)
+	followersMap = make(map[int][]int)
+	followingMap = make(map[int][]int)
+	groupsMap    = make(map[int][]int)
 )
 
 // generates a new UUID
