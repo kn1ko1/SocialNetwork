@@ -73,7 +73,7 @@ func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Failed to parse date-time", http.StatusInternalServerError)
 			return
 		}
-		event.DateTime = dtime.UnixMilli()
+		event.DateTime = dtime.UTC().UnixMilli()
 	}
 	// Validate the event
 	if validationErr := event.Validate(); validationErr != nil {
