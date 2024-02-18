@@ -2,11 +2,13 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
+	"time"
 )
 
 // Endpoint: /api/events
@@ -40,21 +42,46 @@ func (h *EventsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
+	contentType := r.Header.Get("Content-Type")
 	var event models.Event
-	err := json.NewDecoder(r.Body).Decode(&event)
-	if err != nil {
-		utils.HandleError("Failed to decode request body:", err)
-		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
-		return
+	switch contentType {
+	case "application/json":
+		err := json.NewDecoder(r.Body).Decode(&event)
+		if err != nil {
+			utils.HandleError("Failed to decode request body:", err)
+			http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+			return
+		}
+	case "application/x-www-form-urlencoded":
+		err := r.ParseForm()
+		if err != nil {
+			utils.HandleError("Failed to parse form:", err)
+			http.Error(w, "Failed to parse form", http.StatusInternalServerError)
+			return
+		}
+		ctime := time.Now().UTC().UnixMilli()
+		event.CreatedAt = ctime
+		event.UpdatedAt = ctime
+		event.Description = r.PostFormValue("event-description")
+		event.Title = r.PostFormValue("event-title")
+		event.UserId = 1
+		event.GroupId = 1
+		t := fmt.Sprintf("%s%s", r.PostFormValue("event-date-time"), ":00Z")
+		dtime, err := time.Parse(time.RFC3339, t)
+		if err != nil {
+			utils.HandleError("Failed to parse date-time data", err)
+			http.Error(w, "Failed to parse date-time", http.StatusInternalServerError)
+			return
+		}
+		event.DateTime = dtime.UnixMilli()
 	}
-	log.Println("Received event:", event.Title, event.Description)
 	// Validate the event
 	if validationErr := event.Validate(); validationErr != nil {
 		utils.HandleError("Validation failed:", validationErr)
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
-
+	log.Println("Received event:", event.Title, event.Description)
 	// Create event in the repository
 	result, createErr := h.Repo.CreateEvent(event)
 	if createErr != nil {
@@ -64,7 +91,7 @@ func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode(result)
+	err := json.NewEncoder(w).Encode(result)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
