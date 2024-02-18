@@ -31,9 +31,9 @@ func (h *EventsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		h.post(w, r)
 		return
-	// case http.MethodGet:
-	// 	h.get(w, r)
-	// 	return
+	case http.MethodGet:
+		h.get(w, r)
+		return
 	// All unimplemented methods default to a "method not allowed" error
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -97,5 +97,19 @@ func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
+}
 
+func (h *EventsHandler) get(w http.ResponseWriter, r *http.Request) {
+	events, err := h.Repo.GetAllEvents()
+	if err != nil {
+		utils.HandleError("Failed to retrieve events from DB. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	err = json.NewEncoder(w).Encode(&events)
+	if err != nil {
+		utils.HandleError("Failed to encode and write JSON response. ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 }
