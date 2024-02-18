@@ -25,6 +25,7 @@ func GetAllEvents(database *sql.DB) ([]models.Event, error) {
 			&event.DateTime,
 			&event.Description,
 			&event.GroupId,
+			&event.Title,
 			&event.UpdatedAt,
 			&event.UserId,
 		)
