@@ -51,7 +51,7 @@ func (h *GroupByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	Group, err := h.Repo.GetGroup(groupId)
+	Group, err := h.Repo.GetGroupById(groupId)
 	if err != nil {
 		utils.HandleError("Failed to get Group in GetGroupByIdHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
