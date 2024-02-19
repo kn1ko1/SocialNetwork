@@ -27,7 +27,7 @@ func GetHomeDataForUser(database *sql.DB, userId int) (transport.HomeModel, erro
 	}
 
 	// GetPostsPrivate retrieves private posts for the given followerId
-	userHomeData.PrivatePosts, err = GetPostsPrivate(database, userId)
+	userHomeData.PrivatePosts, err = GetPostsPrivateWithComments(database, userId)
 	if err != nil {
 		utils.HandleError("Error in GetHomeDataForUser", err)
 		return userHomeData, err
@@ -35,7 +35,7 @@ func GetHomeDataForUser(database *sql.DB, userId int) (transport.HomeModel, erro
 
 	// GetPostsAlmostPrivate retrieves posts for the provided userId from the POST_USERS table
 
-	userHomeData.AlmostPrivatePosts, err = GetPostsAlmostPrivate(database, userId)
+	userHomeData.AlmostPrivatePosts, err = GetPostsAlmostPrivateWithComments(database, userId)
 	if err != nil {
 		utils.HandleError("Error in GetHomeDataForUser", err)
 		return userHomeData, err

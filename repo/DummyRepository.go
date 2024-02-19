@@ -72,18 +72,30 @@ func (r *DummyRepository) GetHomeDataForUser(userId int) (transport.HomeModel, e
 		homeModel.AllUsers[i] = u
 	}
 
-	homeModel.AlmostPrivatePosts = make([]models.Post, sutTableRuns)
+	homeModel.AlmostPrivatePosts = make([]transport.PostWithComments, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
 		ap := validPost
 		ap.PostId = i + 1
-		homeModel.AlmostPrivatePosts[i] = ap
+		homeModel.AlmostPrivatePosts[i].Post = ap
+		homeModel.AlmostPrivatePosts[i].Comments = make([]models.Comment, sutTableRuns)
+		for j := 0; j < sutTableRuns; j++ {
+			c := validComment
+			c.CommentId = j + 1
+			homeModel.AlmostPrivatePosts[i].Comments[j] = c
+		}
 	}
 
-	homeModel.PrivatePosts = make([]models.Post, sutTableRuns)
+	homeModel.PrivatePosts = make([]transport.PostWithComments, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
-		pp := validPost
-		pp.PostId = i + 1
-		homeModel.PrivatePosts[i] = pp
+		ap := validPost
+		ap.PostId = i + 1
+		homeModel.PrivatePosts[i].Post = ap
+		homeModel.PrivatePosts[i].Comments = make([]models.Comment, sutTableRuns)
+		for j := 0; j < sutTableRuns; j++ {
+			c := validComment
+			c.CommentId = j + 1
+			homeModel.PrivatePosts[i].Comments[j] = c
+		}
 	}
 
 	homeModel.PublicPostsWithComments = make([]transport.PostWithComments, sutTableRuns)
