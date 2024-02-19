@@ -6,7 +6,7 @@ import (
 	"socialnetwork/utils"
 )
 
-// GetPostsByUserId retrieves posts for the provided userId from the POST_USERS table
+// GetPostsAlmostPrivate retrieves posts for the provided userId from the POST_USERS table
 func GetPostsAlmostPrivate(database *sql.DB, userId int) ([]models.Post, error) {
 	var posts []models.Post
 

@@ -26,11 +26,14 @@ func GetHomeDataForUser(database *sql.DB, userId int) (transport.HomeModel, erro
 		return userHomeData, err
 	}
 
+	// GetPostsPrivate retrieves private posts for the given followerId
 	userHomeData.PrivatePosts, err = GetPostsPrivate(database, userId)
 	if err != nil {
 		utils.HandleError("Error in GetHomeDataForUser", err)
 		return userHomeData, err
 	}
+
+	// GetPostsAlmostPrivate retrieves posts for the provided userId from the POST_USERS table
 
 	userHomeData.AlmostPrivatePosts, err = GetPostsAlmostPrivate(database, userId)
 	if err != nil {
@@ -61,18 +64,3 @@ func GetHomeDataForUser(database *sql.DB, userId int) (transport.HomeModel, erro
 
 	return userHomeData, nil
 }
-
-// Retrieves data for the users homepage including posts and comments
-// func GetHomeDataForUser(database *sql.DB, userId int) ([]models.Post, []models.Comment, error) {
-// 	var PostsWithComments []PostWithComments
-// 	publicPosts, _ := GetPostsByGroupId(database, 0)
-// 	// publicPostsCommentsw := ... err
-// 	// postsByFollowing := ... err
-// 	// postsByFollowerByChosen := ... err
-
-// 	allUsers, _ := GetAllUsers(database)
-
-// 	userGroups, _ := GetGroupUsersByUserId(database, userId)
-// 	userEvents, _ := GetEventsByUserId(database, userId)
-// 	userNotifications, _ := GetNotificationsByUserId(database, userId)
-// }

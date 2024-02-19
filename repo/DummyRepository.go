@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/rand"
 	"socialnetwork/models"
+	"socialnetwork/transport"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -58,6 +59,41 @@ func NewDummyRepository() *DummyRepository {
 		log.Fatal(err)
 	}
 	return &DummyRepository{identityDb: identityDb, businessDb: businessDb}
+}
+
+// Home
+func (r *DummyRepository) GetHomeDataForUser(userId int) (transport.HomeModel, error) {
+	var homeModel transport.HomeModel
+
+	// allUsers := make([]models.User, sutTableRuns)
+	// for i := 0; i < sutTableRuns; i++ {
+	// 	u := validUser
+	// 	u.UserId = i + 1
+	// 	allUsers[i] = u
+	// }
+
+	// almostPrivatePosts := make([]models.Post, sutTableRuns)
+	// for i := 0; i < sutTableRuns; i++ {
+	// 	p := validPost
+	// 	p.PostId = i + 1
+	// 	almostPrivatePosts[i] = p
+	// }
+
+	// postsWithComments := make([]models.Post, sutTableRuns)
+	// for i := 0; i < sutTableRuns; i++ {
+	// 	p := validPost
+	// 	p.PostId = i + 1
+	// 	postsWithComments[i] = p
+	// }
+
+	// privatePosts := make([]models.Post, sutTableRuns)
+	// for i := 0; i < sutTableRuns; i++ {
+	// 	p := validPost
+	// 	p.PostId = i + 1
+	// 	privatePosts[i] = p
+	// }
+
+	return homeModel, errors.New("not implimented yet")
 }
 
 func (r *DummyRepository) CreateUser(user models.User) (models.User, error) {

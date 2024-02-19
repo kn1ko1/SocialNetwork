@@ -7,6 +7,7 @@ import (
 	"log"
 	"socialnetwork/models"
 	"socialnetwork/sqlite"
+	"socialnetwork/transport"
 
 	"database/sql"
 
@@ -31,6 +32,11 @@ func NewSQLiteRepository() *SQLiteRepository {
 	}
 	ret.businessDb = db
 	return ret
+}
+
+// Home
+func (r *SQLiteRepository) GetHomeDataForUser(userId int) (transport.HomeModel, error) {
+	return sqlite.GetHomeDataForUser(r.businessDb, userId)
 }
 
 // Users

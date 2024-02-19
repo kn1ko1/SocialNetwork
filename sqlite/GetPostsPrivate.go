@@ -6,7 +6,7 @@ import (
 	"socialnetwork/utils"
 )
 
-// GetPrivatePostsForFollower retrieves private posts for the given followerId
+// GetPostsPrivate retrieves private posts for the given followerId
 func GetPostsPrivate(database *sql.DB, userId int) ([]models.Post, error) {
 	var posts []models.Post
 
