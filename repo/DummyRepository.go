@@ -65,35 +65,62 @@ func NewDummyRepository() *DummyRepository {
 func (r *DummyRepository) GetHomeDataForUser(userId int) (transport.HomeModel, error) {
 	var homeModel transport.HomeModel
 
-	// allUsers := make([]models.User, sutTableRuns)
-	// for i := 0; i < sutTableRuns; i++ {
-	// 	u := validUser
-	// 	u.UserId = i + 1
-	// 	allUsers[i] = u
-	// }
+	homeModel.AllUsers = make([]models.User, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		u := validUser
+		u.UserId = i + 1
+		homeModel.AllUsers[i] = u
+	}
 
-	// almostPrivatePosts := make([]models.Post, sutTableRuns)
-	// for i := 0; i < sutTableRuns; i++ {
-	// 	p := validPost
-	// 	p.PostId = i + 1
-	// 	almostPrivatePosts[i] = p
-	// }
+	homeModel.AlmostPrivatePosts = make([]models.Post, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		ap := validPost
+		ap.PostId = i + 1
+		homeModel.AlmostPrivatePosts[i] = ap
+	}
 
-	// postsWithComments := make([]models.Post, sutTableRuns)
-	// for i := 0; i < sutTableRuns; i++ {
-	// 	p := validPost
-	// 	p.PostId = i + 1
-	// 	postsWithComments[i] = p
-	// }
+	homeModel.PrivatePosts = make([]models.Post, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		pp := validPost
+		pp.PostId = i + 1
+		homeModel.PrivatePosts[i] = pp
+	}
 
-	// privatePosts := make([]models.Post, sutTableRuns)
-	// for i := 0; i < sutTableRuns; i++ {
-	// 	p := validPost
-	// 	p.PostId = i + 1
-	// 	privatePosts[i] = p
-	// }
+	homeModel.PublicPostsWithComments = make([]transport.PostWithComments, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		p := validPost
+		p.PostId = i + 1
+		homeModel.PublicPostsWithComments[i].Post = p
+		homeModel.PublicPostsWithComments[i].Comments = make([]models.Comment, sutTableRuns)
+		for j := 0; j < sutTableRuns; j++ {
+			c := validComment
+			c.CommentId = j + 1
+			homeModel.PublicPostsWithComments[i].Comments[j] = c
+		}
+	}
 
-	return homeModel, errors.New("not implimented yet")
+	homeModel.UserEvents = make([]models.Event, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		e := validEvent
+		e.EventId = i + 1
+		homeModel.UserEvents[i] = e
+	}
+
+	homeModel.UserGroups = make([]models.Group, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		g := validGroup
+		g.GroupId = i + 1
+		homeModel.UserGroups[i] = g
+	}
+
+	homeModel.UserNotifications = make([]models.Notification, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		n := validNotification
+		n.NotificationId = i + 1
+		homeModel.UserNotifications[i] = n
+	}
+
+	return homeModel, nil
 }
 
 func (r *DummyRepository) CreateUser(user models.User) (models.User, error) {
