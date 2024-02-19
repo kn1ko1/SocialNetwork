@@ -1,10 +1,14 @@
 package ws
 
 var (
-	manager *GroupManager
+	groupManager *GroupManager
+	eventManager *EventManager
 )
 
 func init() {
-	manager = NewGroupManager()
-	manager.Start()
+	groupManager = NewGroupManager()
+	groupManager.Start()
+
+	eventManager = NewEventManager()
+	eventManager.Start()
 }

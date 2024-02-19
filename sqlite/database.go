@@ -7,10 +7,35 @@ import (
 	"os"
 	"socialnetwork/utils"
 
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func InitIdentityDatabase() {
+
+	dirPath := "./sqlite/migrations/identity"
+
+	// Open the directory
+	dir, direrr := os.Open(dirPath)
+	if direrr != nil {
+		fmt.Println("Error opening directory:", direrr)
+		return
+	}
+	defer dir.Close()
+
+	// Read the files in the directory
+	fileInfos, fileInfoserr := dir.Readdir(-1)
+	if fileInfoserr != nil {
+		fmt.Println("Error reading directory:", fileInfoserr)
+		return
+	}
+
+	// Print the names of the files
+	fmt.Println("Files in", dirPath+":")
+	for _, fileInfo := range fileInfos {
+		fmt.Println(fileInfo.Name())
+	}
 	// Initialization for identity.db
 	var err error
 
@@ -22,12 +47,9 @@ func InitIdentityDatabase() {
 	log.Println("Connected to Identity SQLite database")
 
 	// Apply "up" migrations from SQL files for identity.db
-	RunMigrations(identityDB, "./sqlite/migrations/identity", "up")
-	if err != nil {
+	if err := runMigrations(identityDB, dirPath, "up"); err != nil {
 		utils.HandleError("Error applying 'up' migrations for identity.db: ", err)
 	}
-
-	WipeDatabaseOnCommandNew(identityDB, "sqlite/migrations/identity")
 
 	defer identityDB.Close()
 }
@@ -44,74 +66,47 @@ func InitBusinessDatabase() {
 	log.Println("Connected to Business SQLite database")
 
 	// Apply "up" migrations from SQL files for business.db
-	RunMigrations(businessDB, "./sqlite/migrations/business", "up")
-	if err != nil {
+	if err := runMigrations(businessDB, "./sqlite/migrations/business", "up"); err != nil {
 		utils.HandleError("Error applying 'up' migrations for business.db: ", err)
 	}
-
-	WipeDatabaseOnCommandNew(businessDB, "sqlite/migrations/business")
 
 	defer businessDB.Close()
 }
 
-func RunMigrations(Database *sql.DB, migrationDir, direction string) {
-	// Read files in the migration directory
-	files, err := os.ReadDir(migrationDir)
+func runMigrations(database *sql.DB, migrationDir, direction string) error {
+	// Create SQLite driver instance
+	// driver, err := sqlite.WithInstance(database, &sqlite.Config{})
+	// if err != nil {
+	// 	return err
+	// }
+
+	// Create migrate instance
+	m, err := migrate.New(
+		migrationDir,
+		"sqlite/data/Identity.db",
+	)
 	if err != nil {
-		utils.HandleError("Error reading migration directory", err)
-		return
+		log.Println("here")
+		return err
+	}
+	log.Println("fsdf")
+	// Perform migration based on direction
+	var migrationErr error
+	if direction == "up" {
+		migrationErr = m.Up()
+	} else if direction == "down" {
+		migrationErr = m.Steps(-1)
+	} else {
+		return fmt.Errorf("invalid migration direction: %s", direction)
 	}
 
-	// Iterate through migration files
-	for _, file := range files {
-		if file.IsDir() {
-			continue
-		}
-
-		fileName := file.Name()
-		// Check if it's an "up" migration file
-		if direction == "up" && !isUpMigration(fileName) {
-			continue
-		}
-		// Check if it's a "down" migration file
-		if direction == "down" && !isDownMigration(fileName) {
-			continue
-		}
-
-		// Build the full path to the migration file
-		migrationPath := migrationDir + "/" + fileName
-
-		// Read SQL content from the migration file
-		sqlBytes, err := os.ReadFile(migrationPath)
-		if err != nil {
-			message := fmt.Sprintf("error reading migration file %s", migrationPath)
-			utils.HandleError(message, err)
-		}
-
-		// Execute the SQL content on the database
-		_, err = Database.Exec(string(sqlBytes))
-		if err != nil {
-			message := fmt.Sprintf("error executing migration %s:", migrationPath)
-			utils.HandleError(message, err)
-		}
+	// Handle migration error
+	if migrationErr != nil && migrationErr != migrate.ErrNoChange {
+		return migrationErr
 	}
-}
 
-func isUpMigration(fileName string) bool {
-	return len(fileName) > 3 && fileName[len(fileName)-7:] == "_up.sql"
-}
+	// Log completion
+	log.Print("Migrations completed successfully")
 
-func isDownMigration(fileName string) bool {
-	return len(fileName) > 5 && fileName[len(fileName)-9:] == "_down.sql"
-}
-
-// This function will delete the database if "go run . new" is typed in command line.
-func WipeDatabaseOnCommandNew(database *sql.DB, path string) {
-	if len(os.Args) > 1 {
-		if os.Args[1] == "new" {
-			// Rollback the last migration (uncomment if needed)
-			RunMigrations(database, path, "down")
-			fmt.Println("Dropped all tables")
-		}
-	}
+	return nil
 }

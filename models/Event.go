@@ -6,14 +6,14 @@ import (
 )
 
 type Event struct {
-	EventId     int
-	CreatedAt   int64
-	DateTime    int64
-	Description string
-	GroupId     int
-	Title       string
-	UpdatedAt   int64
-	UserId      int
+	EventId     int    `json:"eventId"`
+	CreatedAt   int64  `json:"createdAt"`
+	DateTime    int64  `json:"dateTime"`
+	Description string `json:"description"`
+	GroupId     int    `json:"groupId"`
+	Title       string `json:"title"`
+	UpdatedAt   int64  `json:"updatedAt"`
+	UserId      int    `json:"userId"`
 }
 
 func (e *Event) Validate() error {
