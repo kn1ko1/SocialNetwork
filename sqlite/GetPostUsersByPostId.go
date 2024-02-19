@@ -26,6 +26,7 @@ func GetPostUsersByPostId(database *sql.DB, postId int) ([]models.PostUser, erro
 			&postUser.UpdatedAt,
 			&postUser.UserId,
 		)
+
 		if err != nil {
 			utils.HandleError("Error scanning row in GetPostUsersByPostId.", err)
 			return nil, err

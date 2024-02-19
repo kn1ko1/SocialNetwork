@@ -278,7 +278,7 @@ func (r *SQLiteRepository) GetAllGroups() ([]models.Group, error) {
 	return sqlite.GetAllGroups(r.businessDb)
 }
 func (r *SQLiteRepository) GetGroupById(groupId int) (models.Group, error) {
-	return sqlite.GetGroup(r.businessDb, groupId)
+	return sqlite.GetGroupById(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) UpdateGroup(group models.Group) (models.Group, error) {
 	return sqlite.UpdateGroup(r.businessDb, group)

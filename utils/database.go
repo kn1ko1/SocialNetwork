@@ -36,7 +36,6 @@ func InitBusinessDatabase() {
 	log.Println("Connected to Business SQLite database")
 
 	runMigrations(businessDB, "sqlite:///Users/Martin/Desktop/SocialNetwork/sqlite/data/Business.db", "file:///Users/Martin/Desktop/SocialNetwork/sqlite/migrations/business")
-
 }
 
 func runMigrations(db *sql.DB, databaseURL, migrationsDir string) {

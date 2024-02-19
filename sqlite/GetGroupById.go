@@ -8,7 +8,7 @@ import (
 )
 
 // Retrieves group with the relevant groupId from the GROUPS table
-func GetGroup(database *sql.DB, groupId int) (models.Group, error) {
+func GetGroupById(database *sql.DB, groupId int) (models.Group, error) {
 	var group models.Group
 	err := database.QueryRow("SELECT * FROM GROUPS WHERE GroupId = ?", groupId).
 		Scan(
