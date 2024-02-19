@@ -2,52 +2,64 @@ package sqlite
 
 import (
 	"database/sql"
-	"socialnetwork/models"
 	"socialnetwork/transport"
+	"socialnetwork/utils"
 )
 
 // Retrieves data for the user's homepage including posts and comments
-func GetHomeDataForUser(database *sql.DB, userId int) ([]models.User, []transport.PostWithComments, []models.Group, []models.Event, []models.Notification, error) {
-	var (
-		allUsers                []models.User
-		publicPostsWithComments []transport.PostWithComments
-		userGroups              []models.Group
-		userEvents              []models.Event
-		userNotifications       []models.Notification
-		err                     error
-	)
+func GetHomeDataForUser(database *sql.DB, userId int) (transport.HomeModel, error) {
+
+	var userHomeData transport.HomeModel
+	var err error
 
 	// Get all users
-	allUsers, err = GetAllUsers(database)
+	userHomeData.AllUsers, err = GetAllUsers(database)
 	if err != nil {
-		return nil, nil, nil, nil, nil, err
+		utils.HandleError("Error in GetHomeDataForUser", err)
+		return userHomeData, err
 	}
 
 	// Get public posts with comments
-	publicPostsWithComments, err = GetPublicPostsWithComments(database)
+	userHomeData.PublicPostsWithComments, err = GetPublicPostsWithComments(database)
 	if err != nil {
-		return nil, nil, nil, nil, nil, err
+		utils.HandleError("Error in GetHomeDataForUser", err)
+		return userHomeData, err
+	}
+
+	userHomeData.PrivatePosts, err = GetPostsPrivate(database, userId)
+	if err != nil {
+		utils.HandleError("Error in GetHomeDataForUser", err)
+		return userHomeData, err
+	}
+
+	userHomeData.AlmostPrivatePosts, err = GetPostsAlmostPrivate(database, userId)
+	if err != nil {
+		utils.HandleError("Error in GetHomeDataForUser", err)
+		return userHomeData, err
 	}
 
 	// Get groups that the user is a member of
-	userGroups, err = GetGroupsByUserId(database, userId)
+	userHomeData.UserGroups, err = GetGroupsByUserId(database, userId)
 	if err != nil {
-		return nil, nil, nil, nil, nil, err
+		utils.HandleError("Error in GetHomeDataForUser", err)
+		return userHomeData, err
 	}
 
 	// Get events associated with the user
-	userEvents, err = GetEventsByUserId(database, userId)
+	userHomeData.UserEvents, err = GetEventsByUserId(database, userId)
 	if err != nil {
-		return nil, nil, nil, nil, nil, err
+		utils.HandleError("Error in GetHomeDataForUser", err)
+		return userHomeData, err
 	}
 
 	// Get notifications for the user
-	userNotifications, err = GetNotificationsByUserId(database, userId)
+	userHomeData.UserNotifications, err = GetNotificationsByUserId(database, userId)
 	if err != nil {
-		return nil, nil, nil, nil, nil, err
+		utils.HandleError("Error in GetHomeDataForUser", err)
+		return userHomeData, err
 	}
 
-	return allUsers, publicPostsWithComments, userGroups, userEvents, userNotifications, nil
+	return userHomeData, nil
 }
 
 // Retrieves data for the users homepage including posts and comments

@@ -6,8 +6,6 @@ import (
 	"socialnetwork/utils"
 )
 
-// Retrieves group with the relevant groupId from the GROUPS table
-
 // GetGroupsByUserId retrieves groups associated with a given user ID using foreign keys
 func GetGroupsByUserId(database *sql.DB, userId int) ([]models.Group, error) {
 	var groups []models.Group
