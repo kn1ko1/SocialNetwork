@@ -16,7 +16,7 @@ func UpdateUser(database *sql.DB, user models.User) (models.User, error) {
 			Email = ?,
 			EncryptedPassword = ?,
 			FirstName = ?,
-			ImageUrl = ?,
+			ImageURL = ?,
 			IsPublic = ?,
 			LastName = ?,
 			UpdatedAt = ?,
