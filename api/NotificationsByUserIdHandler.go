@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-// Allowed methods: GET, PUT, DELETE
+// Allowed methods: GET
 
 type NotificationByUserIdHandler struct {
 	Repo repo.IRepository

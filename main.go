@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"regexp"
 	"socialnetwork/api"
+	"socialnetwork/auth"
 	"socialnetwork/repo"
 	"socialnetwork/router"
 	"socialnetwork/ui"
@@ -41,10 +42,10 @@ func setupRouter(mux *http.ServeMux) {
 }
 
 func addApiHandlers(rt *router.Router) {
-	r := repo.NewDummyRepository()
-	// loginHandler := auth.NewLoginHandler(r)
+	r := repo.NewSQLiteRepository()
+	loginHandler := auth.NewLoginHandler(r)
 	// logoutHandler := auth.NewLogoutHandler(r)
-	// registrationHandler := auth.NewRegistrationHandler(r)
+	registrationHandler := auth.NewRegistrationHandler(r)
 	usersHandler := api.NewUsersHandler(r)
 	userByIdHandler := api.NewUserByIdHandler(r)
 	// usersByPublicHandler := api.NewUsersByPublicHandler(r)
@@ -73,11 +74,12 @@ func addApiHandlers(rt *router.Router) {
 	postsByGroupIdHandler := api.NewPostsByGroupIdHandler(r)
 	// notificationsHandler := api.NewNotificationsHandler(r)
 	// notificationByIdHandler := api.NewNotificationByIdHandler(r)
+	// notificationByUserIdHandler := api.NewNotificationByUserIdHandler()
 
 	// Auth Handlers
-	// rt.AddHandler(regexp.MustCompile(`^/auth/login$`), loginHandler)
+	rt.AddHandler(regexp.MustCompile(`^/auth/login$`), loginHandler)
 	// rt.AddHandler(regexp.MustCompile(`^/auth/logoutn$`), logoutHandler)
-	// rt.AddHandler(regexp.MustCompile(`^/auth/registration$`), registrationHandler)
+	rt.AddHandler(regexp.MustCompile(`^/auth/registration$`), registrationHandler)
 
 	// // User Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/users$`), usersHandler)

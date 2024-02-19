@@ -7,6 +7,7 @@ import (
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
+	"time"
 )
 
 // Endpoint: /api/groups
@@ -23,7 +24,6 @@ func NewGroupsHandler(r repo.IRepository) *GroupsHandler {
 
 // Supported Methods: GET, POST
 func (h *GroupsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
 	case http.MethodPost:
@@ -40,20 +40,37 @@ func (h *GroupsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *GroupsHandler) post(w http.ResponseWriter, r *http.Request) {
+	contentType := r.Header.Get("Content-Type")
 	var group models.Group
-	err := json.NewDecoder(r.Body).Decode(&group)
-	if err != nil {
-		utils.HandleError("Failed to decode request body:", err)
-		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
-		return
+	switch contentType {
+	case "application/json":
+		err := json.NewDecoder(r.Body).Decode(&group)
+		if err != nil {
+			utils.HandleError("Failed to decode request body:", err)
+			http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+			return
+		}
+	case "application/x-www-form-urlencoded":
+		err := r.ParseForm()
+		if err != nil {
+			utils.HandleError("Failed to parse form:", err)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+			return
+		}
+		ctime := time.Now().UTC().UnixMilli()
+		group.CreatedAt = ctime
+		group.CreatorId = 1
+		group.Description = r.PostFormValue("group-description")
+		group.Title = r.PostFormValue("group-title")
+		group.UpdatedAt = ctime
 	}
-	log.Println("Received group:", group.Title, group.Description)
 	// Validate the group
 	if validationErr := group.Validate(); validationErr != nil {
 		utils.HandleError("Validation failed:", validationErr)
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
+	log.Println("Received group:", group.Title, group.Description)
 	// Create group in the repository
 	result, createErr := h.Repo.CreateGroup(group)
 	if createErr != nil {
@@ -63,7 +80,7 @@ func (h *GroupsHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusCreated)
 	// Encode and write the response
-	err = json.NewEncoder(w).Encode(result)
+	err := json.NewEncoder(w).Encode(result)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -79,7 +96,7 @@ func (h *GroupsHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(w).Encode(allGroups)
+	err = json.NewEncoder(w).Encode(&allGroups)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

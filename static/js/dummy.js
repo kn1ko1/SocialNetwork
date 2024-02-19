@@ -13,24 +13,12 @@ window.addEventListener("load", () => {
     socket.onmessage = (e) => {
         console.log(e.data);
     }
-
-
-    const loginButton = document.getElementById("loginSubmit");
-    loginButton.addEventListener("click", () => {
-        const msg = {
-            code: 2,
-            body: JSON.stringify({
-                name: "Rupert",
-                age: 36
-            })
-        }
-        socket.send(JSON.stringify(msg))
-    })
-
-
+    const h1 = document.createElement("h1");
+    h1.innerText = "Send WebSocket Message";
+    main.appendChild(h1);
     const button = document.createElement("button");
     button.type = "button";
-    button.innerText = "Click";
+    button.innerText = "Send";
     button.addEventListener("click", () => {
         const msg = {
             code: 2,

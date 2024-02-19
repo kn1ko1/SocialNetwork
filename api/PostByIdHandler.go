@@ -128,17 +128,18 @@ func (h *PostByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 func (h *PostByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
 	// figure out userID
-	queryParams := r.URL.Query()
-	userIDString := queryParams.Get("userID")
-	userID, userIDErr := strconv.Atoi(userIDString)
-	if userIDErr != nil {
-		utils.HandleError("Problem with AtoI userID. ", userIDErr)
+	fields := strings.Split(r.URL.Path, "/")
+	postIdStr := fields[len(fields)-1]
+
+	postId, postIdErr := strconv.Atoi(postIdStr)
+	if postIdErr != nil {
+		utils.HandleError("Problem with AtoI userID. ", postIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	log.Println("Received delete request for userID:", userID)
+	log.Println("Received delete request for userID:", postId)
 
-	err := h.Repo.DeletePostById(userID)
+	err := h.Repo.DeletePostById(postId)
 	if err != nil {
 		utils.HandleError("Failed to delete Posts. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

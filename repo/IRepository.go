@@ -97,7 +97,7 @@ type IRepository interface {
 
 	//Group
 	CreateGroup(group models.Group) (models.Group, error)
-	GetGroup(groupId int) (models.Group, error)
+	GetGroupById(groupId int) (models.Group, error)
 	GetAllGroups() ([]models.Group, error)
 	UpdateGroup(group models.Group) (models.Group, error)
 	DeleteGroup(groupId int) error

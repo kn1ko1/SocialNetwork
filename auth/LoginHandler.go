@@ -1,10 +1,13 @@
 package auth
 
 import (
-	"encoding/json"
+	"log"
 	"net/http"
-	"socialnetwork/models"
 	"socialnetwork/repo"
+	"socialnetwork/utils"
+	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type LoginHandler struct {
@@ -20,7 +23,6 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		h.post(w, r)
 		return
-	// All unimplemented methods default to a "method not allowed" error
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -28,42 +30,88 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
-
-	var user *models.User
-	err := json.NewDecoder(r.Body).Decode(&user)
-
+	cookie, err := r.Cookie(cookieName)
+	if err == nil {
+		log.Println("here")
+		_, exists := sessionMap[cookie.Value]
+		if exists {
+			utils.HandleError("Login failed - user already logged in:", err)
+			http.Error(w, "user already logged in", http.StatusBadRequest)
+			return
+		}
+	}
+	contentType := r.Header.Get("Content-Type")
+	var usernameOrEmail string
+	var password string
+	switch contentType {
+	case "application/x-www-form-urlencoded":
+		err := r.ParseForm()
+		if err != nil {
+			utils.HandleError("Failed to parse form:", err)
+			http.Error(w, "Failed to parse form", http.StatusInternalServerError)
+			return
+		}
+		usernameOrEmail = r.PostFormValue("username")
+		password = r.PostFormValue("password")
+	}
+	user, err := h.Repo.GetUserByUsername(usernameOrEmail)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		user, err = h.Repo.GetUserByEmail(usernameOrEmail)
+	}
+	if err != nil {
+		utils.HandleError("Failed to retrieve user", err)
+		http.Error(w, "user with specified username or email does not exist", http.StatusUnauthorized)
 		return
 	}
-
-	// usr, err := sqlite.GetUserById(db, user.UserId)
-
+	err = bcrypt.CompareHashAndPassword([]byte(user.EncryptedPassword), []byte(password))
 	if err != nil {
-		http.Error(w, "Unable to get UserId", http.StatusBadRequest)
+		utils.HandleError("Failed to retrieve user", err)
+		http.Error(w, "invalid username or password", http.StatusUnauthorized)
 		return
 	}
-
-	// Set the session ID as a cookie
-	sessionCookie := http.Cookie{
+	cookieValue = GenerateNewUUID()
+	sessionMap[cookieValue] = &user
+	followers, err := h.Repo.GetUserUsersBySubjectId(user.UserId)
+	if err != nil {
+		utils.HandleError("Failed to retrieve followers", err)
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+	var followerIds []int
+	for _, f := range followers {
+		followerIds = append(followerIds, f.FollowerId)
+	}
+	followersMap[user.UserId] = followerIds
+	following, err := h.Repo.GetUserUsersByFollowerId(user.UserId)
+	if err != nil {
+		utils.HandleError("Failed to retrieve following", err)
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+	var followingIds []int
+	for _, f := range following {
+		followingIds = append(followingIds, f.SubjectId)
+	}
+	followingMap[user.UserId] = followingIds
+	groups, err := h.Repo.GetGroupUsersByUserId(user.UserId)
+	if err != nil {
+		utils.HandleError("Failed to retrieve groups", err)
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+	var groupIds []int
+	for _, g := range groups {
+		groupIds = append(groupIds, g.GroupId)
+	}
+	groupsMap[user.UserId] = groupIds
+	cookie = &http.Cookie{
 		Name:     cookieName,
 		Value:    cookieValue,
-		Expires:  SessionExpiration,
-		HttpOnly: true,
-		Secure:   true,
 		Path:     "/",
-		Domain:   "localhost",
-		MaxAge:   int(timeout.Seconds()),
-		SameSite: http.SameSiteNoneMode,
+		Expires:  time.Now().Add(timeout),
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
 	}
-
-	sessionMap[sessionCookie.Value] = user
-	reflectedSessionMap[user] = sessionCookie.Value
-
-	http.SetCookie(w, &sessionCookie)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-
-	// json.NewEncoder(w).Encode(usr)
+	http.SetCookie(w, cookie)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

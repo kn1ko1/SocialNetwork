@@ -12,12 +12,12 @@ func GetGroup(database *sql.DB, groupId int) (models.Group, error) {
 	var group models.Group
 	err := database.QueryRow("SELECT * FROM GROUPS WHERE GroupId = ?", groupId).
 		Scan(
+			&group.GroupId,
 			&group.CreatedAt,
 			&group.CreatorId,
 			&group.Description,
 			&group.Title,
 			&group.UpdatedAt,
-			&group.GroupId,
 		)
 
 	switch {
