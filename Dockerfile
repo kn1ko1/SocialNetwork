@@ -8,6 +8,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 # Copy the local code to the container
 COPY . .
+# TO-DO - Mount SQLite DBs as volumes
 # Build the Go application
 RUN go build -o social-network .
 # Expose the port the app runs on
