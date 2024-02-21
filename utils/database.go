@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 
+	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/sqlite"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 
@@ -21,7 +22,7 @@ func InitIdentityDatabase() {
 
 	log.Println("Connected to Identity SQLite database")
 
-	// runMigrations(identityDB, "sqlite:///./sqlite/data/Identity.db", "./sqlite/migrations/identity")
+	runMigrations(identityDB, "sqlite://./sqlite/data/Identity.db", "file://./sqlite/migrations/identity")
 
 }
 
@@ -34,19 +35,20 @@ func InitBusinessDatabase() {
 
 	log.Println("Connected to Business SQLite database")
 
-	// runMigrations(businessDB, "sqlite:///./sqlite/data/Business.db", "./sqlite/migrations/business")
+	runMigrations(businessDB, "sqlite://./sqlite/data/Business.db", "file://./sqlite/migrations/business")
+
 }
 
-// func runMigrations(db *sql.DB, databaseURL, migrationsDir string) {
+func runMigrations(db *sql.DB, databaseURL, migrationsDir string) {
 
-// 	m, err := migrate.New(migrationsDir, databaseURL)
+	m, err := migrate.New(migrationsDir, databaseURL)
 
-// 	if err != nil {
-// 		log.Fatal("Error creating migrations instance:", err)
-// 	}
-// 	defer m.Close()
+	if err != nil {
+		log.Fatal("Error creating migrations instance:", err)
+	}
+	defer m.Close()
 
-// 	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-// 		log.Fatal("Error applying migrations:", err)
-// 	}
-// }
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		log.Fatal("Error applying migrations:", err)
+	}
+}
