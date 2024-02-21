@@ -5,17 +5,17 @@ import (
 	"log"
 )
 
-type Group struct {
-	GroupID   int
-	Clients   map[int]*Client
-	Enter     chan *Client
-	Exit      chan *Client
-	Broadcast chan WebSocketMessage
+type SocketGroup struct {
+	SocketGroupID int
+	Clients       map[int]*Client
+	Enter         chan *Client
+	Exit          chan *Client
+	Broadcast     chan WebSocketMessage
 }
 
-func NewGroup(id int) *Group {
-	ret := new(Group)
-	ret.GroupID = id
+func NewSocketGroup(id int) *SocketGroup {
+	ret := new(SocketGroup)
+	ret.SocketGroupID = id
 	ret.Clients = make(map[int]*Client)
 	ret.Enter = make(chan *Client)
 	ret.Exit = make(chan *Client)
@@ -23,7 +23,7 @@ func NewGroup(id int) *Group {
 	return ret
 }
 
-func (g *Group) Run() {
+func (g *SocketGroup) Run() {
 	for {
 		select {
 		case c := <-g.Enter:
@@ -37,7 +37,7 @@ func (g *Group) Run() {
 		case msg := <-g.Broadcast:
 			for _, c := range g.Clients {
 				c.Send(msg)
-				log.Println("I'm in run in ws/Group.go")
+				log.Println("I'm in run in ws/SocketGroup.go")
 			}
 		}
 	}
