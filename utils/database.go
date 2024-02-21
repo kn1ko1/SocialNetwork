@@ -22,7 +22,7 @@ func InitIdentityDatabase() {
 
 	log.Println("Connected to Identity SQLite database")
 
-	runMigrations(identityDB, "sqlite:///Users/Martin/Desktop/SocialNetwork/sqlite/data/Identity.db", "file:///Users/Martin/Desktop/SocialNetwork/sqlite/migrations/identity")
+	runMigrations(identityDB, "sqlite://./sqlite/data/Identity.db", "file://./sqlite/migrations/identity")
 
 }
 
@@ -35,7 +35,7 @@ func InitBusinessDatabase() {
 
 	log.Println("Connected to Business SQLite database")
 
-	runMigrations(businessDB, "sqlite:///Users/Martin/Desktop/SocialNetwork/sqlite/data/Business.db", "file:///Users/Martin/Desktop/SocialNetwork/sqlite/migrations/business")
+	runMigrations(businessDB, "sqlite://./sqlite/data/Business.db", "file://./sqlite/migrations/business")
 
 }
 
