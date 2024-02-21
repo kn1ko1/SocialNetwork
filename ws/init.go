@@ -1,14 +1,10 @@
 package ws
 
 var (
-	groupManager *GroupManager
-	eventManager *EventManager
+	socketGroupManager *SocketGroupManager
 )
 
 func init() {
-	groupManager = NewGroupManager()
-	groupManager.Start()
-
-	eventManager = NewEventManager()
-	eventManager.Start()
+	socketGroupManager = NewSocketGroupManager()
+	socketGroupManager.Start()
 }
