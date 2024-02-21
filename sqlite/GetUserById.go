@@ -12,6 +12,7 @@ func GetUserById(database *sql.DB, userId int) (models.User, error) {
 	var user models.User
 	err := database.QueryRow("SELECT * FROM USERS WHERE UserId = ?", userId).
 		Scan(
+			&user.UserId,
 			&user.Bio,
 			&user.CreatedAt,
 			&user.DOB,

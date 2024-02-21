@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"regexp"
 	"socialnetwork/api"
+	"socialnetwork/auth"
 	"socialnetwork/repo"
 	"socialnetwork/router"
 	"socialnetwork/ui"
@@ -23,7 +24,6 @@ func main() {
 	serveStaticFiles(mux)
 	// Add handlers to router
 	setupRouter(mux)
-
 	// Listen and serve
 	fmt.Printf("server listening at address %s...\n", addr)
 	err := http.ListenAndServe(addr, mux)
@@ -42,9 +42,10 @@ func setupRouter(mux *http.ServeMux) {
 
 func addApiHandlers(rt *router.Router) {
 	r := repo.NewDummyRepository()
-	// loginHandler := auth.NewLoginHandler(r)
+	// r := repo.NewSQLiteRepository()
+	loginHandler := auth.NewLoginHandler(r)
 	// logoutHandler := auth.NewLogoutHandler(r)
-	// registrationHandler := auth.NewRegistrationHandler(r)
+	registrationHandler := auth.NewRegistrationHandler(r)
 	usersHandler := api.NewUsersHandler(r)
 	userByIdHandler := api.NewUserByIdHandler(r)
 	// usersByPublicHandler := api.NewUsersByPublicHandler(r)
@@ -75,10 +76,12 @@ func addApiHandlers(rt *router.Router) {
 	// notificationByIdHandler := api.NewNotificationByIdHandler(r)
 	// notificationByUserIdHandler := api.NewNotificationByUserIdHandler()
 
+	homeHandler := api.NewHomeHandler(r)
+
 	// Auth Handlers
-	// rt.AddHandler(regexp.MustCompile(`^/auth/login$`), loginHandler)
+	rt.AddHandler(regexp.MustCompile(`^/auth/login$`), loginHandler)
 	// rt.AddHandler(regexp.MustCompile(`^/auth/logoutn$`), logoutHandler)
-	// rt.AddHandler(regexp.MustCompile(`^/auth/registration$`), registrationHandler)
+	rt.AddHandler(regexp.MustCompile(`^/auth/registration$`), registrationHandler)
 
 	// // User Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/users$`), usersHandler)
@@ -120,6 +123,8 @@ func addApiHandlers(rt *router.Router) {
 	// // Notification Handlers
 	// rt.AddHandler(regexp.MustCompile(`^/api/notifications$`), notificationsHandler)
 	// rt.AddHandler(regexp.MustCompile(`^/api/notifications/{notificationId}$`), notificationByIdHandler)
+
+	rt.AddHandler(regexp.MustCompile(`^/api/home$`), homeHandler)
 }
 
 func addWSHandler(rt *router.Router) {

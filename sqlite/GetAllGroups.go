@@ -22,6 +22,7 @@ func GetAllGroups(database *sql.DB) ([]models.Group, error) {
 		err := rows.Scan(
 			&group.GroupId,
 			&group.CreatedAt,
+			&group.CreatorId,
 			&group.Description,
 			&group.Title,
 			&group.UpdatedAt,

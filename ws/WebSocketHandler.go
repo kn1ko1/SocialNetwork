@@ -40,7 +40,7 @@ func (h *WebSocketHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	client := NewClient(conn)
-	client.Groups[0] = manager.Groups[0]
+	client.SocketGroups[0] = socketGroupManager.SocketGroups[0]
+	socketGroupManager.SocketGroups[0].Enter <- client
 	go client.Receive()
-	manager.Groups[0].Enter <- client
 }

@@ -7,6 +7,7 @@ import (
 	"log"
 	"socialnetwork/models"
 	"socialnetwork/sqlite"
+	"socialnetwork/transport"
 
 	"database/sql"
 
@@ -31,6 +32,11 @@ func NewSQLiteRepository() *SQLiteRepository {
 	}
 	ret.businessDb = db
 	return ret
+}
+
+// Home
+func (r *SQLiteRepository) GetHomeDataForUser(userId int) (transport.HomeModel, error) {
+	return sqlite.GetHomeDataForUser(r.businessDb, userId)
 }
 
 // Users
@@ -277,8 +283,8 @@ func (r *SQLiteRepository) CreateGroup(group models.Group) (models.Group, error)
 func (r *SQLiteRepository) GetAllGroups() ([]models.Group, error) {
 	return sqlite.GetAllGroups(r.businessDb)
 }
-func (r *SQLiteRepository) GetGroup(groupId int) (models.Group, error) {
-	return sqlite.GetGroup(r.businessDb, groupId)
+func (r *SQLiteRepository) GetGroupById(groupId int) (models.Group, error) {
+	return sqlite.GetGroupById(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) UpdateGroup(group models.Group) (models.Group, error) {
 	return sqlite.UpdateGroup(r.businessDb, group)

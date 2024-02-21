@@ -3,9 +3,15 @@
 
 package repo
 
-import "socialnetwork/models"
+import (
+	"socialnetwork/models"
+	"socialnetwork/transport"
+)
 
 type IRepository interface {
+	// Home (name tbc)
+	GetHomeDataForUser(userId int) (transport.HomeModel, error)
+
 	// User
 	CreateUser(user models.User) (models.User, error)
 	GetAllUsers() ([]models.User, error)
@@ -97,7 +103,7 @@ type IRepository interface {
 
 	//Group
 	CreateGroup(group models.Group) (models.Group, error)
-	GetGroup(groupId int) (models.Group, error)
+	GetGroupById(groupId int) (models.Group, error)
 	GetAllGroups() ([]models.Group, error)
 	UpdateGroup(group models.Group) (models.Group, error)
 	DeleteGroup(groupId int) error

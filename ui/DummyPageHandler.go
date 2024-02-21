@@ -1,6 +1,8 @@
 package ui
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -14,6 +16,12 @@ func NewDummyPageHandler() *DummyPageHandler {
 func (h *DummyPageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
+		cookie, err := r.Cookie("SessionID")
+		if err != nil {
+			log.Println(err.Error())
+		} else {
+			fmt.Println(cookie.Value)
+		}
 		h.get(w, r)
 		return
 	default:

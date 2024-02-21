@@ -38,7 +38,7 @@ func TestGroupByIdHandlerValidIdExpectPass_Put(t *testing.T) {
 	for i := 0; i < 10; i++ {
 
 		handler := NewGroupByIdHandler(R)
-		group, _ := handler.Repo.GetGroup(RandomNumberInt)
+		group, _ := handler.Repo.GetGroupById(RandomNumberInt)
 
 		groupJSON, err := json.Marshal(group)
 		if err != nil {
@@ -115,7 +115,7 @@ func TestGroupByIdHandlerInValidMethodExpectPass_Post1(t *testing.T) {
 
 func TestGroupByIdHandlerInValidMethodExpectPass_Post2(t *testing.T) {
 	handler := NewGroupByIdHandler(R)
-	group, _ := handler.Repo.GetGroup(RandomNumberInt)
+	group, _ := handler.Repo.GetGroupById(RandomNumberInt)
 
 	groupJSON, err := json.Marshal(group)
 	if err != nil {
