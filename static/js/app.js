@@ -4,6 +4,7 @@ window.addEventListener("load", () => {
 
 function renderHomePage() {
     const main = document.getElementById("main");
+    main.innerHTML = "";
     const h1 = document.createElement("h1");
     h1.innerText = "Home";
     main.appendChild(h1);
@@ -13,10 +14,12 @@ function renderHomePage() {
     button.addEventListener("click", () => {
         renderOtherPage();
     })
+    main.appendChild(button);
 }
 
 function renderOtherPage() {
     const main = document.getElementById("main");
+    main.innerHTML = "";
     const h1 = document.createElement("h1");
     h1.innerText = "Other";
     main.appendChild(h1);
@@ -26,4 +29,5 @@ function renderOtherPage() {
     button.addEventListener("click", () => {
         renderHomePage();
     })
+    main.appendChild(button);
 }
