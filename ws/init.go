@@ -1,10 +1,10 @@
 package ws
 
 var (
-	manager *GroupManager
+	socketGroupManager *SocketGroupManager
 )
 
 func init() {
-	manager = NewGroupManager()
-	manager.Start()
+	socketGroupManager = NewSocketGroupManager()
+	socketGroupManager.Start()
 }

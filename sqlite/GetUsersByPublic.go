@@ -33,7 +33,7 @@ func GetUsersByPublic(database *sql.DB) ([]models.User, error) {
 			&user.Username,
 		)
 		if err != nil {
-			utils.HandleError("Error scanning row in GetPublicUsers", err)
+			utils.HandleError("Error scanning row in GetUsersByPublic", err)
 			return users, err
 		}
 
@@ -41,7 +41,7 @@ func GetUsersByPublic(database *sql.DB) ([]models.User, error) {
 	}
 
 	if err := rows.Err(); err != nil {
-		utils.HandleError("Error iterating over rows in GetPublicUsers", err)
+		utils.HandleError("Error iterating over rows in GetUsersByPublic", err)
 		return users, err
 	}
 

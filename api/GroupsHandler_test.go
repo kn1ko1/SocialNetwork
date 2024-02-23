@@ -9,8 +9,7 @@ import (
 	"testing"
 )
 
-func TestGroupsHandler_Post(t *testing.T) {
-
+func TestGroupsHandlerValidGroupExpectedPass_Post(t *testing.T) {
 	handler := NewGroupsHandler(R)
 	group := models.GenerateValidGroup()
 
@@ -35,25 +34,48 @@ func TestGroupsHandler_Post(t *testing.T) {
 
 	// Check the response status code
 	if recorder.Code != http.StatusCreated {
-		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
+		t.Errorf("Expected status code %d, but got %d", http.StatusCreated, recorder.Code)
 	}
 }
 
-func TestGroupsHandlerExpectPass_Get(t *testing.T) {
+func TestGroupsHandlerInValidGroupExpectedPass_Post(t *testing.T) {
+	handler := NewGroupsHandler(R)
+	group := models.GenerateInvalidGroup()
+
+	groupJSON, err := json.Marshal(group)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	URL := "/api/groups"
+
+	// Create a new HTTP request with the encoded JSON as the request body
+	req, err := http.NewRequest(http.MethodPost, URL, bytes.NewBuffer(groupJSON))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Create a response recorder to capture the response
+	recorder := httptest.NewRecorder()
+
+	// Serve the HTTP request using the handler
+	handler.ServeHTTP(recorder, req)
+
+	// Check the response status code
+	if recorder.Code != http.StatusBadRequest {
+		t.Errorf("Expected status code %d, but got %d", http.StatusBadRequest, recorder.Code)
+	}
+}
+
+func TestGroupsHandlerValidExpectPass_Get(t *testing.T) {
 	for i := 0; i < 10; i++ {
 
 		handler := NewGroupsHandler(R)
-		group, _ := handler.Repo.GetAllGroups()
-
-		groupJSON, err := json.Marshal(group)
-		if err != nil {
-			t.Fatal(err)
-		}
 
 		URL := "/api/groups"
 
-		// Create a new HTTP request with the encoded JSON as the request body
-		req, err := http.NewRequest(http.MethodGet, URL, bytes.NewBuffer(groupJSON))
+		// Create a new HTTP request
+		req, err := http.NewRequest(http.MethodGet, URL, nil)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -71,65 +93,54 @@ func TestGroupsHandlerExpectPass_Get(t *testing.T) {
 	}
 }
 
-// func TestGroupsHandlerExpectPass_Put(t *testing.T) {
-// for i := 0; i < 10; i++ {
+func TestGroupsHandlerInvalidMethodExpectPass_Put1(t *testing.T) {
+	handler := NewGroupsHandler(R)
 
-// 	handler := NewGroupsHandler(R)
-// 	group, _ := handler.Repo.UpdateGroup(*GroupExample)
+	URL := "/api/groups"
 
-// 	groupJSON, err := json.Marshal(group)
-// 	if err != nil {
-// 		t.Fatal(err)
-// 	}
+	// Create a new HTTP request
+	req, err := http.NewRequest(http.MethodPut, URL, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-// 	URL := "/api/groups"
+	// Create a response recorder to capture the response
+	recorder := httptest.NewRecorder()
 
-// 	// Create a new HTTP request with the encoded JSON as the request body
-// 	req, err := http.NewRequest(http.MethodPut, URL, bytes.NewBuffer(groupJSON))
-// 	if err != nil {
-// 		t.Fatal(err)
-// 	}
+	// Serve the HTTP request using the handler
+	handler.ServeHTTP(recorder, req)
 
-// 	// Create a response recorder to capture the response
-// 	recorder := httptest.NewRecorder()
+	// Check the response status code
+	if recorder.Code != http.StatusMethodNotAllowed {
+		t.Errorf("Expected status code %d, but got %d", http.StatusMethodNotAllowed, recorder.Code)
+	}
+}
 
-// 	// Serve the HTTP request using the handler
-// 	handler.ServeHTTP(recorder, req)
+func TestGroupsHandlerInValidGroupExpectedPass_Put2(t *testing.T) {
+	handler := NewGroupsHandler(R)
+	group := models.GenerateInvalidGroup()
 
-// 	// Check the response status code
-// 	if recorder.Code != http.StatusOK {
-// 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
-// 	}
-// }
-// }
+	groupJSON, err := json.Marshal(group)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-// func TestGroupsHandlerExpectPass_Delete(t *testing.T) {
-// for i := 0; i < 10; i++ {
+	URL := "/api/groups"
 
-// 	handler := NewGroupsHandler(R)
-// 	err := handler.Repo.DeleteAllGroups()
+	// Create a new HTTP request with the encoded JSON as the request body
+	req, err := http.NewRequest(http.MethodPut, URL, bytes.NewBuffer(groupJSON))
+	if err != nil {
+		t.Fatal(err)
+	}
 
-// 	if err != nil {
-// 		t.Fatal(err)
-// 	}
+	// Create a response recorder to capture the response
+	recorder := httptest.NewRecorder()
 
-// 	URL := "/api/groups"
+	// Serve the HTTP request using the handler
+	handler.ServeHTTP(recorder, req)
 
-// 	// Create a new HTTP request with the encoded JSON as the request body
-// 	req, err := http.NewRequest(http.MethodDelete, URL, nil)
-// 	if err != nil {
-// 		t.Fatal(err)
-// 	}
-
-// 	// Create a response recorder to capture the response
-// 	recorder := httptest.NewRecorder()
-
-// 	// Serve the HTTP request using the handler
-// 	handler.ServeHTTP(recorder, req)
-
-// 	// Check the response status code
-// 	if recorder.Code != http.StatusOK {
-// 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, recorder.Code)
-// 	}
-// }
-// }
+	// Check the response status code
+	if recorder.Code != http.StatusMethodNotAllowed {
+		t.Errorf("Expected status code %d, but got %d", http.StatusMethodNotAllowed, recorder.Code)
+	}
+}

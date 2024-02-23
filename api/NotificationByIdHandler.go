@@ -81,11 +81,11 @@ func (h *NotificationByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	log.Println("received Notification to update:", Notification.NotificationType)
 
 	// // Validate the Notification
-	// if validationErr := Notification.Validate(); validationErr != nil {
-	// 	utils.HandleError("Validation failed:", validationErr)
-	// 	http.Error(w, "Validation failed", http.StatusBadRequest)
-	// 	return
-	// }
+	if validationErr := Notification.Validate(); validationErr != nil {
+		utils.HandleError("Validation failed:", validationErr)
+		http.Error(w, "Validation failed", http.StatusBadRequest)
+		return
+	}
 
 	// Update post in the repository
 	result, createErr := h.Repo.UpdateNotification(Notification)
@@ -106,9 +106,10 @@ func (h *NotificationByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 
 func (h *NotificationByIdHandler) delete(w http.ResponseWriter, r *http.Request) {
 
-	queryParams := r.URL.Query()
-	notificationIdString := queryParams.Get("notificationId")
-	notificationId, notificationIdErr := strconv.Atoi(notificationIdString)
+	fields := strings.Split(r.URL.Path, "/")
+	notificationStr := fields[len(fields)-1]
+
+	notificationId, notificationIdErr := strconv.Atoi(notificationStr)
 	if notificationIdErr != nil {
 		utils.HandleError("Problem with AtoI notificationId. ", notificationIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

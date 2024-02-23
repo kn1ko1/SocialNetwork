@@ -2,7 +2,6 @@ package sqlite
 
 import (
 	"database/sql"
-	"errors"
 	"socialnetwork/models"
 	"socialnetwork/utils"
 )
@@ -27,8 +26,8 @@ func GetUserByUsername(database *sql.DB, username string) (models.User, error) {
 
 	switch {
 	case err == sql.ErrNoRows:
-		utils.HandleError("user not found.", err)
-		return user, errors.New("user not found")
+		utils.HandleError("user not found.", sql.ErrNoRows)
+		return user, sql.ErrNoRows
 	case err != nil:
 		utils.HandleError("Error retrieving user by username.", err)
 		return user, err

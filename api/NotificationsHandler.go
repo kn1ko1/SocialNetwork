@@ -47,11 +47,11 @@ func (h *NotificationsHandler) post(w http.ResponseWriter, r *http.Request) {
 	log.Println("Received notification:", notification.NotificationType)
 
 	// // Validate the event
-	// if validationErr := notification.Validate(); validationErr != nil {
-	// 	utils.HandleError("Validation failed:", validationErr)
-	// 	http.Error(w, "Validation failed", http.StatusBadRequest)
-	// 	return
-	// }
+	if validationErr := notification.Validate(); validationErr != nil {
+		utils.HandleError("Validation failed:", validationErr)
+		http.Error(w, "Validation failed", http.StatusBadRequest)
+		return
+	}
 
 	// Create event in the repository
 	result, createErr := h.Repo.CreateNotification(notification)
