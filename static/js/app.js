@@ -17,7 +17,8 @@ function renderHomePage() {
     main.appendChild(button);
 }
 
-function renderOtherPage() {
+// Some react function
+function renderOtherPage(props) {
     const main = document.getElementById("main");
     main.innerHTML = "";
     const h1 = document.createElement("h1");
