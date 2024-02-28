@@ -40,15 +40,14 @@ func serveReactApp(mux *http.ServeMux) {
 	// Create a file server to serve the React app's 'build' directory
 	fs := http.FileServer(http.Dir("./my-react-app/build"))
 
-	// 	rt := router.NewRouter()
-	// 	addApiHandlers(rt)
-	// 	addWSHandler(rt)
-	// 	addUIHandlers(rt)
+	rt := router.NewRouter()
+	addApiHandlers(rt)
+	addWSHandler(rt)
+	addUIHandlers(rt)
 
 	// Handle requests by serving static files
 	mux.Handle("/", fs)
 
-	// Additional routes can be added here if needed
 }
 
 // func setupRouter(mux *http.ServeMux) {
