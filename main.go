@@ -27,7 +27,7 @@ func main() {
 	serveReactApp(mux)
 
 	// Add handlers to router
-	//setupRouter(mux)
+	setupRouter(mux)
 	// Listen and serve
 	fmt.Printf("server listening at address %s...\n", addr)
 	err := http.ListenAndServe(addr, mux)
@@ -40,10 +40,10 @@ func serveReactApp(mux *http.ServeMux) {
 	// Create a file server to serve the React app's 'build' directory
 	fs := http.FileServer(http.Dir("./my-react-app/build"))
 
-	// 	rt := router.NewRouter()
-	// 	addApiHandlers(rt)
-	// 	addWSHandler(rt)
-	// 	addUIHandlers(rt)
+	// rt := router.NewRouter()
+	// addApiHandlers(rt)
+	// addWSHandler(rt)
+	// addUIHandlers(rt)
 
 	// Handle requests by serving static files
 	mux.Handle("/", fs)
@@ -51,13 +51,13 @@ func serveReactApp(mux *http.ServeMux) {
 	// Additional routes can be added here if needed
 }
 
-// func setupRouter(mux *http.ServeMux) {
-// 	rt := router.NewRouter()
-// 	addApiHandlers(rt)
-// 	addWSHandler(rt)
-// 	addUIHandlers(rt)
-// 	mux.Handle("/", rt)
-// }
+func setupRouter(mux *http.ServeMux) {
+	rt := router.NewRouter()
+	addApiHandlers(rt)
+	addWSHandler(rt)
+	addUIHandlers(rt)
+	mux.Handle("/", rt)
+}
 
 func addApiHandlers(rt *router.Router) {
 	r := repo.NewDummyRepository()
