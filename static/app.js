@@ -45,7 +45,7 @@ const App = () => {
 	)
 }
 
-const Login = (props) => {
+function Login(props) {
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [redirectVar, setRedirectVar] = useState(false)
