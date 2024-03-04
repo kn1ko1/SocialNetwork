@@ -24,10 +24,10 @@ func main() {
 	//serveStaticFiles(mux)
 
 	// Serve React app
-	serveReactApp(mux)
+	// serveReactApp(mux)
 
 	// Add handlers to router
-	//setupRouter(mux)
+	setupRouter(mux)
 	// Listen and serve
 	fmt.Printf("server listening at address %s...\n", addr)
 	err := http.ListenAndServe(addr, mux)
@@ -36,31 +36,31 @@ func main() {
 	}
 }
 
-func serveReactApp(mux *http.ServeMux) {
-	// Create a file server to serve the React app's 'build' directory
-	fs := http.FileServer(http.Dir("./my-react-app/build"))
+// func serveReactApp(mux *http.ServeMux) {
+// 	// Create a file server to serve the React app's 'build' directory
+// 	fs := http.FileServer(http.Dir("./my-react-app/build"))
 
-	rt := router.NewRouter()
-	addApiHandlers(rt)
-	addWSHandler(rt)
-	addUIHandlers(rt)
-
-	// Handle requests by serving static files
-	mux.Handle("/", fs)
-
-}
-
-// func setupRouter(mux *http.ServeMux) {
 // 	rt := router.NewRouter()
 // 	addApiHandlers(rt)
 // 	addWSHandler(rt)
 // 	addUIHandlers(rt)
-// 	mux.Handle("/", rt)
+
+// 	// Handle requests by serving static files
+// 	mux.Handle("/", fs)
+
 // }
 
+func setupRouter(mux *http.ServeMux) {
+	rt := router.NewRouter()
+	addApiHandlers(rt)
+	addWSHandler(rt)
+	addUIHandlers(rt)
+	mux.Handle("/", rt)
+}
+
 func addApiHandlers(rt *router.Router) {
-	r := repo.NewDummyRepository()
-	// r := repo.NewSQLiteRepository()
+	// r := repo.NewDummyRepository()
+	r := repo.NewSQLiteRepository()
 	loginHandler := auth.NewLoginHandler(r)
 	// logoutHandler := auth.NewLogoutHandler(r)
 	registrationHandler := auth.NewRegistrationHandler(r)

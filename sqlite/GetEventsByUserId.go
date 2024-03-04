@@ -8,14 +8,13 @@ import (
 
 // Retrieves event with the relevant userId from the EVENTS table
 func GetEventsByUserId(database *sql.DB, userId int) ([]models.Event, error) {
+	var events []models.Event
 	rows, err := database.Query("SELECT * FROM EVENTS WHERE UserId = ?", userId)
 	if err != nil {
-		utils.HandleError("Error executing SELECT * FROM EVENTS WHERE UserId = ? statement.", err)
-		return nil, err
+		// no results in DB
+		return events, nil
 	}
 	defer rows.Close()
-
-	var events []models.Event
 
 	for rows.Next() {
 		var event models.Event

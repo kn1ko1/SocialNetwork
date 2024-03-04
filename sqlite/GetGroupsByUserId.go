@@ -21,8 +21,8 @@ func GetGroupsByUserId(database *sql.DB, userId int) ([]models.Group, error) {
 	// Execute the query
 	rows, err := database.Query(query, userId)
 	if err != nil {
-		utils.HandleError("Error querying groups by UserId.", err)
-		return nil, err
+		// no results in DB
+		return groups, nil
 	}
 	defer rows.Close()
 

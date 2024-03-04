@@ -84,13 +84,8 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "validation failed for user registration", http.StatusBadRequest)
 		return
 	}
-	log.Println("Received user:", user)
-	// _, err = sqlite.CreateUser(db, user)
-	if err != nil {
-		utils.HandleError("Unable to register a new user in AddUserHandler", err)
-		http.Error(w, "Unable to register a new user", http.StatusBadRequest)
-		return
-	}
+	log.Println("Received user in RegistrationHandler:", user)
+
 	user, err = h.Repo.CreateUser(user)
 	if err != nil {
 		utils.HandleError("Unable to register a new user in AddUserHandler", err)

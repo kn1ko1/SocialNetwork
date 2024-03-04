@@ -54,10 +54,8 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 		usernameOrEmail = r.PostFormValue("username")
 		password = r.PostFormValue("password")
 	}
-	user, err := h.Repo.GetUserByUsername(usernameOrEmail)
-	if err != nil {
-		user, err = h.Repo.GetUserByEmail(usernameOrEmail)
-	}
+
+	user, err := h.Repo.GetUserByUsernameOrEmail(usernameOrEmail)
 	if err != nil {
 		utils.HandleError("Failed to retrieve user", err)
 		http.Error(w, "user with specified username or email does not exist", http.StatusUnauthorized)
@@ -69,8 +67,10 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "invalid username or password", http.StatusUnauthorized)
 		return
 	}
+
 	cookieValue = GenerateNewUUID()
 	sessionMap[cookieValue] = &user
+
 	followers, err := h.Repo.GetUserUsersBySubjectId(user.UserId)
 	if err != nil {
 		utils.HandleError("Failed to retrieve followers", err)
