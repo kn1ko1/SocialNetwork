@@ -46,7 +46,7 @@ const App = () => {
 }
 
 function Login(props) {
-	const [email, setEmail] = useState("")
+	const [usernameOrEmail, setUsernameOrEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [redirectVar, setRedirectVar] = useState(false)
 
@@ -58,12 +58,13 @@ function Login(props) {
 
 		// Create new user as JS object.
 		const userToLogin = {
-			email,
+			usernameOrEmail,
 			password,
 		}
+		console.log(userToLogin)
 
 		// Send user data to golang register function.
-		const response = await fetch("http://localhost:8080/login", {
+		const response = await fetch("http://localhost:8080/auth/login", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			credentials: "include",
@@ -90,7 +91,7 @@ function Login(props) {
 							className="form-control"
 							id="floatingInput"
 							placeholder="name@example.com"
-							onChange={(e) => setEmail(e.target.value)}
+							onChange={(e) => setUsernameOrEmail(e.target.value)}
 						/>
 						<label htmlFor="floatingInput">Email address</label>
 					</div>

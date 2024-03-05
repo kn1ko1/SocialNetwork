@@ -1,9 +1,11 @@
 package auth
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"socialnetwork/repo"
+	"socialnetwork/transport"
 	"socialnetwork/utils"
 	"time"
 
@@ -19,6 +21,7 @@ func NewLoginHandler(r repo.IRepository) *LoginHandler {
 }
 
 func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
 	switch r.Method {
 	case http.MethodPost:
 		h.post(w, r)
@@ -30,6 +33,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
+	var loginInfo transport.LoginInfo
 	cookie, err := r.Cookie(cookieName)
 	if err == nil {
 		log.Println("here")
@@ -41,27 +45,21 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	contentType := r.Header.Get("Content-Type")
-	var usernameOrEmail string
-	var password string
-	switch contentType {
-	case "application/x-www-form-urlencoded":
-		err := r.ParseForm()
-		if err != nil {
-			utils.HandleError("Failed to parse form:", err)
-			http.Error(w, "Failed to parse form", http.StatusInternalServerError)
-			return
-		}
-		usernameOrEmail = r.PostFormValue("username")
-		password = r.PostFormValue("password")
-	}
 
-	user, err := h.Repo.GetUserByUsernameOrEmail(usernameOrEmail)
+	log.Println("[auth/LoginHandler] contentType ", contentType)
+	json.NewDecoder(r.Body).Decode(&loginInfo)
+
+	user, err := h.Repo.GetUserByUsernameOrEmail(loginInfo.UsernameOrEmail)
 	if err != nil {
 		utils.HandleError("Failed to retrieve user", err)
 		http.Error(w, "user with specified username or email does not exist", http.StatusUnauthorized)
 		return
 	}
-	err = bcrypt.CompareHashAndPassword([]byte(user.EncryptedPassword), []byte(password))
+
+	log.Println("[auth/LoginHandler] User: ", user)
+	log.Println("[auth/LoginHandler] Email: ", loginInfo.UsernameOrEmail)
+	log.Println("[auth/LoginHandler] EncryptedPassword: ", user.EncryptedPassword, ". password: ", loginInfo.Password)
+	err = bcrypt.CompareHashAndPassword([]byte(user.EncryptedPassword), []byte(loginInfo.Password))
 	if err != nil {
 		utils.HandleError("Failed to retrieve user", err)
 		http.Error(w, "invalid username or password", http.StatusUnauthorized)

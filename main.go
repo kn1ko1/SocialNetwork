@@ -21,11 +21,7 @@ func main() {
 	// Setup serve mux
 	mux := http.NewServeMux()
 	// Host static files
-	//serveStaticFiles(mux)
-
-	// Serve React app
-	// serveReactApp(mux)
-
+	serveStaticFiles(mux)
 	// Add handlers to router
 	setupRouter(mux)
 	// Listen and serve
@@ -36,20 +32,6 @@ func main() {
 	}
 }
 
-// func serveReactApp(mux *http.ServeMux) {
-// 	// Create a file server to serve the React app's 'build' directory
-// 	fs := http.FileServer(http.Dir("./my-react-app/build"))
-
-// 	rt := router.NewRouter()
-// 	addApiHandlers(rt)
-// 	addWSHandler(rt)
-// 	addUIHandlers(rt)
-
-// 	// Handle requests by serving static files
-// 	mux.Handle("/", fs)
-
-// }
-
 func setupRouter(mux *http.ServeMux) {
 	rt := router.NewRouter()
 	addApiHandlers(rt)
@@ -59,8 +41,8 @@ func setupRouter(mux *http.ServeMux) {
 }
 
 func addApiHandlers(rt *router.Router) {
-	// r := repo.NewDummyRepository()
-	r := repo.NewSQLiteRepository()
+	r := repo.NewDummyRepository()
+	// r := repo.NewSQLiteRepository()
 	loginHandler := auth.NewLoginHandler(r)
 	// logoutHandler := auth.NewLogoutHandler(r)
 	registrationHandler := auth.NewRegistrationHandler(r)
@@ -153,8 +135,8 @@ func addUIHandlers(rt *router.Router) {
 	rt.AddHandler(regexp.MustCompile(`^/$`), ui.NewDummyPageHandler())
 }
 
-// func serveStaticFiles(mux *http.ServeMux) {
-// 	fsRoot := http.Dir("./static/")
-// 	fs := http.FileServer(fsRoot)
-// 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
-// }
+func serveStaticFiles(mux *http.ServeMux) {
+	fsRoot := http.Dir("./static/")
+	fs := http.FileServer(fsRoot)
+	mux.Handle("/static/", http.StripPrefix("/static/", fs))
+}
