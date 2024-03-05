@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"fmt"
+	"encoding/json"
 	"log"
 	"net/http"
 	"socialnetwork/models"
@@ -32,6 +32,9 @@ func (h *RegistrationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 }
 
 func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
+	var user models.User
+	ctime := time.Now().UTC().UnixMilli()
+
 	cookie, err := r.Cookie(cookieName)
 	if err == nil {
 		_, exists := sessionMap[cookie.Value]
@@ -41,42 +44,20 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	contentType := r.Header.Get("Content-Type")
-	var user models.User
-	switch contentType {
-	case "application/x-www-form-urlencoded":
-		err := r.ParseForm()
-		if err != nil {
-			utils.HandleError("Failed to parse form:", err)
-			http.Error(w, "Failed to parse form", http.StatusInternalServerError)
-			return
-		}
-		ctime := time.Now().UTC().UnixMilli()
-		user.Bio = r.PostFormValue("bio")
-		user.CreatedAt = ctime
-		t := fmt.Sprintf("%s%s", r.PostFormValue("dob"), "T00:00:00Z")
-		dobtime, err := time.Parse(time.RFC3339, t)
-		if err != nil {
-			utils.HandleError("Failed to parse date-time data", err)
-			http.Error(w, "Failed to parse date-time", http.StatusInternalServerError)
-			return
-		}
-		user.DOB = dobtime.UTC().UnixMilli()
-		user.Email = r.PostFormValue("email")
-		password := r.PostFormValue("password")
-		encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-		if err != nil {
-			utils.HandleError("Error with password encryption", err)
-			http.Error(w, err.Error(), http.StatusBadRequest)
-		}
-		user.EncryptedPassword = string(encryptedPassword)
-		user.FirstName = r.PostFormValue("first-name")
-		user.ImageURL = ""
-		user.IsPublic = true
-		user.LastName = r.PostFormValue("last-name")
-		user.UpdatedAt = ctime
-		user.Username = r.PostFormValue("username")
+
+	json.NewDecoder(r.Body).Decode(&user)
+
+	log.Println("[RegistrationHandler] ctime:", ctime)
+	user.CreatedAt = ctime
+
+	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(user.EncryptedPassword), bcrypt.DefaultCost)
+	if err != nil {
+		utils.HandleError("Error with password encryption", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
+	user.EncryptedPassword = string(encryptedPassword)
+	user.UpdatedAt = ctime
+
 	err = user.Validate()
 
 	if err != nil {

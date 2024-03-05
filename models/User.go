@@ -8,18 +8,18 @@ import (
 )
 
 type User struct {
-	UserId            int
-	Bio               string
+	UserId            int    `json:"userId"`
+	Bio               string `json:"bio"`
 	CreatedAt         int64
-	DOB               int64
-	Email             string
-	EncryptedPassword string
-	FirstName         string
-	ImageURL          string
-	IsPublic          bool
-	LastName          string
+	DOB               int64  `json:"dob"`
+	Email             string `json:"email"`
+	EncryptedPassword string `json:"encryptedPassword"`
+	FirstName         string `json:"firstName"`
+	ImageURL          string `json:"imageURL"`
+	IsPublic          bool   `json:"isPublic"`
+	LastName          string `json:"lastName"`
 	UpdatedAt         int64
-	Username          string
+	Username          string `json:"username"`
 }
 
 const (
