@@ -63,8 +63,6 @@ func TestUsersHandlerInvalidUserExpectFail_Post(t *testing.T) {
 		if validateErr == nil {
 			t.Error("Expected invalid user to fail validation, if you see this the test has succeeded")
 			return
-			// } else {
-			// 	t.Error("Expected user to fail validation, but it passed")
 		}
 
 		eventUserJSON, err := json.Marshal(user1)

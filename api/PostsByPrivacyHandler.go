@@ -2,13 +2,14 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 	"strings"
 )
 
-// Endpoint: /api/posts/{postId}
+// Endpoint: /api/posts/privacy/public
 // Allowed methods: GET
 
 type PostsByPrivacyHandler struct {
@@ -37,6 +38,11 @@ func (h *PostsByPrivacyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 func (h *PostsByPrivacyHandler) get(w http.ResponseWriter, r *http.Request) {
 	fields := strings.Split(r.URL.Path, "/")
 	privacyString := (fields[len(fields)-1])
+
+	if privacyString != "public" && privacyString != "private" {
+		utils.HandleError("Failed to get posts in GetPostsByPrivacyHandler", errors.New("invalid privacy string"))
+		http.Error(w, "invalid privacy string", http.StatusBadRequest)
+	}
 
 	userPosts, err := h.Repo.GetPostsByPrivacy(privacyString)
 	if err != nil {

@@ -1,27 +1,54 @@
 {{define "Index"}}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link type="text/css" rel="stylesheet" href="./static/css/site.css" />
-    </head>
-    <body>
-        <main id="main">
-            <h1>This is not an actual page! - React will handle real UI</h1>
-            <h5>
-                This page is just a form-based test for various POST endpoints.
-                By default, all all created with UserID '1'. The Comments have
-                PostID '1', the Events have GroupID '1' and the Posts have GroupID '0'.
-            </h5>
-            {{template "SignupForm" .}}
-            {{template "LoginForm" .}}
-            {{template "CreateGroupForm" .}}
-            {{template "CreateEventForm" .}}
-            {{template "CreatePostForm" .}}
-            {{template "CreateCommentForm" .}}
-        </main>
-        <script type="module" src="./static/js/dummy.js"></script>
-    </body>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link type="text/css" rel="stylesheet" href="./static/css/site.css" />
+	</head>
+	<body>
+		<!-- <main id="main">
+			<h1>This is not an actual page! - React will handle real UI</h1>
+			<h5>
+				This page is just a form-based test for various POST endpoints. By
+				default, all all created with UserID '1'. The Comments have PostID '1',
+				the Events have GroupID '1' and the Posts have GroupID '0'.
+			</h5>
+			{{template "SignupForm" .}} {{template "LoginForm" .}} {{template
+			"CreateGroupForm" .}} {{template "CreateEventForm" .}} {{template
+			"CreatePostForm" .}} {{template "CreateCommentForm" .}}
+		</main> -->
+		<div id="root"></div>
+
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<!-- <script src="https://unpkg.com/@babel/plugin-transform-react-jsx@7.16.5/babel.min.js"></script> -->
+
+		<script
+			crossorigin
+			src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"
+		></script>
+
+		<script
+			crossorigin
+			src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"
+		></script>
+
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/react-router-dom/6.22.2/react-router-dom.production.min.js"
+			integrity="sha512-82Gx5QtMrxGdjQk0W8k1+yVQL3mhQUMQJkBWfCp0IuGqyyYtxA1Sd4VfhdbZIPaEX2MEOSvy7Hb17w7zYRNfJQ=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+		></script>
+
+		<!-- <script type="text/babel" src="../static/app.js"></script> -->
+
+		<script
+			type="text/babel"
+			src="../static/app.js"
+			data-type="module"
+			data-presets="env"
+			data-plugins="transform-react-jsx"
+		></script>
+	</body>
 </html>
 {{end}}
