@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-// Endpoint: /api/event/{postId}/eventUser   ?
+// Endpoint:   ?
 // Allowed methods: GET, DELETE
 
 type PostUsersByPostIdHandler struct {
