@@ -151,7 +151,6 @@ function Register(props) {
 			bio,
 			isPublic,
 		};
-		console.log("DoB", newUser.dob)
 		// Send user data to golang register function.
 		const response = await fetch("http://localhost:8080/auth/registration", {
 			method: "POST",
@@ -165,9 +164,9 @@ function Register(props) {
 		// }
 	};
 
-	if (redirectVar) {
-		return navigate("/login"); // This is still iffy!!! ????????????
-	}
+	// if (redirectVar) {
+	// 	return navigate("/login"); // This is still iffy!!! ????????????
+	// }
 
 	return (
 		<div>
@@ -230,7 +229,7 @@ function Register(props) {
 						/>
 						<label htmlFor="dob">Date of Birth</label>
 					</div>
-					
+
 					<div className="form-floating">
 						<input
 							type="text"
@@ -257,24 +256,24 @@ function Register(props) {
 								<input
 									required
 									type="radio"
-									id="private-status"
-									value={"private"}
-									name="isPublic"
-									onClick={(e) => setIsPublic(e.target.value)}
-								/>
-								<label htmlFor="public-status">Private</label>
-							</div>
-							<div>
-
-								<input
-									required
-									type="radio"
 									id="public-status"
-									value={"public"}
+									value="public"
 									name="status"
+									checked
 									onClick={(e) => setIsPublic(e.target.value)}
 								/>
 								<label htmlFor="public-status">Public</label>
+							</div>
+							<div>
+								<input
+									required
+									type="radio"
+									id="private-status"
+									value="private"
+									name="status"
+									onClick={(e) => setIsPublic(e.target.value)}
+								/>
+								<label htmlFor="private-status">Private</label>
 							</div>
 						</div>
 						<label htmlFor="">Status</label>
