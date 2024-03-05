@@ -9,6 +9,8 @@ import (
 
 // Retrieves public (group 0) posts and relevant comments
 func GetPublicPostsWithComments(database *sql.DB) ([]transport.PostWithComments, error) {
+	var result []transport.PostWithComments
+
 	// Query to fetch posts and their corresponding comments using foreign keys
 	query := `
 SELECT 
@@ -25,8 +27,8 @@ WHERE
 
 	rows, err := database.Query(query)
 	if err != nil {
-		utils.HandleError("Error querying posts by UserId.", err)
-		return nil, err
+		// This hopefully means that there are no public posts with comments
+		return result, nil
 	}
 	defer rows.Close()
 
@@ -38,14 +40,10 @@ WHERE
 		var post models.Post
 		var comment models.Comment
 
-		err := rows.Scan(
+		rows.Scan(
 			&post.PostId, &post.Body, &post.CreatedAt, &post.GroupId, &post.ImageURL, &post.Privacy, &post.UpdatedAt,
 			&comment.CommentId, &comment.Body, &comment.CreatedAt, &comment.ImageURL, &comment.UpdatedAt, &comment.UserId,
 		)
-		if err != nil {
-			utils.HandleError("Error scanning row in GetHomeDataForUser.", err)
-			continue
-		}
 
 		if _, ok := postMap[post.PostId]; !ok {
 			postWithComment.Post = post
@@ -61,7 +59,6 @@ WHERE
 		return nil, err
 	}
 
-	var result []transport.PostWithComments
 	for _, postWithComment := range postMap {
 		result = append(result, *postWithComment)
 	}

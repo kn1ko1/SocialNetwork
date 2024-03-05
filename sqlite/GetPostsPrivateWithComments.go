@@ -9,7 +9,7 @@ import (
 
 // GetPostsPrivateWithComments retrieves private posts for the given followerId along with associated comments
 func GetPostsPrivateWithComments(database *sql.DB, userId int) ([]transport.PostWithComments, error) {
-	var postsWithComments []transport.PostWithComments
+	var result []transport.PostWithComments
 
 	query := `
         SELECT p.PostId, p.Body, p.CreatedAt, p.GroupId, p.ImageURL, p.Privacy, p.UpdatedAt, p.UserId
@@ -20,8 +20,8 @@ func GetPostsPrivateWithComments(database *sql.DB, userId int) ([]transport.Post
 
 	rows, err := database.Query(query, userId)
 	if err != nil {
-		utils.HandleError("Error querying private posts for follower.", err)
-		return nil, err
+		// no entries found in DB
+		return result, nil
 	}
 	defer rows.Close()
 
@@ -50,7 +50,7 @@ func GetPostsPrivateWithComments(database *sql.DB, userId int) ([]transport.Post
 		}
 
 		// Append the post along with its comments to the result
-		postsWithComments = append(postsWithComments, transport.PostWithComments{
+		result = append(result, transport.PostWithComments{
 			Post:     post,
 			Comments: comments,
 		})
@@ -61,5 +61,5 @@ func GetPostsPrivateWithComments(database *sql.DB, userId int) ([]transport.Post
 		return nil, err
 	}
 
-	return postsWithComments, nil
+	return result, nil
 }

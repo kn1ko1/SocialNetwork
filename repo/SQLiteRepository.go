@@ -36,7 +36,7 @@ func NewSQLiteRepository() *SQLiteRepository {
 
 // Home
 func (r *SQLiteRepository) GetHomeDataForUser(userId int) (transport.HomeModel, error) {
-	return sqlite.GetHomeDataForUser(r.businessDb, userId)
+	return sqlite.GetHomeDataForUser(r.identityDb, r.businessDb, userId)
 }
 
 // Users
@@ -52,11 +52,16 @@ func (r *SQLiteRepository) GetUsersByPublic() ([]models.User, error) {
 func (r *SQLiteRepository) GetUserById(userId int) (models.User, error) {
 	return sqlite.GetUserById(r.identityDb, userId)
 }
-func (r *SQLiteRepository) GetUserByEmail(email string) (models.User, error) {
-	return sqlite.GetUserByEmail(r.identityDb, email)
-}
-func (r *SQLiteRepository) GetUserByUsername(username string) (models.User, error) {
-	return sqlite.GetUserByUsername(r.identityDb, username)
+
+// func (r *SQLiteRepository) GetUserByEmail(email string) (models.User, error) {
+// 	return sqlite.GetUserByEmail(r.identityDb, email)
+// }
+// func (r *SQLiteRepository) GetUserByUsername(username string) (models.User, error) {
+// 	return sqlite.GetUserByUsername(r.identityDb, username)
+// }
+
+func (r *SQLiteRepository) GetUserByUsernameOrEmail(usernameOrEmail string) (models.User, error) {
+	return sqlite.GetUserByUsernameOrEmail(r.identityDb, usernameOrEmail)
 }
 func (r *SQLiteRepository) UpdateUser(user models.User) (models.User, error) {
 	return sqlite.UpdateUser(r.identityDb, user)
