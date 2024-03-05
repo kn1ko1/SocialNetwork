@@ -36,7 +36,7 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 	var loginInfo transport.LoginInfo
 	cookie, err := r.Cookie(cookieName)
 	if err == nil {
-		log.Println("here")
+		log.Println("[auth/LoginHandler] here")
 		_, exists := sessionMap[cookie.Value]
 		if exists {
 			utils.HandleError("Login failed - user already logged in:", err)
@@ -44,9 +44,7 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	contentType := r.Header.Get("Content-Type")
 
-	log.Println("[auth/LoginHandler] contentType ", contentType)
 	json.NewDecoder(r.Body).Decode(&loginInfo)
 
 	user, err := h.Repo.GetUserByUsernameOrEmail(loginInfo.UsernameOrEmail)

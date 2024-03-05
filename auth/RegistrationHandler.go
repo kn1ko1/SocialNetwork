@@ -2,6 +2,7 @@ package auth
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"socialnetwork/models"
@@ -50,6 +51,15 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 	log.Println("[RegistrationHandler] ctime:", ctime)
 	user.CreatedAt = ctime
 
+	dateString := "2024-03-05"
+	// Parse the date string into a time.Time object
+	date, err := time.Parse("2006-01-02", dateString)
+	if err != nil {
+		fmt.Println("Error parsing date:", err)
+		return
+	}
+	user.DOB = date.UnixNano() / int64(time.Millisecond)
+
 	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(user.EncryptedPassword), bcrypt.DefaultCost)
 	if err != nil {
 		utils.HandleError("Error with password encryption", err)
@@ -75,39 +85,7 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 	cookieValue = GenerateNewUUID()
 	sessionMap[cookieValue] = &user
-	followers, err := h.Repo.GetUserUsersBySubjectId(user.UserId)
-	if err != nil {
-		utils.HandleError("Failed to retrieve followers", err)
-		http.Error(w, "internal server error", http.StatusInternalServerError)
-		return
-	}
-	var followerIds []int
-	for _, f := range followers {
-		followerIds = append(followerIds, f.FollowerId)
-	}
-	followersMap[user.UserId] = followerIds
-	following, err := h.Repo.GetUserUsersByFollowerId(user.UserId)
-	if err != nil {
-		utils.HandleError("Failed to retrieve following", err)
-		http.Error(w, "internal server error", http.StatusInternalServerError)
-		return
-	}
-	var followingIds []int
-	for _, f := range following {
-		followingIds = append(followingIds, f.SubjectId)
-	}
-	followingMap[user.UserId] = followingIds
-	groups, err := h.Repo.GetGroupUsersByUserId(user.UserId)
-	if err != nil {
-		utils.HandleError("Failed to retrieve groups", err)
-		http.Error(w, "internal server error", http.StatusInternalServerError)
-		return
-	}
-	var groupIds []int
-	for _, g := range groups {
-		groupIds = append(groupIds, g.GroupId)
-	}
-	groupsMap[user.UserId] = groupIds
+
 	cookie = &http.Cookie{
 		Name:     cookieName,
 		Value:    cookieValue,

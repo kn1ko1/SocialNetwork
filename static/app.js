@@ -151,7 +151,7 @@ function Register(props) {
 			bio,
 			isPublic,
 		};
-
+		console.log("DoB", newUser.dob)
 		// Send user data to golang register function.
 		const response = await fetch("http://localhost:8080/auth/registration", {
 			method: "POST",
@@ -230,6 +230,7 @@ function Register(props) {
 						/>
 						<label htmlFor="dob">Date of Birth</label>
 					</div>
+					
 					<div className="form-floating">
 						<input
 							type="text"

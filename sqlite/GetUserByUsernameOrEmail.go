@@ -14,6 +14,7 @@ func GetUserByUsernameOrEmail(database *sql.DB, usernameOrEmail string) (models.
 	WHERE Username = ? OR Email = ?
 `, usernameOrEmail, usernameOrEmail).
 		Scan(
+			&user.UserId,
 			&user.Bio,
 			&user.CreatedAt,
 			&user.DOB,
