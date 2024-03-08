@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
+	"socialnetwork/transport"
 	"socialnetwork/utils"
 	"time"
 
@@ -33,8 +34,10 @@ func (h *RegistrationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 }
 
 func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
-	var user models.User
+	var user transport.RegisteringUser
 	ctime := time.Now().UTC().UnixMilli()
+
+	var processedUser models.User
 
 	cookie, err := r.Cookie(cookieName)
 	if err == nil {
@@ -51,14 +54,14 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 	log.Println("[RegistrationHandler] ctime:", ctime)
 	user.CreatedAt = ctime
 
-	dateString := "2024-03-05"
 	// Parse the date string into a time.Time object
-	date, err := time.Parse("2006-01-02", dateString)
+	date, err := time.Parse("2006-01-02", user.DOB)
 	if err != nil {
 		fmt.Println("Error parsing date:", err)
 		return
 	}
-	user.DOB = date.UnixNano() / int64(time.Millisecond)
+	fmt.Println("date", date)
+	fmt.Println(user.DOB)
 
 	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(user.EncryptedPassword), bcrypt.DefaultCost)
 	if err != nil {
@@ -68,7 +71,18 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 	user.EncryptedPassword = string(encryptedPassword)
 	user.UpdatedAt = ctime
 
-	err = user.Validate()
+	processedUser.Bio = user.Bio
+	processedUser.CreatedAt = ctime
+	processedUser.DOB = date.UnixNano() / int64(time.Millisecond)
+	processedUser.Email = user.Email
+	processedUser.EncryptedPassword = string(encryptedPassword)
+	processedUser.FirstName = user.FirstName
+	processedUser.ImageURL = user.ImageURL
+	processedUser.IsPublic = user.IsPublic
+	processedUser.LastName = user.LastName
+	processedUser.UpdatedAt = ctime
+	processedUser.Username = user.Username
+	//err = user.Validate()
 
 	if err != nil {
 		utils.HandleError("User invalid", err)
@@ -77,14 +91,14 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println("Received user in RegistrationHandler:", user)
 
-	user, err = h.Repo.CreateUser(user)
+	user, err = h.Repo.CreateUser(processedUser)
 	if err != nil {
 		utils.HandleError("Unable to register a new user in AddUserHandler", err)
 		http.Error(w, "Unable to register a new user", http.StatusBadRequest)
 		return
 	}
 	cookieValue = GenerateNewUUID()
-	sessionMap[cookieValue] = &user
+	//sessionMap[cookieValue] = &user
 
 	cookie = &http.Cookie{
 		Name:     cookieName,
