@@ -16,13 +16,9 @@ function Login(props) {
 	const [password, setPassword] = useState("")
 	const [redirectVar, setRedirectVar] = useState(false)
 
-	// Redirect
-	// const navigate = useNavigate()
-
 	const submit = async (e) => {
 		e.preventDefault() // prevent reload.
 
-		// Create new user as JS object.
 		const userToLogin = {
 			usernameOrEmail,
 			password,
@@ -41,10 +37,6 @@ function Login(props) {
 		setRedirectVar(true)
 		props.setName(validUser.first)
 	}
-
-	// if (redirectVar) {
-	// 	return navigate("/")
-	// }
 
 	return (
 		<div>
