@@ -9,7 +9,7 @@ const App = () => {
 function Login(props) {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [redirectVar, setRedirectVar] = useState(false);
+  // const [redirectVar, setRedirectVar] = useState(false);
   const submit = async e => {
     e.preventDefault(); // prevent reload.
 
@@ -29,7 +29,7 @@ function Login(props) {
       body: JSON.stringify(userToLogin)
     });
     const validUser = await response.json();
-    setRedirectVar(true);
+    // setRedirectVar(true);
     props.setName(validUser.first);
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
