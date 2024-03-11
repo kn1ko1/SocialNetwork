@@ -34,6 +34,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 	var loginInfo transport.LoginInfo
+
 	cookie, err := r.Cookie(cookieName)
 	if err == nil {
 		log.Println("[auth/LoginHandler] here")
@@ -100,6 +101,7 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 		groupIds = append(groupIds, g.GroupId)
 	}
 	groupsMap[user.UserId] = groupIds
+
 	cookie = &http.Cookie{
 		Name:     cookieName,
 		Value:    cookieValue,
@@ -109,5 +111,6 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 		SameSite: http.SameSiteLaxMode,
 	}
 	http.SetCookie(w, cookie)
+
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
