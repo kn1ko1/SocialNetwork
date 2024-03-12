@@ -8,8 +8,8 @@ const App = () => {
   React.createElement(Login, null),
   React.createElement(Register, null),
   React.createElement(Home, null),
-  React.createElement(Profile, null)
-  // React.createElement(PublicPosts, null)
+  React.createElement(Profile, null),
+  React.createElement(PublicPosts, null)
   );
 };
 
@@ -117,10 +117,6 @@ function Register(props) {
     setRedirectVar(true);
     // }
   };
-
-  // if (redirectVar) {
-  // 	return navigate("/login"); // This is still iffy!!! ????????????
-  // }
 
   return React.createElement("div", null, React.createElement("main", {
     className: "form-signin w-100 m-auto",
@@ -348,9 +344,13 @@ function Profile(props) {
 }
 
 
-async function PublicPosts(props) {
-  // Fetch data from the server
-  const fetchData = async () => {
+function PublicPosts() {
+
+  const publicPostsTemplate = React.createElement("div", {
+    className: "publicPostsContainer"
+  })
+
+  const publicPostsData = async () => {
     const response = await fetch("http://localhost:8080/api/home", {
       method: "GET",
       headers: {
@@ -365,15 +365,31 @@ async function PublicPosts(props) {
 
     return response.json(); 
   };
-  console.log(data); 
-  const data = await fetchData();
-  return React.createElement("div", null, React.createElement("PublicPosts", {
-    className: "form-signin w-100 m-auto",
-    style: {
-      display: "block"
-    }
+
+  try {
+    const receivedData =  publicPostsData()
+    const updatedPublicPostsTemplate = React.cloneElement(publicPostsTemplate, null, receivedData);
+
+    return updatedPublicPostsTemplate
+
+  }catch (error) {
+    // Handle any errors that might occur during fetching or parsing the data
+    console.error('Error fetching data:', error);
   }
-  ))
+  
+
+  
+
+  
+  // console.log(fetchData.response); 
+  // const template = document.createElement("template");
+  // template.innerHTML = `
+  // <div>
+  //     <h1>Hi</h1>
+  //     <p>What's up?</p>
+  // </div>
+  // `
+  // return template
 
 }
 
