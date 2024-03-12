@@ -4,7 +4,12 @@ const {
 const App = () => {
   return /*#__PURE__*/React.createElement("div", {
     className: "app-container"
-  }, /*#__PURE__*/React.createElement(Login, null), /*#__PURE__*/React.createElement(Register, null), /*#__PURE__*/React.createElement(Home, null), /*#__PURE__*/React.createElement(Profile, null));
+  },
+  /*#__PURE__*/React.createElement(Login, null),
+  /*#__PURE__*/React.createElement(Register, null),
+  /*#__PURE__*/React.createElement(Home, null),
+  /*#__PURE__*/React.createElement(Profile, null),
+  /*#__PURE__*/React.createElement(PublicPosts, null));
 };
 function Login(props) {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
@@ -340,5 +345,23 @@ function Profile(props) {
     }
   }));
 }
+
+
+function PublicPosts(props) {
+  const publicPostsData = async data => {
+    await fetch("http://localhost:8080/api/home", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify(data)
+    });
+  };
+  console.log(publicPostsData)
+  // Send user data to golang register function.
+};
+
+
 const root = document.querySelector("#root");
 ReactDOM.render( /*#__PURE__*/React.createElement(App, null), root);
