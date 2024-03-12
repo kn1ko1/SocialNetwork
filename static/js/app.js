@@ -2,15 +2,17 @@ const {
   useState
 } = React;
 const App = () => {
-  return /*#__PURE__*/React.createElement("div", {
+  return React.createElement("div", {
     className: "app-container"
   },
-  /*#__PURE__*/React.createElement(Login, null),
-  /*#__PURE__*/React.createElement(Register, null),
-  /*#__PURE__*/React.createElement(Home, null),
-  /*#__PURE__*/React.createElement(Profile, null),
-  /*#__PURE__*/React.createElement(PublicPosts, null));
+  React.createElement(Login, null),
+  React.createElement(Register, null),
+  React.createElement(Home, null),
+  React.createElement(Profile, null)
+  // React.createElement(PublicPosts, null)
+  );
 };
+
 function Login(props) {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,39 +39,39 @@ function Login(props) {
     // setRedirectVar(true);
     props.setName(validUser.first);
   };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
+  return React.createElement("div", null, React.createElement("main", {
     className: "form-signin w-100 m-auto",
     style: {
       display: "block"
     }
-  }, /*#__PURE__*/React.createElement("h1", {
+  }, React.createElement("h1", {
     className: "h3 mb-3 fw-normal"
-  }, "Please sign in"), /*#__PURE__*/React.createElement("form", {
+  }, "Please sign in"), React.createElement("form", {
     onSubmit: submit
-  }, /*#__PURE__*/React.createElement("div", {
+  }, React.createElement("div", {
     className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  }, React.createElement("input", {
     type: "email",
     className: "form-control",
     id: "floatingInput",
     placeholder: "name@example.com",
     onChange: e => setUsernameOrEmail(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
+  }), React.createElement("label", {
     htmlFor: "floatingInput"
-  }, "Email address")), /*#__PURE__*/React.createElement("div", {
+  }, "Email address")), React.createElement("div", {
     className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  }, React.createElement("input", {
     type: "password",
     className: "form-control",
     id: "floatingPassword",
     placeholder: "Password",
     onChange: e => setPassword(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
+  }), React.createElement("label", {
     htmlFor: "floatingPassword"
-  }, "Password")), /*#__PURE__*/React.createElement("button", {
+  }, "Password")), React.createElement("button", {
     className: "w-100 btn btn-lg btn-primary",
     type: "submit"
-  }, "Sign in")), /*#__PURE__*/React.createElement("span", null, "Already have an account? \xA0")));
+  }, "Sign in")), React.createElement("span", null, "Already have an account? \xA0")));
 }
 function Register(props) {
   const [email, setEmail] = useState("");
@@ -120,95 +122,95 @@ function Register(props) {
   // 	return navigate("/login"); // This is still iffy!!! ????????????
   // }
 
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
+  return React.createElement("div", null, React.createElement("main", {
     className: "form-signin w-100 m-auto",
     style: {
       display: "block"
     }
-  }, /*#__PURE__*/React.createElement("h1", {
+  }, React.createElement("h1", {
     className: "h3 mb-3 fw-normal"
-  }, "Please register"), /*#__PURE__*/React.createElement("form", {
+  }, "Please register"), React.createElement("form", {
     onSubmit: submit
-  }, /*#__PURE__*/React.createElement("div", {
+  }, React.createElement("div", {
     className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  }, React.createElement("input", {
     required: true,
     type: "email",
     className: "form-control",
     id: "floatingInput",
     placeholder: "name@example.com",
     onChange: e => setEmail(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
+  }), React.createElement("label", {
     htmlFor: "floatingInput"
-  }, "Email address")), /*#__PURE__*/React.createElement("div", {
+  }, "Email address")), React.createElement("div", {
     className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  }, React.createElement("input", {
     required: true,
     type: "password",
     className: "form-control reginput",
     id: "regpassword",
     placeholder: "Password",
     onChange: e => setEncryptedPassword(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
+  }), React.createElement("label", {
     htmlFor: "regpassword"
-  }, "Password")), /*#__PURE__*/React.createElement("div", {
+  }, "Password")), React.createElement("div", {
     className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  }, React.createElement("input", {
     required: true,
     type: "text",
     className: "form-control reginput",
     id: "firstName",
     placeholder: "John",
     onChange: e => setFirstName(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
+  }), React.createElement("label", {
     htmlFor: "firstName"
-  }, "First Name")), /*#__PURE__*/React.createElement("div", {
+  }, "First Name")), React.createElement("div", {
     className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  }, React.createElement("input", {
     required: true,
     type: "text",
     className: "form-control reginput",
     id: "lastName",
     placeholder: "Doe",
     onChange: e => setLastName(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
+  }), React.createElement("label", {
     htmlFor: "lastName"
-  }, "Last Name")), /*#__PURE__*/React.createElement("div", {
+  }, "Last Name")), React.createElement("div", {
     className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  }, React.createElement("input", {
     required: true,
     type: "date",
     className: "form-control reginput",
     id: "dob",
     placeholder: "16/01/1998",
     onChange: e => setDob(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
+  }), React.createElement("label", {
     htmlFor: "dob"
-  }, "Date of Birth")), /*#__PURE__*/React.createElement("div", {
+  }, "Date of Birth")), React.createElement("div", {
     className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  }, React.createElement("input", {
     type: "text",
     className: "form-control reginput",
     id: "imageURL",
     placeholder: "https://...",
     onChange: e => setImageURL(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
+  }), React.createElement("label", {
     htmlFor: "imageURL"
-  }, "ImageURL")), /*#__PURE__*/React.createElement("div", {
+  }, "ImageURL")), React.createElement("div", {
     className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  }, React.createElement("input", {
     type: "text",
     className: "form-control reginput",
     id: "username",
     placeholder: "Johnny",
     onChange: e => setUsername(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
+  }), React.createElement("label", {
     htmlFor: "username"
-  }, "Username")), /*#__PURE__*/React.createElement("div", {
+  }, "Username")), React.createElement("div", {
     className: "form-floating"
-  }, /*#__PURE__*/React.createElement("div", {
+  }, React.createElement("div", {
     className: "form-control reginput status"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
+  }, React.createElement("div", null, React.createElement("input", {
     required: true,
     type: "radio",
     id: "public-status",
@@ -216,22 +218,22 @@ function Register(props) {
     name: "status",
     checked: true,
     onClick: e => setIsPublic(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
+  }), React.createElement("label", {
     htmlFor: "public-status"
-  }, "Public")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
+  }, "Public")), React.createElement("div", null, React.createElement("input", {
     required: true,
     type: "radio",
     id: "private-status",
     value: "private",
     name: "status",
     onClick: e => setIsPublic(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
+  }), React.createElement("label", {
     htmlFor: "private-status"
-  }, "Private"))), /*#__PURE__*/React.createElement("label", {
+  }, "Private"))), React.createElement("label", {
     htmlFor: ""
-  }, "Status")), /*#__PURE__*/React.createElement("div", {
+  }, "Status")), React.createElement("div", {
     className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  }, React.createElement("input", {
     className: "form-control reginput",
     name: "bio",
     placeholder: "About Me",
@@ -239,29 +241,29 @@ function Register(props) {
     cols: "30",
     rows: "10",
     onChange: e => setBio(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
+  }), React.createElement("label", {
     htmlFor: "about"
-  }, "About me")), /*#__PURE__*/React.createElement("button", {
+  }, "About me")), React.createElement("button", {
     className: "w-100 btn btn-lg btn-primary",
     type: "submit"
-  }, "Register")), /*#__PURE__*/React.createElement("span", null, "Already have an account? \xA0")));
+  }, "Register")), React.createElement("span", null, "Already have an account? \xA0")));
 }
 function Home(props) {
-  return /*#__PURE__*/React.createElement("main", null, /*#__PURE__*/React.createElement("div", {
+  return React.createElement("main", null, React.createElement("div", {
     className: "contentContainer"
-  }, props.name ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(ProfileImgContainer, {
+  }, props.name ? React.createElement(React.Fragment, null, React.createElement(ProfileImgContainer, {
     name: props.name,
     user: props.user,
     imageURL: props.imageURL
-  }), /*#__PURE__*/React.createElement(GroupContainer, {
+  }), React.createElement(GroupContainer, {
     groups: props.groups,
     socket: props.socket
-  }), /*#__PURE__*/React.createElement(PostForm, {
+  }), React.createElement(PostForm, {
     imageURL: props.imageURL
-  }), /*#__PURE__*/React.createElement(RightSide, {
+  }), React.createElement(RightSide, {
     openConnection: props.openConnection,
     fetchRequestData: props.fetchRequestData
-  }), /*#__PURE__*/React.createElement(GetChat, null)) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("p", null, "You are not logged in"))));
+  }), React.createElement(GetChat, null)) : React.createElement(React.Fragment, null, React.createElement("p", null, "You are not logged in"))));
 }
 function Profile(props) {
   const [status, setStatus] = useState("");
@@ -273,7 +275,6 @@ function Profile(props) {
   // }, [props.user.status]);
 
   const sendStatusToBackend = async data => {
-    console.log(data);
     await fetch("http://localhost:8080/update-user-status", {
       method: "POST",
       headers: {
@@ -300,18 +301,18 @@ function Profile(props) {
       setStatus("public");
     }
   };
-  return /*#__PURE__*/React.createElement("div", {
+  return React.createElement("div", {
     className: "profileContainer"
-  }, "name=", props.name, "user=", props.user, "imageURL=", props.imageURL, "socket=", props.socket, "currentUser=", props.currentUser, "fetchUsersData=", props.fetchUsersData, "update=", props.update, "setUpdate=", props.setUpdate, /*#__PURE__*/React.createElement("div", {
+  }, "name=", props.name, "user=", props.user, "imageURL=", props.imageURL, "socket=", props.socket, "currentUser=", props.currentUser, "fetchUsersData=", props.fetchUsersData, "update=", props.update, "setUpdate=", props.setUpdate, React.createElement("div", {
     className: "formContainer"
-  }, /*#__PURE__*/React.createElement("div", {
+  }, React.createElement("div", {
     className: "smallAvatar"
-  }, /*#__PURE__*/React.createElement("img", {
+  }, React.createElement("img", {
     src: props.imageURL,
     alt: "profile photo"
-  })), /*#__PURE__*/React.createElement("div", {
+  })), React.createElement("div", {
     className: "profile-page-title"
-  }, props.name, "'s Posts")), props.currentUser === undefined ? /*#__PURE__*/React.createElement("div", {
+  }, props.name, "'s Posts")), props.currentUser === undefined ? React.createElement("div", {
     id: "set-public-private",
     className: "privacyButtons",
     style: {
@@ -320,7 +321,7 @@ function Profile(props) {
       justifyContent: "space-evenly",
       alignItems: "center"
     }
-  }, /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+  }, React.createElement(React.Fragment, null, React.createElement("button", {
     className: "postType",
     onClick: updateUserStatus,
     "data-type": "private",
@@ -328,7 +329,7 @@ function Profile(props) {
     style: {
       backgroundColor: status === "private" ? "rgba(129, 25, 41, 0.55)" : "rgb(148, 28, 47)"
     }
-  }, "Set Private"), /*#__PURE__*/React.createElement("button", {
+  }, "Set Private"), React.createElement("button", {
     className: "postType",
     onClick: updateUserStatus,
     "data-type": "public",
@@ -336,7 +337,7 @@ function Profile(props) {
     style: {
       backgroundColor: status === "public" ? "rgba(129, 25, 41, 0.55)" : "rgb(148, 28, 47)"
     }
-  }, "Set Public"))) : /*#__PURE__*/React.createElement("div", {
+  }, "Set Public"))) : React.createElement("div", {
     id: "set-public-private",
     className: "privacyButtons",
     style: {
@@ -347,21 +348,34 @@ function Profile(props) {
 }
 
 
-function PublicPosts(props) {
-  const publicPostsData = async data => {
-    await fetch("http://localhost:8080/api/home", {
+async function PublicPosts(props) {
+  // Fetch data from the server
+  const fetchData = async () => {
+    const response = await fetch("http://localhost:8080/api/home", {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
       },
-      credentials: "include",
-      body: JSON.stringify(data)
+      credentials: "include"
     });
-  };
-  console.log(publicPostsData)
-  // Send user data to golang register function.
-};
 
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    return response.json(); 
+  };
+  console.log(data); 
+  const data = await fetchData();
+  return React.createElement("div", null, React.createElement("PublicPosts", {
+    className: "form-signin w-100 m-auto",
+    style: {
+      display: "block"
+    }
+  }
+  ))
+
+}
 
 const root = document.querySelector("#root");
-ReactDOM.render( /*#__PURE__*/React.createElement(App, null), root);
+ReactDOM.render( React.createElement(App, null), root);
