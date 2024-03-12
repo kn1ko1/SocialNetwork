@@ -9,7 +9,7 @@ import (
 
 // GetPostsAlmostPrivateWithComments retrieves almost private posts for the provided userId along with associated comments
 func GetPostsAlmostPrivateWithComments(database *sql.DB, userId int) ([]transport.PostWithComments, error) {
-	var postsWithComments []transport.PostWithComments
+	var result []transport.PostWithComments
 
 	// Query to select almost private posts based on the provided userId
 	query := `
@@ -21,8 +21,8 @@ func GetPostsAlmostPrivateWithComments(database *sql.DB, userId int) ([]transpor
 
 	rows, err := database.Query(query, userId)
 	if err != nil {
-		utils.HandleError("Error querying almost private posts by UserId.", err)
-		return nil, err
+		// no results found in DB
+		return result, nil
 	}
 	defer rows.Close()
 
@@ -55,7 +55,7 @@ func GetPostsAlmostPrivateWithComments(database *sql.DB, userId int) ([]transpor
 			Post:     post,
 			Comments: comments,
 		}
-		postsWithComments = append(postsWithComments, postWithComments)
+		result = append(result, postWithComments)
 	}
 
 	if err := rows.Err(); err != nil {
@@ -63,5 +63,5 @@ func GetPostsAlmostPrivateWithComments(database *sql.DB, userId int) ([]transpor
 		return nil, err
 	}
 
-	return postsWithComments, nil
+	return result, nil
 }

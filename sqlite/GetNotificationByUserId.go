@@ -8,14 +8,13 @@ import (
 
 // Retrieves notifications with the relevant userId from the NOTIFICATIONS table
 func GetNotificationsByUserId(database *sql.DB, userId int) ([]models.Notification, error) {
+	var notifications []models.Notification
+
 	rows, err := database.Query("SELECT * FROM NOTIFICATIONS WHERE UserId = ?", userId)
 	if err != nil {
-		utils.HandleError("Error querying notifications by UserId.", err)
-		return nil, err
+		return notifications, nil
 	}
 	defer rows.Close()
-
-	var notifications []models.Notification
 
 	for rows.Next() {
 		var notification models.Notification

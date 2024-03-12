@@ -31,9 +31,9 @@ func (h *PostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		h.post(w, r)
 		return
-	case http.MethodGet:
-		h.get(w, r)
-		return
+	// case http.MethodGet:
+	// 	h.get(w, r)
+	// 	return
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -75,15 +75,16 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("Received post:", post.UserId, post.Body)
-	parseMultipartFormErr := r.ParseMultipartForm(10 << 20)
-	if parseMultipartFormErr != nil {
-		utils.HandleError("Unable to Parse Multipart Form.", parseMultipartFormErr)
-	}
+	r.ParseMultipartForm(10 << 20)
+	// if parseMultipartFormErr != nil {
+	// 	utils.HandleError("Unable to Parse Multipart Form.", parseMultipartFormErr)
+	// }
 
-	file, fileHeader, formFileErr := r.FormFile("image")
-	if formFileErr != nil {
-		utils.HandleError("Error reading image.", formFileErr)
-	}
+	file, fileHeader, _ := r.FormFile("image")
+	// file, fileHeader, formFileErr := r.FormFile("image")
+	// if formFileErr != nil {
+	// 	utils.HandleError("Error reading image.", formFileErr)
+	// }
 
 	//if file is given
 	if file != nil {
@@ -115,19 +116,19 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *PostsHandler) get(w http.ResponseWriter, r *http.Request) {
+// func (h *PostsHandler) get(w http.ResponseWriter, r *http.Request) {
 
-	allPosts, err := h.Repo.GetAllPosts()
-	if err != nil {
-		utils.HandleError("Failed to get posts in PostHandler. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
+// 	allPosts, err := h.Repo.GetAllPosts()
+// 	if err != nil {
+// 		utils.HandleError("Failed to get posts in PostHandler. ", err)
+// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 		return
+// 	}
 
-	err = json.NewEncoder(w).Encode(allPosts)
-	if err != nil {
-		utils.HandleError("Failed to encode and write JSON response. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-}
+// 	err = json.NewEncoder(w).Encode(allPosts)
+// 	if err != nil {
+// 		utils.HandleError("Failed to encode and write JSON response. ", err)
+// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 		return
+// 	}
+// }

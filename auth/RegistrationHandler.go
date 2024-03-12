@@ -1,11 +1,13 @@
 package auth
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
+	"socialnetwork/transport"
 	"socialnetwork/utils"
 	"time"
 
@@ -32,6 +34,8 @@ func (h *RegistrationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 }
 
 func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
+
+	// Checks cookies
 	cookie, err := r.Cookie(cookieName)
 	if err == nil {
 		_, exists := sessionMap[cookie.Value]
@@ -41,97 +45,66 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	contentType := r.Header.Get("Content-Type")
-	var user models.User
-	switch contentType {
-	case "application/x-www-form-urlencoded":
-		err := r.ParseForm()
-		if err != nil {
-			utils.HandleError("Failed to parse form:", err)
-			http.Error(w, "Failed to parse form", http.StatusInternalServerError)
-			return
-		}
-		ctime := time.Now().UTC().UnixMilli()
-		user.Bio = r.PostFormValue("bio")
-		user.CreatedAt = ctime
-		t := fmt.Sprintf("%s%s", r.PostFormValue("dob"), "T00:00:00Z")
-		dobtime, err := time.Parse(time.RFC3339, t)
-		if err != nil {
-			utils.HandleError("Failed to parse date-time data", err)
-			http.Error(w, "Failed to parse date-time", http.StatusInternalServerError)
-			return
-		}
-		user.DOB = dobtime.UTC().UnixMilli()
-		user.Email = r.PostFormValue("email")
-		password := r.PostFormValue("password")
-		encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-		if err != nil {
-			utils.HandleError("Error with password encryption", err)
-			http.Error(w, err.Error(), http.StatusBadRequest)
-		}
-		user.EncryptedPassword = string(encryptedPassword)
-		user.FirstName = r.PostFormValue("first-name")
-		user.ImageURL = ""
-		user.IsPublic = true
-		user.LastName = r.PostFormValue("last-name")
-		user.UpdatedAt = ctime
-		user.Username = r.PostFormValue("username")
-	}
-	err = user.Validate()
 
+	// Decodes incoming json into registeringUser (transport.RegisteringUser)
+	var registeringUser transport.RegisteringUser
+	json.NewDecoder(r.Body).Decode(&registeringUser)
+
+	// converts date from string to milliseconds for storage in database
+	date, err := time.Parse("2006-01-02", registeringUser.DOB)
+	if err != nil {
+		fmt.Println("Error parsing date:", err)
+		return
+	}
+	dateInMilliseconds := date.UTC().UnixMilli()
+	log.Println("[auth/RegistrationHandler] date", date)
+	log.Println("[auth/RegistrationHandler]registeringUser.DOB ", dateInMilliseconds)
+	t := time.Unix(dateInMilliseconds/1000, 0)
+	log.Println("[auth/RegistrationHandler]date converted back ", t.Format("02-01-2006"))
+
+	// Encrypt Password for Storage
+	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(registeringUser.EncryptedPassword), bcrypt.DefaultCost)
+	if err != nil {
+		utils.HandleError("Error with password encryption", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+	// Creates current time in milliseconds for CreatedAt and UpdatedAt fields
+	ctime := time.Now().UTC().UnixMilli()
+
+	// Creates a models.User struct to passing to CreateUser, so that it both takes in and passes out the same types of data
+	processedUser := models.User{
+		Bio:               registeringUser.Bio,
+		CreatedAt:         ctime,
+		DOB:               dateInMilliseconds,
+		Email:             registeringUser.Email,
+		EncryptedPassword: string(encryptedPassword),
+		FirstName:         registeringUser.FirstName,
+		ImageURL:          registeringUser.ImageURL,
+		IsPublic:          registeringUser.IsPublic,
+		LastName:          registeringUser.LastName,
+		UpdatedAt:         ctime,
+		Username:          registeringUser.Username,
+	}
+
+	err = processedUser.Validate()
 	if err != nil {
 		utils.HandleError("User invalid", err)
 		http.Error(w, "validation failed for user registration", http.StatusBadRequest)
 		return
 	}
-	log.Println("Received user:", user)
-	// _, err = sqlite.CreateUser(db, user)
+	log.Println("Received user in RegistrationHandler:", processedUser)
+
+	processedUser, err = h.Repo.CreateUser(processedUser)
 	if err != nil {
 		utils.HandleError("Unable to register a new user in AddUserHandler", err)
 		http.Error(w, "Unable to register a new user", http.StatusBadRequest)
 		return
 	}
-	user, err = h.Repo.CreateUser(user)
-	if err != nil {
-		utils.HandleError("Unable to register a new user in AddUserHandler", err)
-		http.Error(w, "Unable to register a new user", http.StatusBadRequest)
-		return
-	}
+
+	// Sets up a new Cookie
 	cookieValue = GenerateNewUUID()
-	sessionMap[cookieValue] = &user
-	followers, err := h.Repo.GetUserUsersBySubjectId(user.UserId)
-	if err != nil {
-		utils.HandleError("Failed to retrieve followers", err)
-		http.Error(w, "internal server error", http.StatusInternalServerError)
-		return
-	}
-	var followerIds []int
-	for _, f := range followers {
-		followerIds = append(followerIds, f.FollowerId)
-	}
-	followersMap[user.UserId] = followerIds
-	following, err := h.Repo.GetUserUsersByFollowerId(user.UserId)
-	if err != nil {
-		utils.HandleError("Failed to retrieve following", err)
-		http.Error(w, "internal server error", http.StatusInternalServerError)
-		return
-	}
-	var followingIds []int
-	for _, f := range following {
-		followingIds = append(followingIds, f.SubjectId)
-	}
-	followingMap[user.UserId] = followingIds
-	groups, err := h.Repo.GetGroupUsersByUserId(user.UserId)
-	if err != nil {
-		utils.HandleError("Failed to retrieve groups", err)
-		http.Error(w, "internal server error", http.StatusInternalServerError)
-		return
-	}
-	var groupIds []int
-	for _, g := range groups {
-		groupIds = append(groupIds, g.GroupId)
-	}
-	groupsMap[user.UserId] = groupIds
+	//sessionMap[cookieValue] = &processedUser
+
 	cookie = &http.Cookie{
 		Name:     cookieName,
 		Value:    cookieValue,

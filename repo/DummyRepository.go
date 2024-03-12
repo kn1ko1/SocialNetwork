@@ -164,15 +164,19 @@ func (r *DummyRepository) GetUsersByPublic() ([]models.User, error) {
 	return users, nil
 }
 
-func (r *DummyRepository) GetUserByEmail(email string) (models.User, error) {
-	user := validUser
-	user.Email = email
-	return user, nil
-}
-func (r *DummyRepository) GetUserByUsername(username string) (models.User, error) {
-	user := validUser
-	user.Username = username
-	return user, nil
+//	func (r *DummyRepository) GetUserByEmail(email string) (models.User, error) {
+//		user := validUser
+//		user.Email = email
+//		return user, nil
+//	}
+//
+//	func (r *DummyRepository) GetUserByUsername(username string) (models.User, error) {
+//		user := validUser
+//		user.Username = username
+//		return user, nil
+//	}
+func (r *DummyRepository) GetUserByUsernameOrEmail(usernameOrEmail string) (models.User, error) {
+	return *models.GenerateValidUser(), nil
 }
 func (r *DummyRepository) UpdateUser(user models.User) (models.User, error) {
 	return user, nil
