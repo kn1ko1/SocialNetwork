@@ -1,5 +1,5 @@
 const { useState } = React
-
+ 
 const App = () => {
 	return (
 		<div className="app-container">
@@ -112,6 +112,7 @@ function Register(props) {
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(newUser),
 		});
+		console.log("dob", newUser.dob)
 		await response.json()
 		// let result = await response.json()
 		// if (result.email === email) {
