@@ -1,22 +1,19 @@
+import { jsx as _jsx } from "react/jsx-runtime";
+import { jsxs as _jsxs } from "react/jsx-runtime";
+import { Fragment as _Fragment } from "react/jsx-runtime";
 const {
   useState
 } = React;
 const App = () => {
-  return React.createElement("div", {
-    className: "app-container"
-  },
-  React.createElement(Login, null),
-  React.createElement(Register, null),
-  React.createElement(Home, null),
-  React.createElement(Profile, null),
-  React.createElement(PublicPosts, null)
-  );
+  return /*#__PURE__*/_jsxs("div", {
+    className: "app-container",
+    children: [/*#__PURE__*/_jsx(Login, {}), /*#__PURE__*/_jsx(Register, {}), /*#__PURE__*/_jsx(Home, {}), /*#__PURE__*/_jsx(Profile, {})]
+  });
 };
-
 function Login(props) {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [redirectVar, setRedirectVar] = useState(false);
+  const [redirectVar, setRedirectVar] = useState(false);
   const submit = async e => {
     e.preventDefault(); // prevent reload.
 
@@ -36,42 +33,54 @@ function Login(props) {
       body: JSON.stringify(userToLogin)
     });
     const validUser = await response.json();
-    // setRedirectVar(true);
+    setRedirectVar(true);
     props.setName(validUser.first);
   };
-  return React.createElement("div", null, React.createElement("main", {
-    className: "form-signin w-100 m-auto",
-    style: {
-      display: "block"
-    }
-  }, React.createElement("h1", {
-    className: "h3 mb-3 fw-normal"
-  }, "Please sign in"), React.createElement("form", {
-    onSubmit: submit
-  }, React.createElement("div", {
-    className: "form-floating"
-  }, React.createElement("input", {
-    type: "email",
-    className: "form-control",
-    id: "floatingInput",
-    placeholder: "name@example.com",
-    onChange: e => setUsernameOrEmail(e.target.value)
-  }), React.createElement("label", {
-    htmlFor: "floatingInput"
-  }, "Email address")), React.createElement("div", {
-    className: "form-floating"
-  }, React.createElement("input", {
-    type: "password",
-    className: "form-control",
-    id: "floatingPassword",
-    placeholder: "Password",
-    onChange: e => setPassword(e.target.value)
-  }), React.createElement("label", {
-    htmlFor: "floatingPassword"
-  }, "Password")), React.createElement("button", {
-    className: "w-100 btn btn-lg btn-primary",
-    type: "submit"
-  }, "Sign in")), React.createElement("span", null, "Already have an account? \xA0")));
+  return /*#__PURE__*/_jsx("div", {
+    children: /*#__PURE__*/_jsxs("main", {
+      className: "form-signin w-100 m-auto",
+      style: {
+        display: "block"
+      },
+      children: [/*#__PURE__*/_jsx("h1", {
+        className: "h3 mb-3 fw-normal",
+        children: "Please sign in"
+      }), /*#__PURE__*/_jsxs("form", {
+        onSubmit: submit,
+        children: [/*#__PURE__*/_jsxs("div", {
+          className: "form-floating",
+          children: [/*#__PURE__*/_jsx("input", {
+            type: "email",
+            className: "form-control",
+            id: "floatingInput",
+            placeholder: "name@example.com",
+            onChange: e => setUsernameOrEmail(e.target.value)
+          }), /*#__PURE__*/_jsx("label", {
+            htmlFor: "floatingInput",
+            children: "Email address"
+          })]
+        }), /*#__PURE__*/_jsxs("div", {
+          className: "form-floating",
+          children: [/*#__PURE__*/_jsx("input", {
+            type: "password",
+            className: "form-control",
+            id: "floatingPassword",
+            placeholder: "Password",
+            onChange: e => setPassword(e.target.value)
+          }), /*#__PURE__*/_jsx("label", {
+            htmlFor: "floatingPassword",
+            children: "Password"
+          })]
+        }), /*#__PURE__*/_jsx("button", {
+          className: "w-100 btn btn-lg btn-primary",
+          type: "submit",
+          children: "Sign in"
+        })]
+      }), /*#__PURE__*/_jsx("span", {
+        children: "Already have an account? \xA0"
+      })]
+    })
+  });
 }
 function Register(props) {
   const [email, setEmail] = useState("");
@@ -111,6 +120,7 @@ function Register(props) {
       },
       body: JSON.stringify(newUser)
     });
+    console.log("dob", newUser.dob);
     await response.json();
     // let result = await response.json()
     // if (result.email === email) {
@@ -118,148 +128,194 @@ function Register(props) {
     // }
   };
 
-  return React.createElement("div", null, React.createElement("main", {
-    className: "form-signin w-100 m-auto",
-    style: {
-      display: "block"
-    }
-  }, React.createElement("h1", {
-    className: "h3 mb-3 fw-normal"
-  }, "Please register"), React.createElement("form", {
-    onSubmit: submit
-  }, React.createElement("div", {
-    className: "form-floating"
-  }, React.createElement("input", {
-    required: true,
-    type: "email",
-    className: "form-control",
-    id: "floatingInput",
-    placeholder: "name@example.com",
-    onChange: e => setEmail(e.target.value)
-  }), React.createElement("label", {
-    htmlFor: "floatingInput"
-  }, "Email address")), React.createElement("div", {
-    className: "form-floating"
-  }, React.createElement("input", {
-    required: true,
-    type: "password",
-    className: "form-control reginput",
-    id: "regpassword",
-    placeholder: "Password",
-    onChange: e => setEncryptedPassword(e.target.value)
-  }), React.createElement("label", {
-    htmlFor: "regpassword"
-  }, "Password")), React.createElement("div", {
-    className: "form-floating"
-  }, React.createElement("input", {
-    required: true,
-    type: "text",
-    className: "form-control reginput",
-    id: "firstName",
-    placeholder: "John",
-    onChange: e => setFirstName(e.target.value)
-  }), React.createElement("label", {
-    htmlFor: "firstName"
-  }, "First Name")), React.createElement("div", {
-    className: "form-floating"
-  }, React.createElement("input", {
-    required: true,
-    type: "text",
-    className: "form-control reginput",
-    id: "lastName",
-    placeholder: "Doe",
-    onChange: e => setLastName(e.target.value)
-  }), React.createElement("label", {
-    htmlFor: "lastName"
-  }, "Last Name")), React.createElement("div", {
-    className: "form-floating"
-  }, React.createElement("input", {
-    required: true,
-    type: "date",
-    className: "form-control reginput",
-    id: "dob",
-    placeholder: "16/01/1998",
-    onChange: e => setDob(e.target.value)
-  }), React.createElement("label", {
-    htmlFor: "dob"
-  }, "Date of Birth")), React.createElement("div", {
-    className: "form-floating"
-  }, React.createElement("input", {
-    type: "text",
-    className: "form-control reginput",
-    id: "imageURL",
-    placeholder: "https://...",
-    onChange: e => setImageURL(e.target.value)
-  }), React.createElement("label", {
-    htmlFor: "imageURL"
-  }, "ImageURL")), React.createElement("div", {
-    className: "form-floating"
-  }, React.createElement("input", {
-    type: "text",
-    className: "form-control reginput",
-    id: "username",
-    placeholder: "Johnny",
-    onChange: e => setUsername(e.target.value)
-  }), React.createElement("label", {
-    htmlFor: "username"
-  }, "Username")), React.createElement("div", {
-    className: "form-floating"
-  }, React.createElement("div", {
-    className: "form-control reginput status"
-  }, React.createElement("div", null, React.createElement("input", {
-    required: true,
-    type: "radio",
-    id: "public-status",
-    value: "public",
-    name: "status",
-    checked: true,
-    onClick: e => setIsPublic(e.target.value)
-  }), React.createElement("label", {
-    htmlFor: "public-status"
-  }, "Public")), React.createElement("div", null, React.createElement("input", {
-    required: true,
-    type: "radio",
-    id: "private-status",
-    value: "private",
-    name: "status",
-    onClick: e => setIsPublic(e.target.value)
-  }), React.createElement("label", {
-    htmlFor: "private-status"
-  }, "Private"))), React.createElement("label", {
-    htmlFor: ""
-  }, "Status")), React.createElement("div", {
-    className: "form-floating"
-  }, React.createElement("input", {
-    className: "form-control reginput",
-    name: "bio",
-    placeholder: "About Me",
-    id: "bio",
-    cols: "30",
-    rows: "10",
-    onChange: e => setBio(e.target.value)
-  }), React.createElement("label", {
-    htmlFor: "about"
-  }, "About me")), React.createElement("button", {
-    className: "w-100 btn btn-lg btn-primary",
-    type: "submit"
-  }, "Register")), React.createElement("span", null, "Already have an account? \xA0")));
+  // if (redirectVar) {
+  // 	return navigate("/login"); // This is still iffy!!! ????????????
+  // }
+
+  return /*#__PURE__*/_jsx("div", {
+    children: /*#__PURE__*/_jsxs("main", {
+      className: "form-signin w-100 m-auto",
+      style: {
+        display: "block"
+      },
+      children: [/*#__PURE__*/_jsx("h1", {
+        className: "h3 mb-3 fw-normal",
+        children: "Please register"
+      }), /*#__PURE__*/_jsxs("form", {
+        onSubmit: submit,
+        children: [/*#__PURE__*/_jsxs("div", {
+          className: "form-floating",
+          children: [/*#__PURE__*/_jsx("input", {
+            required: true,
+            type: "email",
+            className: "form-control",
+            id: "floatingInput",
+            placeholder: "name@example.com",
+            onChange: e => setEmail(e.target.value)
+          }), /*#__PURE__*/_jsx("label", {
+            htmlFor: "floatingInput",
+            children: "Email address"
+          })]
+        }), /*#__PURE__*/_jsxs("div", {
+          className: "form-floating",
+          children: [/*#__PURE__*/_jsx("input", {
+            required: true,
+            type: "password",
+            className: "form-control reginput",
+            id: "regpassword",
+            placeholder: "Password",
+            onChange: e => setEncryptedPassword(e.target.value)
+          }), /*#__PURE__*/_jsx("label", {
+            htmlFor: "regpassword",
+            children: "Password"
+          })]
+        }), /*#__PURE__*/_jsxs("div", {
+          className: "form-floating",
+          children: [/*#__PURE__*/_jsx("input", {
+            required: true,
+            type: "text",
+            className: "form-control reginput",
+            id: "firstName",
+            placeholder: "John",
+            onChange: e => setFirstName(e.target.value)
+          }), /*#__PURE__*/_jsx("label", {
+            htmlFor: "firstName",
+            children: "First Name"
+          })]
+        }), /*#__PURE__*/_jsxs("div", {
+          className: "form-floating",
+          children: [/*#__PURE__*/_jsx("input", {
+            required: true,
+            type: "text",
+            className: "form-control reginput",
+            id: "lastName",
+            placeholder: "Doe",
+            onChange: e => setLastName(e.target.value)
+          }), /*#__PURE__*/_jsx("label", {
+            htmlFor: "lastName",
+            children: "Last Name"
+          })]
+        }), /*#__PURE__*/_jsxs("div", {
+          className: "form-floating",
+          children: [/*#__PURE__*/_jsx("input", {
+            required: true,
+            type: "date",
+            className: "form-control reginput",
+            id: "dob",
+            placeholder: "16/01/1998",
+            onChange: e => setDob(e.target.value)
+          }), /*#__PURE__*/_jsx("label", {
+            htmlFor: "dob",
+            children: "Date of Birth"
+          })]
+        }), /*#__PURE__*/_jsxs("div", {
+          className: "form-floating",
+          children: [/*#__PURE__*/_jsx("input", {
+            type: "text",
+            className: "form-control reginput",
+            id: "imageURL",
+            placeholder: "https://...",
+            onChange: e => setImageURL(e.target.value)
+          }), /*#__PURE__*/_jsx("label", {
+            htmlFor: "imageURL",
+            children: "ImageURL"
+          })]
+        }), /*#__PURE__*/_jsxs("div", {
+          className: "form-floating",
+          children: [/*#__PURE__*/_jsx("input", {
+            type: "text",
+            className: "form-control reginput",
+            id: "username",
+            placeholder: "Johnny",
+            onChange: e => setUsername(e.target.value)
+          }), /*#__PURE__*/_jsx("label", {
+            htmlFor: "username",
+            children: "Username"
+          })]
+        }), /*#__PURE__*/_jsxs("div", {
+          className: "form-floating",
+          children: [/*#__PURE__*/_jsxs("div", {
+            className: "form-control reginput status",
+            children: [/*#__PURE__*/_jsxs("div", {
+              children: [/*#__PURE__*/_jsx("input", {
+                required: true,
+                type: "radio",
+                id: "public-status",
+                value: "public",
+                name: "status",
+                checked: true,
+                onClick: e => setIsPublic(e.target.value)
+              }), /*#__PURE__*/_jsx("label", {
+                htmlFor: "public-status",
+                children: "Public"
+              })]
+            }), /*#__PURE__*/_jsxs("div", {
+              children: [/*#__PURE__*/_jsx("input", {
+                required: true,
+                type: "radio",
+                id: "private-status",
+                value: "private",
+                name: "status",
+                onClick: e => setIsPublic(e.target.value)
+              }), /*#__PURE__*/_jsx("label", {
+                htmlFor: "private-status",
+                children: "Private"
+              })]
+            })]
+          }), /*#__PURE__*/_jsx("label", {
+            htmlFor: "",
+            children: "Status"
+          })]
+        }), /*#__PURE__*/_jsxs("div", {
+          className: "form-floating",
+          children: [/*#__PURE__*/_jsx("input", {
+            className: "form-control reginput",
+            name: "bio",
+            placeholder: "About Me",
+            id: "bio",
+            cols: "30",
+            rows: "10",
+            onChange: e => setBio(e.target.value)
+          }), /*#__PURE__*/_jsx("label", {
+            htmlFor: "about",
+            children: "About me"
+          })]
+        }), /*#__PURE__*/_jsx("button", {
+          className: "w-100 btn btn-lg btn-primary",
+          type: "submit",
+          children: "Register"
+        })]
+      }), /*#__PURE__*/_jsx("span", {
+        children: "Already have an account? \xA0"
+      })]
+    })
+  });
 }
 function Home(props) {
-  return React.createElement("main", null, React.createElement("div", {
-    className: "contentContainer"
-  }, props.name ? React.createElement(React.Fragment, null, React.createElement(ProfileImgContainer, {
-    name: props.name,
-    user: props.user,
-    imageURL: props.imageURL
-  }), React.createElement(GroupContainer, {
-    groups: props.groups,
-    socket: props.socket
-  }), React.createElement(PostForm, {
-    imageURL: props.imageURL
-  }), React.createElement(RightSide, {
-    openConnection: props.openConnection,
-    fetchRequestData: props.fetchRequestData
-  }), React.createElement(GetChat, null)) : React.createElement(React.Fragment, null, React.createElement("p", null, "You are not logged in"))));
+  return /*#__PURE__*/_jsx("main", {
+    children: /*#__PURE__*/_jsx("div", {
+      className: "contentContainer",
+      children: props.name ? /*#__PURE__*/_jsxs(_Fragment, {
+        children: [/*#__PURE__*/_jsx(ProfileImgContainer, {
+          name: props.name,
+          user: props.user,
+          imageURL: props.imageURL
+        }), /*#__PURE__*/_jsx(GroupContainer, {
+          groups: props.groups,
+          socket: props.socket
+        }), /*#__PURE__*/_jsx(PostForm, {
+          imageURL: props.imageURL
+        }), /*#__PURE__*/_jsx(RightSide, {
+          openConnection: props.openConnection,
+          fetchRequestData: props.fetchRequestData
+        }), /*#__PURE__*/_jsx(GetChat, {})]
+      }) : /*#__PURE__*/_jsx(_Fragment, {
+        children: /*#__PURE__*/_jsx("p", {
+          children: "You are not logged in"
+        })
+      })
+    })
+  });
 }
 function Profile(props) {
   const [status, setStatus] = useState("");
@@ -271,6 +327,7 @@ function Profile(props) {
   // }, [props.user.status]);
 
   const sendStatusToBackend = async data => {
+    console.log(data);
     await fetch("http://localhost:8080/update-user-status", {
       method: "POST",
       headers: {
@@ -297,101 +354,96 @@ function Profile(props) {
       setStatus("public");
     }
   };
-  return React.createElement("div", {
-    className: "profileContainer"
-  }, "name=", props.name, "user=", props.user, "imageURL=", props.imageURL, "socket=", props.socket, "currentUser=", props.currentUser, "fetchUsersData=", props.fetchUsersData, "update=", props.update, "setUpdate=", props.setUpdate, React.createElement("div", {
-    className: "formContainer"
-  }, React.createElement("div", {
-    className: "smallAvatar"
-  }, React.createElement("img", {
-    src: props.imageURL,
-    alt: "profile photo"
-  })), React.createElement("div", {
-    className: "profile-page-title"
-  }, props.name, "'s Posts")), props.currentUser === undefined ? React.createElement("div", {
-    id: "set-public-private",
-    className: "privacyButtons",
-    style: {
-      width: "100%",
-      backgroundColor: "white",
-      justifyContent: "space-evenly",
-      alignItems: "center"
-    }
-  }, React.createElement(React.Fragment, null, React.createElement("button", {
-    className: "postType",
-    onClick: updateUserStatus,
-    "data-type": "private",
-    disabled: status === "private" ? true : false,
-    style: {
-      backgroundColor: status === "private" ? "rgba(129, 25, 41, 0.55)" : "rgb(148, 28, 47)"
-    }
-  }, "Set Private"), React.createElement("button", {
-    className: "postType",
-    onClick: updateUserStatus,
-    "data-type": "public",
-    disabled: status === "public" ? true : false,
-    style: {
-      backgroundColor: status === "public" ? "rgba(129, 25, 41, 0.55)" : "rgb(148, 28, 47)"
-    }
-  }, "Set Public"))) : React.createElement("div", {
-    id: "set-public-private",
-    className: "privacyButtons",
-    style: {
-      width: "100%",
-      backgroundColor: "rgba(250, 250, 250, 0.5)"
-    }
-  }));
-}
-
-
-function PublicPosts() {
-
-  const publicPostsTemplate = React.createElement("div", {
-    className: "publicPostsContainer"
-  })
-
-  const publicPostsData = async () => {
-    const response = await fetch("http://localhost:8080/api/home", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
+  return /*#__PURE__*/_jsxs("div", {
+    className: "profileContainer",
+    children: ["name=", props.name, "user=", props.user, "imageURL=", props.imageURL, "socket=", props.socket, "currentUser=", props.currentUser, "fetchUsersData=", props.fetchUsersData, "update=", props.update, "setUpdate=", props.setUpdate, /*#__PURE__*/_jsxs("div", {
+      className: "formContainer",
+      children: [/*#__PURE__*/_jsx("div", {
+        className: "smallAvatar",
+        children: /*#__PURE__*/_jsx("img", {
+          src: props.imageURL,
+          alt: "profile photo"
+        })
+      }), /*#__PURE__*/_jsxs("div", {
+        className: "profile-page-title",
+        children: [props.name, "'s Posts"]
+      })]
+    }), props.currentUser === undefined ? /*#__PURE__*/_jsx("div", {
+      id: "set-public-private",
+      className: "privacyButtons",
+      style: {
+        width: "100%",
+        backgroundColor: "white",
+        justifyContent: "space-evenly",
+        alignItems: "center"
       },
-      credentials: "include"
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    return response.json(); 
-  };
-
-  try {
-    const receivedData =  publicPostsData()
-    const updatedPublicPostsTemplate = React.cloneElement(publicPostsTemplate, null, receivedData);
-
-    return updatedPublicPostsTemplate
-
-  }catch (error) {
-    // Handle any errors that might occur during fetching or parsing the data
-    console.error('Error fetching data:', error);
-  }
-  
-
-  
-
-  
-  // console.log(fetchData.response); 
-  // const template = document.createElement("template");
-  // template.innerHTML = `
-  // <div>
-  //     <h1>Hi</h1>
-  //     <p>What's up?</p>
-  // </div>
-  // `
-  // return template
-
+      children: /*#__PURE__*/_jsxs(_Fragment, {
+        children: [/*#__PURE__*/_jsx("button", {
+          className: "postType",
+          onClick: updateUserStatus,
+          "data-type": "private",
+          disabled: status === "private" ? true : false,
+          style: {
+            backgroundColor: status === "private" ? "rgba(129, 25, 41, 0.55)" : "rgb(148, 28, 47)"
+          },
+          children: "Set Private"
+        }), /*#__PURE__*/_jsx("button", {
+          className: "postType",
+          onClick: updateUserStatus,
+          "data-type": "public",
+          disabled: status === "public" ? true : false,
+          style: {
+            backgroundColor: status === "public" ? "rgba(129, 25, 41, 0.55)" : "rgb(148, 28, 47)"
+          },
+          children: "Set Public"
+        })]
+      })
+    }) : /*#__PURE__*/_jsx("div", {
+      id: "set-public-private",
+      className: "privacyButtons",
+      style: {
+        width: "100%",
+        backgroundColor: "rgba(250, 250, 250, 0.5)"
+      }
+    })]
+  });
 }
+
+async function PublicPosts() {
+	// Fetch data from the server
+	const fetchData = async () => {
+	  const response = await fetch("http://localhost:8080/api/home", {
+		method: "GET",
+		headers: {
+		  "Content-Type": "application/json"
+		},
+		credentials: "include"
+	  });
+
+	  if (!response.ok) {
+		throw new Error(`HTTP error! Status: ${response.status}`);
+	  }
+
+	  return response.json(); 
+	};
+
+	const data = await fetchData();
+
+	// Render the fetched data here
+	return (
+
+	  <div className="public-posts">
+		<h2>All Users</h2>
+		<ul>
+		  {data.users.map(user => (
+			<li key={user.id}>{user.name}</li>
+		  ))}
+		</ul>
+
+	  </div>
+
+	);
+  }
 
 const root = document.querySelector("#root");
-ReactDOM.render( React.createElement(App, null), root);
+ReactDOM.render( /*#__PURE__*/_jsx(App, {}), root);

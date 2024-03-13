@@ -7,7 +7,7 @@ const App = () => {
 			<Register />
 			<Home />
 			<Profile />
-			<PublicPosts />
+			{/* <PublicPosts /> */}
 		</div>
 	)
 }
@@ -403,42 +403,41 @@ function Profile(props) {
 	);
 }
 
-async function PublicPosts(props) {
-	// Fetch data from the server
-	const fetchData = async () => {
-	  const response = await fetch("http://localhost:8080/api/home", {
-		method: "GET",
-		headers: {
-		  "Content-Type": "application/json"
-		},
-		credentials: "include"
-	  });
+// async function PublicPosts() {
+// 	// Fetch data from the server
+// 	const fetchData = async () => {
+// 	  const response = await fetch("http://localhost:8080/api/home", {
+// 		method: "GET",
+// 		headers: {
+// 		  "Content-Type": "application/json"
+// 		},
+// 		credentials: "include"
+// 	  });
   
-	  if (!response.ok) {
-		throw new Error(`HTTP error! Status: ${response.status}`);
-	  }
+// 	  if (!response.ok) {
+// 		throw new Error(`HTTP error! Status: ${response.status}`);
+// 	  }
   
-	  return response.json(); 
-	};
+// 	  return response.json(); 
+// 	};
 	
-	// Call fetchData and wait for the result
-	const data = await fetchData();
+// 	const data = await fetchData();
   
-	// Render the fetched data here
-	return (
+// 	// Render the fetched data here
+// 	return (
 	  
-	  <div className="public-posts">
-		<h2>All Users</h2>
-		<ul>
-		  {data.users.map(user => (
-			<li key={user.id}>{user.name}</li>
-		  ))}
-		</ul>
+// 	  <div className="public-posts">
+// 		<h2>All Users</h2>
+// 		<ul>
+// 		  {data.users.map(user => (
+// 			<li key={user.id}>{user.name}</li>
+// 		  ))}
+// 		</ul>
    
-	  </div>
+// 	  </div>
 	  
-	);
-  }
+// 	);
+//   }
 
 const root = document.querySelector("#root")
 ReactDOM.render(<App />, root)
