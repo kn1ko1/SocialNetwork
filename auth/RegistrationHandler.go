@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
+	"socialnetwork/transport"
 	"socialnetwork/utils"
 	"time"
 
@@ -33,9 +34,8 @@ func (h *RegistrationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 }
 
 func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
-	var user models.User
-	ctime := time.Now().UTC().UnixMilli()
 
+	// Checks cookies
 	cookie, err := r.Cookie(cookieName)
 	if err == nil {
 		_, exists := sessionMap[cookie.Value]
@@ -46,45 +46,64 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	json.NewDecoder(r.Body).Decode(&user)
+	// Decodes incoming json into registeringUser (transport.RegisteringUser)
+	var registeringUser transport.RegisteringUser
+	json.NewDecoder(r.Body).Decode(&registeringUser)
 
-	log.Println("[RegistrationHandler] ctime:", ctime)
-	user.CreatedAt = ctime
-
-	dateString := "2024-03-05"
-	// Parse the date string into a time.Time object
-	date, err := time.Parse("2006-01-02", dateString)
+	// converts date from string to milliseconds for storage in database
+	date, err := time.Parse("2006-01-02", registeringUser.DOB)
 	if err != nil {
 		fmt.Println("Error parsing date:", err)
 		return
 	}
-	user.DOB = date.UnixNano() / int64(time.Millisecond)
+	dateInMilliseconds := date.UTC().UnixMilli()
+	log.Println("[auth/RegistrationHandler] date", date)
+	log.Println("[auth/RegistrationHandler]registeringUser.DOB ", dateInMilliseconds)
+	t := time.Unix(dateInMilliseconds/1000, 0)
+	log.Println("[auth/RegistrationHandler]date converted back ", t.Format("02-01-2006"))
 
-	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(user.EncryptedPassword), bcrypt.DefaultCost)
+	// Encrypt Password for Storage
+	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(registeringUser.EncryptedPassword), bcrypt.DefaultCost)
 	if err != nil {
 		utils.HandleError("Error with password encryption", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
-	user.EncryptedPassword = string(encryptedPassword)
-	user.UpdatedAt = ctime
+	// Creates current time in milliseconds for CreatedAt and UpdatedAt fields
+	ctime := time.Now().UTC().UnixMilli()
 
-	err = user.Validate()
+	// Creates a models.User struct to passing to CreateUser, so that it both takes in and passes out the same types of data
+	processedUser := models.User{
+		Bio:               registeringUser.Bio,
+		CreatedAt:         ctime,
+		DOB:               dateInMilliseconds,
+		Email:             registeringUser.Email,
+		EncryptedPassword: string(encryptedPassword),
+		FirstName:         registeringUser.FirstName,
+		ImageURL:          registeringUser.ImageURL,
+		IsPublic:          registeringUser.IsPublic,
+		LastName:          registeringUser.LastName,
+		UpdatedAt:         ctime,
+		Username:          registeringUser.Username,
+	}
 
+	err = processedUser.Validate()
 	if err != nil {
 		utils.HandleError("User invalid", err)
 		http.Error(w, "validation failed for user registration", http.StatusBadRequest)
 		return
 	}
-	log.Println("Received user in RegistrationHandler:", user)
+	log.Println("Received user in RegistrationHandler:", processedUser)
 
-	user, err = h.Repo.CreateUser(user)
+	processedUser, err = h.Repo.CreateUser(processedUser)
 	if err != nil {
 		utils.HandleError("Unable to register a new user in AddUserHandler", err)
 		http.Error(w, "Unable to register a new user", http.StatusBadRequest)
 		return
 	}
+
+	// Sets up a new Cookie
 	cookieValue = GenerateNewUUID()
-	sessionMap[cookieValue] = &user
+	//sessionMap[cookieValue] = &processedUser
 
 	cookie = &http.Cookie{
 		Name:     cookieName,
