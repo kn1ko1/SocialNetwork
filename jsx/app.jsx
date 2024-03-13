@@ -1,5 +1,5 @@
-const { useState } = React
- 
+const { useState, useEffect } = React
+
 const App = () => {
 	return (
 		<div className="app-container">
@@ -7,7 +7,7 @@ const App = () => {
 			<Register />
 			<Home />
 			<Profile />
-			{/* <PublicPosts /> */}
+			<PublicPosts />
 		</div>
 	)
 }
@@ -403,41 +403,36 @@ function Profile(props) {
 	);
 }
 
-// async function PublicPosts() {
-// 	// Fetch data from the server
-// 	const fetchData = async () => {
-// 	  const response = await fetch("http://localhost:8080/api/home", {
-// 		method: "GET",
-// 		headers: {
-// 		  "Content-Type": "application/json"
-// 		},
-// 		credentials: "include"
-// 	  });
+function PublicPosts() {
+	const [users, setUsers] = useState([]);
   
-// 	  if (!response.ok) {
-// 		throw new Error(`HTTP error! Status: ${response.status}`);
-// 	  }
+	useEffect(() => {
+	  fetch('http://localhost:8080/api/home')
+		.then(response => response.json())
+		.then(data => {
+		  // Assuming the data structure is { users: [...] }
+		  setUsers(data.users);
+		})
+		.catch(error => {
+		  console.error('Error fetching data:', error);
+		});
+	}, []);
   
-// 	  return response.json(); 
-// 	};
-	
-// 	const data = await fetchData();
-  
-// 	// Render the fetched data here
-// 	return (
-	  
-// 	  <div className="public-posts">
-// 		<h2>All Users</h2>
-// 		<ul>
-// 		  {data.users.map(user => (
-// 			<li key={user.id}>{user.name}</li>
-// 		  ))}
-// 		</ul>
-   
-// 	  </div>
-	  
-// 	);
-//   }
+	return (
+	  <div className="public-posts">
+		<h2>All Users</h2>
+		<ul>
+		  {users.map(user => (
+			<li key={user.id}>
+			  {user.name} - {user.email} {/* Render whatever user properties you need */}
+			</li>
+		  ))}
+		</ul>
+	  </div>
+	);
+  }
+
+
 
 const root = document.querySelector("#root")
 ReactDOM.render(<App />, root)
