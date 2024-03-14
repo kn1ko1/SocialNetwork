@@ -35,7 +35,10 @@ function Login(props) {
 		const validUser = await response.json()
 		setRedirectVar(true)
 		props.setName(validUser.first)
+		const appContainer = container.querySelector('.app-container');	
+		appContainer.innerHTML = ""
 	}
+		
 
 	return (
 		<div>

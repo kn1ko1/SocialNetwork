@@ -32,6 +32,8 @@ function Login(props) {
     const validUser = await response.json();
     setRedirectVar(true);
     props.setName(validUser.first);
+    const appContainer = container.querySelector('.app-container');
+    appContainer.innerHTML = "";
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
     className: "form-signin w-100 m-auto",
