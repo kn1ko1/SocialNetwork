@@ -248,15 +248,18 @@ function Register(props) {
   }, "Register")), /*#__PURE__*/React.createElement("span", null, "Already have an account? \xA0")));
 }
 
-// Main post form, defaults to sending posts to public group
-function PostForm(props) {
+// Main post form, defaults to sending posts to public group (0)
+function PostForm() {
   const [body, setBody] = useState("");
   const [imageURL, setImageURL] = useState("");
 
   // const [redirectVar, setRedirectVar] = useState(false)
-  const groupId = Number(0);
+  let groupId = null;
   const userId = Number(36);
   const privacy = "public";
+  if (privacy === "public") {
+    groupId = Number(0);
+  }
   const submit = async e => {
     e.preventDefault(); // prevent reload.
 

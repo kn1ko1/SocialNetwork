@@ -262,19 +262,25 @@ function Register(props) {
 	);
 }
 
-// Main post form, defaults to sending posts to public group
-function PostForm(props) {
+// Main post form, defaults to sending posts to public group (0)
+function PostForm() {
 	const [body, setBody] = useState("")
 	const [imageURL, setImageURL] = useState("")
-
-	// const [redirectVar, setRedirectVar] = useState(false)
-	const groupId = Number(0)
-	const userId = Number(36)
 	const privacy = "public"
+	let groupId = null
 
+	// Needs to be changed to get info from... cookie?
+	const userId = Number(36)
+
+	if (privacy === "public") {
+		groupId = Number(0)
+	}
+
+	// Upon submitting:
 	const submit = async (e) => {
 		e.preventDefault() // prevent reload.
 
+		// Reads info from returned HTML
 		const postToSend = {
 			body,
 			groupId,
@@ -284,7 +290,7 @@ function PostForm(props) {
 		}
 		console.log("Post being sent to backend: ", postToSend)
 
-		// Send user data to golang register function.
+		// Send user data to golang api/PostHandler.go.
 		await fetch("http://localhost:8080/api/posts", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
@@ -328,6 +334,7 @@ function PostForm(props) {
 	)
 }
 
+// Display information relating to homepage
 function Home() {
 	const [users, setUsers] = useState([]);
 	const [almostPrivatePosts, setAlmostPrivatePosts] = useState([]);
@@ -438,6 +445,8 @@ function Home() {
 	);
 }
 
+// Elements related to the homepage clustered together for the login function to return.
+// Needs work, but it's a start
 const completedHomePage = () => {
 	return (
 		<div className="completedHomePage">
