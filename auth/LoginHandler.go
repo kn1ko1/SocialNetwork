@@ -59,9 +59,49 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 	log.Println("[auth/LoginHandler] Email: ", loginInfo.UsernameOrEmail)
 	log.Println("[auth/LoginHandler] EncryptedPassword: ", user.EncryptedPassword, ". password: ", loginInfo.Password)
 	err = bcrypt.CompareHashAndPassword([]byte(user.EncryptedPassword), []byte(loginInfo.Password))
+
 	if err != nil {
 		utils.HandleError("Failed to retrieve user", err)
 		http.Error(w, "invalid username or password", http.StatusUnauthorized)
+		return
+	}
+
+	// If login is successful, construct the response JSON
+	response := struct {
+		Success bool        `json:"success"`
+		Message string      `json:"message"`
+		User    interface{} `json:"user,omitempty"`
+	}{
+		Success: true,
+		Message: "Login successful",
+		User: struct {
+			ID       int    `json:"id"`
+			Username string `json:"username"`
+			Email    string `json:"email"`
+			// Add other user fields as needed
+		}{
+			ID:       user.UserId,
+			Username: user.Username,
+			Email:    user.Email,
+			// Assign other user fields as needed
+		},
+	}
+
+	// Convert the response struct to JSON
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		utils.HandleError("Failed to marshal JSON response", err)
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	// Set response headers
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_, err = w.Write(jsonResponse)
+	if err != nil {
+		utils.HandleError("Failed to write JSON response", err)
+		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
 

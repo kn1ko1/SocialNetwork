@@ -5,37 +5,64 @@ const {
 const App = () => {
   return /*#__PURE__*/React.createElement("div", {
     className: "app-container"
-  }, /*#__PURE__*/React.createElement(Login, null), /*#__PURE__*/React.createElement(Register, null));
+  }, /*#__PURE__*/React.createElement(Login, null));
 };
 function Login(props) {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [redirectVar, setRedirectVar] = useState(false)
+  const [redirectVar, setRedirectVar] = useState(false);
+  const [error, setError] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const errorMessage = document.querySelector(".error-message");
 
+  //this is the sign in button
   const submit = async e => {
     e.preventDefault(); // prevent reload.
 
+    //this is user input 
     const userToLogin = {
       usernameOrEmail,
       password
     };
-    console.log(userToLogin);
+    try {
+      //check credentials with backend
+      const response = await fetch('http://localhost:8080/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify(userToLogin)
+      });
+      if (!response.ok) {
+        errorMessage.innerHTML = 'Invalid credentials';
+        throw new Error('Invalid credentials');
+      }
 
-    // Send user data to golang register function.
-    await fetch("http://localhost:8080/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      credentials: "include",
-      body: JSON.stringify(userToLogin)
-    });
+      //takes response from backend and processes
+      const data = await response.json();
+      if (data.success) {
+        setIsLoggedIn(true);
+      } else {
+        errorMessage.innerHTML = 'Invalid credentials';
+        throw new Error('Invalid credentials');
+      }
+    } catch (error) {
+      errorMessage.innerHTML = 'Invalid credentials';
+      setError('Invalid credentials');
+    }
+  };
 
-    // setRedirectVar(true)
-    // props.setName(validUser.first)
+  //if credentials frontend match backend then we render home
+  if (isLoggedIn) {
     const appContainer = document.querySelector('.app-container');
     ReactDOM.render(completedHomePage(), appContainer);
-    // const validUser = await response.json()
+  }
+
+  //this is the register button, when pressed will serve registration form
+  const renderRegister = () => {
+    const appContainer = document.querySelector('.app-container');
+    ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), appContainer);
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
     className: "form-signin w-100 m-auto",
@@ -69,7 +96,12 @@ function Login(props) {
   }, "Password")), /*#__PURE__*/React.createElement("button", {
     className: "w-100 btn btn-lg btn-primary",
     type: "submit"
-  }, "Sign in")), /*#__PURE__*/React.createElement("span", null, "Already have an account? \xA0")));
+  }, "Sign in")), /*#__PURE__*/React.createElement("div", {
+    className: "error-message"
+  }), /*#__PURE__*/React.createElement("span", null, "Don't have an account? \xA0"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-link",
+    onClick: renderRegister
+  }, "Register")));
 }
 function Register(props) {
   const [email, setEmail] = useState("");
@@ -82,10 +114,9 @@ function Register(props) {
   const [bio, setBio] = useState("");
   const [isPublic, setIsPublic] = useState("");
   const [redirectVar, setRedirectVar] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
 
-  // Redirect
-  //const navigate = useNavigate();
-
+  //this is register button
   const submit = async e => {
     e.preventDefault(); // prevent reload.
 
@@ -101,26 +132,42 @@ function Register(props) {
       bio,
       isPublic
     };
-    // Send user data to golang register function.
-    const response = await fetch("http://localhost:8080/auth/registration", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(newUser)
-    });
-    console.log("dob", newUser.dob);
-    await response.json();
-    // let result = await response.json()
-    // if (result.email === email) {
-    setRedirectVar(true);
-    // }
+    try {
+      // Send user data to backend
+      const response = await fetch("http://localhost:8080/auth/registration", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newUser)
+      });
+      if (!response.ok) {
+        throw new Error('Invalid credentials');
+      }
+
+      //takes response from backend and processes
+      const data = await response.json();
+      if (data.success) {
+        setIsRegistered(true);
+      } else {
+        throw new Error('Invalid credentials');
+      }
+    } catch (error) {
+      setError('Invalid credentials');
+    }
   };
 
-  // if (redirectVar) {
-  // 	return navigate("/login"); // This is still iffy!!! ????????????
-  // }
+  //if credentials frontend succesfully create a new user then we render home
+  if (isRegistered) {
+    const appContainer = document.querySelector('.app-container');
+    ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
+  }
 
+  //this is the login button, when pressed will serve login form
+  const renderLogin = () => {
+    const appContainer = document.querySelector('.app-container');
+    ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
+  };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
     className: "form-signin w-100 m-auto",
     style: {
@@ -245,24 +292,30 @@ function Register(props) {
   }, "About me")), /*#__PURE__*/React.createElement("button", {
     className: "w-100 btn btn-lg btn-primary",
     type: "submit"
-  }, "Register")), /*#__PURE__*/React.createElement("span", null, "Already have an account? \xA0")));
+  }, "Register")), /*#__PURE__*/React.createElement("span", null, "Already have an account? \xA0"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-link",
+    onClick: renderLogin
+  }, "Login")));
 }
 
 // Main post form, defaults to sending posts to public group (0)
 function PostForm() {
   const [body, setBody] = useState("");
   const [imageURL, setImageURL] = useState("");
-
-  // const [redirectVar, setRedirectVar] = useState(false)
-  let groupId = null;
-  const userId = Number(36);
   const privacy = "public";
+  let groupId = null;
+
+  // Needs to be changed to get info from... cookie?
+  const userId = Number(36);
   if (privacy === "public") {
     groupId = Number(0);
   }
+
+  // Upon submitting:
   const submit = async e => {
     e.preventDefault(); // prevent reload.
 
+    // Reads info from returned HTML
     const postToSend = {
       body,
       groupId,
@@ -272,7 +325,7 @@ function PostForm() {
     };
     console.log("Post being sent to backend: ", postToSend);
 
-    // Send user data to golang register function.
+    // Send user data to golang api/PostHandler.go.
     await fetch("http://localhost:8080/api/posts", {
       method: "POST",
       headers: {
@@ -314,6 +367,8 @@ function PostForm() {
     type: "submit"
   }, "Submit"))));
 }
+
+// Display information relating to homepage
 function Home() {
   const [users, setUsers] = useState([]);
   const [almostPrivatePosts, setAlmostPrivatePosts] = useState([]);
@@ -367,6 +422,9 @@ function Home() {
     key: userNotification.createdAt
   }, userNotification.NotificationType, " ")))));
 }
+
+// Elements related to the homepage clustered together for the login function to return.
+// Needs work, but it's a start
 const completedHomePage = () => {
   return /*#__PURE__*/React.createElement("div", {
     className: "completedHomePage"

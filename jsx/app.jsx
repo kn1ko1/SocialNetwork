@@ -4,42 +4,69 @@ const App = () => {
 	return (
 		<div className="app-container">
 			<Login />
-			<Register />
 		</div>
 	)
 }
 
+
 function Login(props) {
 	const [usernameOrEmail, setUsernameOrEmail] = useState("")
 	const [password, setPassword] = useState("")
-	// const [redirectVar, setRedirectVar] = useState(false)
+	const [redirectVar, setRedirectVar] = useState(false)
+	const [error, setError] = useState(null);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const errorMessage = document.querySelector(".error-message")
 
+	//this is the sign in button
 	const submit = async (e) => {
 		e.preventDefault() // prevent reload.
 
+		//this is user input 
 		const userToLogin = {
 			usernameOrEmail,
 			password,
 		}
-		console.log(userToLogin)
 
-		// Send user data to golang register function.
-		await fetch("http://localhost:8080/auth/login", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			credentials: "include",
-			body: JSON.stringify(userToLogin),
-		})
+		try {
+			//check credentials with backend
+			const response = await fetch('http://localhost:8080/auth/login', {
+			  method: 'POST',
+			  headers: { 'Content-Type': 'application/json' },
+			  credentials: 'include',
+			  body: JSON.stringify(userToLogin),
+			});
 
-		// setRedirectVar(true)
-		// props.setName(validUser.first)
+			if (!response.ok) {
+			  errorMessage.innerHTML = 'Invalid credentials'
+			  throw new Error('Invalid credentials');
+			}
+	  
+			//takes response from backend and processes
+			const data = await response.json();
+			if (data.success) {
+			  setIsLoggedIn(true);
+			} else {
+			  errorMessage.innerHTML = 'Invalid credentials'
+			  throw new Error('Invalid credentials');
+			}
+		  } catch (error) {
+			errorMessage.innerHTML = 'Invalid credentials'
+			setError('Invalid credentials');
+		  }
+		};
+	  
+		//if credentials frontend match backend then we render home
+		if (isLoggedIn) {
+			const appContainer = document.querySelector('.app-container');
+			ReactDOM.render(completedHomePage(), appContainer);
+		}
+
+	//this is the register button, when pressed will serve registration form
+	const renderRegister = () => {
 		const appContainer = document.querySelector('.app-container');
-
-		ReactDOM.render(completedHomePage(), appContainer);
-		// const validUser = await response.json()
-
-	}
-
+		ReactDOM.render(<Register />, appContainer);
+	  };
+		
 
 	return (
 		<div>
@@ -70,10 +97,11 @@ function Login(props) {
 						Sign in
 					</button>
 				</form>
-				<span>Already have an account? &nbsp;</span>
-				{/* <Link to="/register" style={{ color: "white" }}>
-					Register
-				</Link> */}
+                <div className="error-message"></div>
+				<span>Don't have an account? &nbsp;</span>
+				<button className="btn btn-link" onClick={renderRegister}>
+          Register
+        </button>
 			</main>
 		</div>
 	)
@@ -90,10 +118,9 @@ function Register(props) {
 	const [bio, setBio] = useState("");
 	const [isPublic, setIsPublic] = useState("");
 	const [redirectVar, setRedirectVar] = useState(false);
+	const [isRegistered, setIsRegistered] = useState(false);
 
-	// Redirect
-	//const navigate = useNavigate();
-
+	//this is register button
 	const submit = async (e) => {
 		e.preventDefault(); // prevent reload.
 
@@ -109,23 +136,43 @@ function Register(props) {
 			bio,
 			isPublic,
 		};
-		// Send user data to golang register function.
-		const response = await fetch("http://localhost:8080/auth/registration", {
+
+		try {
+			// Send user data to backend
+			const response = await fetch("http://localhost:8080/auth/registration", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(newUser),
 		});
-		console.log("dob", newUser.dob)
-		await response.json()
-		// let result = await response.json()
-		// if (result.email === email) {
-		setRedirectVar(true);
-		// }
-	};
+	  
+		if (!response.ok) {
+		  throw new Error('Invalid credentials');
+		}
 
-	// if (redirectVar) {
-	// 	return navigate("/login"); // This is still iffy!!! ????????????
-	// }
+		//takes response from backend and processes
+		const data = await response.json();
+			if (data.success) {
+			  setIsRegistered(true);
+			} else {
+			  throw new Error('Invalid credentials');
+			}
+		  } catch (error) {
+			setError('Invalid credentials');
+		  }
+		};
+	  
+		//if credentials frontend succesfully create a new user then we render home
+		if (isRegistered) {
+			const appContainer = document.querySelector('.app-container');
+			ReactDOM.render(<Home />, appContainer);
+		}
+	
+	//this is the login button, when pressed will serve login form
+	const renderLogin = () => {
+		const appContainer = document.querySelector('.app-container');
+		ReactDOM.render(<Login />, appContainer);
+	  };
+
 
 	return (
 		<div>
@@ -254,9 +301,9 @@ function Register(props) {
 					</button>
 				</form>
 				<span>Already have an account? &nbsp;</span>
-				{/* <Link to="/login" style={{ color: "white" }}>
+				<button className="btn btn-link" onClick={renderLogin}>
           Login
-        </Link> */}
+        </button>
 			</main>
 		</div>
 	);
