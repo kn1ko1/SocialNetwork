@@ -41,33 +41,26 @@ func (h *PostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
-	contentType := r.Header.Get("Content-Type")
 	var post models.Post
-	switch contentType {
-	case "application/json":
-		err := json.NewDecoder(r.Body).Decode(&post)
-		if err != nil {
-			utils.HandleError("Failed to decode request body:", err)
-			http.Error(w, "Failed to decode request body", http.StatusBadRequest)
-			return
-		}
-	case "application/x-www-form-urlencoded":
-		err := r.ParseForm()
-		if err != nil {
-			utils.HandleError("Failed to parse form:", err)
-			http.Error(w, "internal server error", http.StatusInternalServerError)
-			return
-		}
-		ctime := time.Now().UTC().UnixMilli()
-		post.Body = r.PostFormValue("post-body")
-		post.CreatedAt = ctime
-		post.GroupId = 0
-		post.Privacy = r.PostFormValue("post-privacy")
-		// fmt.Println(post.Privacy)
-		post.UpdatedAt = ctime
-		post.UserId = 1
+
+	err := json.NewDecoder(r.Body).Decode(&post)
+	if err != nil {
+		utils.HandleError("Failed to decode request body:", err)
+		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+		return
 	}
 
+	ctime := time.Now().UTC().UnixMilli()
+	post.CreatedAt = ctime
+	post.GroupId = 0
+	// fmt.Println(post.Privacy)
+	post.UpdatedAt = ctime
+	post.UserId = 1
+
+	log.Println("ctime is:", ctime)
+	log.Println("post.CreatedAt is:", post.CreatedAt)
+	t := time.Unix(ctime/1000, 0)
+	log.Println("[api/PostHandler]date converted back ", t.Format("02-01-2006"))
 	// Validate the post
 	if validationErr := post.Validate(); validationErr != nil {
 		utils.HandleError("Validation failed:", validationErr)
@@ -108,7 +101,7 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 
 	// Encode and write the response
 	w.WriteHeader(http.StatusCreated)
-	err := json.NewEncoder(w).Encode(result)
+	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
