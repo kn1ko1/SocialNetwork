@@ -1,20 +1,16 @@
 const {
-  useState
+  useState,
+  useEffect
 } = React;
 const App = () => {
   return /*#__PURE__*/React.createElement("div", {
     className: "app-container"
-  },
-  /*#__PURE__*/React.createElement(Login, null),
-  /*#__PURE__*/React.createElement(Register, null),
-  /*#__PURE__*/React.createElement(Home, null),
-  /*#__PURE__*/React.createElement(Profile, null),
-  /*#__PURE__*/React.createElement(PublicPosts, null));
+  }, /*#__PURE__*/React.createElement(Login, null), /*#__PURE__*/React.createElement(Register, null), /*#__PURE__*/React.createElement(Home, null));
 };
 function Login(props) {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [redirectVar, setRedirectVar] = useState(false);
+  const [redirectVar, setRedirectVar] = useState(false);
   const submit = async e => {
     e.preventDefault(); // prevent reload.
 
@@ -34,7 +30,7 @@ function Login(props) {
       body: JSON.stringify(userToLogin)
     });
     const validUser = await response.json();
-    // setRedirectVar(true);
+    setRedirectVar(true);
     props.setName(validUser.first);
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
@@ -109,6 +105,7 @@ function Register(props) {
       },
       body: JSON.stringify(newUser)
     });
+    console.log("dob", newUser.dob);
     await response.json();
     // let result = await response.json()
     // if (result.email === email) {
@@ -246,122 +243,58 @@ function Register(props) {
     type: "submit"
   }, "Register")), /*#__PURE__*/React.createElement("span", null, "Already have an account? \xA0")));
 }
-function Home(props) {
-  return /*#__PURE__*/React.createElement("main", null, /*#__PURE__*/React.createElement("div", {
-    className: "contentContainer"
-  }, props.name ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(ProfileImgContainer, {
-    name: props.name,
-    user: props.user,
-    imageURL: props.imageURL
-  }), /*#__PURE__*/React.createElement(GroupContainer, {
-    groups: props.groups,
-    socket: props.socket
-  }), /*#__PURE__*/React.createElement(PostForm, {
-    imageURL: props.imageURL
-  }), /*#__PURE__*/React.createElement(RightSide, {
-    openConnection: props.openConnection,
-    fetchRequestData: props.fetchRequestData
-  }), /*#__PURE__*/React.createElement(GetChat, null)) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("p", null, "You are not logged in"))));
-}
-function Profile(props) {
-  const [status, setStatus] = useState("");
+function Home() {
+  const [users, setUsers] = useState([]);
+  const [almostPrivatePosts, setAlmostPrivatePosts] = useState([]);
   const [privatePosts, setPrivatePosts] = useState([]);
-
-  // Update status to props.user.status.
-  // useEffect(() => {
-  //   setStatus(props.user.status);
-  // }, [props.user.status]);
-
-  const sendStatusToBackend = async data => {
-    console.log(data);
-    await fetch("http://localhost:8080/update-user-status", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      credentials: "include",
-      body: JSON.stringify(data)
+  const [publicPostsWithComments, setPublicPostsWithComments] = useState([]);
+  const [userEvents, setUserEvents] = useState([]);
+  const [userGroups, setUserGroups] = useState([]);
+  const [userNotifications, setUserNotifications] = useState([]);
+  useEffect(() => {
+    fetch('http://localhost:8080/api/home').then(response => response.json()).then(data => {
+      setUsers(data.allUsers);
+      setAlmostPrivatePosts(data.almostPrivatePosts);
+      setPrivatePosts(data.privatePosts);
+      setPublicPostsWithComments(data.publicPostsWithComments);
+      setUserEvents(data.userEvents);
+      setUserGroups(data.userGroups);
+      setUserNotifications(data.userNotifications);
+    }).catch(error => {
+      console.error('Error fetching data:', error);
     });
-  };
-  const updateUserStatus = async ev => {
-    let buttonClicked = ev.target.getAttribute("data-type");
-    if (buttonClicked === "private") {
-      sendStatusToBackend({
-        user: props.user.email,
-        setStatus: "private"
-      });
-      setStatus("private");
-    } else if (buttonClicked === "public") {
-      // update on backend if user is not already public
-      sendStatusToBackend({
-        user: props.user.email,
-        setStatus: "public"
-      });
-      setStatus("public");
-    }
-  };
+  }, []);
   return /*#__PURE__*/React.createElement("div", {
-    className: "profileContainer"
-  }, "name=", props.name, "user=", props.user, "imageURL=", props.imageURL, "socket=", props.socket, "currentUser=", props.currentUser, "fetchUsersData=", props.fetchUsersData, "update=", props.update, "setUpdate=", props.setUpdate, /*#__PURE__*/React.createElement("div", {
-    className: "formContainer"
+    className: "homePage"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "smallAvatar"
-  }, /*#__PURE__*/React.createElement("img", {
-    src: props.imageURL,
-    alt: "profile photo"
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "profile-page-title"
-  }, props.name, "'s Posts")), props.currentUser === undefined ? /*#__PURE__*/React.createElement("div", {
-    id: "set-public-private",
-    className: "privacyButtons",
-    style: {
-      width: "100%",
-      backgroundColor: "white",
-      justifyContent: "space-evenly",
-      alignItems: "center"
-    }
-  }, /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
-    className: "postType",
-    onClick: updateUserStatus,
-    "data-type": "private",
-    disabled: status === "private" ? true : false,
-    style: {
-      backgroundColor: status === "private" ? "rgba(129, 25, 41, 0.55)" : "rgb(148, 28, 47)"
-    }
-  }, "Set Private"), /*#__PURE__*/React.createElement("button", {
-    className: "postType",
-    onClick: updateUserStatus,
-    "data-type": "public",
-    disabled: status === "public" ? true : false,
-    style: {
-      backgroundColor: status === "public" ? "rgba(129, 25, 41, 0.55)" : "rgb(148, 28, 47)"
-    }
-  }, "Set Public"))) : /*#__PURE__*/React.createElement("div", {
-    id: "set-public-private",
-    className: "privacyButtons",
-    style: {
-      width: "100%",
-      backgroundColor: "rgba(250, 250, 250, 0.5)"
-    }
-  }));
+    className: "allUsersList"
+  }, /*#__PURE__*/React.createElement("h2", null, "All Users"), /*#__PURE__*/React.createElement("ul", null, users.map(user => /*#__PURE__*/React.createElement("li", {
+    key: user.userId
+  }, user.username, " - ", user.email, " ")))), /*#__PURE__*/React.createElement("div", {
+    className: "almostPrivatePosts"
+  }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), /*#__PURE__*/React.createElement("ul", null, almostPrivatePosts !== null && almostPrivatePosts.map(almostPrivatePost => /*#__PURE__*/React.createElement("li", {
+    key: almostPrivatePost.createdAt
+  }, almostPrivatePost.body, " - ", almostPrivatePost.UserId)))), /*#__PURE__*/React.createElement("div", {
+    className: "privatePosts"
+  }, /*#__PURE__*/React.createElement("h2", null, "Private Posts"), /*#__PURE__*/React.createElement("ul", null, privatePosts !== null && privatePosts.map(privatePost => /*#__PURE__*/React.createElement("li", {
+    key: privatePost.createdAt
+  }, privatePost.body, " - ", privatePost.UserId, " ")))), /*#__PURE__*/React.createElement("div", {
+    className: "publicPostsWithComments"
+  }, /*#__PURE__*/React.createElement("h2", null, "Public Posts"), /*#__PURE__*/React.createElement("ul", null, publicPostsWithComments !== null && publicPostsWithComments.map(publicPostsWithComment => /*#__PURE__*/React.createElement("li", {
+    key: publicPostsWithComment.post.CreatedAt
+  }, publicPostsWithComment.post.Body, " - ", publicPostsWithComment.post.UserId, " ")))), /*#__PURE__*/React.createElement("div", {
+    className: "userEvents"
+  }, /*#__PURE__*/React.createElement("h2", null, "Events"), /*#__PURE__*/React.createElement("ul", null, userEvents !== null && userEvents.map(userEvent => /*#__PURE__*/React.createElement("li", {
+    key: userEvent.createdAt
+  }, userEvent.Title, " ")))), /*#__PURE__*/React.createElement("div", {
+    className: "userGroups"
+  }, /*#__PURE__*/React.createElement("h2", null, "Groups"), /*#__PURE__*/React.createElement("ul", null, userGroups !== null && userGroups.map(userGroup => /*#__PURE__*/React.createElement("li", {
+    key: userGroup.createdAt
+  }, userGroup.Title, " ")))), /*#__PURE__*/React.createElement("div", {
+    className: "userNotifications"
+  }, /*#__PURE__*/React.createElement("h2", null, "Notifications"), /*#__PURE__*/React.createElement("ul", null, userNotifications !== null && userNotifications.map(userNotification => /*#__PURE__*/React.createElement("li", {
+    key: userNotification.createdAt
+  }, userNotification.NotificationType, " ")))));
 }
-
-
-function PublicPosts(props) {
-  const publicPostsData = async data => {
-    await fetch("http://localhost:8080/api/home", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      credentials: "include",
-      body: JSON.stringify(data)
-    });
-  };
-  console.log(publicPostsData)
-  // Send user data to golang register function.
-};
-
-
 const root = document.querySelector("#root");
 ReactDOM.render( /*#__PURE__*/React.createElement(App, null), root);

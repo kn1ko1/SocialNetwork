@@ -1,12 +1,11 @@
-const { useState } = React
- 
+const { useState, useEffect } = React
+
 const App = () => {
 	return (
 		<div className="app-container">
 			<Login />
 			<Register />
 			<Home />
-			<Profile />
 		</div>
 	)
 }
@@ -259,148 +258,116 @@ function Register(props) {
 	);
 }
 
-function Home(props) {
-	return (
-		<main>
-			<div className="contentContainer">
-				{props.name ? (
-					<>
-						<ProfileImgContainer
-							name={props.name}
-							user={props.user}
-							imageURL={props.imageURL}
-						/>
-						<GroupContainer groups={props.groups} socket={props.socket} />
-						<PostForm imageURL={props.imageURL} />
-						<RightSide openConnection={props.openConnection} fetchRequestData={props.fetchRequestData} />
-						<GetChat />
-					</>
-				) : (
-					<>
-						<p>You are not logged in</p>
-						{/* <Link to="/login">Login</Link> */}
-					</>
-				)}
-			</div>
-		</main>
-	);
-}
-
-function Profile(props) {
-	const [status, setStatus] = useState("");
+function Home() {
+	const [users, setUsers] = useState([]);
+	const [almostPrivatePosts, setAlmostPrivatePosts] = useState([]);
 	const [privatePosts, setPrivatePosts] = useState([]);
+	const [publicPostsWithComments, setPublicPostsWithComments] = useState([]);
+	const [userEvents, setUserEvents] = useState([]);
+	const [userGroups, setUserGroups] = useState([]);
+	const [userNotifications, setUserNotifications] = useState([]);
 
-
-	// Update status to props.user.status.
-	// useEffect(() => {
-	//   setStatus(props.user.status);
-	// }, [props.user.status]);
-
-	const sendStatusToBackend = async (data) => {
-		console.log(data);
-		await fetch("http://localhost:8080/update-user-status", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			credentials: "include",
-			body: JSON.stringify(data),
-		});
-	};
-
-	const updateUserStatus = async (ev) => {
-		let buttonClicked = ev.target.getAttribute("data-type");
-		if (buttonClicked === "private") {
-			sendStatusToBackend({
-				user: props.user.email,
-				setStatus: "private",
+	useEffect(() => {
+		fetch('http://localhost:8080/api/home')
+			.then(response => response.json())
+			.then(data => {
+				setUsers(data.allUsers);
+				setAlmostPrivatePosts(data.almostPrivatePosts)
+				setPrivatePosts(data.privatePosts)
+				setPublicPostsWithComments(data.publicPostsWithComments)
+				setUserEvents(data.userEvents)
+				setUserGroups(data.userGroups)
+				setUserNotifications(data.userNotifications)
+			})
+			.catch(error => {
+				console.error('Error fetching data:', error);
 			});
-			setStatus("private");
-		} else if (buttonClicked === "public") {
-			// update on backend if user is not already public
-			sendStatusToBackend({
-				user: props.user.email,
-				setStatus: "public",
-			});
-			setStatus("public");
-		}
-	};
+	}, []);
 
 	return (
-		<div className="profileContainer">
+		<div className="homePage">
 
-			name={props.name}
-			user={props.user}
-			imageURL={props.imageURL}
-			socket={props.socket}
-			currentUser={props.currentUser}
-			fetchUsersData={props.fetchUsersData}
-			update={props.update}
-			setUpdate={props.setUpdate}
-
-			<div className="formContainer">
-				<div className="smallAvatar">
-					<img src={props.imageURL} alt="profile photo" />
-				</div>
-				<div className="profile-page-title">{props.name}'s Posts</div>
+			<div className="allUsersList">
+				<h2>All Users</h2>
+				<ul>
+					{users.map(user => (
+						<li key={user.userId}>
+							{user.username} - {user.email} {/* Render whatever user properties you need */}
+						</li>
+					))}
+				</ul>
 			</div>
 
-			{/* If my profile */}
+			<div className="almostPrivatePosts">
+				<h2>Almost Private Posts</h2>
+				<ul>
+					{almostPrivatePosts !== null && almostPrivatePosts.map(almostPrivatePost => (
+						<li key={almostPrivatePost.createdAt}>
+							{almostPrivatePost.body} - {almostPrivatePost.UserId}
+							{/* Render whatever user properties you need */}
+						</li>
+					))}
+				</ul>
+			</div>
 
-			{props.currentUser === undefined ? (
-				<div
-					id="set-public-private"
-					className="privacyButtons"
-					style={{
-						width: "100%",
-						backgroundColor: "white",
-						justifyContent: "space-evenly",
-						alignItems: "center",
-					}}
-				>
-					{/* currentUser is not passed to profile when redirecting to myProfile */}
-					<>
-						<button
-							className="postType"
-							onClick={updateUserStatus}
-							data-type="private"
-							disabled={status === "private" ? true : false}
-							style={{
-								backgroundColor:
-									status === "private"
-										? "rgba(129, 25, 41, 0.55)"
-										: "rgb(148, 28, 47)",
-							}}
-						>
-							Set Private
-						</button>
-						<button
-							className="postType"
-							onClick={updateUserStatus}
-							data-type="public"
-							disabled={status === "public" ? true : false}
-							style={{
-								backgroundColor:
-									status === "public"
-										? "rgba(129, 25, 41, 0.55)"
-										: "rgb(148, 28, 47)",
-							}}
-						>
-							Set Public
-						</button>
-					</>
-				</div>
-			) : (
-				<div
-					id="set-public-private"
-					className="privacyButtons"
-					style={{ width: "100%", backgroundColor: "rgba(250, 250, 250, 0.5)" }}
-				></div>
-			)}
+			<div className="privatePosts">
+				<h2>Private Posts</h2>
+				<ul>
+				{privatePosts !== null && privatePosts.map(privatePost => (
+						<li key={privatePost.createdAt}>
+							{privatePost.body} - {privatePost.UserId} {/* Render whatever user properties you need */}
+						</li>
+					))}
+				</ul>
+			</div>
 
-			{/* <AllPosts user={props.user} privatePosts={privatePosts} />
-		<RightSide openConnection={props.openConnection} fetchRequestData={props.fetchRequestData}  /> */}
+			<div className="publicPostsWithComments">
+				<h2>Public Posts</h2>
+				<ul>
+				{publicPostsWithComments !== null && publicPostsWithComments.map(publicPostsWithComment => (
+						<li key={publicPostsWithComment.post.CreatedAt}>
+							{publicPostsWithComment.post.Body} - {publicPostsWithComment.post.UserId} {/* Render whatever user properties you need */}
+						</li>
+					))}
+				</ul>
+			</div>
+
+			<div className="userEvents">
+				<h2>Events</h2>
+				<ul>
+				{userEvents !== null && userEvents.map(userEvent => (
+						<li key={userEvent.createdAt}>
+							{userEvent.Title} {/* Render whatever user properties you need */}
+						</li>
+					))}
+				</ul>
+			</div>
+
+			<div className="userGroups">
+				<h2>Groups</h2>
+				<ul>
+				{userGroups !== null && userGroups.map(userGroup => (
+						<li key={userGroup.createdAt}>
+							{userGroup.Title} {/* Render whatever user properties you need */}
+						</li>
+					))}
+				</ul>
+			</div>
+
+			<div className="userNotifications">
+				<h2>Notifications</h2>
+				<ul>
+				{userNotifications !== null && userNotifications.map(userNotification => (
+						<li key={userNotification.createdAt}>
+							{userNotification.NotificationType} {/* Render whatever user properties you need */}
+						</li>
+					))}
+				</ul>
+			</div>
 		</div>
 	);
 }
+
 
 
 const root = document.querySelector("#root")
