@@ -5,12 +5,13 @@ const {
 const App = () => {
   return /*#__PURE__*/React.createElement("div", {
     className: "app-container"
-  }, /*#__PURE__*/React.createElement(Login, null), /*#__PURE__*/React.createElement(Register, null), /*#__PURE__*/React.createElement(Home, null));
+  }, /*#__PURE__*/React.createElement(Login, null), /*#__PURE__*/React.createElement(Register, null));
 };
 function Login(props) {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [redirectVar, setRedirectVar] = useState(false);
+  // const [redirectVar, setRedirectVar] = useState(false)
+
   const submit = async e => {
     e.preventDefault(); // prevent reload.
 
@@ -21,7 +22,7 @@ function Login(props) {
     console.log(userToLogin);
 
     // Send user data to golang register function.
-    const response = await fetch("http://localhost:8080/auth/login", {
+    await fetch("http://localhost:8080/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -29,13 +30,11 @@ function Login(props) {
       credentials: "include",
       body: JSON.stringify(userToLogin)
     });
-    console.log("here");
-    setRedirectVar(true);
+
+    // setRedirectVar(true)
     // props.setName(validUser.first)
     const appContainer = document.querySelector('.app-container');
-    console.log("app-container");
-    console.log(appContainer);
-    ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
+    ReactDOM.render(completedHomePage(), appContainer);
     // const validUser = await response.json()
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
@@ -248,66 +247,69 @@ function Register(props) {
     type: "submit"
   }, "Register")), /*#__PURE__*/React.createElement("span", null, "Already have an account? \xA0")));
 }
+
+// Main post form, defaults to sending posts to public group
 function PostForm(props) {
-  const [postBody, setPostBody] = useState("");
-  const [redirectVar, setRedirectVar] = useState(false);
+  const [body, setBody] = useState("");
+  const [imageURL, setImageURL] = useState("");
+
+  // const [redirectVar, setRedirectVar] = useState(false)
+  const groupId = Number(0);
+  const userId = Number(36);
+  const privacy = "public";
   const submit = async e => {
     e.preventDefault(); // prevent reload.
 
-    const userToLogin = {
-      usernameOrEmail,
-      password
+    const postToSend = {
+      body,
+      groupId,
+      imageURL,
+      privacy,
+      userId
     };
-    console.log(userToLogin);
+    console.log("Post being sent to backend: ", postToSend);
 
     // Send user data to golang register function.
-    const response = await fetch("http://localhost:8080/auth/login", {
+    await fetch("http://localhost:8080/api/posts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       credentials: "include",
-      body: JSON.stringify(userToLogin)
+      body: JSON.stringify(postToSend)
     });
-    const validUser = await response.json();
-    setRedirectVar(true);
-    props.setName(validUser.first);
-    const appContainer = container.querySelector('.app-container');
-    appContainer.innerHTML = "";
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
-    className: "form-signin w-100 m-auto",
+    className: "postForm",
     style: {
       display: "block"
     }
   }, /*#__PURE__*/React.createElement("h1", {
     className: "h3 mb-3 fw-normal"
-  }, "Please sign in"), /*#__PURE__*/React.createElement("form", {
+  }, "Post Message Here"), /*#__PURE__*/React.createElement("form", {
     onSubmit: submit
   }, /*#__PURE__*/React.createElement("div", {
     className: "form-floating"
   }, /*#__PURE__*/React.createElement("input", {
-    type: "email",
+    type: "text",
     className: "form-control",
-    id: "floatingInput",
+    id: "postFormBody",
     placeholder: "name@example.com",
-    onChange: e => setUsernameOrEmail(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "floatingInput"
-  }, "Email address")), /*#__PURE__*/React.createElement("div", {
+    onChange: e => setBody(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
     className: "form-floating"
   }, /*#__PURE__*/React.createElement("input", {
-    type: "password",
+    type: "text",
     className: "form-control",
-    id: "floatingPassword",
-    placeholder: "Password",
-    onChange: e => setPassword(e.target.value)
+    id: "postFormImgURL",
+    placeholder: "This/Will/Need/A/Button.gif",
+    onChange: e => setImageURL(e.target.value)
   }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "floatingPassword"
-  }, "Password")), /*#__PURE__*/React.createElement("button", {
+    htmlFor: "postFormImgURL"
+  }, "Image URL")), /*#__PURE__*/React.createElement("button", {
     className: "w-100 btn btn-lg btn-primary",
     type: "submit"
-  }, "Sign in")), /*#__PURE__*/React.createElement("span", null, "Already have an account? \xA0")));
+  }, "Submit"))));
 }
 function Home() {
   const [users, setUsers] = useState([]);
@@ -362,5 +364,10 @@ function Home() {
     key: userNotification.createdAt
   }, userNotification.NotificationType, " ")))));
 }
+const completedHomePage = () => {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "completedHomePage"
+  }, /*#__PURE__*/React.createElement(PostForm, null), /*#__PURE__*/React.createElement(Home, null));
+};
 const root = document.querySelector("#root");
 ReactDOM.render( /*#__PURE__*/React.createElement(App, null), root);

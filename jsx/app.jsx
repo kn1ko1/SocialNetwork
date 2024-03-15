@@ -5,7 +5,6 @@ const App = () => {
 		<div className="app-container">
 			<Login />
 			<Register />
-			<Home />
 		</div>
 	)
 }
@@ -13,7 +12,7 @@ const App = () => {
 function Login(props) {
 	const [usernameOrEmail, setUsernameOrEmail] = useState("")
 	const [password, setPassword] = useState("")
-	const [redirectVar, setRedirectVar] = useState(false)
+	// const [redirectVar, setRedirectVar] = useState(false)
 
 	const submit = async (e) => {
 		e.preventDefault() // prevent reload.
@@ -32,17 +31,15 @@ function Login(props) {
 			body: JSON.stringify(userToLogin),
 		})
 
-		console.log("here")
-		setRedirectVar(true)
+		// setRedirectVar(true)
 		// props.setName(validUser.first)
-		const appContainer = document.querySelector('.app-container');	
-		console.log("app-container")
-		console.log(appContainer)
-		ReactDOM.render(<Home />, appContainer);
-				// const validUser = await response.json()
+		const appContainer = document.querySelector('.app-container');
+
+		ReactDOM.render(completedHomePage(), appContainer);
+		// const validUser = await response.json()
 
 	}
-		
+
 
 	return (
 		<div>
@@ -265,69 +262,67 @@ function Register(props) {
 	);
 }
 
-
+// Main post form, defaults to sending posts to public group
 function PostForm(props) {
-	const [postBody, setPostBody] = useState("")
-	const [redirectVar, setRedirectVar] = useState(false)
+	const [body, setBody] = useState("")
+	const [imageURL, setImageURL] = useState("")
+
+	// const [redirectVar, setRedirectVar] = useState(false)
+	const groupId = Number(0)
+	const userId = Number(36)
+	const privacy = "public"
 
 	const submit = async (e) => {
 		e.preventDefault() // prevent reload.
 
-		const userToLogin = {
-			usernameOrEmail,
-			password,
+		const postToSend = {
+			body,
+			groupId,
+			imageURL,
+			privacy,
+			userId
 		}
-		console.log(userToLogin)
+		console.log("Post being sent to backend: ", postToSend)
 
 		// Send user data to golang register function.
-		const response = await fetch("http://localhost:8080/auth/login", {
+		await fetch("http://localhost:8080/api/posts", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			credentials: "include",
-			body: JSON.stringify(userToLogin),
+			body: JSON.stringify(postToSend),
 		})
 
-		const validUser = await response.json()
-		setRedirectVar(true)
-		props.setName(validUser.first)
-		const appContainer = container.querySelector('.app-container');	
-		appContainer.innerHTML = ""
+
 	}
-		
 
 	return (
 		<div>
-			<main className="form-signin w-100 m-auto" style={{ display: "block" }}>
-				<h1 className="h3 mb-3 fw-normal">Please sign in</h1>
+			<main className="postForm" style={{ display: "block" }}>
+				<h1 className="h3 mb-3 fw-normal">Post Message Here</h1>
 				<form onSubmit={submit}>
 					<div className="form-floating">
 						<input
-							type="email"
+							type="text"
 							className="form-control"
-							id="floatingInput"
+							id="postFormBody"
 							placeholder="name@example.com"
-							onChange={(e) => setUsernameOrEmail(e.target.value)}
+							onChange={(e) => setBody(e.target.value)}
 						/>
-						<label htmlFor="floatingInput">Email address</label>
 					</div>
 					<div className="form-floating">
 						<input
-							type="password"
+							type="text"
 							className="form-control"
-							id="floatingPassword"
-							placeholder="Password"
-							onChange={(e) => setPassword(e.target.value)}
+							id="postFormImgURL"
+							placeholder="This/Will/Need/A/Button.gif"
+							onChange={(e) => setImageURL(e.target.value)}
 						/>
-						<label htmlFor="floatingPassword">Password</label>
+						<label htmlFor="postFormImgURL">Image URL</label>
 					</div>
 					<button className="w-100 btn btn-lg btn-primary" type="submit">
-						Sign in
+						Submit
 					</button>
 				</form>
-				<span>Already have an account? &nbsp;</span>
-				{/* <Link to="/register" style={{ color: "white" }}>
-					Register
-				</Link> */}
 			</main>
 		</div>
 	)
@@ -388,7 +383,7 @@ function Home() {
 			<div className="privatePosts">
 				<h2>Private Posts</h2>
 				<ul>
-				{privatePosts !== null && privatePosts.map(privatePost => (
+					{privatePosts !== null && privatePosts.map(privatePost => (
 						<li key={privatePost.createdAt}>
 							{privatePost.body} - {privatePost.UserId} {/* Render whatever user properties you need */}
 						</li>
@@ -399,7 +394,7 @@ function Home() {
 			<div className="publicPostsWithComments">
 				<h2>Public Posts</h2>
 				<ul>
-				{publicPostsWithComments !== null && publicPostsWithComments.map(publicPostsWithComment => (
+					{publicPostsWithComments !== null && publicPostsWithComments.map(publicPostsWithComment => (
 						<li key={publicPostsWithComment.post.CreatedAt}>
 							{publicPostsWithComment.post.Body} - {publicPostsWithComment.post.UserId} {/* Render whatever user properties you need */}
 						</li>
@@ -410,7 +405,7 @@ function Home() {
 			<div className="userEvents">
 				<h2>Events</h2>
 				<ul>
-				{userEvents !== null && userEvents.map(userEvent => (
+					{userEvents !== null && userEvents.map(userEvent => (
 						<li key={userEvent.createdAt}>
 							{userEvent.Title} {/* Render whatever user properties you need */}
 						</li>
@@ -421,7 +416,7 @@ function Home() {
 			<div className="userGroups">
 				<h2>Groups</h2>
 				<ul>
-				{userGroups !== null && userGroups.map(userGroup => (
+					{userGroups !== null && userGroups.map(userGroup => (
 						<li key={userGroup.createdAt}>
 							{userGroup.Title} {/* Render whatever user properties you need */}
 						</li>
@@ -432,7 +427,7 @@ function Home() {
 			<div className="userNotifications">
 				<h2>Notifications</h2>
 				<ul>
-				{userNotifications !== null && userNotifications.map(userNotification => (
+					{userNotifications !== null && userNotifications.map(userNotification => (
 						<li key={userNotification.createdAt}>
 							{userNotification.NotificationType} {/* Render whatever user properties you need */}
 						</li>
@@ -443,6 +438,14 @@ function Home() {
 	);
 }
 
+const completedHomePage = () => {
+	return (
+		<div className="completedHomePage">
+			<PostForm />
+			<Home />
+		</div>
+	)
+}
 
 
 const root = document.querySelector("#root")
