@@ -68,41 +68,43 @@ function Login(props) {
 	  };
 		
 
-	return (
-		<div>
-			<main className="form-signin w-100 m-auto" style={{ display: "block" }}>
-				<h1 className="h3 mb-3 fw-normal">Please sign in</h1>
-				<form onSubmit={submit}>
-					<div className="form-floating">
-						<input
-							type="email"
-							className="form-control"
-							id="floatingInput"
-							placeholder="name@example.com"
-							onChange={(e) => setUsernameOrEmail(e.target.value)}
-						/>
-						<label htmlFor="floatingInput">Email address</label>
-					</div>
-					<div className="form-floating">
-						<input
-							type="password"
-							className="form-control"
-							id="floatingPassword"
-							placeholder="Password"
-							onChange={(e) => setPassword(e.target.value)}
-						/>
-						<label htmlFor="floatingPassword">Password</label>
-					</div>
-					<button className="w-100 btn btn-lg btn-primary" type="submit">
-						Sign in
-					</button>
-				</form>
-                <div className="error-message"></div>
-				<span>Don't have an account? &nbsp;</span>
-				<button className="btn btn-link" onClick={renderRegister}>
-          Register
+	  return (
+		<div className="login-container">
+<main className="form-signin w-100 m-auto" style={{ display: "block" }}>
+    <h1 className="h3 mb-3 fw-normal login-text">log in</h1>
+    <form onSubmit={submit}>
+        <div className="form-floating">
+            <label htmlFor="floatingInput" className="login-text">Email address</label>
+            <input
+                type="email"
+                className="form-control login-text"
+                id="floatingInput"
+                placeholder="name@example.com"
+                onChange={(e) => setUsernameOrEmail(e.target.value)}
+            />
+        </div>
+		
+        <div className="form-floating">
+            <label htmlFor="floatingPassword" className="login-text">Password</label>
+            <input
+                type="password"
+                className="form-control login-text"
+                id="floatingPassword"
+                placeholder="Password"
+                onChange={(e) => setPassword(e.target.value)}
+            />
+        </div>
+        <button className="w-100 btn btn-lg btn-primary login-button" type="submit">
+            Sign in
         </button>
-			</main>
+    </form>
+    <div className="error-message"></div>
+    <br /> {/* Add a line break for spacing */}
+    <span className="login-text">Don't have an account? &nbsp;</span>
+    <button className="w-100 btn btn-lg btn-primary login-button" onClick={renderRegister}>
+        Register
+    </button>
+</main>
 		</div>
 	)
 }
@@ -174,10 +176,10 @@ function Register(props) {
 	  };
 
 
-	return (
-		<div>
-			<main className="form-signin w-100 m-auto" style={{ display: "block" }}>
-				<h1 className="h3 mb-3 fw-normal">Please register</h1>
+	  return (
+        <div className="login-container"> {/* Utilize the same container with the background image */}
+            <main className="form-signin w-100 m-auto" style={{ display: "block" }}>
+                <h1 className="h3 mb-3 fw-normal">register</h1>
 				<form onSubmit={submit}>
 
 					<div className="form-floating">
@@ -296,13 +298,15 @@ function Register(props) {
 						></input>
 						<label htmlFor="about">About me</label>
 					</div>
-					<button className="w-100 btn btn-lg btn-primary" type="submit">
+					<button className="w-100 btn btn-lg btn-primary login-button" type="submit">
 						Register
 					</button>
 				</form>
-				<span>Already have an account? &nbsp;</span>
-				<button className="btn btn-link" onClick={renderLogin}>
-          Login
+				<div className="error-message"></div>
+                <br /> {/* Add a line break for spacing */}
+                <span className="login-text">Already have an account? &nbsp;</span>
+                <button className="w-100 btn btn-lg btn-primary login-button" onClick={renderLogin}>
+                    Login
         </button>
 			</main>
 		</div>

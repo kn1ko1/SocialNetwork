@@ -64,42 +64,48 @@ function Login(props) {
     const appContainer = document.querySelector('.app-container');
     ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), appContainer);
   };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "login-container"
+  }, /*#__PURE__*/React.createElement("main", {
     className: "form-signin w-100 m-auto",
     style: {
       display: "block"
     }
   }, /*#__PURE__*/React.createElement("h1", {
-    className: "h3 mb-3 fw-normal"
-  }, "Please sign in"), /*#__PURE__*/React.createElement("form", {
+    className: "h3 mb-3 fw-normal login-text"
+  }, "log in"), /*#__PURE__*/React.createElement("form", {
     onSubmit: submit
   }, /*#__PURE__*/React.createElement("div", {
     className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "floatingInput",
+    className: "login-text"
+  }, "Email address"), /*#__PURE__*/React.createElement("input", {
     type: "email",
-    className: "form-control",
+    className: "form-control login-text",
     id: "floatingInput",
     placeholder: "name@example.com",
     onChange: e => setUsernameOrEmail(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "floatingInput"
-  }, "Email address")), /*#__PURE__*/React.createElement("div", {
+  })), /*#__PURE__*/React.createElement("div", {
     className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "floatingPassword",
+    className: "login-text"
+  }, "Password"), /*#__PURE__*/React.createElement("input", {
     type: "password",
-    className: "form-control",
+    className: "form-control login-text",
     id: "floatingPassword",
     placeholder: "Password",
     onChange: e => setPassword(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "floatingPassword"
-  }, "Password")), /*#__PURE__*/React.createElement("button", {
-    className: "w-100 btn btn-lg btn-primary",
+  })), /*#__PURE__*/React.createElement("button", {
+    className: "w-100 btn btn-lg btn-primary login-button",
     type: "submit"
   }, "Sign in")), /*#__PURE__*/React.createElement("div", {
     className: "error-message"
-  }), /*#__PURE__*/React.createElement("span", null, "Don't have an account? \xA0"), /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-link",
+  }), /*#__PURE__*/React.createElement("br", null), " ", /*#__PURE__*/React.createElement("span", {
+    className: "login-text"
+  }, "Don't have an account? \xA0"), /*#__PURE__*/React.createElement("button", {
+    className: "w-100 btn btn-lg btn-primary login-button",
     onClick: renderRegister
   }, "Register")));
 }
@@ -168,14 +174,16 @@ function Register(props) {
     const appContainer = document.querySelector('.app-container');
     ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
   };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "login-container"
+  }, " ", /*#__PURE__*/React.createElement("main", {
     className: "form-signin w-100 m-auto",
     style: {
       display: "block"
     }
   }, /*#__PURE__*/React.createElement("h1", {
     className: "h3 mb-3 fw-normal"
-  }, "Please register"), /*#__PURE__*/React.createElement("form", {
+  }, "register"), /*#__PURE__*/React.createElement("form", {
     onSubmit: submit
   }, /*#__PURE__*/React.createElement("div", {
     className: "form-floating"
@@ -290,10 +298,14 @@ function Register(props) {
   }), /*#__PURE__*/React.createElement("label", {
     htmlFor: "about"
   }, "About me")), /*#__PURE__*/React.createElement("button", {
-    className: "w-100 btn btn-lg btn-primary",
+    className: "w-100 btn btn-lg btn-primary login-button",
     type: "submit"
-  }, "Register")), /*#__PURE__*/React.createElement("span", null, "Already have an account? \xA0"), /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-link",
+  }, "Register")), /*#__PURE__*/React.createElement("div", {
+    className: "error-message"
+  }), /*#__PURE__*/React.createElement("br", null), " ", /*#__PURE__*/React.createElement("span", {
+    className: "login-text"
+  }, "Already have an account? \xA0"), /*#__PURE__*/React.createElement("button", {
+    className: "w-100 btn btn-lg btn-primary login-button",
     onClick: renderLogin
   }, "Login")));
 }
