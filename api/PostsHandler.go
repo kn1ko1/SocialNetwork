@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
+	"socialnetwork/transport"
 	"socialnetwork/utils"
 	"time"
 )
@@ -41,21 +42,24 @@ func (h *PostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
-	var post models.Post
+	var postFromFrontend transport.PostFromFrontend
+	ctime := time.Now().UTC().UnixMilli()
 
-	err := json.NewDecoder(r.Body).Decode(&post)
+	err := json.NewDecoder(r.Body).Decode(&postFromFrontend)
 	if err != nil {
 		utils.HandleError("Failed to decode request body:", err)
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
 
-	ctime := time.Now().UTC().UnixMilli()
-	post.CreatedAt = ctime
-	post.GroupId = 0
-	// fmt.Println(post.Privacy)
-	post.UpdatedAt = ctime
-	post.UserId = 1
+	post := models.Post{
+		Body:      postFromFrontend.Body,
+		CreatedAt: ctime,
+		GroupId:   postFromFrontend.GroupId,
+		Privacy:   postFromFrontend.Privacy,
+		UpdatedAt: ctime,
+		UserId:    1,
+	}
 
 	log.Println("ctime is:", ctime)
 	log.Println("post.CreatedAt is:", post.CreatedAt)
@@ -74,10 +78,7 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	file, fileHeader, _ := r.FormFile("image")
-	// file, fileHeader, formFileErr := r.FormFile("image")
-	// if formFileErr != nil {
-	// 	utils.HandleError("Error reading image.", formFileErr)
-	// }
+	log.Println("[api/PostsHandler] File: ", file)
 
 	//if file is given
 	if file != nil {

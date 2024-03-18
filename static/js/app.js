@@ -388,7 +388,7 @@ function Register(props) {
 function PostForm() {
   const [body, setBody] = useState("");
   const [privacy, setPrivacy] = useState("");
-  const [imageURL, setImageURL] = useState(null);
+  const [image, setImage] = useState(null);
   let groupId = null;
 
   // Needs to be changed to get info from... cookie?
@@ -406,7 +406,7 @@ function PostForm() {
       body,
       privacy,
       groupId,
-      imageURL,
+      image,
       userId
     };
     console.log("Post being sent to backend: ", postToSend);
@@ -425,7 +425,8 @@ function PostForm() {
   // Function to handle file selection
   const handleFileChange = e => {
     const file = e.target.files[0];
-    setImageURL(file);
+    setImage(file);
+    console.log("File:", file);
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
     className: "postForm",
