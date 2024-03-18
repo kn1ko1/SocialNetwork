@@ -14,6 +14,7 @@ function Login(props) {
   const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const errorMessage = document.querySelector(".error-message");
+  const [showForm, setShowForm] = useState(true);
 
   //this is the sign in button
   const submit = async e => {

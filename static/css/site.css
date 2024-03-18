@@ -50,3 +50,8 @@ html {
     padding: 8px; /* Padding for input boxes */
 }
 
+.homePage {
+    background-image: url('../cool-background.png');
+    background-size: cover;
+    background-position: center;
+}

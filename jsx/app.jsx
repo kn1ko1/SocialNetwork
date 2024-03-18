@@ -16,6 +16,7 @@ function Login(props) {
 	const [error, setError] = useState(null);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
     const errorMessage = document.querySelector(".error-message")
+	const [showForm, setShowForm] = useState(true);
 
 	//this is the sign in button
 	const submit = async (e) => {
@@ -66,8 +67,8 @@ function Login(props) {
 		const appContainer = document.querySelector('.app-container');
 		ReactDOM.render(<Register />, appContainer);
 	  };
-		
 
+		
 	  return (
 		<div className="login-container">
 <main className="form-signin w-100 m-auto" style={{ display: "block" }}>
@@ -108,6 +109,7 @@ function Login(props) {
 		</div>
 	)
 }
+
 
 function Register(props) {
 	const [email, setEmail] = useState("");
