@@ -4,14 +4,41 @@ const App = () => {
 	return (
 		<div className="app-container">
 			<Navbar />
+			<Dummy />
 			<Login />
 		</div>
 	)
 }
 
+function Dummy(props) {
+	return (
+		<div className="container-fluid text-center">
+		<div className="row mb-2">
+			<div className="col-lg-3">
+				<h1>Welcome</h1>
+			</div>
+			<div className="col-lg-6">
+				<h1>Welcome</h1>
+			</div>
+			<div className="col-lg-3">
+				<h1>Welcome</h1>
+			</div>
+		</div>
+		<div className="row">
+			<div className="col-6">
+				<h1>Welcome</h1>
+			</div>
+			<div className="col-6">
+				<h1>Welcome</h1>
+			</div>
+		</div>
+	</div>
+	)
+}
+
 function Navbar(props) {
 	return (
-		<nav className="navbar navbar-expand-lg bg-body-tertiary">
+		<nav className="navbar navbar-expand-md bg-body-tertiary">
 				<div className="container-fluid">
 				  <a className="navbar-brand" href="#">Navbar</a>
 				  <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -111,8 +138,23 @@ function Login(props) {
 
 		
 	  return (
-		<div className="login-container">
-<main className="form-signin w-100 m-auto" style={{ display: "block" }}>
+		<div className="container login-container">
+			<form>
+				<div class="mb-3">
+					<label for="exampleInputEmail1" class="form-label">Email address</label>
+					<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+					<div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+				</div>
+				<div class="mb-3">
+					<label for="exampleInputPassword1" class="form-label">Password</label>
+					<input type="password" class="form-control" id="exampleInputPassword1" />
+				</div>
+				<div class="mb-3 form-check">
+					<input type="checkbox" class="form-check-input" id="exampleCheck1" />
+					<label class="form-check-label" for="exampleCheck1">Check me out</label>
+				</div>
+				<button type="submit" class="btn btn-primary btn-lg">Submit</button>
+			</form>
     <h1 className="h3 mb-3 fw-normal login-text">log in</h1>
     <form onSubmit={submit}>
         <div className="form-floating">
@@ -146,8 +188,7 @@ function Login(props) {
     <button className="w-100 btn btn-lg btn-primary login-button" onClick={renderRegister}>
         Register
     </button>
-</main>
-		</div>
+	</div>
 	)
 }
 
