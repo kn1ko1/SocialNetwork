@@ -57,7 +57,7 @@ function Login(props) {
   //if credentials frontend match backend then we render home
   if (isLoggedIn) {
     const appContainer = document.querySelector('.app-container');
-    ReactDOM.render(completedHomePage(), appContainer);
+    ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
   }
 
   //this is the register button, when pressed will serve registration form
@@ -310,12 +310,62 @@ function Register(props) {
     onClick: renderLogin
   }, "Login")));
 }
+function Nav() {
+  const [activeFunction, setActiveFunction] = useState(null);
+  const renderProfile = () => {
+    setActiveFunction("Profile function called");
+  };
+  const renderChat = () => {
+    setActiveFunction("Chat function called");
+  };
+  const renderGroup = () => {
+    setActiveFunction("Group function called");
+  };
+  const renderNotifications = () => {
+    setActiveFunction("Notifications function called");
+  };
+  const renderHome = () => {
+    completedHomePage();
+    console.log("pressed?");
+  };
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "navbar"
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: renderProfile
+  }, "Profile"), /*#__PURE__*/React.createElement("button", {
+    onClick: renderChat
+  }, "Chat"), /*#__PURE__*/React.createElement("button", {
+    onClick: renderGroup
+  }, "Group"), /*#__PURE__*/React.createElement("button", {
+    onClick: renderNotifications
+  }, "Notifications"), /*#__PURE__*/React.createElement("button", {
+    onClick: renderHome
+  }, "Home")), /*#__PURE__*/React.createElement("div", {
+    className: "content"
+  }, activeFunction && /*#__PURE__*/React.createElement("p", null, activeFunction)));
+}
+
+// function Profile {
+
+// }
+
+// function Chat {
+
+// }
+
+// function Group {
+
+// }
+
+// function Notifications{
+
+// }
 
 // Main post form, defaults to sending posts to public group (0)
 function PostForm() {
   const [body, setBody] = useState("");
-  const [imageURL, setImageURL] = useState("");
-  const privacy = "public";
+  const [privacy, setPrivacy] = useState("");
+  const [imageURL, setImageURL] = useState(null);
   let groupId = null;
 
   // Needs to be changed to get info from... cookie?
@@ -331,9 +381,9 @@ function PostForm() {
     // Reads info from returned HTML
     const postToSend = {
       body,
+      privacy,
       groupId,
       imageURL,
-      privacy,
       userId
     };
     console.log("Post being sent to backend: ", postToSend);
@@ -347,6 +397,12 @@ function PostForm() {
       credentials: "include",
       body: JSON.stringify(postToSend)
     });
+  };
+
+  // Function to handle file selection
+  const handleFileChange = e => {
+    const file = e.target.files[0];
+    setImageURL(file);
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
     className: "postForm",
@@ -363,19 +419,41 @@ function PostForm() {
     type: "text",
     className: "form-control",
     id: "postFormBody",
-    placeholder: "name@example.com",
+    placeholder: "Type your post here...",
     onChange: e => setBody(e.target.value)
   })), /*#__PURE__*/React.createElement("div", {
     className: "form-floating"
   }, /*#__PURE__*/React.createElement("input", {
-    type: "text",
+    type: "file",
     className: "form-control",
-    id: "postFormImgURL",
-    placeholder: "This/Will/Need/A/Button.gif",
-    onChange: e => setImageURL(e.target.value)
+    id: "postFormImgUpload",
+    accept: "image/*",
+    onChange: handleFileChange
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "form-floating"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-control reginput status"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
+    required: true,
+    type: "radio",
+    id: "post-public-status",
+    value: "public",
+    name: "status",
+    checked: privacy === "public",
+    onClick: e => setPrivacy(e.target.value)
   }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "postFormImgURL"
-  }, "Image URL")), /*#__PURE__*/React.createElement("button", {
+    htmlFor: "post-public-status"
+  }, "Public")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
+    required: true,
+    type: "radio",
+    id: "private-status",
+    value: "private",
+    name: "status",
+    checked: privacy === "private",
+    onClick: e => setPrivacy(e.target.value)
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "private-status"
+  }, "Private")))), /*#__PURE__*/React.createElement("button", {
     className: "w-100 btn btn-lg btn-primary",
     type: "submit"
   }, "Submit"))));
@@ -406,6 +484,8 @@ function Home() {
   return /*#__PURE__*/React.createElement("div", {
     className: "homePage"
   }, /*#__PURE__*/React.createElement("div", {
+    className: "postForm"
+  }, /*#__PURE__*/React.createElement(PostForm, null)), /*#__PURE__*/React.createElement("div", {
     className: "allUsersList"
   }, /*#__PURE__*/React.createElement("h2", null, "All Users"), /*#__PURE__*/React.createElement("ul", null, users.map(user => /*#__PURE__*/React.createElement("li", {
     key: user.userId
@@ -438,10 +518,15 @@ function Home() {
 
 // Elements related to the homepage clustered together for the login function to return.
 // Needs work, but it's a start
-const completedHomePage = () => {
-  return /*#__PURE__*/React.createElement("div", {
-    className: "completedHomePage"
-  }, /*#__PURE__*/React.createElement(PostForm, null), /*#__PURE__*/React.createElement(Home, null));
-};
+// const completedHomePage = () => {
+// 	return (
+// 		<div className="completedHomePage">
+// 			<Nav />
+// 			<PostForm />
+// 			<Home />
+// 		</div>
+// 	)
+// }
+
 const root = document.querySelector("#root");
 ReactDOM.render( /*#__PURE__*/React.createElement(App, null), root);

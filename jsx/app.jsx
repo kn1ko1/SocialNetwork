@@ -59,7 +59,7 @@ function Login(props) {
 		//if credentials frontend match backend then we render home
 		if (isLoggedIn) {
 			const appContainer = document.querySelector('.app-container');
-			ReactDOM.render(completedHomePage(), appContainer);
+			ReactDOM.render(<Home />, appContainer);
 		}
 
 	//this is the register button, when pressed will serve registration form
@@ -315,33 +315,51 @@ function Register(props) {
 	);
 }
 
+
+
+// function Profile {
+
+// }
+
+// function Chat {
+
+// }
+
+// function Group {
+
+// }
+
+// function Notifications{
+
+// }
+
 // Main post form, defaults to sending posts to public group (0)
 function PostForm() {
-	const [body, setBody] = useState("")
-	const [imageURL, setImageURL] = useState("")
-	const privacy = "public"
-	let groupId = null
+	const [body, setBody] = useState("");
+	const [privacy, setPrivacy] = useState("");
+	const [imageURL, setImageURL] = useState(null);
+	let groupId = null;
 
 	// Needs to be changed to get info from... cookie?
-	const userId = Number(36)
+	const userId = Number(36);
 
 	if (privacy === "public") {
-		groupId = Number(0)
+		groupId = Number(0);
 	}
 
 	// Upon submitting:
 	const submit = async (e) => {
-		e.preventDefault() // prevent reload.
+		e.preventDefault(); // prevent reload.
 
 		// Reads info from returned HTML
 		const postToSend = {
 			body,
+			privacy,
 			groupId,
 			imageURL,
-			privacy,
-			userId
-		}
-		console.log("Post being sent to backend: ", postToSend)
+			userId,
+		};
+		console.log("Post being sent to backend: ", postToSend);
 
 		// Send user data to golang api/PostHandler.go.
 		await fetch("http://localhost:8080/api/posts", {
@@ -349,10 +367,14 @@ function PostForm() {
 			headers: { "Content-Type": "application/json" },
 			credentials: "include",
 			body: JSON.stringify(postToSend),
-		})
+		});
+	};
 
-
-	}
+	// Function to handle file selection
+	const handleFileChange = (e) => {
+		const file = e.target.files[0];
+		setImageURL(file);
+	};
 
 	return (
 		<div>
@@ -364,19 +386,48 @@ function PostForm() {
 							type="text"
 							className="form-control"
 							id="postFormBody"
-							placeholder="name@example.com"
+							placeholder="Type your post here..."
 							onChange={(e) => setBody(e.target.value)}
 						/>
 					</div>
+
 					<div className="form-floating">
+						{/* Use input type="file" for image selection/upload */}
 						<input
-							type="text"
+							type="file"
 							className="form-control"
-							id="postFormImgURL"
-							placeholder="This/Will/Need/A/Button.gif"
-							onChange={(e) => setImageURL(e.target.value)}
+							id="postFormImgUpload"
+							accept="image/*"
+							onChange={handleFileChange}
 						/>
-						<label htmlFor="postFormImgURL">Image URL</label>
+					</div>
+					<div className="form-floating">
+						<div className="form-control reginput status">
+							<div>
+								<input
+									required
+									type="radio"
+									id="post-public-status"
+									value="public"
+									name="status"
+									checked={privacy === "public"}
+									onClick={(e) => setPrivacy(e.target.value)}
+								/>
+								<label htmlFor="post-public-status">Public</label>
+							</div>
+							<div>
+								<input
+									required
+									type="radio"
+									id="private-status"
+									value="private"
+									name="status"
+									checked={privacy === "private"}
+									onClick={(e) => setPrivacy(e.target.value)}
+								/>
+								<label htmlFor="private-status">Private</label>
+							</div>
+						</div>
 					</div>
 					<button className="w-100 btn btn-lg btn-primary" type="submit">
 						Submit
@@ -384,7 +435,7 @@ function PostForm() {
 				</form>
 			</main>
 		</div>
-	)
+	);
 }
 
 // Display information relating to homepage
@@ -416,6 +467,9 @@ function Home() {
 
 	return (
 		<div className="homePage">
+			<div className = "postForm">
+				<PostForm />
+			</div>
 
 			<div className="allUsersList">
 				<h2>All Users</h2>
@@ -496,17 +550,6 @@ function Home() {
 			</div>
 		</div>
 	);
-}
-
-// Elements related to the homepage clustered together for the login function to return.
-// Needs work, but it's a start
-const completedHomePage = () => {
-	return (
-		<div className="completedHomePage">
-			<PostForm />
-			<Home />
-		</div>
-	)
 }
 
 
