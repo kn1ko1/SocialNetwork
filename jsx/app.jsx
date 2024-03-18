@@ -3,38 +3,38 @@ const { useState, useEffect } = React
 const App = () => {
 	return (
 		<div className="app-container">
-			<Navbar />
-			<Dummy />
+			{/* <Navbar /> */}
+			{/* <Dummy /> */}
 			<Login />
 		</div>
 	)
 }
 
-function Dummy(props) {
-	return (
-		<div className="container-fluid text-center">
-		<div className="row mb-2">
-			<div className="col-lg-3">
-				<h1>Welcome</h1>
-			</div>
-			<div className="col-lg-6">
-				<h1>Welcome</h1>
-			</div>
-			<div className="col-lg-3">
-				<h1>Welcome</h1>
-			</div>
-		</div>
-		<div className="row">
-			<div className="col-6">
-				<h1>Welcome</h1>
-			</div>
-			<div className="col-6">
-				<h1>Welcome</h1>
-			</div>
-		</div>
-	</div>
-	)
-}
+// function Dummy(props) {
+// 	return (
+// 		<div className="container-fluid text-center">
+// 		<div className="row mb-2">
+// 			<div className="col-lg-3">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 			<div className="col-lg-6">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 			<div className="col-lg-3">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 		</div>
+// 		<div className="row">
+// 			<div className="col-6">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 			<div className="col-6">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 		</div>
+// 	</div>
+// 	)
+// }
 
 function Navbar(props) {
 	return (
@@ -139,55 +139,35 @@ function Login(props) {
 		
 	  return (
 		<div className="container login-container">
-			<form>
+			<h1 className="h3 mb-3 fw-normal login-text">log in</h1>
+			<form onSubmit={submit}>
 				<div class="mb-3">
 					<label for="exampleInputEmail1" class="form-label">Email address</label>
-					<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
-					<div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+					<input 
+					type="email" 
+					className="form-control form-control-lg"
+					id="exampleInputEmail1" 
+					aria-describedby="emailHelp" 
+					onChange={(e) => setUsernameOrEmail(e.target.value)}/>
 				</div>
 				<div class="mb-3">
 					<label for="exampleInputPassword1" class="form-label">Password</label>
-					<input type="password" class="form-control" id="exampleInputPassword1" />
+					<input 
+					type="password" 
+					className="form-control form-control-lg"
+					id="exampleInputPassword1" 
+					onChange={(e) => setPassword(e.target.value)}/>
 				</div>
-				<div class="mb-3 form-check">
-					<input type="checkbox" class="form-check-input" id="exampleCheck1" />
-					<label class="form-check-label" for="exampleCheck1">Check me out</label>
-				</div>
-				<button type="submit" class="btn btn-primary btn-lg">Submit</button>
+				<button type="submit" class="btn btn-primary">Log in</button>
 			</form>
-    <h1 className="h3 mb-3 fw-normal login-text">log in</h1>
-    <form onSubmit={submit}>
-        <div className="form-floating">
-            <label htmlFor="floatingInput" className="login-text">Email address</label>
-            <input
-                type="email"
-                className="form-control login-text"
-                id="floatingInput"
-                placeholder="name@example.com"
-                onChange={(e) => setUsernameOrEmail(e.target.value)}
-            />
-        </div>
-		
-        <div className="form-floating">
-            <label htmlFor="floatingPassword" className="login-text">Password</label>
-            <input
-                type="password"
-                className="form-control login-text"
-                id="floatingPassword"
-                placeholder="Password"
-                onChange={(e) => setPassword(e.target.value)}
-            />
-        </div>
-        <button className="w-100 btn btn-lg btn-primary login-button" type="submit">
-            Sign in
-        </button>
-    </form>
     <div className="error-message"></div>
     <br /> {/* Add a line break for spacing */}
+	<div className="mb3"> 
     <span className="login-text">Don't have an account? &nbsp;</span>
-    <button className="w-100 btn btn-lg btn-primary login-button" onClick={renderRegister}>
+    <button type="submit" className="btn btn-primary" onClick={renderRegister}>
         Register
     </button>
+	</div>
 	</div>
 	)
 }
@@ -202,7 +182,7 @@ function Register(props) {
 	const [imageURL, setImageURL] = useState("");
 	const [username, setUsername] = useState("");
 	const [bio, setBio] = useState("");
-	const [isPublic, setIsPublic] = useState("");
+	const [isPublic, setIsPublic] = useState("public");
 	const [redirectVar, setRedirectVar] = useState(false);
 	const [isRegistered, setIsRegistered] = useState(false);
 
@@ -260,142 +240,153 @@ function Register(props) {
 	  };
 
 
-	  return (
-        <div className="login-container"> {/* Utilize the same container with the background image */}
-            <main className="form-signin w-100 m-auto" style={{ display: "block" }}>
-                <h1 className="h3 mb-3 fw-normal">register</h1>
-				<form onSubmit={submit}>
+return (
+		<div className="container login-container">
+			<h1 className="h3 mb-3 fw-normal login-text">register</h1>
+			<form onSubmit={submit}>
 
-					<div className="form-floating">
-						<input
-							required
-							type="email"
-							className="form-control"
-							id="floatingInput"
-							placeholder="name@example.com"
-							onChange={(e) => setEmail(e.target.value)}
-						/>
-						<label htmlFor="floatingInput">Email address</label>
-					</div>
-					<div className="form-floating">
-						<input
-							required
-							type="password"
-							className="form-control reginput"
-							id="regpassword"
-							placeholder="Password"
-							onChange={(e) => setEncryptedPassword(e.target.value)}
-						/>
-						<label htmlFor="regpassword">Password</label>
-					</div>
-					<div className="form-floating">
-						<input
-							required
-							type="text"
-							className="form-control reginput"
-							id="firstName"
-							placeholder="John"
-							onChange={(e) => setFirstName(e.target.value)}
-						/>
-						<label htmlFor="firstName">First Name</label>
-					</div>
-					<div className="form-floating">
-						<input
-							required
-							type="text"
-							className="form-control reginput"
-							id="lastName"
-							placeholder="Doe"
-							onChange={(e) => setLastName(e.target.value)}
-						/>
-						<label htmlFor="lastName">Last Name</label>
-					</div>
-					<div className="form-floating">
-						<input
-							required
-							type="date"
-							className="form-control reginput"
-							id="dob"
-							placeholder="16/01/1998"
-							onChange={(e) => setDob(e.target.value)}
-						/>
-						<label htmlFor="dob">Date of Birth</label>
-					</div>
+        
 
-					<div className="form-floating">
-						<input
-							type="text"
-							className="form-control reginput"
-							id="imageURL"
-							placeholder="https://..."
-							onChange={(e) => setImageURL(e.target.value)}
-						/>
-						<label htmlFor="imageURL">ImageURL</label>
-					</div>
-					<div className="form-floating">
-						<input
-							type="text"
-							className="form-control reginput"
-							id="username"
-							placeholder="Johnny"
-							onChange={(e) => setUsername(e.target.value)}
-						/>
-						<label htmlFor="username">Username</label>
-					</div>
-					<div className="form-floating">
-						<div className="form-control reginput status">
-							<div>
-								<input
-									required
-									type="radio"
-									id="public-status"
-									value="public"
-									name="status"
-									checked
-									onClick={(e) => setIsPublic(e.target.value)}
-								/>
-								<label htmlFor="public-status">Public</label>
-							</div>
-							<div>
-								<input
-									required
-									type="radio"
-									id="private-status"
-									value="private"
-									name="status"
-									onClick={(e) => setIsPublic(e.target.value)}
-								/>
-								<label htmlFor="private-status">Private</label>
-							</div>
-						</div>
-						<label htmlFor="">Status</label>
-					</div>
-					<div className="form-floating">
-						<input
-							className="form-control reginput"
-							name="bio"
-							placeholder="About Me"
-							id="bio"
-							cols="30"
-							rows="10"
-							onChange={(e) => setBio(e.target.value)}
-						></input>
-						<label htmlFor="about">About me</label>
-					</div>
-					<button className="w-100 btn btn-lg btn-primary login-button" type="submit">
-						Register
-					</button>
-				</form>
-				<div className="error-message"></div>
-                <br /> {/* Add a line break for spacing */}
-                <span className="login-text">Already have an account? &nbsp;</span>
-                <button className="w-100 btn btn-lg btn-primary login-button" onClick={renderLogin}>
-                    Login
-        </button>
-			</main>
-		</div>
+		<div className="mb-3">
+		<label htmlFor="floatingInput">Email address</label>
+		<input 
+		    required
+		    type="email" 
+		    className="form-control" 
+		    id="floatingInput" 
+		    placeholder="name@example.com"
+	        onChange={(e) => setEmail(e.target.value)}/>
+	  </div>
+
+	  <div className="mb-3">
+		<label htmlFor="regpassword">Password</label>
+		<input 
+		    required
+		    type="password" 
+		    className="form-control reginput" 
+		    id="regpassword" 
+			placeholder="Password"
+			onChange={(e) => setEncryptedPassword(e.target.value)}/>
+	  </div>
+
+	  <div className="mb-3">
+		<label htmlFor="firstName">First Name</label>
+		<input 
+		    required
+			type="text" 
+			className="form-control reginput"
+			id="firstName"
+			placeholder="John"
+			onChange={(e) => setFirstName(e.target.value)}/>
+	  </div>
+
+	  <div className="mb-3">
+		<label htmlFor="lastName">Last Name</label>
+		<input 
+		    required
+			type="text" 
+			className="form-control reginput"
+			id="lastName"
+			placeholder="Doe"
+			onChange={(e) => setLastName(e.target.value)}/>
+	  </div>
+
+	  <div className="mb-3">
+	    <label htmlFor="dob">Date of Birth</label>
+	    <input
+			required
+			type="date"
+			className="form-control reginput"
+			id="dob"
+	     	placeholder="16/01/1998"
+			onChange={(e) => setDob(e.target.value)}/>	
+	  </div>
+
+	  <div className="mb-3">
+		<label htmlFor="imageURL">ImageURL</label>
+		<input 
+		    type="text"
+			className="form-control reginput"
+			id="imageURL"
+			placeholder="https://..."
+			onChange={(e) => setImageURL(e.target.value)}/>
+	  </div>
+
+	  <div className="mb-3">
+	  <label htmlFor="username">Username</label>
+		<input 
+		    type="text"
+			className="form-control reginput"
+			id="username"
+			placeholder="Johnny"
+			onChange={(e) => setUsername(e.target.value)}/>
+	  </div>
+
+	  <div className="form-check">
+    <input
+        className="form-check-input"
+        type="radio"
+        id="public-status"
+        value="public"
+        name="status"
+        checked={isPublic === "public"}
+        onChange={(e) => setIsPublic(e.target.value)}
+    />
+    <label className="form-check-label" htmlFor="public-status">
+        Public
+    </label>
+</div>
+
+<div className="form-check">
+    <input
+        className="form-check-input"
+        type="radio"
+        id="private-status"
+        value="private"
+        name="status"
+        checked={isPublic === "private"}
+        onChange={(e) => setIsPublic(e.target.value)}
+    />
+    <label className="form-check-label" htmlFor="private-status">
+        Private
+    </label>
+</div>
+
+
+	  <div className="mb-3">
+	  <label htmlFor="about">About me</label>
+		<input 
+		    type="text"
+			className="form-control reginput"
+			id="bio"
+			placeholder="About Me"
+			cols="30"
+			rows="10"
+			onChange={(e) => setBio(e.target.value)}/>
+	  </div>
+
+
+
+	  <button  className="btn btn-primary" type="submit">Register</button>
+
+	  </form>
+
+
+	
+
+	  <div className="error-message"></div>
+    <br /> {/* Add a line break for spacing */}
+	<div className="mb3"> 
+    <span className="login-text">Already have an account? &nbsp;</span>
+    <button type="submit" className="btn btn-primary" onClick={renderLogin}>
+        Log in
+    </button>
+	</div>
+	</div>
 	);
 }
+
+
 
 
 

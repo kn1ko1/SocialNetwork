@@ -9,20 +9,20 @@ html {
 
 body {
     min-width: 250px;
-}
-
-.login-container {
     background-image: url('../cool-background.png'); /* Specify the path to your image */
     background-size: cover; /* Cover the entire container */
     background-position: center; /* Center the background image */
     background-repeat: no-repeat; /* Prevent repeating the image */
+}
+
+.login-container {
     border-radius: 10px; /* Rounded Corners */
     padding: 40px; /* Padding for spacing */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Adjust height as needed */
+    height: 120vh; /* Adjust height as needed */
 }
 
 .login-text {
@@ -49,14 +49,8 @@ body {
     align-items: center;
 }
 
-.form-control {
-    border: 1px solid black; /* Black border for input boxes */
-    border-radius: 5px;
-    padding: 8px; /* Padding for input boxes */
-}
-
-.homePage {
+/* .homePage {
     background-image: url('../cool-background.png');
     background-size: cover;
     background-position: center;
-}
+} */

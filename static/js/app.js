@@ -5,27 +5,35 @@ const {
 const App = () => {
   return /*#__PURE__*/React.createElement("div", {
     className: "app-container"
-  }, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement(Dummy, null), /*#__PURE__*/React.createElement(Login, null));
+  }, /*#__PURE__*/React.createElement(Login, null));
 };
-function Dummy(props) {
-  return /*#__PURE__*/React.createElement("div", {
-    className: "container-fluid text-center"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "row mb-2"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "col-lg-3"
-  }, /*#__PURE__*/React.createElement("h1", null, "Welcome")), /*#__PURE__*/React.createElement("div", {
-    className: "col-lg-6"
-  }, /*#__PURE__*/React.createElement("h1", null, "Welcome")), /*#__PURE__*/React.createElement("div", {
-    className: "col-lg-3"
-  }, /*#__PURE__*/React.createElement("h1", null, "Welcome"))), /*#__PURE__*/React.createElement("div", {
-    className: "row"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "col-6"
-  }, /*#__PURE__*/React.createElement("h1", null, "Welcome")), /*#__PURE__*/React.createElement("div", {
-    className: "col-6"
-  }, /*#__PURE__*/React.createElement("h1", null, "Welcome"))));
-}
+
+// function Dummy(props) {
+// 	return (
+// 		<div className="container-fluid text-center">
+// 		<div className="row mb-2">
+// 			<div className="col-lg-3">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 			<div className="col-lg-6">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 			<div className="col-lg-3">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 		</div>
+// 		<div className="row">
+// 			<div className="col-6">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 			<div className="col-6">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 		</div>
+// 	</div>
+// 	)
+// }
+
 function Navbar(props) {
   return /*#__PURE__*/React.createElement("nav", {
     className: "navbar navbar-expand-md bg-body-tertiary"
@@ -159,77 +167,45 @@ function Login(props) {
   };
   return /*#__PURE__*/React.createElement("div", {
     className: "container login-container"
-  }, /*#__PURE__*/React.createElement("form", null, /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h1", {
+    className: "h3 mb-3 fw-normal login-text"
+  }, "log in"), /*#__PURE__*/React.createElement("form", {
+    onSubmit: submit
+  }, /*#__PURE__*/React.createElement("div", {
     class: "mb-3"
   }, /*#__PURE__*/React.createElement("label", {
     for: "exampleInputEmail1",
     class: "form-label"
   }, "Email address"), /*#__PURE__*/React.createElement("input", {
     type: "email",
-    class: "form-control",
+    className: "form-control form-control-lg",
     id: "exampleInputEmail1",
-    "aria-describedby": "emailHelp"
-  }), /*#__PURE__*/React.createElement("div", {
-    id: "emailHelp",
-    class: "form-text"
-  }, "We'll never share your email with anyone else.")), /*#__PURE__*/React.createElement("div", {
+    "aria-describedby": "emailHelp",
+    onChange: e => setUsernameOrEmail(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
     class: "mb-3"
   }, /*#__PURE__*/React.createElement("label", {
     for: "exampleInputPassword1",
     class: "form-label"
   }, "Password"), /*#__PURE__*/React.createElement("input", {
     type: "password",
-    class: "form-control",
-    id: "exampleInputPassword1"
-  })), /*#__PURE__*/React.createElement("div", {
-    class: "mb-3 form-check"
-  }, /*#__PURE__*/React.createElement("input", {
-    type: "checkbox",
-    class: "form-check-input",
-    id: "exampleCheck1"
-  }), /*#__PURE__*/React.createElement("label", {
-    class: "form-check-label",
-    for: "exampleCheck1"
-  }, "Check me out")), /*#__PURE__*/React.createElement("button", {
-    type: "submit",
-    class: "btn btn-primary btn-lg"
-  }, "Submit")), /*#__PURE__*/React.createElement("h1", {
-    className: "h3 mb-3 fw-normal login-text"
-  }, "log in"), /*#__PURE__*/React.createElement("form", {
-    onSubmit: submit
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "floatingInput",
-    className: "login-text"
-  }, "Email address"), /*#__PURE__*/React.createElement("input", {
-    type: "email",
-    className: "form-control login-text",
-    id: "floatingInput",
-    placeholder: "name@example.com",
-    onChange: e => setUsernameOrEmail(e.target.value)
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "floatingPassword",
-    className: "login-text"
-  }, "Password"), /*#__PURE__*/React.createElement("input", {
-    type: "password",
-    className: "form-control login-text",
-    id: "floatingPassword",
-    placeholder: "Password",
+    className: "form-control form-control-lg",
+    id: "exampleInputPassword1",
     onChange: e => setPassword(e.target.value)
   })), /*#__PURE__*/React.createElement("button", {
-    className: "w-100 btn btn-lg btn-primary login-button",
-    type: "submit"
-  }, "Sign in")), /*#__PURE__*/React.createElement("div", {
+    type: "submit",
+    class: "btn btn-primary"
+  }, "Log in")), /*#__PURE__*/React.createElement("div", {
     className: "error-message"
-  }), /*#__PURE__*/React.createElement("br", null), " ", /*#__PURE__*/React.createElement("span", {
+  }), /*#__PURE__*/React.createElement("br", null), " ", /*#__PURE__*/React.createElement("div", {
+    className: "mb3"
+  }, /*#__PURE__*/React.createElement("span", {
     className: "login-text"
   }, "Don't have an account? \xA0"), /*#__PURE__*/React.createElement("button", {
-    className: "w-100 btn btn-lg btn-primary login-button",
+    type: "submit",
+    className: "btn btn-primary",
     onClick: renderRegister
-  }, "Register"));
+  }, "Register")));
 }
 function Register(props) {
   const [email, setEmail] = useState("");
@@ -240,7 +216,7 @@ function Register(props) {
   const [imageURL, setImageURL] = useState("");
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
-  const [isPublic, setIsPublic] = useState("");
+  const [isPublic, setIsPublic] = useState("public");
   const [redirectVar, setRedirectVar] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
 
@@ -297,173 +273,138 @@ function Register(props) {
     ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
   };
   return /*#__PURE__*/React.createElement("div", {
-    className: "login-container"
-  }, " ", /*#__PURE__*/React.createElement("main", {
-    className: "form-signin w-100 m-auto",
-    style: {
-      display: "block"
-    }
+    className: "container login-container"
   }, /*#__PURE__*/React.createElement("h1", {
-    className: "h3 mb-3 fw-normal"
+    className: "h3 mb-3 fw-normal login-text"
   }, "register"), /*#__PURE__*/React.createElement("form", {
     onSubmit: submit
   }, /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "floatingInput"
+  }, "Email address"), /*#__PURE__*/React.createElement("input", {
     required: true,
     type: "email",
     className: "form-control",
     id: "floatingInput",
     placeholder: "name@example.com",
     onChange: e => setEmail(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "floatingInput"
-  }, "Email address")), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "regpassword"
+  }, "Password"), /*#__PURE__*/React.createElement("input", {
     required: true,
     type: "password",
     className: "form-control reginput",
     id: "regpassword",
     placeholder: "Password",
     onChange: e => setEncryptedPassword(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "regpassword"
-  }, "Password")), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "firstName"
+  }, "First Name"), /*#__PURE__*/React.createElement("input", {
     required: true,
     type: "text",
     className: "form-control reginput",
     id: "firstName",
     placeholder: "John",
     onChange: e => setFirstName(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "firstName"
-  }, "First Name")), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "lastName"
+  }, "Last Name"), /*#__PURE__*/React.createElement("input", {
     required: true,
     type: "text",
     className: "form-control reginput",
     id: "lastName",
     placeholder: "Doe",
     onChange: e => setLastName(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "lastName"
-  }, "Last Name")), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "dob"
+  }, "Date of Birth"), /*#__PURE__*/React.createElement("input", {
     required: true,
     type: "date",
     className: "form-control reginput",
     id: "dob",
     placeholder: "16/01/1998",
     onChange: e => setDob(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "dob"
-  }, "Date of Birth")), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "imageURL"
+  }, "ImageURL"), /*#__PURE__*/React.createElement("input", {
     type: "text",
     className: "form-control reginput",
     id: "imageURL",
     placeholder: "https://...",
     onChange: e => setImageURL(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "imageURL"
-  }, "ImageURL")), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "username"
+  }, "Username"), /*#__PURE__*/React.createElement("input", {
     type: "text",
     className: "form-control reginput",
     id: "username",
     placeholder: "Johnny",
     onChange: e => setUsername(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "username"
-  }, "Username")), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "form-control reginput status"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
-    required: true,
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "form-check"
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "form-check-input",
     type: "radio",
     id: "public-status",
     value: "public",
     name: "status",
-    checked: true,
-    onClick: e => setIsPublic(e.target.value)
+    checked: isPublic === "public",
+    onChange: e => setIsPublic(e.target.value)
   }), /*#__PURE__*/React.createElement("label", {
+    className: "form-check-label",
     htmlFor: "public-status"
-  }, "Public")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
-    required: true,
+  }, "Public")), /*#__PURE__*/React.createElement("div", {
+    className: "form-check"
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "form-check-input",
     type: "radio",
     id: "private-status",
     value: "private",
     name: "status",
-    onClick: e => setIsPublic(e.target.value)
+    checked: isPublic === "private",
+    onChange: e => setIsPublic(e.target.value)
   }), /*#__PURE__*/React.createElement("label", {
+    className: "form-check-label",
     htmlFor: "private-status"
-  }, "Private"))), /*#__PURE__*/React.createElement("label", {
-    htmlFor: ""
-  }, "Status")), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  }, "Private")), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "about"
+  }, "About me"), /*#__PURE__*/React.createElement("input", {
+    type: "text",
     className: "form-control reginput",
-    name: "bio",
-    placeholder: "About Me",
     id: "bio",
+    placeholder: "About Me",
     cols: "30",
     rows: "10",
     onChange: e => setBio(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "about"
-  }, "About me")), /*#__PURE__*/React.createElement("button", {
-    className: "w-100 btn btn-lg btn-primary login-button",
+  })), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
     type: "submit"
   }, "Register")), /*#__PURE__*/React.createElement("div", {
     className: "error-message"
-  }), /*#__PURE__*/React.createElement("br", null), " ", /*#__PURE__*/React.createElement("span", {
+  }), /*#__PURE__*/React.createElement("br", null), " ", /*#__PURE__*/React.createElement("div", {
+    className: "mb3"
+  }, /*#__PURE__*/React.createElement("span", {
     className: "login-text"
   }, "Already have an account? \xA0"), /*#__PURE__*/React.createElement("button", {
-    className: "w-100 btn btn-lg btn-primary login-button",
+    type: "submit",
+    className: "btn btn-primary",
     onClick: renderLogin
-  }, "Login")));
-}
-function Nav() {
-  const [activeFunction, setActiveFunction] = useState(null);
-  const renderProfile = () => {
-    setActiveFunction("Profile function called");
-  };
-  const renderChat = () => {
-    setActiveFunction("Chat function called");
-  };
-  const renderGroup = () => {
-    setActiveFunction("Group function called");
-  };
-  const renderNotifications = () => {
-    setActiveFunction("Notifications function called");
-  };
-  const renderHome = () => {
-    completedHomePage();
-    console.log("pressed?");
-  };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "navbar"
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: renderProfile
-  }, "Profile"), /*#__PURE__*/React.createElement("button", {
-    onClick: renderChat
-  }, "Chat"), /*#__PURE__*/React.createElement("button", {
-    onClick: renderGroup
-  }, "Group"), /*#__PURE__*/React.createElement("button", {
-    onClick: renderNotifications
-  }, "Notifications"), /*#__PURE__*/React.createElement("button", {
-    onClick: renderHome
-  }, "Home")), /*#__PURE__*/React.createElement("div", {
-    className: "content"
-  }, activeFunction && /*#__PURE__*/React.createElement("p", null, activeFunction)));
+  }, "Log in")));
 }
 
 // function Profile {
@@ -636,18 +577,5 @@ function Home() {
     key: userNotification.createdAt
   }, userNotification.NotificationType, " ")))));
 }
-
-// Elements related to the homepage clustered together for the login function to return.
-// Needs work, but it's a start
-// const completedHomePage = () => {
-// 	return (
-// 		<div className="completedHomePage">
-// 			<Nav />
-// 			<PostForm />
-// 			<Home />
-// 		</div>
-// 	)
-// }
-
 const root = document.querySelector("#root");
 ReactDOM.render( /*#__PURE__*/React.createElement(App, null), root);
