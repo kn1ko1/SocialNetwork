@@ -15,7 +15,7 @@ function Login(props) {
 	const [redirectVar, setRedirectVar] = useState(false)
 	const [error, setError] = useState(null);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const errorMessage = document.querySelector(".error-message")
+	const errorMessage = document.querySelector(".error-message")
 	const [showForm, setShowForm] = useState(true);
 
 	//this is the sign in button
@@ -31,81 +31,81 @@ function Login(props) {
 		try {
 			//check credentials with backend
 			const response = await fetch('http://localhost:8080/auth/login', {
-			  method: 'POST',
-			  headers: { 'Content-Type': 'application/json' },
-			  credentials: 'include',
-			  body: JSON.stringify(userToLogin),
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include',
+				body: JSON.stringify(userToLogin),
 			});
 
 			if (!response.ok) {
-			  errorMessage.innerHTML = 'Invalid credentials'
-			  throw new Error('Invalid credentials');
+				errorMessage.innerHTML = 'Invalid credentials'
+				throw new Error('Invalid credentials');
 			}
-	  
+
 			//takes response from backend and processes
 			const data = await response.json();
 			if (data.success) {
-			  setIsLoggedIn(true);
+				setIsLoggedIn(true);
 			} else {
-			  errorMessage.innerHTML = 'Invalid credentials'
-			  throw new Error('Invalid credentials');
+				errorMessage.innerHTML = 'Invalid credentials'
+				throw new Error('Invalid credentials');
 			}
-		  } catch (error) {
+		} catch (error) {
 			errorMessage.innerHTML = 'Invalid credentials'
 			setError('Invalid credentials');
-		  }
-		};
-	  
-		//if credentials frontend match backend then we render home
-		if (isLoggedIn) {
-			const appContainer = document.querySelector('.app-container');
-			ReactDOM.render(completedHomePage(), appContainer);
 		}
+	};
+
+	//if credentials frontend match backend then we render home
+	if (isLoggedIn) {
+		const appContainer = document.querySelector('.app-container');
+		ReactDOM.render(<Home />, appContainer);
+	}
 
 	//this is the register button, when pressed will serve registration form
 	const renderRegister = () => {
 		const appContainer = document.querySelector('.app-container');
 		ReactDOM.render(<Register />, appContainer);
-	  };
+	};
 
-		
-	  return (
+
+	return (
 		<div className="login-container">
-<main className="form-signin w-100 m-auto" style={{ display: "block" }}>
-    <h1 className="h3 mb-3 fw-normal login-text">log in</h1>
-    <form onSubmit={submit}>
-        <div className="form-floating">
-            <label htmlFor="floatingInput" className="login-text">Email address</label>
-            <input
-                type="email"
-                className="form-control login-text"
-                id="floatingInput"
-                placeholder="name@example.com"
-                onChange={(e) => setUsernameOrEmail(e.target.value)}
-            />
-        </div>
-		
-        <div className="form-floating">
-            <label htmlFor="floatingPassword" className="login-text">Password</label>
-            <input
-                type="password"
-                className="form-control login-text"
-                id="floatingPassword"
-                placeholder="Password"
-                onChange={(e) => setPassword(e.target.value)}
-            />
-        </div>
-        <button className="w-100 btn btn-lg btn-primary login-button" type="submit">
-            Sign in
-        </button>
-    </form>
-    <div className="error-message"></div>
-    <br /> {/* Add a line break for spacing */}
-    <span className="login-text">Don't have an account? &nbsp;</span>
-    <button className="w-100 btn btn-lg btn-primary login-button" onClick={renderRegister}>
-        Register
-    </button>
-</main>
+			<main className="form-signin w-100 m-auto" style={{ display: "block" }}>
+				<h1 className="h3 mb-3 fw-normal login-text">log in</h1>
+				<form onSubmit={submit}>
+					<div className="form-floating">
+						<label htmlFor="floatingInput" className="login-text">Email address</label>
+						<input
+							type="email"
+							className="form-control login-text"
+							id="floatingInput"
+							placeholder="name@example.com"
+							onChange={(e) => setUsernameOrEmail(e.target.value)}
+						/>
+					</div>
+
+					<div className="form-floating">
+						<label htmlFor="floatingPassword" className="login-text">Password</label>
+						<input
+							type="password"
+							className="form-control login-text"
+							id="floatingPassword"
+							placeholder="Password"
+							onChange={(e) => setPassword(e.target.value)}
+						/>
+					</div>
+					<button className="w-100 btn btn-lg btn-primary login-button" type="submit">
+						Sign in
+					</button>
+				</form>
+				<div className="error-message"></div>
+				<br /> {/* Add a line break for spacing */}
+				<span className="login-text">Don't have an account? &nbsp;</span>
+				<button className="w-100 btn btn-lg btn-primary login-button" onClick={renderRegister}>
+					Register
+				</button>
+			</main>
 		</div>
 	)
 }
@@ -144,47 +144,48 @@ function Register(props) {
 		try {
 			// Send user data to backend
 			const response = await fetch("http://localhost:8080/auth/registration", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(newUser),
-		});
-	  
-		if (!response.ok) {
-		  throw new Error('Invalid credentials');
-		}
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(newUser),
+			});
 
-		//takes response from backend and processes
-		const data = await response.json();
-			if (data.success) {
-			  setIsRegistered(true);
-			} else {
-			  throw new Error('Invalid credentials');
+			if (!response.ok) {
+				throw new Error('Invalid credentials');
 			}
-		  } catch (error) {
+
+			//takes response from backend and processes
+			const data = await response.json();
+			if (data.success) {
+				setIsRegistered(true);
+			} else {
+				throw new Error('Invalid credentials');
+			}
+		} catch (error) {
 			setError('Invalid credentials');
-		  }
-		};
-	  
-		//if credentials frontend succesfully create a new user then we render home
-		if (isRegistered) {
-			const appContainer = document.querySelector('.app-container');
-			ReactDOM.render(<Home />, appContainer);
 		}
-	
+	};
+
+	//if credentials frontend succesfully create a new user then we render home
+	if (isRegistered) {
+		const appContainer = document.querySelector('.app-container');
+		ReactDOM.render(<Home />, appContainer);
+	}
+
 	//this is the login button, when pressed will serve login form
 	const renderLogin = () => {
 		const appContainer = document.querySelector('.app-container');
 		ReactDOM.render(<Login />, appContainer);
-	  };
+	};
 
 
-	  return (
-        <div className="login-container"> {/* Utilize the same container with the background image */}
-            <main className="form-signin w-100 m-auto" style={{ display: "block" }}>
-                <h1 className="h3 mb-3 fw-normal">register</h1>
+	return (
+		<div className="login-container"> {/* Utilize the same container with the background image */}
+			<main className="form-signin w-100 m-auto" style={{ display: "block" }}>
+				<h1 className="h3 mb-3 fw-normal">register</h1>
 				<form onSubmit={submit}>
 
 					<div className="form-floating">
+						<label htmlFor="floatingInput">Email address</label>
 						<input
 							required
 							type="email"
@@ -193,7 +194,7 @@ function Register(props) {
 							placeholder="name@example.com"
 							onChange={(e) => setEmail(e.target.value)}
 						/>
-						<label htmlFor="floatingInput">Email address</label>
+
 					</div>
 					<div className="form-floating">
 						<input
@@ -305,11 +306,11 @@ function Register(props) {
 					</button>
 				</form>
 				<div className="error-message"></div>
-                <br /> {/* Add a line break for spacing */}
-                <span className="login-text">Already have an account? &nbsp;</span>
-                <button className="w-100 btn btn-lg btn-primary login-button" onClick={renderLogin}>
-                    Login
-        </button>
+				<br /> {/* Add a line break for spacing */}
+				<span className="login-text">Already have an account? &nbsp;</span>
+				<button className="w-100 btn btn-lg btn-primary login-button" onClick={renderLogin}>
+					Login
+				</button>
 			</main>
 		</div>
 	);
@@ -317,31 +318,31 @@ function Register(props) {
 
 // Main post form, defaults to sending posts to public group (0)
 function PostForm() {
-	const [body, setBody] = useState("")
-	const [imageURL, setImageURL] = useState("")
-	const privacy = "public"
-	let groupId = null
+	const [body, setBody] = useState("");
+	const [privacy, setPrivacy] = useState("");
+	const [imageURL, setImageURL] = useState(null);
+	let groupId = null;
 
 	// Needs to be changed to get info from... cookie?
-	const userId = Number(36)
+	const userId = Number(36);
 
 	if (privacy === "public") {
-		groupId = Number(0)
+		groupId = Number(0);
 	}
 
 	// Upon submitting:
 	const submit = async (e) => {
-		e.preventDefault() // prevent reload.
+		e.preventDefault(); // prevent reload.
 
 		// Reads info from returned HTML
 		const postToSend = {
 			body,
+			privacy,
 			groupId,
 			imageURL,
-			privacy,
-			userId
-		}
-		console.log("Post being sent to backend: ", postToSend)
+			userId,
+		};
+		console.log("Post being sent to backend: ", postToSend);
 
 		// Send user data to golang api/PostHandler.go.
 		await fetch("http://localhost:8080/api/posts", {
@@ -349,10 +350,14 @@ function PostForm() {
 			headers: { "Content-Type": "application/json" },
 			credentials: "include",
 			body: JSON.stringify(postToSend),
-		})
+		});
+	};
 
-
-	}
+	// Function to handle file selection
+	const handleFileChange = (e) => {
+		const file = e.target.files[0];
+		setImageURL(file);
+	};
 
 	return (
 		<div>
@@ -364,19 +369,48 @@ function PostForm() {
 							type="text"
 							className="form-control"
 							id="postFormBody"
-							placeholder="name@example.com"
+							placeholder="Type your post here..."
 							onChange={(e) => setBody(e.target.value)}
 						/>
 					</div>
+
 					<div className="form-floating">
+						{/* Use input type="file" for image selection/upload */}
 						<input
-							type="text"
+							type="file"
 							className="form-control"
-							id="postFormImgURL"
-							placeholder="This/Will/Need/A/Button.gif"
-							onChange={(e) => setImageURL(e.target.value)}
+							id="postFormImgUpload"
+							accept="image/*"
+							onChange={handleFileChange}
 						/>
-						<label htmlFor="postFormImgURL">Image URL</label>
+					</div>
+					<div className="form-floating">
+						<div className="form-control reginput status">
+							<div>
+								<input
+									required
+									type="radio"
+									id="post-public-status"
+									value="public"
+									name="status"
+									checked={privacy === "public"}
+									onClick={(e) => setPrivacy(e.target.value)}
+								/>
+								<label htmlFor="post-public-status">Public</label>
+							</div>
+							<div>
+								<input
+									required
+									type="radio"
+									id="private-status"
+									value="private"
+									name="status"
+									checked={privacy === "private"}
+									onClick={(e) => setPrivacy(e.target.value)}
+								/>
+								<label htmlFor="private-status">Private</label>
+							</div>
+						</div>
 					</div>
 					<button className="w-100 btn btn-lg btn-primary" type="submit">
 						Submit
@@ -384,7 +418,7 @@ function PostForm() {
 				</form>
 			</main>
 		</div>
-	)
+	);
 }
 
 // Display information relating to homepage
@@ -416,7 +450,9 @@ function Home() {
 
 	return (
 		<div className="homePage">
-
+			<div className="postForm">
+				<PostForm />
+			</div>
 			<div className="allUsersList">
 				<h2>All Users</h2>
 				<ul>
@@ -496,17 +532,6 @@ function Home() {
 			</div>
 		</div>
 	);
-}
-
-// Elements related to the homepage clustered together for the login function to return.
-// Needs work, but it's a start
-const completedHomePage = () => {
-	return (
-		<div className="completedHomePage">
-			<PostForm />
-			<Home />
-		</div>
-	)
 }
 
 
