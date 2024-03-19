@@ -35,79 +35,88 @@ const App = () => {
 // }
 
 function Navbar(props) {
-  return (
-    /*#__PURE__*/
-    //LOGOUT
-    //NOTIFICATIONS
-    //CHAT
-    //GROUP
-    //HOME
-    //PROFILE
-    React.createElement("nav", {
-      className: "navbar navbar-expand-md bg-body-tertiary"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "container-fluid"
-    }, /*#__PURE__*/React.createElement("a", {
-      className: "navbar-brand",
-      href: "#"
-    }, "Navbar"), /*#__PURE__*/React.createElement("button", {
-      className: "navbar-toggler",
-      type: "button",
-      "data-bs-toggle": "collapse",
-      "data-bs-target": "#navbarSupportedContent",
-      "aria-controls": "navbarSupportedContent",
-      "aria-expanded": "false",
-      "aria-label": "Toggle navigation"
-    }, /*#__PURE__*/React.createElement("span", {
-      className: "navbar-toggler-icon"
-    })), /*#__PURE__*/React.createElement("div", {
-      className: "collapse navbar-collapse",
-      id: "navbarSupportedContent"
-    }, /*#__PURE__*/React.createElement("ul", {
-      className: "navbar-nav me-auto mb-2 mb-lg-0"
-    }, /*#__PURE__*/React.createElement("li", {
-      className: "nav-item"
-    }, /*#__PURE__*/React.createElement("a", {
-      className: "nav-link",
-      href: "#"
-    }, "LOGOUT")), /*#__PURE__*/React.createElement("li", {
-      className: "nav-item"
-    }, /*#__PURE__*/React.createElement("a", {
-      className: "nav-link",
-      href: "#"
-    }, "NOTIFICATIONS")), /*#__PURE__*/React.createElement("li", {
-      className: "nav-item"
-    }, /*#__PURE__*/React.createElement("a", {
-      className: "nav-link",
-      href: "#"
-    }, "CHAT")), /*#__PURE__*/React.createElement("li", {
-      className: "nav-item"
-    }, /*#__PURE__*/React.createElement("a", {
-      className: "nav-link",
-      href: "#"
-    }, "GROUP")), /*#__PURE__*/React.createElement("li", {
-      className: "nav-item"
-    }, /*#__PURE__*/React.createElement("a", {
-      className: "nav-link",
-      href: "#"
-    }, "HOME")), /*#__PURE__*/React.createElement("li", {
-      className: "nav-item"
-    }, /*#__PURE__*/React.createElement("a", {
-      className: "nav-link",
-      href: "#"
-    }, "PROFILE"))), /*#__PURE__*/React.createElement("form", {
-      className: "d-flex",
-      role: "search"
-    }, /*#__PURE__*/React.createElement("input", {
-      className: "form-control me-2",
-      type: "search",
-      placeholder: "Search",
-      "aria-label": "Search"
-    }), /*#__PURE__*/React.createElement("button", {
-      className: "btn btn-outline-success",
-      type: "submit"
-    }, "Search")))))
-  );
+  const renderHome = () => {
+    const appContainer = document.querySelector('.app-container');
+    ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
+  };
+  const renderProfile = () => {
+    const appContainer = document.querySelector('.app-container');
+    ReactDOM.render( /*#__PURE__*/React.createElement(Profile, null), appContainer);
+  };
+  const renderNotifications = () => {
+    const appContainer = document.querySelector('.app-container');
+    ReactDOM.render( /*#__PURE__*/React.createElement(Notifications, null), appContainer);
+  };
+  const renderChat = () => {
+    const appContainer = document.querySelector('.app-container');
+    ReactDOM.render( /*#__PURE__*/React.createElement(Chat, null), appContainer);
+  };
+  const renderGroup = () => {
+    const appContainer = document.querySelector('.app-container');
+    ReactDOM.render( /*#__PURE__*/React.createElement(Group, null), appContainer);
+  };
+  const renderLogin = () => {
+    //Some logout logic and function needs implemented here rather than lines below
+
+    const appContainer = document.querySelector('.app-container');
+    ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
+  };
+  return /*#__PURE__*/React.createElement("nav", {
+    className: "navbar navbar-expand-md bg-body-tertiary"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container-fluid"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "navbar-toggler",
+    type: "button",
+    "data-bs-toggle": "collapse",
+    "data-bs-target": "#navbarSupportedContent",
+    "aria-controls": "navbarSupportedContent",
+    "aria-expanded": "false",
+    "aria-label": "Toggle navigation"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "navbar-toggler-icon"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "collapse navbar-collapse",
+    id: "navbarSupportedContent"
+  }, /*#__PURE__*/React.createElement("ul", {
+    className: "navbar-nav me-auto mx-auto mb-2 mb-lg-0"
+  }, /*#__PURE__*/React.createElement("li", {
+    className: "nav-item"
+  }, /*#__PURE__*/React.createElement("a", {
+    className: "nav-link",
+    href: "#",
+    onClick: renderProfile
+  }, "PROFILE")), /*#__PURE__*/React.createElement("li", {
+    className: "nav-item"
+  }, /*#__PURE__*/React.createElement("a", {
+    className: "nav-link",
+    href: "#",
+    onClick: renderHome
+  }, "HOME")), /*#__PURE__*/React.createElement("li", {
+    className: "nav-item"
+  }, /*#__PURE__*/React.createElement("a", {
+    className: "nav-link",
+    href: "#",
+    onClick: renderNotifications
+  }, "NOTIFICATIONS")), /*#__PURE__*/React.createElement("li", {
+    className: "nav-item"
+  }, /*#__PURE__*/React.createElement("a", {
+    className: "nav-link",
+    href: "#",
+    onClick: renderChat
+  }, "CHAT")), /*#__PURE__*/React.createElement("li", {
+    className: "nav-item"
+  }, /*#__PURE__*/React.createElement("a", {
+    className: "nav-link",
+    href: "#",
+    onClick: renderGroup
+  }, "GROUP")), /*#__PURE__*/React.createElement("li", {
+    className: "nav-item"
+  }, /*#__PURE__*/React.createElement("a", {
+    className: "nav-link",
+    href: "#",
+    onClick: renderLogin
+  }, "LOGOUT"))))));
 }
 function Login(props) {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
@@ -159,6 +168,7 @@ function Login(props) {
   //if credentials frontend match backend then we render home
   if (isLoggedIn) {
     const appContainer = document.querySelector('.app-container');
+    //ReactDOM.render(<Home />, appContainer);
     ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
   }
 
@@ -408,22 +418,18 @@ function Register(props) {
     onClick: renderLogin
   }, "Log in")));
 }
-
-// function Profile {
-
-// }
-
-// function Chat {
-
-// }
-
-// function Group {
-
-// }
-
-// function Notifications{
-
-// }
+function Profile() {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Profile"));
+}
+function Chat() {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"));
+}
+function Group() {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Group"));
+}
+function Notifications() {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Notifications"));
+}
 
 // Main post form, defaults to sending posts to public group (0)
 function PostForm() {
@@ -548,67 +554,6 @@ function PostForm() {
     className: "w-100 btn btn-lg btn-primary",
     type: "submit"
   }, "Submit"))));
-
-  // return (
-  // 	<div>
-  // 		<main className="postForm" style={{ display: "block" }}>
-  // 			<h1 className="h3 mb-3 fw-normal">Post Message Here</h1>
-  // 			<form onSubmit={submit}>
-  // 				<div className="form-floating">
-  // 					<input
-  // 						type="text"
-  // 						className="form-control"
-  // 						id="postFormBody"
-  // 						placeholder="Type your post here..."
-  // 						onChange={(e) => setBody(e.target.value)}
-  // 					/>
-  // 				</div>
-
-  // 				<div className="form-floating">
-  // 					{/* Use input type="file" for image selection/upload */}
-  // 					<input
-  // 						type="file"
-  // 						className="form-control"
-  // 						id="postFormImgUpload"
-  // 						accept="image/*"
-  // 						onChange={handleFileChange}
-  // 					/>
-  // 				</div>
-  // 				<div className="form-floating">
-  // 					<div className="form-control reginput status">
-  // 						<div>
-  // 							<input
-  // 								required
-  // 								type="radio"
-  // 								id="post-public-status"
-  // 								value="public"
-  // 								name="status"
-  // 								checked={privacy === "public"}
-  // 								onClick={(e) => setPrivacy(e.target.value)}
-  // 							/>
-  // 							<label htmlFor="post-public-status">Public</label>
-  // 						</div>
-  // 						<div>
-  // 							<input
-  // 								required
-  // 								type="radio"
-  // 								id="private-status"
-  // 								value="private"
-  // 								name="status"
-  // 								checked={privacy === "private"}
-  // 								onClick={(e) => setPrivacy(e.target.value)}
-  // 							/>
-  // 							<label htmlFor="private-status">Private</label>
-  // 						</div>
-  // 					</div>
-  // 				</div>
-  // 				<button className="w-100 btn btn-lg btn-primary" type="submit">
-  // 					Submit
-  // 				</button>
-  // 			</form>
-  // 		</main>
-  // 	</div>
-  // );
 }
 
 // Display information relating to homepage
@@ -635,9 +580,7 @@ function Home() {
   }, []);
   return /*#__PURE__*/React.createElement("div", {
     className: "homePage"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "postForm"
-  }, /*#__PURE__*/React.createElement(PostForm, null)), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement(PostForm, null), /*#__PURE__*/React.createElement("div", {
     className: "allUsersList"
   }, /*#__PURE__*/React.createElement("h2", null, "All Users"), /*#__PURE__*/React.createElement("ul", null, users.map(user => /*#__PURE__*/React.createElement("li", {
     key: user.userId
