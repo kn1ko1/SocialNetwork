@@ -572,25 +572,19 @@ function PostForm({ groupId }) {
 
 // Display information relating to homepage
 function Home() {
-	const [users, setUsers] = useState([]);
 	const [almostPrivatePosts, setAlmostPrivatePosts] = useState([]);
 	const [privatePosts, setPrivatePosts] = useState([]);
 	const [publicPostsWithComments, setPublicPostsWithComments] = useState([]);
-	const [userEvents, setUserEvents] = useState([]);
 	const [userGroups, setUserGroups] = useState([]);
-	const [userNotifications, setUserNotifications] = useState([]);
 
 	useEffect(() => {
 		fetch('http://localhost:8080/api/home')
 			.then(response => response.json())
 			.then(data => {
-				setUsers(data.allUsers);
 				setAlmostPrivatePosts(data.almostPrivatePosts)
 				setPrivatePosts(data.privatePosts)
 				setPublicPostsWithComments(data.publicPostsWithComments)
-				setUserEvents(data.userEvents)
 				setUserGroups(data.userGroups)
-				setUserNotifications(data.userNotifications)
 			})
 			.catch(error => {
 				console.error('Error fetching data:', error);
@@ -604,16 +598,6 @@ function Home() {
 			<Navbar />
 			<PostForm groupId={0} />
 
-			<div className="allUsersList">
-				<h2>All Users</h2>
-				<ul>
-					{users.map(user => (
-						<li key={user.userId}>
-							{user.username} - {user.email} {/* Render whatever user properties you need */}
-						</li>
-					))}
-				</ul>
-			</div>
 
 			<div className="almostPrivatePosts">
 				<h2>Almost Private Posts</h2>
@@ -649,34 +633,12 @@ function Home() {
 				</ul>
 			</div>
 
-			<div className="userEvents">
-				<h2>Events</h2>
-				<ul>
-					{userEvents !== null && userEvents.map(userEvent => (
-						<li key={userEvent.createdAt}>
-							{userEvent.Title} {/* Render whatever user properties you need */}
-						</li>
-					))}
-				</ul>
-			</div>
-
 			<div className="userGroups">
 				<h2>Groups</h2>
 				<ul>
 					{userGroups !== null && userGroups.map(userGroup => (
 						<li key={userGroup.createdAt}>
 							{userGroup.Title} {/* Render whatever user properties you need */}
-						</li>
-					))}
-				</ul>
-			</div>
-
-			<div className="userNotifications">
-				<h2>Notifications</h2>
-				<ul>
-					{userNotifications !== null && userNotifications.map(userNotification => (
-						<li key={userNotification.createdAt}>
-							{userNotification.NotificationType} {/* Render whatever user properties you need */}
 						</li>
 					))}
 				</ul>
