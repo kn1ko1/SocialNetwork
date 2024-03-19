@@ -569,7 +569,7 @@ function Home() {
       console.error('Error fetching data:', error);
     });
   }, []);
-  return /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React.createElement("main", {
     className: "homePage"
   }, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement(PostForm, {
     groupId: 0
@@ -603,5 +603,102 @@ function Home() {
     key: userNotification.createdAt
   }, userNotification.NotificationType, " ")))));
 }
+
+// function Profile() {
+
+// 	const [usernameOrEmail, setUsernameOrEmail] = useState("")
+// 	const [password, setPassword] = useState("")
+
+// 	//this is the sign in button
+// 	const submit = async (e) => {
+// 		e.preventDefault() // prevent reload.
+
+// 		//this is user input 
+// 		const userToLogin = {
+// 			usernameOrEmail,
+// 			password,
+// 		}
+
+// 		try {
+// 			//check credentials with backend
+// 			const response = await fetch('http://localhost:8080/auth/login', {
+// 				method: 'POST',
+// 				headers: { 'Content-Type': 'application/json' },
+// 				credentials: 'include',
+// 				body: JSON.stringify(userToLogin),
+// 			});
+
+// 			if (!response.ok) {
+// 				errorMessage.innerHTML = 'Invalid credentials'
+// 				throw new Error('Invalid credentials');
+// 			}
+
+// 			//takes response from backend and processes
+// 			const data = await response.json();
+// 			if (data.success) {
+// 				setIsLoggedIn(true);
+// 			} else {
+// 				errorMessage.innerHTML = 'Invalid credentials'
+// 				throw new Error('Invalid credentials');
+// 			}
+// 		} catch (error) {
+// 			errorMessage.innerHTML = 'Invalid credentials'
+// 			setError('Invalid credentials');
+// 		}
+// 	};
+
+// 	//if credentials frontend match backend then we render home
+// 	if (isLoggedIn) {
+// 		const appContainer = document.querySelector('.app-container');
+// 		ReactDOM.render(<Home />, appContainer);
+// 	}
+
+// 	//this is the register button, when pressed will serve registration form
+// 	const renderRegister = () => {
+// 		const appContainer = document.querySelector('.app-container');
+// 		ReactDOM.render(<Register />, appContainer);
+// 	};
+
+// 	return (
+// 		<div className="login-container">
+// 			<main className="form-signin w-100 m-auto" style={{ display: "block" }}>
+// 				<h1 className="h3 mb-3 fw-normal login-text">log in</h1>
+// 				<form onSubmit={submit}>
+// 					<div className="form-floating">
+// 						<label htmlFor="floatingInput" className="login-text">Email address</label>
+// 						<input
+// 							type="email"
+// 							className="form-control login-text"
+// 							id="floatingInput"
+// 							placeholder="name@example.com"
+// 							onChange={(e) => setUsernameOrEmail(e.target.value)}
+// 						/>
+// 					</div>
+
+// 					<div className="form-floating">
+// 						<label htmlFor="floatingPassword" className="login-text">Password</label>
+// 						<input
+// 							type="password"
+// 							className="form-control login-text"
+// 							id="floatingPassword"
+// 							placeholder="Password"
+// 							onChange={(e) => setPassword(e.target.value)}
+// 						/>
+// 					</div>
+// 					<button className="w-100 btn btn-lg btn-primary login-button" type="submit">
+// 						Sign in
+// 					</button>
+// 				</form>
+// 				<div className="error-message"></div>
+// 				<br /> {/* Add a line break for spacing */}
+// 				<span className="login-text">Don't have an account? &nbsp;</span>
+// 				<button className="w-100 btn btn-lg btn-primary login-button" onClick={renderRegister}>
+// 					Register
+// 				</button>
+// 			</main>
+// 		</div>
+// 	)
+// }
+
 const root = document.querySelector("#root");
 ReactDOM.render( /*#__PURE__*/React.createElement(App, null), root);
