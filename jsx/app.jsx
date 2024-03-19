@@ -3,8 +3,7 @@ const { useState, useEffect } = React
 const App = () => {
 	return (
 		<div className="app-container">
-			{/* <Navbar /> */}
-			{/* <Dummy /> */}
+			
 			<Login />
 		</div>
 	)
@@ -37,46 +36,68 @@ const App = () => {
 // }
 
 function Navbar(props) {
+
+	const renderHome = () => {
+		const appContainer = document.querySelector('.app-container');
+		ReactDOM.render(<Home />, appContainer);
+	};
+
+	const renderProfile = () => {
+		const appContainer = document.querySelector('.app-container');
+		ReactDOM.render(<Profile />, appContainer);
+	};
+
+	const renderNotifications = () => {
+		const appContainer = document.querySelector('.app-container');
+		ReactDOM.render(<Notifications />, appContainer);
+	};
+
+	const renderChat = () => {
+		const appContainer = document.querySelector('.app-container');
+		ReactDOM.render(<Chat />, appContainer);
+	};
+
+	const renderGroup = () => {
+		const appContainer = document.querySelector('.app-container');
+		ReactDOM.render(<Group />, appContainer);
+	};
+
+	const renderLogin = () => {
+
+		//Some logout logic and function needs implemented here rather than lines below
+
+		const appContainer = document.querySelector('.app-container');
+		ReactDOM.render(<Login />, appContainer);
+	};
+
+
 	return (
-
-		//LOGOUT
-		//NOTIFICATIONS
-		//CHAT
-		//GROUP
-		//HOME
-		//PROFILE
-
-		<nav className="navbar navbar-expand-md bg-body-tertiary">
+<nav className="navbar navbar-expand-md bg-body-tertiary">
     <div className="container-fluid">
-        <a className="navbar-brand" href="#">Navbar</a>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                <li className="nav-item">
-                    <a className="nav-link" href="#">LOGOUT</a>
+            <ul className="navbar-nav me-auto mx-auto mb-2 mb-lg-0">
+			<li className="nav-item">
+                    <a className="nav-link" href="#" onClick={renderProfile}>PROFILE</a>
+                </li>
+			<li className="nav-item">
+                    <a className="nav-link" href="#" onClick={renderHome}>HOME</a>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href="#">NOTIFICATIONS</a>
+                    <a className="nav-link" href="#" onClick={renderNotifications}>NOTIFICATIONS</a>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href="#">CHAT</a>
+                    <a className="nav-link" href="#" onClick={renderChat}>CHAT</a>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href="#">GROUP</a>
+                    <a className="nav-link" href="#" onClick={renderGroup}>GROUP</a>
                 </li>
-                <li className="nav-item">
-                    <a className="nav-link" href="#">HOME</a>
-                </li>
-                <li className="nav-item">
-                    <a className="nav-link" href="#">PROFILE</a>
+				<li className="nav-item">
+                    <a className="nav-link" href="#" onClick={renderLogin}>LOGOUT</a>
                 </li>
             </ul>
-            <form className="d-flex" role="search">
-                <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                <button className="btn btn-outline-success" type="submit">Search</button>
-            </form>
         </div>
     </div>
 </nav>
@@ -133,6 +154,7 @@ function Login(props) {
 		//if credentials frontend match backend then we render home
 		if (isLoggedIn) {
 			const appContainer = document.querySelector('.app-container');
+			//ReactDOM.render(<Home />, appContainer);
 			ReactDOM.render(<Home />, appContainer);
 		}
 
@@ -392,24 +414,44 @@ return (
 }
 
 
+function Profile() {
+	return (
+		<div>
+			<Navbar />
+	<h1>Profile</h1>
+		</div>
+	)
+}
 
 
+function Chat() {
+	return (
+		<div>
+			<Navbar />
+	<h1>Chat</h1>
+		</div>
+	)
+}
 
-// function Profile {
 
-// }
+function Group() {
+return (
+	<div>
+		<Navbar />
+<h1>Group</h1>
+	</div>
+)
+}
 
-// function Chat {
 
-// }
-
-// function Group {
-
-// }
-
-// function Notifications{
-
-// }
+function Notifications() {
+	return (
+		<div>
+			<Navbar />
+	<h1>Notifications</h1>
+		</div>
+	)
+}
 
 // Main post form, defaults to sending posts to public group (0)
 function PostForm() {
@@ -537,67 +579,6 @@ function PostForm() {
         </main>
     </div>
 );
-
-	// return (
-	// 	<div>
-	// 		<main className="postForm" style={{ display: "block" }}>
-	// 			<h1 className="h3 mb-3 fw-normal">Post Message Here</h1>
-	// 			<form onSubmit={submit}>
-	// 				<div className="form-floating">
-	// 					<input
-	// 						type="text"
-	// 						className="form-control"
-	// 						id="postFormBody"
-	// 						placeholder="Type your post here..."
-	// 						onChange={(e) => setBody(e.target.value)}
-	// 					/>
-	// 				</div>
-
-	// 				<div className="form-floating">
-	// 					{/* Use input type="file" for image selection/upload */}
-	// 					<input
-	// 						type="file"
-	// 						className="form-control"
-	// 						id="postFormImgUpload"
-	// 						accept="image/*"
-	// 						onChange={handleFileChange}
-	// 					/>
-	// 				</div>
-	// 				<div className="form-floating">
-	// 					<div className="form-control reginput status">
-	// 						<div>
-	// 							<input
-	// 								required
-	// 								type="radio"
-	// 								id="post-public-status"
-	// 								value="public"
-	// 								name="status"
-	// 								checked={privacy === "public"}
-	// 								onClick={(e) => setPrivacy(e.target.value)}
-	// 							/>
-	// 							<label htmlFor="post-public-status">Public</label>
-	// 						</div>
-	// 						<div>
-	// 							<input
-	// 								required
-	// 								type="radio"
-	// 								id="private-status"
-	// 								value="private"
-	// 								name="status"
-	// 								checked={privacy === "private"}
-	// 								onClick={(e) => setPrivacy(e.target.value)}
-	// 							/>
-	// 							<label htmlFor="private-status">Private</label>
-	// 						</div>
-	// 					</div>
-	// 				</div>
-	// 				<button className="w-100 btn btn-lg btn-primary" type="submit">
-	// 					Submit
-	// 				</button>
-	// 			</form>
-	// 		</main>
-	// 	</div>
-	// );
 }
 
 // Display information relating to homepage
@@ -629,7 +610,11 @@ function Home() {
 
 	return (
 		<div className="homePage">
-			<PostForm />
+			
+			<Navbar />
+				<PostForm />
+			
+
 			<div className="allUsersList">
 				<h2>All Users</h2>
 				<ul>
