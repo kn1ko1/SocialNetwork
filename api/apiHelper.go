@@ -25,7 +25,7 @@ var RandomNumberStr = strconv.Itoa(rand.Intn(1000000))
 
 const (
 	maxFileSize = 20 << 20 // 20MB
-	dirPath     = "static/uploadFiles/images"
+	dirPath     = "static/uploadedFiles/images"
 )
 
 var supportedFileTypes = map[string]bool{
@@ -44,15 +44,15 @@ func ImageProcessing(w http.ResponseWriter, r *http.Request, file multipart.File
 		utils.HandleError("File type is not supported!!", errors.New("file type is not supported"))
 		return "", supportedFileTypesErr
 	}
-	//create a file in the given directory with the suffix .jpg
-	osFile, createTempErr := os.CreateTemp(dirPath, "*.jp*g, *.png, *.gif")
+	// Create a temporary file in the given directory with a unique name
+	osFile, createTempErr := os.CreateTemp(dirPath, "upload-*.jpg")
 	if createTempErr != nil {
 		utils.HandleError("Error creating file: ", createTempErr)
 		http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
 		return "", createTempErr
 	}
 	defer osFile.Close()
-	//copy the contents of the file to the file created above
+	// Copy the contents of the file to the file created above
 	_, copyErr := io.Copy(osFile, file)
 	if copyErr != nil {
 		utils.HandleError("Error copying file: ", copyErr)

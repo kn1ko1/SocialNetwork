@@ -432,60 +432,51 @@ function Notifications() {
 }
 
 // Main post form, defaults to sending posts to public group (0)
-function PostForm() {
+function PostForm({
+  groupId
+}) {
   const [body, setBody] = useState("");
   const [privacy, setPrivacy] = useState("");
-  const [imageURL, setImageURL] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
-  let groupId = null;
 
   // Needs to be changed to get info from... cookie?
   const userId = Number(36);
-  if (privacy === "public") {
-    groupId = Number(0);
-  }
 
   // Upon submitting:
   const submit = async e => {
     e.preventDefault(); // prevent reload.
 
-    // Reads info from returned HTML
-    const postToSend = {
-      body,
-      privacy,
-      groupId,
-      imageURL,
-      userId
-    };
-    console.log("Post being sent to backend: ", postToSend);
+    const formData = new FormData();
+
+    // Append form data
+    formData.append('body', body);
+    formData.append('privacy', privacy);
+    formData.append('groupId', groupId);
+    formData.append('userId', userId);
+    if (selectedFile) {
+      formData.append('image', selectedFile);
+    }
+    console.log("Form data being sent to backend: ", formData);
 
     // Send user data to golang api/PostHandler.go.
     await fetch("http://localhost:8080/api/posts", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
       credentials: "include",
-      body: JSON.stringify(postToSend)
+      body: formData
     });
 
     // Reset the form fields to their default state
     setBody("");
     setPrivacy("");
-    //   setGroupId(null);
     setImageURL(null);
-    //   setUserId(null);
-
-    document.getElementById('postFormBody').value = "";
     setSelectedFile(null);
-    // document.getElementById('fileInput').value = null;
+    document.getElementById('postFormBody').value = "";
   };
 
   // Function to handle file selection
   const handleFileChange = e => {
     setSelectedFile(e.target.files[0]);
     // const file = e.target.files[0];
-    // setImageURL(file);
   };
   const handleSelectFile = () => {
     const fileInput = document.getElementById('fileInput');
@@ -580,7 +571,9 @@ function Home() {
   }, []);
   return /*#__PURE__*/React.createElement("div", {
     className: "homePage"
-  }, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement(PostForm, null), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement(PostForm, {
+    groupId: 0
+  }), /*#__PURE__*/React.createElement("div", {
     className: "allUsersList"
   }, /*#__PURE__*/React.createElement("h2", null, "All Users"), /*#__PURE__*/React.createElement("ul", null, users.map(user => /*#__PURE__*/React.createElement("li", {
     key: user.userId

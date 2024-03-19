@@ -77,9 +77,10 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 		imageURL, err = ImageProcessing(w, r, file, *fileHeader)
 		if err != nil {
 			utils.HandleError("Error with ImageHandler", err)
-			http.Error(w, "Failed to process image", http.StatusInternalServerError)
+			// http.Error(w, "Failed to process image", http.StatusInternalServerError)
 			return
 		}
+		log.Println("[api/PostsHandler] Image Stored at:", imageURL)
 	}
 
 	// Create Post object
