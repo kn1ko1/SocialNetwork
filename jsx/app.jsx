@@ -411,6 +411,7 @@ function PostForm() {
 	const [body, setBody] = useState("");
 	const [privacy, setPrivacy] = useState("");
 	const [imageURL, setImageURL] = useState(null);
+	const [selectedFile, setSelectedFile] = useState(null);
 	let groupId = null;
 
 	// Needs to be changed to get info from... cookie?
@@ -441,74 +442,157 @@ function PostForm() {
 			credentials: "include",
 			body: JSON.stringify(postToSend),
 		});
+
+		  // Reset the form fields to their default state
+		  setBody("");
+		  setPrivacy("");
+		//   setGroupId(null);
+		  setImageURL(null);
+		//   setUserId(null);
+
+		document.getElementById('postFormBody').value = "";
+		setSelectedFile(null);
+		// document.getElementById('fileInput').value = null;
 	};
 
 	// Function to handle file selection
 	const handleFileChange = (e) => {
-		const file = e.target.files[0];
-		setImageURL(file);
+		setSelectedFile(e.target.files[0]);
+		// const file = e.target.files[0];
+		// setImageURL(file);
 	};
 
-	return (
-		<div>
-			<main className="postForm" style={{ display: "block" }}>
-				<h1 className="h3 mb-3 fw-normal">Post Message Here</h1>
-				<form onSubmit={submit}>
-					<div className="form-floating">
-						<input
-							type="text"
-							className="form-control"
-							id="postFormBody"
-							placeholder="Type your post here..."
-							onChange={(e) => setBody(e.target.value)}
-						/>
-					</div>
+	const handleSelectFile = () => {
+		const fileInput = document.getElementById('fileInput');
+        fileInput.click();
+    };
 
-					<div className="form-floating">
-						{/* Use input type="file" for image selection/upload */}
-						<input
-							type="file"
-							className="form-control"
-							id="postFormImgUpload"
-							accept="image/*"
-							onChange={handleFileChange}
-						/>
-					</div>
-					<div className="form-floating">
-						<div className="form-control reginput status">
-							<div>
-								<input
-									required
-									type="radio"
-									id="post-public-status"
-									value="public"
-									name="status"
-									checked={privacy === "public"}
-									onClick={(e) => setPrivacy(e.target.value)}
-								/>
-								<label htmlFor="post-public-status">Public</label>
-							</div>
-							<div>
-								<input
-									required
-									type="radio"
-									id="private-status"
-									value="private"
-									name="status"
-									checked={privacy === "private"}
-									onClick={(e) => setPrivacy(e.target.value)}
-								/>
-								<label htmlFor="private-status">Private</label>
-							</div>
-						</div>
-					</div>
-					<button className="w-100 btn btn-lg btn-primary" type="submit">
-						Submit
-					</button>
-				</form>
-			</main>
-		</div>
-	);
+	return (
+    <div>
+        <main className="postForm container" style={{ maxWidth: "400px" }}>
+            <h1 className="h3 mb-3 fw-normal">Post Message Here</h1>
+            <form onSubmit={submit}>
+                <div className="form-floating mb-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="postFormBody"
+                        placeholder="Type your post here..."
+                        onChange={(e) => setBody(e.target.value)}
+                    />
+                </div>
+
+				<div>
+				<button type="button" className="btn btn-primary" onClick={handleSelectFile}>
+                Select File
+            </button>
+            <span>{selectedFile ? selectedFile.name : 'No file selected'}</span>
+            <input
+                type="file"
+                id="fileInput"
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+            />
+        </div>
+      <br /> {/* Line break */}
+                <div className="form-floating mb-3">
+                    <div className="form-check">
+                        <input
+                            required
+                            type="radio"
+                            id="post-public-status"
+                            value="public"
+                            name="status"
+                            checked={privacy === "public"}
+                            onClick={(e) => setPrivacy(e.target.value)}
+                            className="form-check-input"
+                        />
+                        <label htmlFor="post-public-status" className="form-check-label">Public</label>
+                    </div>
+                    <div className="form-check">
+                        <input
+                            required
+                            type="radio"
+                            id="private-status"
+                            value="private"
+                            name="status"
+                            checked={privacy === "private"}
+                            onClick={(e) => setPrivacy(e.target.value)}
+                            className="form-check-input"
+                        />
+                        <label htmlFor="private-status" className="form-check-label">Private</label>
+                    </div>
+                </div>
+
+                <button className="w-100 btn btn-lg btn-primary" type="submit">
+                    Submit
+                </button>
+            </form>
+        </main>
+    </div>
+);
+
+	// return (
+	// 	<div>
+	// 		<main className="postForm" style={{ display: "block" }}>
+	// 			<h1 className="h3 mb-3 fw-normal">Post Message Here</h1>
+	// 			<form onSubmit={submit}>
+	// 				<div className="form-floating">
+	// 					<input
+	// 						type="text"
+	// 						className="form-control"
+	// 						id="postFormBody"
+	// 						placeholder="Type your post here..."
+	// 						onChange={(e) => setBody(e.target.value)}
+	// 					/>
+	// 				</div>
+
+	// 				<div className="form-floating">
+	// 					{/* Use input type="file" for image selection/upload */}
+	// 					<input
+	// 						type="file"
+	// 						className="form-control"
+	// 						id="postFormImgUpload"
+	// 						accept="image/*"
+	// 						onChange={handleFileChange}
+	// 					/>
+	// 				</div>
+	// 				<div className="form-floating">
+	// 					<div className="form-control reginput status">
+	// 						<div>
+	// 							<input
+	// 								required
+	// 								type="radio"
+	// 								id="post-public-status"
+	// 								value="public"
+	// 								name="status"
+	// 								checked={privacy === "public"}
+	// 								onClick={(e) => setPrivacy(e.target.value)}
+	// 							/>
+	// 							<label htmlFor="post-public-status">Public</label>
+	// 						</div>
+	// 						<div>
+	// 							<input
+	// 								required
+	// 								type="radio"
+	// 								id="private-status"
+	// 								value="private"
+	// 								name="status"
+	// 								checked={privacy === "private"}
+	// 								onClick={(e) => setPrivacy(e.target.value)}
+	// 							/>
+	// 							<label htmlFor="private-status">Private</label>
+	// 						</div>
+	// 					</div>
+	// 				</div>
+	// 				<button className="w-100 btn btn-lg btn-primary" type="submit">
+	// 					Submit
+	// 				</button>
+	// 			</form>
+	// 		</main>
+	// 	</div>
+	// );
 }
 
 // Display information relating to homepage

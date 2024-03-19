@@ -428,6 +428,7 @@ function PostForm() {
   const [body, setBody] = useState("");
   const [privacy, setPrivacy] = useState("");
   const [imageURL, setImageURL] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   let groupId = null;
 
   // Needs to be changed to get info from... cookie?
@@ -459,66 +460,153 @@ function PostForm() {
       credentials: "include",
       body: JSON.stringify(postToSend)
     });
+
+    // Reset the form fields to their default state
+    setBody("");
+    setPrivacy("");
+    //   setGroupId(null);
+    setImageURL(null);
+    //   setUserId(null);
+
+    document.getElementById('postFormBody').value = "";
+    setSelectedFile(null);
+    // document.getElementById('fileInput').value = null;
   };
 
   // Function to handle file selection
   const handleFileChange = e => {
-    const file = e.target.files[0];
-    setImageURL(file);
+    setSelectedFile(e.target.files[0]);
+    // const file = e.target.files[0];
+    // setImageURL(file);
+  };
+  const handleSelectFile = () => {
+    const fileInput = document.getElementById('fileInput');
+    fileInput.click();
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
-    className: "postForm",
+    className: "postForm container",
     style: {
-      display: "block"
+      maxWidth: "400px"
     }
   }, /*#__PURE__*/React.createElement("h1", {
     className: "h3 mb-3 fw-normal"
   }, "Post Message Here"), /*#__PURE__*/React.createElement("form", {
     onSubmit: submit
   }, /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
+    className: "form-floating mb-3"
   }, /*#__PURE__*/React.createElement("input", {
     type: "text",
     className: "form-control",
     id: "postFormBody",
     placeholder: "Type your post here...",
     onChange: e => setBody(e.target.value)
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "btn btn-primary",
+    onClick: handleSelectFile
+  }, "Select File"), /*#__PURE__*/React.createElement("span", null, selectedFile ? selectedFile.name : 'No file selected'), /*#__PURE__*/React.createElement("input", {
     type: "file",
-    className: "form-control",
-    id: "postFormImgUpload",
+    id: "fileInput",
     accept: "image/*",
+    style: {
+      display: 'none'
+    },
     onChange: handleFileChange
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
+  })), /*#__PURE__*/React.createElement("br", null), " ", /*#__PURE__*/React.createElement("div", {
+    className: "form-floating mb-3"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "form-control reginput status"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
+    className: "form-check"
+  }, /*#__PURE__*/React.createElement("input", {
     required: true,
     type: "radio",
     id: "post-public-status",
     value: "public",
     name: "status",
     checked: privacy === "public",
-    onClick: e => setPrivacy(e.target.value)
+    onClick: e => setPrivacy(e.target.value),
+    className: "form-check-input"
   }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "post-public-status"
-  }, "Public")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
+    htmlFor: "post-public-status",
+    className: "form-check-label"
+  }, "Public")), /*#__PURE__*/React.createElement("div", {
+    className: "form-check"
+  }, /*#__PURE__*/React.createElement("input", {
     required: true,
     type: "radio",
     id: "private-status",
     value: "private",
     name: "status",
     checked: privacy === "private",
-    onClick: e => setPrivacy(e.target.value)
+    onClick: e => setPrivacy(e.target.value),
+    className: "form-check-input"
   }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "private-status"
-  }, "Private")))), /*#__PURE__*/React.createElement("button", {
+    htmlFor: "private-status",
+    className: "form-check-label"
+  }, "Private"))), /*#__PURE__*/React.createElement("button", {
     className: "w-100 btn btn-lg btn-primary",
     type: "submit"
   }, "Submit"))));
+
+  // return (
+  // 	<div>
+  // 		<main className="postForm" style={{ display: "block" }}>
+  // 			<h1 className="h3 mb-3 fw-normal">Post Message Here</h1>
+  // 			<form onSubmit={submit}>
+  // 				<div className="form-floating">
+  // 					<input
+  // 						type="text"
+  // 						className="form-control"
+  // 						id="postFormBody"
+  // 						placeholder="Type your post here..."
+  // 						onChange={(e) => setBody(e.target.value)}
+  // 					/>
+  // 				</div>
+
+  // 				<div className="form-floating">
+  // 					{/* Use input type="file" for image selection/upload */}
+  // 					<input
+  // 						type="file"
+  // 						className="form-control"
+  // 						id="postFormImgUpload"
+  // 						accept="image/*"
+  // 						onChange={handleFileChange}
+  // 					/>
+  // 				</div>
+  // 				<div className="form-floating">
+  // 					<div className="form-control reginput status">
+  // 						<div>
+  // 							<input
+  // 								required
+  // 								type="radio"
+  // 								id="post-public-status"
+  // 								value="public"
+  // 								name="status"
+  // 								checked={privacy === "public"}
+  // 								onClick={(e) => setPrivacy(e.target.value)}
+  // 							/>
+  // 							<label htmlFor="post-public-status">Public</label>
+  // 						</div>
+  // 						<div>
+  // 							<input
+  // 								required
+  // 								type="radio"
+  // 								id="private-status"
+  // 								value="private"
+  // 								name="status"
+  // 								checked={privacy === "private"}
+  // 								onClick={(e) => setPrivacy(e.target.value)}
+  // 							/>
+  // 							<label htmlFor="private-status">Private</label>
+  // 						</div>
+  // 					</div>
+  // 				</div>
+  // 				<button className="w-100 btn btn-lg btn-primary" type="submit">
+  // 					Submit
+  // 				</button>
+  // 			</form>
+  // 		</main>
+  // 	</div>
+  // );
 }
 
 // Display information relating to homepage
