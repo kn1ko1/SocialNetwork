@@ -5,80 +5,109 @@ const {
 const App = () => {
   return /*#__PURE__*/React.createElement("div", {
     className: "app-container"
-  }, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement(Login, null));
+  }, /*#__PURE__*/React.createElement(Login, null));
 };
+
+// function Dummy(props) {
+// 	return (
+// 		<div className="container-fluid text-center">
+// 		<div className="row mb-2">
+// 			<div className="col-lg-3">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 			<div className="col-lg-6">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 			<div className="col-lg-3">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 		</div>
+// 		<div className="row">
+// 			<div className="col-6">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 			<div className="col-6">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 		</div>
+// 	</div>
+// 	)
+// }
+
 function Navbar(props) {
-  return /*#__PURE__*/React.createElement("nav", {
-    className: "navbar navbar-expand-lg bg-body-tertiary"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "container-fluid"
-  }, /*#__PURE__*/React.createElement("a", {
-    className: "navbar-brand",
-    href: "#"
-  }, "Navbar"), /*#__PURE__*/React.createElement("button", {
-    className: "navbar-toggler",
-    type: "button",
-    "data-bs-toggle": "collapse",
-    "data-bs-target": "#navbarSupportedContent",
-    "aria-controls": "navbarSupportedContent",
-    "aria-expanded": "false",
-    "aria-label": "Toggle navigation"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "navbar-toggler-icon"
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "collapse navbar-collapse",
-    id: "navbarSupportedContent"
-  }, /*#__PURE__*/React.createElement("ul", {
-    className: "navbar-nav me-auto mb-2 mb-lg-0"
-  }, /*#__PURE__*/React.createElement("li", {
-    className: "nav-item"
-  }, /*#__PURE__*/React.createElement("a", {
-    className: "nav-link active",
-    "aria-current": "page",
-    href: "#"
-  }, "Home")), /*#__PURE__*/React.createElement("li", {
-    className: "nav-item"
-  }, /*#__PURE__*/React.createElement("a", {
-    className: "nav-link",
-    href: "#"
-  }, "Link")), /*#__PURE__*/React.createElement("li", {
-    className: "nav-item dropdown"
-  }, /*#__PURE__*/React.createElement("a", {
-    className: "nav-link dropdown-toggle",
-    href: "#",
-    role: "button",
-    "data-bs-toggle": "dropdown",
-    "aria-expanded": "false"
-  }, "Dropdown"), /*#__PURE__*/React.createElement("ul", {
-    className: "dropdown-menu"
-  }, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
-    className: "dropdown-item",
-    href: "#"
-  }, "Action")), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
-    className: "dropdown-item",
-    href: "#"
-  }, "Another action")), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("hr", {
-    className: "dropdown-divider"
-  })), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
-    className: "dropdown-item",
-    href: "#"
-  }, "Something else here")))), /*#__PURE__*/React.createElement("li", {
-    className: "nav-item"
-  }, /*#__PURE__*/React.createElement("a", {
-    className: "nav-link disabled",
-    "aria-disabled": "true"
-  }, "Disabled"))), /*#__PURE__*/React.createElement("form", {
-    className: "d-flex",
-    role: "search"
-  }, /*#__PURE__*/React.createElement("input", {
-    className: "form-control me-2",
-    type: "search",
-    placeholder: "Search",
-    "aria-label": "Search"
-  }), /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-outline-success",
-    type: "submit"
-  }, "Search")))));
+  return (
+    /*#__PURE__*/
+    //LOGOUT
+    //NOTIFICATIONS
+    //CHAT
+    //GROUP
+    //HOME
+    //PROFILE
+    React.createElement("nav", {
+      className: "navbar navbar-expand-md bg-body-tertiary"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "container-fluid"
+    }, /*#__PURE__*/React.createElement("a", {
+      className: "navbar-brand",
+      href: "#"
+    }, "Navbar"), /*#__PURE__*/React.createElement("button", {
+      className: "navbar-toggler",
+      type: "button",
+      "data-bs-toggle": "collapse",
+      "data-bs-target": "#navbarSupportedContent",
+      "aria-controls": "navbarSupportedContent",
+      "aria-expanded": "false",
+      "aria-label": "Toggle navigation"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "navbar-toggler-icon"
+    })), /*#__PURE__*/React.createElement("div", {
+      className: "collapse navbar-collapse",
+      id: "navbarSupportedContent"
+    }, /*#__PURE__*/React.createElement("ul", {
+      className: "navbar-nav me-auto mb-2 mb-lg-0"
+    }, /*#__PURE__*/React.createElement("li", {
+      className: "nav-item"
+    }, /*#__PURE__*/React.createElement("a", {
+      className: "nav-link",
+      href: "#"
+    }, "LOGOUT")), /*#__PURE__*/React.createElement("li", {
+      className: "nav-item"
+    }, /*#__PURE__*/React.createElement("a", {
+      className: "nav-link",
+      href: "#"
+    }, "NOTIFICATIONS")), /*#__PURE__*/React.createElement("li", {
+      className: "nav-item"
+    }, /*#__PURE__*/React.createElement("a", {
+      className: "nav-link",
+      href: "#"
+    }, "CHAT")), /*#__PURE__*/React.createElement("li", {
+      className: "nav-item"
+    }, /*#__PURE__*/React.createElement("a", {
+      className: "nav-link",
+      href: "#"
+    }, "GROUP")), /*#__PURE__*/React.createElement("li", {
+      className: "nav-item"
+    }, /*#__PURE__*/React.createElement("a", {
+      className: "nav-link",
+      href: "#"
+    }, "HOME")), /*#__PURE__*/React.createElement("li", {
+      className: "nav-item"
+    }, /*#__PURE__*/React.createElement("a", {
+      className: "nav-link",
+      href: "#"
+    }, "PROFILE"))), /*#__PURE__*/React.createElement("form", {
+      className: "d-flex",
+      role: "search"
+    }, /*#__PURE__*/React.createElement("input", {
+      className: "form-control me-2",
+      type: "search",
+      placeholder: "Search",
+      "aria-label": "Search"
+    }), /*#__PURE__*/React.createElement("button", {
+      className: "btn btn-outline-success",
+      type: "submit"
+    }, "Search")))))
+  );
 }
 function Login(props) {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
@@ -139,47 +168,44 @@ function Login(props) {
     ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), appContainer);
   };
   return /*#__PURE__*/React.createElement("div", {
-    className: "login-container"
-  }, /*#__PURE__*/React.createElement("main", {
-    className: "form-signin w-100 m-auto",
-    style: {
-      display: "block"
-    }
+    className: "container login-container"
   }, /*#__PURE__*/React.createElement("h1", {
     className: "h3 mb-3 fw-normal login-text"
   }, "log in"), /*#__PURE__*/React.createElement("form", {
     onSubmit: submit
   }, /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
+    class: "mb-3"
   }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "floatingInput",
-    className: "login-text"
+    for: "exampleInputEmail1",
+    class: "form-label"
   }, "Email address"), /*#__PURE__*/React.createElement("input", {
     type: "email",
-    className: "form-control login-text",
-    id: "floatingInput",
-    placeholder: "name@example.com",
+    className: "form-control form-control-lg",
+    id: "exampleInputEmail1",
+    "aria-describedby": "emailHelp",
     onChange: e => setUsernameOrEmail(e.target.value)
   })), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
+    class: "mb-3"
   }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "floatingPassword",
-    className: "login-text"
+    for: "exampleInputPassword1",
+    class: "form-label"
   }, "Password"), /*#__PURE__*/React.createElement("input", {
     type: "password",
-    className: "form-control login-text",
-    id: "floatingPassword",
-    placeholder: "Password",
+    className: "form-control form-control-lg",
+    id: "exampleInputPassword1",
     onChange: e => setPassword(e.target.value)
   })), /*#__PURE__*/React.createElement("button", {
-    className: "w-100 btn btn-lg btn-primary login-button",
-    type: "submit"
-  }, "Sign in")), /*#__PURE__*/React.createElement("div", {
+    type: "submit",
+    class: "btn btn-primary"
+  }, "Log in")), /*#__PURE__*/React.createElement("div", {
     className: "error-message"
-  }), /*#__PURE__*/React.createElement("br", null), " ", /*#__PURE__*/React.createElement("span", {
+  }), /*#__PURE__*/React.createElement("br", null), " ", /*#__PURE__*/React.createElement("div", {
+    className: "mb3"
+  }, /*#__PURE__*/React.createElement("span", {
     className: "login-text"
   }, "Don't have an account? \xA0"), /*#__PURE__*/React.createElement("button", {
-    className: "w-100 btn btn-lg btn-primary login-button",
+    type: "submit",
+    className: "btn btn-primary",
     onClick: renderRegister
   }, "Register")));
 }
@@ -192,7 +218,7 @@ function Register(props) {
   const [imageURL, setImageURL] = useState("");
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
-  const [isPublic, setIsPublic] = useState("");
+  const [isPublic, setIsPublic] = useState("public");
   const [redirectVar, setRedirectVar] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
 
@@ -249,18 +275,13 @@ function Register(props) {
     ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
   };
   return /*#__PURE__*/React.createElement("div", {
-    className: "login-container"
-  }, " ", /*#__PURE__*/React.createElement("main", {
-    className: "form-signin w-100 m-auto",
-    style: {
-      display: "block"
-    }
+    className: "container login-container"
   }, /*#__PURE__*/React.createElement("h1", {
-    className: "h3 mb-3 fw-normal"
+    className: "h3 mb-3 fw-normal login-text"
   }, "register"), /*#__PURE__*/React.createElement("form", {
     onSubmit: submit
   }, /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
+    className: "mb-3"
   }, /*#__PURE__*/React.createElement("label", {
     htmlFor: "floatingInput"
   }, "Email address"), /*#__PURE__*/React.createElement("input", {
@@ -271,124 +292,145 @@ function Register(props) {
     placeholder: "name@example.com",
     onChange: e => setEmail(e.target.value)
   })), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "regpassword"
+  }, "Password"), /*#__PURE__*/React.createElement("input", {
     required: true,
     type: "password",
     className: "form-control reginput",
     id: "regpassword",
     placeholder: "Password",
     onChange: e => setEncryptedPassword(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "regpassword"
-  }, "Password")), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "firstName"
+  }, "First Name"), /*#__PURE__*/React.createElement("input", {
     required: true,
     type: "text",
     className: "form-control reginput",
     id: "firstName",
     placeholder: "John",
     onChange: e => setFirstName(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "firstName"
-  }, "First Name")), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "lastName"
+  }, "Last Name"), /*#__PURE__*/React.createElement("input", {
     required: true,
     type: "text",
     className: "form-control reginput",
     id: "lastName",
     placeholder: "Doe",
     onChange: e => setLastName(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "lastName"
-  }, "Last Name")), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "dob"
+  }, "Date of Birth"), /*#__PURE__*/React.createElement("input", {
     required: true,
     type: "date",
     className: "form-control reginput",
     id: "dob",
     placeholder: "16/01/1998",
     onChange: e => setDob(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "dob"
-  }, "Date of Birth")), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "imageURL"
+  }, "ImageURL"), /*#__PURE__*/React.createElement("input", {
     type: "text",
     className: "form-control reginput",
     id: "imageURL",
     placeholder: "https://...",
     onChange: e => setImageURL(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "imageURL"
-  }, "ImageURL")), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "username"
+  }, "Username"), /*#__PURE__*/React.createElement("input", {
     type: "text",
     className: "form-control reginput",
     id: "username",
     placeholder: "Johnny",
     onChange: e => setUsername(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "username"
-  }, "Username")), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "form-control reginput status"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
-    required: true,
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "form-check"
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "form-check-input",
     type: "radio",
     id: "public-status",
     value: "public",
     name: "status",
-    checked: true,
-    onClick: e => setIsPublic(e.target.value)
+    checked: isPublic === "public",
+    onChange: e => setIsPublic(e.target.value)
   }), /*#__PURE__*/React.createElement("label", {
+    className: "form-check-label",
     htmlFor: "public-status"
-  }, "Public")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
-    required: true,
+  }, "Public")), /*#__PURE__*/React.createElement("div", {
+    className: "form-check"
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "form-check-input",
     type: "radio",
     id: "private-status",
     value: "private",
     name: "status",
-    onClick: e => setIsPublic(e.target.value)
+    checked: isPublic === "private",
+    onChange: e => setIsPublic(e.target.value)
   }), /*#__PURE__*/React.createElement("label", {
+    className: "form-check-label",
     htmlFor: "private-status"
-  }, "Private"))), /*#__PURE__*/React.createElement("label", {
-    htmlFor: ""
-  }, "Status")), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  }, "Private")), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "about"
+  }, "About me"), /*#__PURE__*/React.createElement("input", {
+    type: "text",
     className: "form-control reginput",
-    name: "bio",
-    placeholder: "About Me",
     id: "bio",
+    placeholder: "About Me",
     cols: "30",
     rows: "10",
     onChange: e => setBio(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "about"
-  }, "About me")), /*#__PURE__*/React.createElement("button", {
-    className: "w-100 btn btn-lg btn-primary login-button",
+  })), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
     type: "submit"
   }, "Register")), /*#__PURE__*/React.createElement("div", {
     className: "error-message"
-  }), /*#__PURE__*/React.createElement("br", null), " ", /*#__PURE__*/React.createElement("span", {
+  }), /*#__PURE__*/React.createElement("br", null), " ", /*#__PURE__*/React.createElement("div", {
+    className: "mb3"
+  }, /*#__PURE__*/React.createElement("span", {
     className: "login-text"
   }, "Already have an account? \xA0"), /*#__PURE__*/React.createElement("button", {
-    className: "w-100 btn btn-lg btn-primary login-button",
+    type: "submit",
+    className: "btn btn-primary",
     onClick: renderLogin
-  }, "Login")));
+  }, "Log in")));
 }
+
+// function Profile {
+
+// }
+
+// function Chat {
+
+// }
+
+// function Group {
+
+// }
+
+// function Notifications{
+
+// }
 
 // Main post form, defaults to sending posts to public group (0)
 function PostForm() {
   const [body, setBody] = useState("");
   const [privacy, setPrivacy] = useState("");
-  const [image, setImage] = useState(null);
+  const [imageURL, setImageURL] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   let groupId = null;
 
   // Needs to be changed to get info from... cookie?
@@ -406,7 +448,7 @@ function PostForm() {
       body,
       privacy,
       groupId,
-      image,
+      imageURL,
       userId
     };
     console.log("Post being sent to backend: ", postToSend);
@@ -420,67 +462,153 @@ function PostForm() {
       credentials: "include",
       body: JSON.stringify(postToSend)
     });
+
+    // Reset the form fields to their default state
+    setBody("");
+    setPrivacy("");
+    //   setGroupId(null);
+    setImageURL(null);
+    //   setUserId(null);
+
+    document.getElementById('postFormBody').value = "";
+    setSelectedFile(null);
+    // document.getElementById('fileInput').value = null;
   };
 
   // Function to handle file selection
   const handleFileChange = e => {
-    const file = e.target.files[0];
-    setImage(file);
-    console.log("File:", file);
+    setSelectedFile(e.target.files[0]);
+    // const file = e.target.files[0];
+    // setImageURL(file);
+  };
+  const handleSelectFile = () => {
+    const fileInput = document.getElementById('fileInput');
+    fileInput.click();
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
-    className: "postForm",
+    className: "postForm container",
     style: {
-      display: "block"
+      maxWidth: "400px"
     }
   }, /*#__PURE__*/React.createElement("h1", {
     className: "h3 mb-3 fw-normal"
   }, "Post Message Here"), /*#__PURE__*/React.createElement("form", {
     onSubmit: submit
   }, /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
+    className: "form-floating mb-3"
   }, /*#__PURE__*/React.createElement("input", {
     type: "text",
     className: "form-control",
     id: "postFormBody",
     placeholder: "Type your post here...",
     onChange: e => setBody(e.target.value)
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
-  }, /*#__PURE__*/React.createElement("input", {
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "btn btn-primary",
+    onClick: handleSelectFile
+  }, "Select File"), /*#__PURE__*/React.createElement("span", null, selectedFile ? selectedFile.name : 'No file selected'), /*#__PURE__*/React.createElement("input", {
     type: "file",
-    className: "form-control",
-    id: "postFormImgUpload",
+    id: "fileInput",
     accept: "image/*",
+    style: {
+      display: 'none'
+    },
     onChange: handleFileChange
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating"
+  })), /*#__PURE__*/React.createElement("br", null), " ", /*#__PURE__*/React.createElement("div", {
+    className: "form-floating mb-3"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "form-control reginput status"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
+    className: "form-check"
+  }, /*#__PURE__*/React.createElement("input", {
     required: true,
     type: "radio",
     id: "post-public-status",
     value: "public",
     name: "status",
     checked: privacy === "public",
-    onClick: e => setPrivacy(e.target.value)
+    onClick: e => setPrivacy(e.target.value),
+    className: "form-check-input"
   }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "post-public-status"
-  }, "Public")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
+    htmlFor: "post-public-status",
+    className: "form-check-label"
+  }, "Public")), /*#__PURE__*/React.createElement("div", {
+    className: "form-check"
+  }, /*#__PURE__*/React.createElement("input", {
     required: true,
     type: "radio",
     id: "private-status",
     value: "private",
     name: "status",
     checked: privacy === "private",
-    onClick: e => setPrivacy(e.target.value)
+    onClick: e => setPrivacy(e.target.value),
+    className: "form-check-input"
   }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "private-status"
-  }, "Private")))), /*#__PURE__*/React.createElement("button", {
+    htmlFor: "private-status",
+    className: "form-check-label"
+  }, "Private"))), /*#__PURE__*/React.createElement("button", {
     className: "w-100 btn btn-lg btn-primary",
     type: "submit"
   }, "Submit"))));
+
+  // return (
+  // 	<div>
+  // 		<main className="postForm" style={{ display: "block" }}>
+  // 			<h1 className="h3 mb-3 fw-normal">Post Message Here</h1>
+  // 			<form onSubmit={submit}>
+  // 				<div className="form-floating">
+  // 					<input
+  // 						type="text"
+  // 						className="form-control"
+  // 						id="postFormBody"
+  // 						placeholder="Type your post here..."
+  // 						onChange={(e) => setBody(e.target.value)}
+  // 					/>
+  // 				</div>
+
+  // 				<div className="form-floating">
+  // 					{/* Use input type="file" for image selection/upload */}
+  // 					<input
+  // 						type="file"
+  // 						className="form-control"
+  // 						id="postFormImgUpload"
+  // 						accept="image/*"
+  // 						onChange={handleFileChange}
+  // 					/>
+  // 				</div>
+  // 				<div className="form-floating">
+  // 					<div className="form-control reginput status">
+  // 						<div>
+  // 							<input
+  // 								required
+  // 								type="radio"
+  // 								id="post-public-status"
+  // 								value="public"
+  // 								name="status"
+  // 								checked={privacy === "public"}
+  // 								onClick={(e) => setPrivacy(e.target.value)}
+  // 							/>
+  // 							<label htmlFor="post-public-status">Public</label>
+  // 						</div>
+  // 						<div>
+  // 							<input
+  // 								required
+  // 								type="radio"
+  // 								id="private-status"
+  // 								value="private"
+  // 								name="status"
+  // 								checked={privacy === "private"}
+  // 								onClick={(e) => setPrivacy(e.target.value)}
+  // 							/>
+  // 							<label htmlFor="private-status">Private</label>
+  // 						</div>
+  // 					</div>
+  // 				</div>
+  // 				<button className="w-100 btn btn-lg btn-primary" type="submit">
+  // 					Submit
+  // 				</button>
+  // 			</form>
+  // 		</main>
+  // 	</div>
+  // );
 }
 
 // Display information relating to homepage

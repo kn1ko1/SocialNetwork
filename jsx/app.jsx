@@ -3,50 +3,83 @@ const { useState, useEffect } = React
 const App = () => {
 	return (
 		<div className="app-container">
-			<Navbar />
+			{/* <Navbar /> */}
+			{/* <Dummy /> */}
 			<Login />
 		</div>
 	)
 }
 
+// function Dummy(props) {
+// 	return (
+// 		<div className="container-fluid text-center">
+// 		<div className="row mb-2">
+// 			<div className="col-lg-3">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 			<div className="col-lg-6">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 			<div className="col-lg-3">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 		</div>
+// 		<div className="row">
+// 			<div className="col-6">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 			<div className="col-6">
+// 				<h1>Welcome</h1>
+// 			</div>
+// 		</div>
+// 	</div>
+// 	)
+// }
+
 function Navbar(props) {
 	return (
-		<nav className="navbar navbar-expand-lg bg-body-tertiary">
-			<div className="container-fluid">
-				<a className="navbar-brand" href="#">Navbar</a>
-				<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-					<span className="navbar-toggler-icon"></span>
-				</button>
-				<div className="collapse navbar-collapse" id="navbarSupportedContent">
-					<ul className="navbar-nav me-auto mb-2 mb-lg-0">
-						<li className="nav-item">
-							<a className="nav-link active" aria-current="page" href="#">Home</a>
-						</li>
-						<li className="nav-item">
-							<a className="nav-link" href="#">Link</a>
-						</li>
-						<li className="nav-item dropdown">
-							<a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-								Dropdown
-							</a>
-							<ul className="dropdown-menu">
-								<li><a className="dropdown-item" href="#">Action</a></li>
-								<li><a className="dropdown-item" href="#">Another action</a></li>
-								<li><hr className="dropdown-divider" /></li>
-								<li><a className="dropdown-item" href="#">Something else here</a></li>
-							</ul>
-						</li>
-						<li className="nav-item">
-							<a className="nav-link disabled" aria-disabled="true">Disabled</a>
-						</li>
-					</ul>
-					<form className="d-flex" role="search">
-						<input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-						<button className="btn btn-outline-success" type="submit">Search</button>
-					</form>
-				</div>
-			</div>
-		</nav>
+
+		//LOGOUT
+		//NOTIFICATIONS
+		//CHAT
+		//GROUP
+		//HOME
+		//PROFILE
+
+		<nav className="navbar navbar-expand-md bg-body-tertiary">
+    <div className="container-fluid">
+        <a className="navbar-brand" href="#">Navbar</a>
+        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                <li className="nav-item">
+                    <a className="nav-link" href="#">LOGOUT</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" href="#">NOTIFICATIONS</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" href="#">CHAT</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" href="#">GROUP</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" href="#">HOME</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" href="#">PROFILE</a>
+                </li>
+            </ul>
+            <form className="d-flex" role="search">
+                <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                <button className="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</nav>
 	)
 }
 
@@ -94,14 +127,14 @@ function Login(props) {
 		} catch (error) {
 			errorMessage.innerHTML = 'Invalid credentials'
 			setError('Invalid credentials');
+		  }
+		};
+	  
+		//if credentials frontend match backend then we render home
+		if (isLoggedIn) {
+			const appContainer = document.querySelector('.app-container');
+			ReactDOM.render(<Home />, appContainer);
 		}
-	};
-
-	//if credentials frontend match backend then we render home
-	if (isLoggedIn) {
-		const appContainer = document.querySelector('.app-container');
-		ReactDOM.render(<Home />, appContainer);
-	}
 
 	//this is the register button, when pressed will serve registration form
 	const renderRegister = () => {
@@ -109,45 +142,39 @@ function Login(props) {
 		ReactDOM.render(<Register />, appContainer);
 	};
 
-
-	return (
-		<div className="login-container">
-			<main className="form-signin w-100 m-auto" style={{ display: "block" }}>
-				<h1 className="h3 mb-3 fw-normal login-text">log in</h1>
-				<form onSubmit={submit}>
-					<div className="form-floating">
-						<label htmlFor="floatingInput" className="login-text">Email address</label>
-						<input
-							type="email"
-							className="form-control login-text"
-							id="floatingInput"
-							placeholder="name@example.com"
-							onChange={(e) => setUsernameOrEmail(e.target.value)}
-						/>
-					</div>
-
-					<div className="form-floating">
-						<label htmlFor="floatingPassword" className="login-text">Password</label>
-						<input
-							type="password"
-							className="form-control login-text"
-							id="floatingPassword"
-							placeholder="Password"
-							onChange={(e) => setPassword(e.target.value)}
-						/>
-					</div>
-					<button className="w-100 btn btn-lg btn-primary login-button" type="submit">
-						Sign in
-					</button>
-				</form>
-				<div className="error-message"></div>
-				<br /> {/* Add a line break for spacing */}
-				<span className="login-text">Don't have an account? &nbsp;</span>
-				<button className="w-100 btn btn-lg btn-primary login-button" onClick={renderRegister}>
-					Register
-				</button>
-			</main>
-		</div>
+		
+	  return (
+		<div className="container login-container">
+			<h1 className="h3 mb-3 fw-normal login-text">log in</h1>
+			<form onSubmit={submit}>
+				<div class="mb-3">
+					<label for="exampleInputEmail1" class="form-label">Email address</label>
+					<input 
+					type="email" 
+					className="form-control form-control-lg"
+					id="exampleInputEmail1" 
+					aria-describedby="emailHelp" 
+					onChange={(e) => setUsernameOrEmail(e.target.value)}/>
+				</div>
+				<div class="mb-3">
+					<label for="exampleInputPassword1" class="form-label">Password</label>
+					<input 
+					type="password" 
+					className="form-control form-control-lg"
+					id="exampleInputPassword1" 
+					onChange={(e) => setPassword(e.target.value)}/>
+				</div>
+				<button type="submit" class="btn btn-primary">Log in</button>
+			</form>
+    <div className="error-message"></div>
+    <br /> {/* Add a line break for spacing */}
+	<div className="mb3"> 
+    <span className="login-text">Don't have an account? &nbsp;</span>
+    <button type="submit" className="btn btn-primary" onClick={renderRegister}>
+        Register
+    </button>
+	</div>
+	</div>
 	)
 }
 
@@ -160,7 +187,7 @@ function Register(props) {
 	const [imageURL, setImageURL] = useState("");
 	const [username, setUsername] = useState("");
 	const [bio, setBio] = useState("");
-	const [isPublic, setIsPublic] = useState("");
+	const [isPublic, setIsPublic] = useState("public");
 	const [redirectVar, setRedirectVar] = useState(false);
 	const [isRegistered, setIsRegistered] = useState(false);
 
@@ -218,149 +245,178 @@ function Register(props) {
 	};
 
 
-	return (
-		<div className="login-container"> {/* Utilize the same container with the background image */}
-			<main className="form-signin w-100 m-auto" style={{ display: "block" }}>
-				<h1 className="h3 mb-3 fw-normal">register</h1>
-				<form onSubmit={submit}>
+return (
+		<div className="container login-container">
+			<h1 className="h3 mb-3 fw-normal login-text">register</h1>
+			<form onSubmit={submit}>
 
-					<div className="form-floating">
-						<label htmlFor="floatingInput">Email address</label>
-						<input
-							required
-							type="email"
-							className="form-control"
-							id="floatingInput"
-							placeholder="name@example.com"
-							onChange={(e) => setEmail(e.target.value)}
-						/>
+        
 
-					</div>
-					<div className="form-floating">
-						<input
-							required
-							type="password"
-							className="form-control reginput"
-							id="regpassword"
-							placeholder="Password"
-							onChange={(e) => setEncryptedPassword(e.target.value)}
-						/>
-						<label htmlFor="regpassword">Password</label>
-					</div>
-					<div className="form-floating">
-						<input
-							required
-							type="text"
-							className="form-control reginput"
-							id="firstName"
-							placeholder="John"
-							onChange={(e) => setFirstName(e.target.value)}
-						/>
-						<label htmlFor="firstName">First Name</label>
-					</div>
-					<div className="form-floating">
-						<input
-							required
-							type="text"
-							className="form-control reginput"
-							id="lastName"
-							placeholder="Doe"
-							onChange={(e) => setLastName(e.target.value)}
-						/>
-						<label htmlFor="lastName">Last Name</label>
-					</div>
-					<div className="form-floating">
-						<input
-							required
-							type="date"
-							className="form-control reginput"
-							id="dob"
-							placeholder="16/01/1998"
-							onChange={(e) => setDob(e.target.value)}
-						/>
-						<label htmlFor="dob">Date of Birth</label>
-					</div>
+		<div className="mb-3">
+		<label htmlFor="floatingInput">Email address</label>
+		<input 
+		    required
+		    type="email" 
+		    className="form-control" 
+		    id="floatingInput" 
+		    placeholder="name@example.com"
+	        onChange={(e) => setEmail(e.target.value)}/>
+	  </div>
 
-					<div className="form-floating">
-						<input
-							type="text"
-							className="form-control reginput"
-							id="imageURL"
-							placeholder="https://..."
-							onChange={(e) => setImageURL(e.target.value)}
-						/>
-						<label htmlFor="imageURL">ImageURL</label>
-					</div>
-					<div className="form-floating">
-						<input
-							type="text"
-							className="form-control reginput"
-							id="username"
-							placeholder="Johnny"
-							onChange={(e) => setUsername(e.target.value)}
-						/>
-						<label htmlFor="username">Username</label>
-					</div>
-					<div className="form-floating">
-						<div className="form-control reginput status">
-							<div>
-								<input
-									required
-									type="radio"
-									id="public-status"
-									value="public"
-									name="status"
-									checked
-									onClick={(e) => setIsPublic(e.target.value)}
-								/>
-								<label htmlFor="public-status">Public</label>
-							</div>
-							<div>
-								<input
-									required
-									type="radio"
-									id="private-status"
-									value="private"
-									name="status"
-									onClick={(e) => setIsPublic(e.target.value)}
-								/>
-								<label htmlFor="private-status">Private</label>
-							</div>
-						</div>
-						<label htmlFor="">Status</label>
-					</div>
-					<div className="form-floating">
-						<input
-							className="form-control reginput"
-							name="bio"
-							placeholder="About Me"
-							id="bio"
-							cols="30"
-							rows="10"
-							onChange={(e) => setBio(e.target.value)}
-						></input>
-						<label htmlFor="about">About me</label>
-					</div>
-					<button className="w-100 btn btn-lg btn-primary login-button" type="submit">
-						Register
-					</button>
-				</form>
-				<div className="error-message"></div>
-				<br /> {/* Add a line break for spacing */}
-				<span className="login-text">Already have an account? &nbsp;</span>
-				<button className="w-100 btn btn-lg btn-primary login-button" onClick={renderLogin}>
-					Login
-				</button>
-			</main>
-		</div>
+	  <div className="mb-3">
+		<label htmlFor="regpassword">Password</label>
+		<input 
+		    required
+		    type="password" 
+		    className="form-control reginput" 
+		    id="regpassword" 
+			placeholder="Password"
+			onChange={(e) => setEncryptedPassword(e.target.value)}/>
+	  </div>
+
+	  <div className="mb-3">
+		<label htmlFor="firstName">First Name</label>
+		<input 
+		    required
+			type="text" 
+			className="form-control reginput"
+			id="firstName"
+			placeholder="John"
+			onChange={(e) => setFirstName(e.target.value)}/>
+	  </div>
+
+	  <div className="mb-3">
+		<label htmlFor="lastName">Last Name</label>
+		<input 
+		    required
+			type="text" 
+			className="form-control reginput"
+			id="lastName"
+			placeholder="Doe"
+			onChange={(e) => setLastName(e.target.value)}/>
+	  </div>
+
+	  <div className="mb-3">
+	    <label htmlFor="dob">Date of Birth</label>
+	    <input
+			required
+			type="date"
+			className="form-control reginput"
+			id="dob"
+	     	placeholder="16/01/1998"
+			onChange={(e) => setDob(e.target.value)}/>	
+	  </div>
+
+	  <div className="mb-3">
+		<label htmlFor="imageURL">ImageURL</label>
+		<input 
+		    type="text"
+			className="form-control reginput"
+			id="imageURL"
+			placeholder="https://..."
+			onChange={(e) => setImageURL(e.target.value)}/>
+	  </div>
+
+	  <div className="mb-3">
+	  <label htmlFor="username">Username</label>
+		<input 
+		    type="text"
+			className="form-control reginput"
+			id="username"
+			placeholder="Johnny"
+			onChange={(e) => setUsername(e.target.value)}/>
+	  </div>
+
+	  <div className="form-check">
+    <input
+        className="form-check-input"
+        type="radio"
+        id="public-status"
+        value="public"
+        name="status"
+        checked={isPublic === "public"}
+        onChange={(e) => setIsPublic(e.target.value)}
+    />
+    <label className="form-check-label" htmlFor="public-status">
+        Public
+    </label>
+</div>
+
+<div className="form-check">
+    <input
+        className="form-check-input"
+        type="radio"
+        id="private-status"
+        value="private"
+        name="status"
+        checked={isPublic === "private"}
+        onChange={(e) => setIsPublic(e.target.value)}
+    />
+    <label className="form-check-label" htmlFor="private-status">
+        Private
+    </label>
+</div>
+
+
+	  <div className="mb-3">
+	  <label htmlFor="about">About me</label>
+		<input 
+		    type="text"
+			className="form-control reginput"
+			id="bio"
+			placeholder="About Me"
+			cols="30"
+			rows="10"
+			onChange={(e) => setBio(e.target.value)}/>
+	  </div>
+
+
+
+	  <button  className="btn btn-primary" type="submit">Register</button>
+
+	  </form>
+
+
+	
+
+	  <div className="error-message"></div>
+    <br /> {/* Add a line break for spacing */}
+	<div className="mb3"> 
+    <span className="login-text">Already have an account? &nbsp;</span>
+    <button type="submit" className="btn btn-primary" onClick={renderLogin}>
+        Log in
+    </button>
+	</div>
+	</div>
 	);
 }
+
+
+
+
+
+// function Profile {
+
+// }
+
+// function Chat {
+
+// }
+
+// function Group {
+
+// }
+
+// function Notifications{
+
+// }
 
 // Main post form, defaults to sending posts to public group (0)
 function PostForm() {
 	const [body, setBody] = useState("");
 	const [privacy, setPrivacy] = useState("");
-	const [image, setImage] = useState(null);
+	const [imageURL, setImageURL] = useState(null);
+	const [selectedFile, setSelectedFile] = useState(null);
 	let groupId = null;
 
 	// Needs to be changed to get info from... cookie?
@@ -379,7 +435,7 @@ function PostForm() {
 			body,
 			privacy,
 			groupId,
-			image,
+			imageURL,
 			userId,
 		};
 		console.log("Post being sent to backend: ", postToSend);
@@ -391,75 +447,157 @@ function PostForm() {
 			credentials: "include",
 			body: JSON.stringify(postToSend),
 		});
+
+		  // Reset the form fields to their default state
+		  setBody("");
+		  setPrivacy("");
+		//   setGroupId(null);
+		  setImageURL(null);
+		//   setUserId(null);
+
+		document.getElementById('postFormBody').value = "";
+		setSelectedFile(null);
+		// document.getElementById('fileInput').value = null;
 	};
 
 	// Function to handle file selection
 	const handleFileChange = (e) => {
-		const file = e.target.files[0];
-		setImage(file);
-		console.log("File:", file)
+		setSelectedFile(e.target.files[0]);
+		// const file = e.target.files[0];
+		// setImageURL(file);
 	};
 
-	return (
-		<div>
-			<main className="postForm" style={{ display: "block" }}>
-				<h1 className="h3 mb-3 fw-normal">Post Message Here</h1>
-				<form onSubmit={submit}>
-					<div className="form-floating">
-						<input
-							type="text"
-							className="form-control"
-							id="postFormBody"
-							placeholder="Type your post here..."
-							onChange={(e) => setBody(e.target.value)}
-						/>
-					</div>
+	const handleSelectFile = () => {
+		const fileInput = document.getElementById('fileInput');
+        fileInput.click();
+    };
 
-					<div className="form-floating">
-						{/* Use input type="file" for image selection/upload */}
-						<input
-							type="file"
-							className="form-control"
-							id="postFormImgUpload"
-							accept="image/*"
-							onChange={handleFileChange}
-						/>
-					</div>
-					<div className="form-floating">
-						<div className="form-control reginput status">
-							<div>
-								<input
-									required
-									type="radio"
-									id="post-public-status"
-									value="public"
-									name="status"
-									checked={privacy === "public"}
-									onClick={(e) => setPrivacy(e.target.value)}
-								/>
-								<label htmlFor="post-public-status">Public</label>
-							</div>
-							<div>
-								<input
-									required
-									type="radio"
-									id="private-status"
-									value="private"
-									name="status"
-									checked={privacy === "private"}
-									onClick={(e) => setPrivacy(e.target.value)}
-								/>
-								<label htmlFor="private-status">Private</label>
-							</div>
-						</div>
-					</div>
-					<button className="w-100 btn btn-lg btn-primary" type="submit">
-						Submit
-					</button>
-				</form>
-			</main>
-		</div>
-	);
+	return (
+    <div>
+        <main className="postForm container" style={{ maxWidth: "400px" }}>
+            <h1 className="h3 mb-3 fw-normal">Post Message Here</h1>
+            <form onSubmit={submit}>
+                <div className="form-floating mb-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="postFormBody"
+                        placeholder="Type your post here..."
+                        onChange={(e) => setBody(e.target.value)}
+                    />
+                </div>
+
+				<div>
+				<button type="button" className="btn btn-primary" onClick={handleSelectFile}>
+                Select File
+            </button>
+            <span>{selectedFile ? selectedFile.name : 'No file selected'}</span>
+            <input
+                type="file"
+                id="fileInput"
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+            />
+        </div>
+      <br /> {/* Line break */}
+                <div className="form-floating mb-3">
+                    <div className="form-check">
+                        <input
+                            required
+                            type="radio"
+                            id="post-public-status"
+                            value="public"
+                            name="status"
+                            checked={privacy === "public"}
+                            onClick={(e) => setPrivacy(e.target.value)}
+                            className="form-check-input"
+                        />
+                        <label htmlFor="post-public-status" className="form-check-label">Public</label>
+                    </div>
+                    <div className="form-check">
+                        <input
+                            required
+                            type="radio"
+                            id="private-status"
+                            value="private"
+                            name="status"
+                            checked={privacy === "private"}
+                            onClick={(e) => setPrivacy(e.target.value)}
+                            className="form-check-input"
+                        />
+                        <label htmlFor="private-status" className="form-check-label">Private</label>
+                    </div>
+                </div>
+
+                <button className="w-100 btn btn-lg btn-primary" type="submit">
+                    Submit
+                </button>
+            </form>
+        </main>
+    </div>
+);
+
+	// return (
+	// 	<div>
+	// 		<main className="postForm" style={{ display: "block" }}>
+	// 			<h1 className="h3 mb-3 fw-normal">Post Message Here</h1>
+	// 			<form onSubmit={submit}>
+	// 				<div className="form-floating">
+	// 					<input
+	// 						type="text"
+	// 						className="form-control"
+	// 						id="postFormBody"
+	// 						placeholder="Type your post here..."
+	// 						onChange={(e) => setBody(e.target.value)}
+	// 					/>
+	// 				</div>
+
+	// 				<div className="form-floating">
+	// 					{/* Use input type="file" for image selection/upload */}
+	// 					<input
+	// 						type="file"
+	// 						className="form-control"
+	// 						id="postFormImgUpload"
+	// 						accept="image/*"
+	// 						onChange={handleFileChange}
+	// 					/>
+	// 				</div>
+	// 				<div className="form-floating">
+	// 					<div className="form-control reginput status">
+	// 						<div>
+	// 							<input
+	// 								required
+	// 								type="radio"
+	// 								id="post-public-status"
+	// 								value="public"
+	// 								name="status"
+	// 								checked={privacy === "public"}
+	// 								onClick={(e) => setPrivacy(e.target.value)}
+	// 							/>
+	// 							<label htmlFor="post-public-status">Public</label>
+	// 						</div>
+	// 						<div>
+	// 							<input
+	// 								required
+	// 								type="radio"
+	// 								id="private-status"
+	// 								value="private"
+	// 								name="status"
+	// 								checked={privacy === "private"}
+	// 								onClick={(e) => setPrivacy(e.target.value)}
+	// 							/>
+	// 							<label htmlFor="private-status">Private</label>
+	// 						</div>
+	// 					</div>
+	// 				</div>
+	// 				<button className="w-100 btn btn-lg btn-primary" type="submit">
+	// 					Submit
+	// 				</button>
+	// 			</form>
+	// 		</main>
+	// 	</div>
+	// );
 }
 
 // Display information relating to homepage
