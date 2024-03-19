@@ -35,7 +35,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 	var loginInfo transport.LoginInfo
 
-	cookie, err := r.Cookie(cookieName)
+	cookie, err := r.Cookie(CookieName)
 	if err == nil {
 		log.Println("[auth/LoginHandler] here")
 		_, exists := sessionMap[cookie.Value]
@@ -56,10 +56,7 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("[auth/LoginHandler] User: ", user)
-	log.Println("[auth/LoginHandler] Email: ", loginInfo.UsernameOrEmail)
-	log.Println("[auth/LoginHandler] EncryptedPassword: ", user.EncryptedPassword, ". password: ", loginInfo.Password)
 	err = bcrypt.CompareHashAndPassword([]byte(user.EncryptedPassword), []byte(loginInfo.Password))
-
 	if err != nil {
 		utils.HandleError("Failed to retrieve user", err)
 		http.Error(w, "invalid username or password", http.StatusUnauthorized)
@@ -87,6 +84,22 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
+	sessionMap[CookieValue] = &user
+	log.Println("[auth/LoginHandler] User from sessionMap:", sessionMap[CookieValue])
+
+	cookie = &http.Cookie{
+		Name:     CookieName,
+		Value:    CookieValue,
+		Path:     "/",
+		Expires:  time.Now().Add(timeout),
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	}
+	log.Println("[auth/LoginHandler] cookie:", cookie)
+	log.Println("[auth/LoginHandler] cookie.name:", cookie.Name)
+	log.Println("[auth/LoginHandler] cookie.value:", cookie.Value)
+
+	http.SetCookie(w, cookie)
 	// Convert the response struct to JSON
 	jsonResponse, err := json.Marshal(response)
 	if err != nil {
@@ -105,50 +118,4 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookieValue = GenerateNewUUID()
-	sessionMap[cookieValue] = &user
-
-	followers, err := h.Repo.GetUserUsersBySubjectId(user.UserId)
-	if err != nil {
-		utils.HandleError("Failed to retrieve followers", err)
-		http.Error(w, "internal server error", http.StatusInternalServerError)
-		return
-	}
-	var followerIds []int
-	for _, f := range followers {
-		followerIds = append(followerIds, f.FollowerId)
-	}
-	followersMap[user.UserId] = followerIds
-	following, err := h.Repo.GetUserUsersByFollowerId(user.UserId)
-	if err != nil {
-		utils.HandleError("Failed to retrieve following", err)
-		http.Error(w, "internal server error", http.StatusInternalServerError)
-		return
-	}
-	var followingIds []int
-	for _, f := range following {
-		followingIds = append(followingIds, f.SubjectId)
-	}
-	followingMap[user.UserId] = followingIds
-	groups, err := h.Repo.GetGroupUsersByUserId(user.UserId)
-	if err != nil {
-		utils.HandleError("Failed to retrieve groups", err)
-		http.Error(w, "internal server error", http.StatusInternalServerError)
-		return
-	}
-	var groupIds []int
-	for _, g := range groups {
-		groupIds = append(groupIds, g.GroupId)
-	}
-	groupsMap[user.UserId] = groupIds
-
-	cookie = &http.Cookie{
-		Name:     cookieName,
-		Value:    cookieValue,
-		Path:     "/",
-		Expires:  time.Now().Add(timeout),
-		HttpOnly: true,
-		SameSite: http.SameSiteLaxMode,
-	}
-	http.SetCookie(w, cookie)
 }

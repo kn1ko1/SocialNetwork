@@ -15,12 +15,13 @@ func getUser(r *http.Request) (*models.User, error) {
 	// 	utils.HandleError("Error reading cookie", err)
 	// 	return nil, err
 	// }
-	cookie := http.Cookie{
-		Name:  "sessionID",
-		Value: "fakeSessionID123",
+	cookie, err := r.Cookie(auth.CookieName)
+	if err != nil {
+		utils.HandleError("Error reading cookie.", err)
 	}
+	log.Println("[api/getUser] Cookie:", cookie)
 
-	ret, err := auth.AuthenticateSessionCookie(&cookie)
+	ret, err := auth.AuthenticateSessionCookie(cookie)
 	if err != nil {
 		utils.HandleError("Error authenticating session cookie.", err)
 		return nil, err

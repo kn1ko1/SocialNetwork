@@ -32,7 +32,7 @@ func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (h *LogoutHandler) get(w http.ResponseWriter, r *http.Request) {
 	// handlers.SetupCORS(&w, r)
 	cookie := http.Cookie{
-		Name:     cookieName,
+		Name:     CookieName,
 		Value:    "",
 		Path:     "/",
 		Expires:  time.Unix(0, 0),
