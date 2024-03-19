@@ -12,41 +12,41 @@ const App = () => {
 function Navbar(props) {
 	return (
 		<nav className="navbar navbar-expand-lg bg-body-tertiary">
-				<div className="container-fluid">
-				  <a className="navbar-brand" href="#">Navbar</a>
-				  <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<div className="container-fluid">
+				<a className="navbar-brand" href="#">Navbar</a>
+				<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 					<span className="navbar-toggler-icon"></span>
-				  </button>
-				  <div className="collapse navbar-collapse" id="navbarSupportedContent">
+				</button>
+				<div className="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul className="navbar-nav me-auto mb-2 mb-lg-0">
-					  <li className="nav-item">
-						<a className="nav-link active" aria-current="page" href="#">Home</a>
-					  </li>
-					  <li className="nav-item">
-						<a className="nav-link" href="#">Link</a>
-					  </li>
-					  <li className="nav-item dropdown">
-						<a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-						  Dropdown
-						</a>
-						<ul className="dropdown-menu">
-						  <li><a className="dropdown-item" href="#">Action</a></li>
-						  <li><a className="dropdown-item" href="#">Another action</a></li>
-						  <li><hr className="dropdown-divider" /></li>
-						  <li><a className="dropdown-item" href="#">Something else here</a></li>
-						</ul>
-					  </li>
-					  <li className="nav-item">
-						<a className="nav-link disabled" aria-disabled="true">Disabled</a>
-					  </li>
+						<li className="nav-item">
+							<a className="nav-link active" aria-current="page" href="#">Home</a>
+						</li>
+						<li className="nav-item">
+							<a className="nav-link" href="#">Link</a>
+						</li>
+						<li className="nav-item dropdown">
+							<a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								Dropdown
+							</a>
+							<ul className="dropdown-menu">
+								<li><a className="dropdown-item" href="#">Action</a></li>
+								<li><a className="dropdown-item" href="#">Another action</a></li>
+								<li><hr className="dropdown-divider" /></li>
+								<li><a className="dropdown-item" href="#">Something else here</a></li>
+							</ul>
+						</li>
+						<li className="nav-item">
+							<a className="nav-link disabled" aria-disabled="true">Disabled</a>
+						</li>
 					</ul>
 					<form className="d-flex" role="search">
-					  <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-					  <button className="btn btn-outline-success" type="submit">Search</button>
+						<input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+						<button className="btn btn-outline-success" type="submit">Search</button>
 					</form>
-				  </div>
 				</div>
-			  </nav>
+			</div>
+		</nav>
 	)
 }
 
@@ -491,7 +491,7 @@ function Home() {
 
 	return (
 		<div className="homePage">
-				<PostForm />
+			<PostForm />
 			<div className="allUsersList">
 				<h2>All Users</h2>
 				<ul>
@@ -573,6 +573,102 @@ function Home() {
 	);
 }
 
+function Profile() {
+
+	const [usernameOrEmail, setUsernameOrEmail] = useState("")
+	const [password, setPassword] = useState("")
+
+	//this is the sign in button
+	const submit = async (e) => {
+		e.preventDefault() // prevent reload.
+
+		//this is user input 
+		const userToLogin = {
+			usernameOrEmail,
+			password,
+		}
+
+		try {
+			//check credentials with backend
+			const response = await fetch('http://localhost:8080/auth/login', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include',
+				body: JSON.stringify(userToLogin),
+			});
+
+			if (!response.ok) {
+				errorMessage.innerHTML = 'Invalid credentials'
+				throw new Error('Invalid credentials');
+			}
+
+			//takes response from backend and processes
+			const data = await response.json();
+			if (data.success) {
+				setIsLoggedIn(true);
+			} else {
+				errorMessage.innerHTML = 'Invalid credentials'
+				throw new Error('Invalid credentials');
+			}
+		} catch (error) {
+			errorMessage.innerHTML = 'Invalid credentials'
+			setError('Invalid credentials');
+		}
+	};
+
+	//if credentials frontend match backend then we render home
+	if (isLoggedIn) {
+		const appContainer = document.querySelector('.app-container');
+		ReactDOM.render(<Home />, appContainer);
+	}
+
+	//this is the register button, when pressed will serve registration form
+	const renderRegister = () => {
+		const appContainer = document.querySelector('.app-container');
+		ReactDOM.render(<Register />, appContainer);
+	};
+
+
+	return (
+		<div className="login-container">
+			<main className="form-signin w-100 m-auto" style={{ display: "block" }}>
+				<h1 className="h3 mb-3 fw-normal login-text">log in</h1>
+				<form onSubmit={submit}>
+					<div className="form-floating">
+						<label htmlFor="floatingInput" className="login-text">Email address</label>
+						<input
+							type="email"
+							className="form-control login-text"
+							id="floatingInput"
+							placeholder="name@example.com"
+							onChange={(e) => setUsernameOrEmail(e.target.value)}
+						/>
+					</div>
+
+					<div className="form-floating">
+						<label htmlFor="floatingPassword" className="login-text">Password</label>
+						<input
+							type="password"
+							className="form-control login-text"
+							id="floatingPassword"
+							placeholder="Password"
+							onChange={(e) => setPassword(e.target.value)}
+						/>
+					</div>
+					<button className="w-100 btn btn-lg btn-primary login-button" type="submit">
+						Sign in
+					</button>
+				</form>
+				<div className="error-message"></div>
+				<br /> {/* Add a line break for spacing */}
+				<span className="login-text">Don't have an account? &nbsp;</span>
+				<button className="w-100 btn btn-lg btn-primary login-button" onClick={renderRegister}>
+					Register
+				</button>
+			</main>
+		</div>
+	)
+}
 
 const root = document.querySelector("#root")
 ReactDOM.render(<App />, root)
