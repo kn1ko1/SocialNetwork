@@ -8,9 +8,10 @@ html {
 }
 
 body {
-    min-width: 250px;
-    background-image: url('../cool-background.png'); /* Specify the path to your image */
-    background-size: cover; /* Cover the entire container */
+    min-width: 100vw; /* Set the minimum width to 100% of the viewport width */
+    min-height: 100vh; /* Set the minimum height to 100% of the viewport height */
+    background-image: url('../cool-background.png'); /* Specify the path to your new image */
+    background-size: cover; /* Cover the entire page */
     background-position: center; /* Center the background image */
     background-repeat: no-repeat; /* Prevent repeating the image */
 }
@@ -25,32 +26,9 @@ body {
     height: 120vh; /* Adjust height as needed */
 }
 
-.login-text {
-    font-family: Helvetica, sans-serif;
-    margin-right: 10px; /* Add margin between label and input box */
-}
-
-.login-button {
-    background-color: #00798C; /* Button Color */
-    color: white; /* Text Color */
-    padding: 10px 20px; /* Padding for button */
-    border: 1px solid black; /* Black border */
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.login-button:hover {
-    background-color: #005F6B; /* Hover Color */
-}
-
 .form-floating {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-/* .homePage {
-    background-image: url('../cool-background.png');
-    background-size: cover;
-    background-position: center;
-} */
