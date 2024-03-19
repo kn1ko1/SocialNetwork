@@ -2,13 +2,11 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
-	"log"
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
-	"socialnetwork/transport"
 	"socialnetwork/utils"
+	"strconv"
 	"time"
 )
 
@@ -42,57 +40,57 @@ func (h *PostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
-	var postFromFrontend transport.PostFromFrontend
 	ctime := time.Now().UTC().UnixMilli()
 
-	err := json.NewDecoder(r.Body).Decode(&postFromFrontend)
+	// Parse form data
+	err := r.ParseMultipartForm(10 << 20)
 	if err != nil {
-		utils.HandleError("Failed to decode request body:", err)
-		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+		utils.HandleError("Failed to parse form data:", err)
+		http.Error(w, "Failed to parse form data", http.StatusBadRequest)
 		return
 	}
 
-	post := models.Post{
-		Body:      postFromFrontend.Body,
-		CreatedAt: ctime,
-		GroupId:   postFromFrontend.GroupId,
-		Privacy:   postFromFrontend.Privacy,
-		UpdatedAt: ctime,
-		UserId:    1,
+	// Extract form fields
+	body := r.FormValue("body")
+	groupIDStr := r.FormValue("groupId")
+	groupID, _ := strconv.Atoi(groupIDStr)
+	imageURL := ""
+	privacy := r.FormValue("privacy")
+	// I dunno, get it from cookies.  To be added
+	userId := 1
+
+	// Handle file upload
+	file, fileHeader, _ := r.FormFile("image")
+	if file != nil {
+
+		defer file.Close()
+		imageURL, err = ImageProcessing(w, r, file, *fileHeader)
+		if err != nil {
+			utils.HandleError("Error with ImageHandler", err)
+			http.Error(w, "Failed to process image", http.StatusInternalServerError)
+			return
+		}
 	}
 
-	log.Println("ctime is:", ctime)
-	log.Println("post.CreatedAt is:", post.CreatedAt)
-	t := time.Unix(ctime/1000, 0)
-	log.Println("[api/PostHandler]date converted back ", t.Format("02-01-2006"))
+	// Create Post object
+	post := models.Post{
+		Body:      body,
+		CreatedAt: ctime,
+		GroupId:   groupID,
+		Privacy:   privacy,
+		UpdatedAt: ctime,
+		ImageURL:  imageURL,
+		UserId:    userId,
+	}
+
 	// Validate the post
 	if validationErr := post.Validate(); validationErr != nil {
 		utils.HandleError("Validation failed:", validationErr)
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
-	log.Println("Received post:", post.UserId, post.Body)
-	r.ParseMultipartForm(10 << 20)
-	// if parseMultipartFormErr != nil {
-	// 	utils.HandleError("Unable to Parse Multipart Form.", parseMultipartFormErr)
-	// }
 
-	file, fileHeader, _ := r.FormFile("image")
-	log.Println("[api/PostsHandler] File: ", file)
-
-	//if file is given
-	if file != nil {
-		defer file.Close()
-		var ImageProcessingrErr error
-		post.ImageURL, ImageProcessingrErr = ImageProcessing(w, r, file, *fileHeader)
-		if ImageProcessingrErr != nil {
-			utils.HandleError("Error with ImageHandler", ImageProcessingrErr)
-		}
-		fmt.Println("POST INSERTED WITH FILE")
-	} else {
-		fmt.Println("POST INSERTED WITHOUT FILE")
-	}
-
+	// Create post in the repository
 	result, createErr := h.Repo.CreatePost(post)
 	if createErr != nil {
 		utils.HandleError("Failed to create post in the repository:", createErr)
