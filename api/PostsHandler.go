@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
@@ -56,9 +57,18 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 	groupID, _ := strconv.Atoi(groupIDStr)
 	imageURL := ""
 	privacy := r.FormValue("privacy")
-	// I dunno, get it from cookies.  To be added
+	//
+	//
+	// I dunno, get it from cookies.  To be added...
 	userId := 1
-
+	//
+	//
+	log.Println("[api/PostsHandler] Received Post:", body)
+	log.Println("[api/PostsHandler] GroupId:", groupID)
+	log.Println("[api/PostsHandler] Privacy:", privacy)
+	log.Println("[api/PostsHandler] From UserId:", userId)
+	//
+	//
 	// Handle file upload
 	file, fileHeader, _ := r.FormFile("image")
 	if file != nil {

@@ -151,7 +151,6 @@ function Login(props) {
 	)
 }
 
-
 function Register(props) {
 	const [email, setEmail] = useState("");
 	const [encryptedPassword, setEncryptedPassword] = useState("");
@@ -492,9 +491,7 @@ function Home() {
 
 	return (
 		<div className="homePage">
-			<div className="postForm">
 				<PostForm />
-			</div>
 			<div className="allUsersList">
 				<h2>All Users</h2>
 				<ul>
