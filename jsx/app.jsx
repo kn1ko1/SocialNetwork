@@ -4,8 +4,8 @@ const App = () => {
 	return (
 		<div className="app-container">
 			<Login />
-			<Register />
-			<Home />
+			{/*<Register />*/}
+			{/*<Home />*/}
 			<Profile />
 		</div>
 	)
@@ -67,7 +67,7 @@ function Login(props) {
 						Sign in
 					</button>
 				</form>
-				<span>Already have an account? &nbsp;</span>
+				<span>Don't have an account? &nbsp;</span>
 				{/* <Link to="/register" style={{ color: "white" }}>
 					Register
 				</Link> */}
@@ -250,7 +250,7 @@ function Register(props) {
 						Register
 					</button>
 				</form>
-				<span>Already have an account? &nbsp;</span>
+				<span>Don't have an account? &nbsp;</span>
 				{/* <Link to="/login" style={{ color: "white" }}>
           Login
         </Link> */}

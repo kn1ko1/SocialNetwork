@@ -4,17 +4,12 @@ const {
 const App = () => {
   return /*#__PURE__*/React.createElement("div", {
     className: "app-container"
-  },
-  /*#__PURE__*/React.createElement(Login, null),
-  /*#__PURE__*/React.createElement(Register, null),
-  /*#__PURE__*/React.createElement(Home, null),
-  /*#__PURE__*/React.createElement(Profile, null),
-  /*#__PURE__*/React.createElement(PublicPosts, null));
+  }, /*#__PURE__*/React.createElement(Login, null), /*#__PURE__*/React.createElement(Profile, null));
 };
 function Login(props) {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [redirectVar, setRedirectVar] = useState(false);
+  const [redirectVar, setRedirectVar] = useState(false);
   const submit = async e => {
     e.preventDefault(); // prevent reload.
 
@@ -34,7 +29,7 @@ function Login(props) {
       body: JSON.stringify(userToLogin)
     });
     const validUser = await response.json();
-    // setRedirectVar(true);
+    setRedirectVar(true);
     props.setName(validUser.first);
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
@@ -69,7 +64,7 @@ function Login(props) {
   }, "Password")), /*#__PURE__*/React.createElement("button", {
     className: "w-100 btn btn-lg btn-primary",
     type: "submit"
-  }, "Sign in")), /*#__PURE__*/React.createElement("span", null, "Already have an account? \xA0")));
+  }, "Sign in")), /*#__PURE__*/React.createElement("span", null, "Don't have an account? \xA0")));
 }
 function Register(props) {
   const [email, setEmail] = useState("");
@@ -109,6 +104,7 @@ function Register(props) {
       },
       body: JSON.stringify(newUser)
     });
+    console.log("dob", newUser.dob);
     await response.json();
     // let result = await response.json()
     // if (result.email === email) {
@@ -244,7 +240,7 @@ function Register(props) {
   }, "About me")), /*#__PURE__*/React.createElement("button", {
     className: "w-100 btn btn-lg btn-primary",
     type: "submit"
-  }, "Register")), /*#__PURE__*/React.createElement("span", null, "Already have an account? \xA0")));
+  }, "Register")), /*#__PURE__*/React.createElement("span", null, "Don't have an account? \xA0")));
 }
 function Home(props) {
   return /*#__PURE__*/React.createElement("main", null, /*#__PURE__*/React.createElement("div", {
@@ -345,23 +341,5 @@ function Profile(props) {
     }
   }));
 }
-
-
-function PublicPosts(props) {
-  const publicPostsData = async data => {
-    await fetch("http://localhost:8080/api/home", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      credentials: "include",
-      body: JSON.stringify(data)
-    });
-  };
-  console.log(publicPostsData)
-  // Send user data to golang register function.
-};
-
-
 const root = document.querySelector("#root");
 ReactDOM.render( /*#__PURE__*/React.createElement(App, null), root);
