@@ -70,8 +70,12 @@ function Navbar() {
 		const appContainer = document.querySelector('.app-container');
 		ReactDOM.render(<Login />, appContainer);
 
-		if (!response.ok) {
-			throw new Error('Error with Logout');
+		const cookieHeader = response.headers.get('set-cookie');
+		if (cookieHeader) {
+			document.cookie = cookieHeader;
+			console.log("Logout successful!");
+		} else {
+			console.log("Failed to logout");
 		}
 	};
 
@@ -442,6 +446,7 @@ function Group() {
 			<Navbar />
 			<h1>Group</h1>
 		</div>
+
 	)
 }
 
@@ -699,6 +704,9 @@ function Home() {
 					{publicPostsWithComments !== null && publicPostsWithComments.map(publicPostsWithComment => (
 						<li key={publicPostsWithComment.post.CreatedAt}>
 							{publicPostsWithComment.post.Body} - {publicPostsWithComment.post.UserId} {/* Render whatever user properties you need */}
+							{publicPostsWithComment.post.ImageURL !== null && (
+								<img src={publicPostsWithComment.post.ImageURL}/>
+							)}
 						</li>
 					))}
 				</ul>

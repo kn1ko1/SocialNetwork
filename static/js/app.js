@@ -62,8 +62,12 @@ function Navbar() {
     });
     const appContainer = document.querySelector('.app-container');
     ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
-    if (!response.ok) {
-      throw new Error('Error with Logout');
+    const cookieHeader = response.headers.get('set-cookie');
+    if (cookieHeader) {
+      document.cookie = cookieHeader;
+      console.log("Logout successful!");
+    } else {
+      console.log("Failed to logout");
     }
   };
   return /*#__PURE__*/React.createElement("nav", {
@@ -667,7 +671,9 @@ function Home() {
     className: "publicPostsWithComments"
   }, /*#__PURE__*/React.createElement("h2", null, "Public Posts"), /*#__PURE__*/React.createElement("ul", null, publicPostsWithComments !== null && publicPostsWithComments.map(publicPostsWithComment => /*#__PURE__*/React.createElement("li", {
     key: publicPostsWithComment.post.CreatedAt
-  }, publicPostsWithComment.post.Body, " - ", publicPostsWithComment.post.UserId, " ")))), /*#__PURE__*/React.createElement("div", {
+  }, publicPostsWithComment.post.Body, " - ", publicPostsWithComment.post.UserId, " ", publicPostsWithComment.post.ImageURL !== null && /*#__PURE__*/React.createElement("img", {
+    src: publicPostsWithComment.post.ImageURL
+  }))))), /*#__PURE__*/React.createElement("div", {
     className: "userGroups"
   }, /*#__PURE__*/React.createElement("h2", null, "Groups"), /*#__PURE__*/React.createElement("ul", null, userGroups !== null && userGroups.map(userGroup => /*#__PURE__*/React.createElement("li", {
     key: userGroup.createdAt
