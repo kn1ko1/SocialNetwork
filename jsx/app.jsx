@@ -3,7 +3,6 @@ const { useState, useEffect } = React
 const App = () => {
 	return (
 		<div className="app-container">
-
 			<Login />
 		</div>
 	)
@@ -35,7 +34,7 @@ const App = () => {
 // 	)
 // }
 
-function Navbar(props) {
+function Navbar() {
 
 	const renderHome = () => {
 		const appContainer = document.querySelector('.app-container');
@@ -62,13 +61,25 @@ function Navbar(props) {
 		ReactDOM.render(<Group />, appContainer);
 	};
 
-	const renderLogin = () => {
+	const logout = async () => {
 
-		//Some logout logic and function needs implemented here rather than lines below
-
+		const response = await fetch("http://localhost:8080/auth/logout", {
+			method: "POST",
+			credentials: "include",
+		});
 		const appContainer = document.querySelector('.app-container');
 		ReactDOM.render(<Login />, appContainer);
+
+		const cookieHeader = response.headers.get('set-cookie');
+		if (cookieHeader) {
+			document.cookie = cookieHeader;
+			console.log("Logout successful!");
+		} else {
+			console.log("Failed to logout");
+		}
 	};
+
+
 
 
 	return (
@@ -95,7 +106,7 @@ function Navbar(props) {
 							<a className="nav-link" href="#" onClick={renderGroup}>GROUP</a>
 						</li>
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={renderLogin}>LOGOUT</a>
+							<a className="nav-link" href="#" onClick={logout}>LOGOUT</a>
 						</li>
 					</ul>
 				</div>
@@ -104,14 +115,12 @@ function Navbar(props) {
 	)
 }
 
-function Login(props) {
+function Login() {
 	const [usernameOrEmail, setUsernameOrEmail] = useState("")
 	const [password, setPassword] = useState("")
-	const [redirectVar, setRedirectVar] = useState(false)
 	const [error, setError] = useState(null);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const errorMessage = document.querySelector(".error-message")
-	const [showForm, setShowForm] = useState(true);
 
 	//this is the sign in button
 	const submit = async (e) => {
@@ -200,7 +209,7 @@ function Login(props) {
 	)
 }
 
-function Register(props) {
+function Register() {
 	const [email, setEmail] = useState("");
 	const [encryptedPassword, setEncryptedPassword] = useState("");
 	const [firstName, setFirstName] = useState("");
@@ -210,7 +219,6 @@ function Register(props) {
 	const [username, setUsername] = useState("");
 	const [bio, setBio] = useState("");
 	const [isPublic, setIsPublic] = useState("public");
-	const [redirectVar, setRedirectVar] = useState(false);
 	const [isRegistered, setIsRegistered] = useState(false);
 
 	//this is register button
@@ -414,13 +422,13 @@ function Register(props) {
 }
 
 function Profile() {
- 	return (
- 		<div>
+	return (
+		<div>
 			<Navbar />
- 	<h1>Profile</h1>
- 		</div>
- 	)
- }
+			<h1>Profile</h1>
+		</div>
+	)
+}
 
 
 function Chat() {
@@ -438,6 +446,7 @@ function Group() {
 			<Navbar />
 			<h1>Group</h1>
 		</div>
+
 	)
 }
 
@@ -462,9 +471,9 @@ function PostForm({ groupId }) {
 	// Upon submitting:
 	const submit = async (e) => {
 		e.preventDefault(); // prevent reload.
-	
+
 		const formData = new FormData();
-	
+
 		// Append form data
 		formData.append('body', body);
 		formData.append('privacy', privacy);
@@ -473,24 +482,24 @@ function PostForm({ groupId }) {
 		if (selectedFile) {
 			formData.append('image', selectedFile);
 		}
-	
+
 		console.log("Form data being sent to backend: ", formData);
-	
+
 		// Send user data to golang api/PostHandler.go.
 		await fetch("http://localhost:8080/api/posts", {
 			method: "POST",
 			credentials: "include",
 			body: formData,
 		});
-	
+
 		// Reset the form fields to their default state
 		setBody("");
 		setPrivacy("");
 		setSelectedFile(null);
-	
+
 		document.getElementById('postFormBody').value = "";
 	};
-	
+
 
 	// Function to handle file selection
 	const handleFileChange = (e) => {
@@ -570,6 +579,72 @@ function PostForm({ groupId }) {
 	);
 }
 
+
+const PostCard = () => {
+	return (
+		<section style={{ backgroundColor: '#eee' }}>
+			<div className="container my-5 py-5">
+				<div className="row d-flex justify-content-center">
+					<div className="col-md-12 col-lg-10 col-xl-8">
+						<div className="card">
+							<div className="card-body">
+								<div className="d-flex flex-start align-items-center">
+									<img className="rounded-circle shadow-1-strong me-3"
+										src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="60"
+										height="60" />
+									<div>
+										<h6 className="fw-bold text-primary mb-1">Lily Coleman</h6>
+										<p className="text-muted small mb-0">
+											Shared publicly - Jan 2020
+										</p>
+									</div>
+								</div>
+
+								<p className="mt-3 mb-4 pb-2">
+									Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+									tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+									quis nostrud exercitation ullamco laboris nisi ut aliquip consequat.
+								</p>
+
+								<div className="small d-flex justify-content-start">
+									<a href="#!" className="d-flex align-items-center me-3">
+										<i className="far fa-thumbs-up me-2"></i>
+										<p className="mb-0">Like</p>
+									</a>
+									<a href="#!" className="d-flex align-items-center me-3">
+										<i className="far fa-comment-dots me-2"></i>
+										<p className="mb-0">Comment</p>
+									</a>
+									<a href="#!" className="d-flex align-items-center me-3">
+										<i className="fas fa-share me-2"></i>
+										<p className="mb-0">Share</p>
+									</a>
+								</div>
+							</div>
+							<div className="card-footer py-3 border-0" style={{ backgroundColor: '#f8f9fa' }}>
+								<div className="d-flex flex-start w-100">
+									<img className="rounded-circle shadow-1-strong me-3"
+										src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="40"
+										height="40" />
+									<div className="form-outline w-100">
+										<textarea className="form-control" id="textAreaExample" rows="4"
+											style={{ background: '#fff' }}></textarea>
+										<label className="form-label" htmlFor="textAreaExample">Message</label>
+									</div>
+								</div>
+								<div className="float-end mt-2 pt-1">
+									<button type="button" className="btn btn-primary btn-sm">Post comment</button>
+									<button type="button" className="btn btn-outline-primary btn-sm">Cancel</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	);
+};
+
 // Display information relating to homepage
 function Home() {
 	const [almostPrivatePosts, setAlmostPrivatePosts] = useState([]);
@@ -592,11 +667,12 @@ function Home() {
 	}, []);
 
 	return (
-		
+
 		<main className="homePage">
-			
+
 			<Navbar />
 			<PostForm groupId={0} />
+			{/* <PostCard /> */}
 
 
 			<div className="almostPrivatePosts">
@@ -628,6 +704,9 @@ function Home() {
 					{publicPostsWithComments !== null && publicPostsWithComments.map(publicPostsWithComment => (
 						<li key={publicPostsWithComment.post.CreatedAt}>
 							{publicPostsWithComment.post.Body} - {publicPostsWithComment.post.UserId} {/* Render whatever user properties you need */}
+							{publicPostsWithComment.post.ImageURL !== null && (
+								<img src={publicPostsWithComment.post.ImageURL}/>
+							)}
 						</li>
 					))}
 				</ul>
@@ -643,107 +722,10 @@ function Home() {
 					))}
 				</ul>
 			</div>
-		
+
 		</main>
 	);
 }
-
-// function Profile() {
-
-// 	const [usernameOrEmail, setUsernameOrEmail] = useState("")
-// 	const [password, setPassword] = useState("")
-
-// 	//this is the sign in button
-// 	const submit = async (e) => {
-// 		e.preventDefault() // prevent reload.
-
-// 		//this is user input 
-// 		const userToLogin = {
-// 			usernameOrEmail,
-// 			password,
-// 		}
-
-// 		try {
-// 			//check credentials with backend
-// 			const response = await fetch('http://localhost:8080/auth/login', {
-// 				method: 'POST',
-// 				headers: { 'Content-Type': 'application/json' },
-// 				credentials: 'include',
-// 				body: JSON.stringify(userToLogin),
-// 			});
-
-// 			if (!response.ok) {
-// 				errorMessage.innerHTML = 'Invalid credentials'
-// 				throw new Error('Invalid credentials');
-// 			}
-
-// 			//takes response from backend and processes
-// 			const data = await response.json();
-// 			if (data.success) {
-// 				setIsLoggedIn(true);
-// 			} else {
-// 				errorMessage.innerHTML = 'Invalid credentials'
-// 				throw new Error('Invalid credentials');
-// 			}
-// 		} catch (error) {
-// 			errorMessage.innerHTML = 'Invalid credentials'
-// 			setError('Invalid credentials');
-// 		}
-// 	};
-
-// 	//if credentials frontend match backend then we render home
-// 	if (isLoggedIn) {
-// 		const appContainer = document.querySelector('.app-container');
-// 		ReactDOM.render(<Home />, appContainer);
-// 	}
-
-// 	//this is the register button, when pressed will serve registration form
-// 	const renderRegister = () => {
-// 		const appContainer = document.querySelector('.app-container');
-// 		ReactDOM.render(<Register />, appContainer);
-// 	};
-
-
-// 	return (
-// 		<div className="login-container">
-// 			<main className="form-signin w-100 m-auto" style={{ display: "block" }}>
-// 				<h1 className="h3 mb-3 fw-normal login-text">log in</h1>
-// 				<form onSubmit={submit}>
-// 					<div className="form-floating">
-// 						<label htmlFor="floatingInput" className="login-text">Email address</label>
-// 						<input
-// 							type="email"
-// 							className="form-control login-text"
-// 							id="floatingInput"
-// 							placeholder="name@example.com"
-// 							onChange={(e) => setUsernameOrEmail(e.target.value)}
-// 						/>
-// 					</div>
-
-// 					<div className="form-floating">
-// 						<label htmlFor="floatingPassword" className="login-text">Password</label>
-// 						<input
-// 							type="password"
-// 							className="form-control login-text"
-// 							id="floatingPassword"
-// 							placeholder="Password"
-// 							onChange={(e) => setPassword(e.target.value)}
-// 						/>
-// 					</div>
-// 					<button className="w-100 btn btn-lg btn-primary login-button" type="submit">
-// 						Sign in
-// 					</button>
-// 				</form>
-// 				<div className="error-message"></div>
-// 				<br /> {/* Add a line break for spacing */}
-// 				<span className="login-text">Don't have an account? &nbsp;</span>
-// 				<button className="w-100 btn btn-lg btn-primary login-button" onClick={renderRegister}>
-// 					Register
-// 				</button>
-// 			</main>
-// 		</div>
-// 	)
-// }
 
 const root = document.querySelector("#root")
 ReactDOM.render(<App />, root)
