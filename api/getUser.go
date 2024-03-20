@@ -8,16 +8,13 @@ import (
 	"socialnetwork/utils"
 )
 
+// Obtains user by reading the cookie
 func getUser(r *http.Request) (*models.User, error) {
 
-	// c, err := r.Cookie("Session")
-	// if err != nil {
-	// 	utils.HandleError("Error reading cookie", err)
-	// 	return nil, err
-	// }
 	cookie, err := r.Cookie(auth.CookieName)
 	if err != nil {
 		utils.HandleError("Error reading cookie.", err)
+		return nil, err
 	}
 	log.Println("[api/getUser] Cookie:", cookie)
 

@@ -55,11 +55,16 @@ function Navbar() {
     const appContainer = document.querySelector('.app-container');
     ReactDOM.render( /*#__PURE__*/React.createElement(Group, null), appContainer);
   };
-  const renderLogin = () => {
-    //Some logout logic and function needs implemented here rather than lines below
-
+  const logout = async () => {
+    const response = await fetch("http://localhost:8080/auth/logout", {
+      method: "POST",
+      credentials: "include"
+    });
     const appContainer = document.querySelector('.app-container');
     ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
+    if (!response.ok) {
+      throw new Error('Error with Logout');
+    }
   };
   return /*#__PURE__*/React.createElement("nav", {
     className: "navbar navbar-expand-md bg-body-tertiary"
@@ -115,7 +120,7 @@ function Navbar() {
   }, /*#__PURE__*/React.createElement("a", {
     className: "nav-link",
     href: "#",
-    onClick: renderLogin
+    onClick: logout
   }, "LOGOUT"))))));
 }
 function Login() {

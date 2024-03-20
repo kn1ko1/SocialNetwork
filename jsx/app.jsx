@@ -61,13 +61,21 @@ function Navbar() {
 		ReactDOM.render(<Group />, appContainer);
 	};
 
-	const renderLogin = () => {
+	const logout = async () => {
 
-		//Some logout logic and function needs implemented here rather than lines below
-
+		const response = await fetch("http://localhost:8080/auth/logout", {
+			method: "POST",
+			credentials: "include",
+		});
 		const appContainer = document.querySelector('.app-container');
 		ReactDOM.render(<Login />, appContainer);
+
+		if (!response.ok) {
+			throw new Error('Error with Logout');
+		}
 	};
+
+
 
 
 	return (
@@ -94,7 +102,7 @@ function Navbar() {
 							<a className="nav-link" href="#" onClick={renderGroup}>GROUP</a>
 						</li>
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={renderLogin}>LOGOUT</a>
+							<a className="nav-link" href="#" onClick={logout}>LOGOUT</a>
 						</li>
 					</ul>
 				</div>
