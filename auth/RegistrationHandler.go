@@ -101,6 +101,45 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Construct the response JSON
+	response := struct {
+		Success bool        `json:"success"`
+		Message string      `json:"message"`
+		User    interface{} `json:"user,omitempty"`
+	}{
+		Success: true,
+		Message: "Registration successful",
+		User: struct {
+			ID       int    `json:"id"`
+			Username string `json:"username"`
+			Email    string `json:"email"`
+			// Add other user fields as needed
+		}{
+			ID:       processedUser.UserId,
+			Username: processedUser.Username,
+			Email:    processedUser.Email,
+			// Assign other user fields as needed
+		},
+	}
+
+	// Convert the response struct to JSON
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		utils.HandleError("Failed to marshal JSON response", err)
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	// Set response headers
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_, err = w.Write(jsonResponse)
+	if err != nil {
+		utils.HandleError("Failed to write JSON response", err)
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+
 	// Sets up a new Cookie
 	cookieValue = GenerateNewUUID()
 	//sessionMap[cookieValue] = &processedUser

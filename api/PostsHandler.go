@@ -2,12 +2,12 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
+	"strconv"
 	"time"
 )
 
@@ -41,31 +41,57 @@ func (h *PostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
-	contentType := r.Header.Get("Content-Type")
-	var post models.Post
-	switch contentType {
-	case "application/json":
-		err := json.NewDecoder(r.Body).Decode(&post)
+	ctime := time.Now().UTC().UnixMilli()
+
+	// Parse form data
+	err := r.ParseMultipartForm(10 << 20)
+	if err != nil {
+		utils.HandleError("Failed to parse form data:", err)
+		http.Error(w, "Failed to parse form data", http.StatusBadRequest)
+		return
+	}
+
+	// Extract form fields
+	body := r.FormValue("body")
+	groupIDStr := r.FormValue("groupId")
+	groupID, _ := strconv.Atoi(groupIDStr)
+	imageURL := ""
+	privacy := r.FormValue("privacy")
+	//
+	//
+	// I dunno, get it from cookies.  To be added...
+	userId := 1
+	//
+	//
+	log.Println("[api/PostsHandler] Received Post:", body)
+	log.Println("[api/PostsHandler] GroupId:", groupID)
+	log.Println("[api/PostsHandler] Privacy:", privacy)
+	log.Println("[api/PostsHandler] From UserId:", userId)
+	//
+	//
+	// Handle file upload
+	file, fileHeader, _ := r.FormFile("image")
+	if file != nil {
+
+		defer file.Close()
+		imageURL, err = ImageProcessing(w, r, file, *fileHeader)
 		if err != nil {
-			utils.HandleError("Failed to decode request body:", err)
-			http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+			utils.HandleError("Error with ImageHandler", err)
+			// http.Error(w, "Failed to process image", http.StatusInternalServerError)
 			return
 		}
-	case "application/x-www-form-urlencoded":
-		err := r.ParseForm()
-		if err != nil {
-			utils.HandleError("Failed to parse form:", err)
-			http.Error(w, "internal server error", http.StatusInternalServerError)
-			return
-		}
-		ctime := time.Now().UTC().UnixMilli()
-		post.Body = r.PostFormValue("post-body")
-		post.CreatedAt = ctime
-		post.GroupId = 0
-		post.Privacy = r.PostFormValue("post-privacy")
-		// fmt.Println(post.Privacy)
-		post.UpdatedAt = ctime
-		post.UserId = 1
+		log.Println("[api/PostsHandler] Image Stored at:", imageURL)
+	}
+
+	// Create Post object
+	post := models.Post{
+		Body:      body,
+		CreatedAt: ctime,
+		GroupId:   groupID,
+		Privacy:   privacy,
+		UpdatedAt: ctime,
+		ImageURL:  imageURL,
+		UserId:    userId,
 	}
 
 	// Validate the post
@@ -74,31 +100,8 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
-	log.Println("Received post:", post.UserId, post.Body)
-	r.ParseMultipartForm(10 << 20)
-	// if parseMultipartFormErr != nil {
-	// 	utils.HandleError("Unable to Parse Multipart Form.", parseMultipartFormErr)
-	// }
 
-	file, fileHeader, _ := r.FormFile("image")
-	// file, fileHeader, formFileErr := r.FormFile("image")
-	// if formFileErr != nil {
-	// 	utils.HandleError("Error reading image.", formFileErr)
-	// }
-
-	//if file is given
-	if file != nil {
-		defer file.Close()
-		var ImageProcessingrErr error
-		post.ImageURL, ImageProcessingrErr = ImageProcessing(w, r, file, *fileHeader)
-		if ImageProcessingrErr != nil {
-			utils.HandleError("Error with ImageHandler", ImageProcessingrErr)
-		}
-		fmt.Println("POST INSERTED WITH FILE")
-	} else {
-		fmt.Println("POST INSERTED WITHOUT FILE")
-	}
-
+	// Create post in the repository
 	result, createErr := h.Repo.CreatePost(post)
 	if createErr != nil {
 		utils.HandleError("Failed to create post in the repository:", createErr)
@@ -108,7 +111,7 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 
 	// Encode and write the response
 	w.WriteHeader(http.StatusCreated)
-	err := json.NewEncoder(w).Encode(result)
+	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

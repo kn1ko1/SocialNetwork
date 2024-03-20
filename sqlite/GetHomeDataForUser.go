@@ -12,13 +12,6 @@ func GetHomeDataForUser(identityDB, businessDb *sql.DB, userId int) (transport.H
 	var userHomeData transport.HomeModel
 	var err error
 
-	// Get all users
-	userHomeData.AllUsers, err = GetAllUsers(identityDB)
-	if err != nil {
-		utils.HandleError("Error in GetHomeDataForUser", err)
-		// return userHomeData, err
-	}
-
 	// Get public posts with comments
 	userHomeData.PublicPostsWithComments, err = GetPublicPostsWithComments(businessDb)
 	if err != nil {
@@ -43,20 +36,6 @@ func GetHomeDataForUser(identityDB, businessDb *sql.DB, userId int) (transport.H
 
 	// Get groups that the user is a member of
 	userHomeData.UserGroups, err = GetGroupsByUserId(businessDb, userId)
-	if err != nil {
-		utils.HandleError("Error in GetHomeDataForUser", err)
-		// return userHomeData, err
-	}
-
-	// Get events associated with the user
-	userHomeData.UserEvents, err = GetEventsByUserId(businessDb, userId)
-	if err != nil {
-		utils.HandleError("Error in GetHomeDataForUser", err)
-		// return userHomeData, err
-	}
-
-	// Get notifications for the user
-	userHomeData.UserNotifications, err = GetNotificationsByUserId(businessDb, userId)
 	if err != nil {
 		utils.HandleError("Error in GetHomeDataForUser", err)
 		// return userHomeData, err
