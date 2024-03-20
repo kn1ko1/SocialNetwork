@@ -659,7 +659,7 @@ function Home() {
     className: "homePage"
   }, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement(PostForm, {
     groupId: 0
-  }), /*#__PURE__*/React.createElement(PostCard, null), /*#__PURE__*/React.createElement("div", {
+  }), /*#__PURE__*/React.createElement("div", {
     className: "almostPrivatePosts"
   }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), /*#__PURE__*/React.createElement("ul", null, almostPrivatePosts !== null && almostPrivatePosts.map(almostPrivatePost => /*#__PURE__*/React.createElement("li", {
     key: almostPrivatePost.createdAt

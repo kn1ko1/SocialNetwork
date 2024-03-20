@@ -672,7 +672,7 @@ function Home() {
 
 			<Navbar />
 			<PostForm groupId={0} />
-			<PostCard />
+			{/* <PostCard /> */}
 
 
 			<div className="almostPrivatePosts">
