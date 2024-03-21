@@ -468,7 +468,6 @@ function PostForm({
     // Reset the form fields to their default state
     setBody("");
     setPrivacy("");
-    setImageURL(null);
     setSelectedFile(null);
     document.getElementById('postFormBody').value = "";
   };
@@ -573,7 +572,7 @@ function Home() {
     className: "homePage"
   }, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement(PostForm, {
     groupId: 0
-  }), /*#__PURE__*/React.createElement("div", {
+  }), /*#__PURE__*/React.createElement(PostCard, null), /*#__PURE__*/React.createElement("div", {
     className: "allUsersList"
   }, /*#__PURE__*/React.createElement("h2", null, "All Users"), /*#__PURE__*/React.createElement("ul", null, users.map(user => /*#__PURE__*/React.createElement("li", {
     key: user.userId
@@ -700,5 +699,92 @@ function Home() {
 // 	)
 // }
 
+const PostCard = () => {
+  return /*#__PURE__*/React.createElement("section", {
+    style: {
+      backgroundColor: '#eee'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container my-5 py-5"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "row d-flex justify-content-center"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "col-md-12 col-lg-10 col-xl-8"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-body"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "d-flex flex-start align-items-center"
+  }, /*#__PURE__*/React.createElement("img", {
+    className: "rounded-circle shadow-1-strong me-3",
+    src: "https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp",
+    alt: "avatar",
+    width: "60",
+    height: "60"
+  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h6", {
+    className: "fw-bold text-primary mb-1"
+  }, "Lily Coleman"), /*#__PURE__*/React.createElement("p", {
+    className: "text-muted small mb-0"
+  }, "Shared publicly - Jan 2020"))), /*#__PURE__*/React.createElement("p", {
+    className: "mt-3 mb-4 pb-2"
+  }, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip consequat."), /*#__PURE__*/React.createElement("div", {
+    className: "small d-flex justify-content-start"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "#!",
+    className: "d-flex align-items-center me-3"
+  }, /*#__PURE__*/React.createElement("i", {
+    className: "far fa-thumbs-up me-2"
+  }), /*#__PURE__*/React.createElement("p", {
+    className: "mb-0"
+  }, "Like")), /*#__PURE__*/React.createElement("a", {
+    href: "#!",
+    className: "d-flex align-items-center me-3"
+  }, /*#__PURE__*/React.createElement("i", {
+    className: "far fa-comment-dots me-2"
+  }), /*#__PURE__*/React.createElement("p", {
+    className: "mb-0"
+  }, "Comment")), /*#__PURE__*/React.createElement("a", {
+    href: "#!",
+    className: "d-flex align-items-center me-3"
+  }, /*#__PURE__*/React.createElement("i", {
+    className: "fas fa-share me-2"
+  }), /*#__PURE__*/React.createElement("p", {
+    className: "mb-0"
+  }, "Share")))), /*#__PURE__*/React.createElement("div", {
+    className: "card-footer py-3 border-0",
+    style: {
+      backgroundColor: '#f8f9fa'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "d-flex flex-start w-100"
+  }, /*#__PURE__*/React.createElement("img", {
+    className: "rounded-circle shadow-1-strong me-3",
+    src: "https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp",
+    alt: "avatar",
+    width: "40",
+    height: "40"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "form-outline w-100"
+  }, /*#__PURE__*/React.createElement("textarea", {
+    className: "form-control",
+    id: "textAreaExample",
+    rows: "4",
+    style: {
+      background: '#fff'
+    }
+  }), /*#__PURE__*/React.createElement("label", {
+    className: "form-label",
+    htmlFor: "textAreaExample"
+  }, "Message"))), /*#__PURE__*/React.createElement("div", {
+    className: "float-end mt-2 pt-1"
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "btn btn-primary btn-sm"
+  }, "Post comment"), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "btn btn-outline-primary btn-sm"
+  }, "Cancel"))))))));
+};
 const root = document.querySelector("#root");
 ReactDOM.render( /*#__PURE__*/React.createElement(App, null), root);
