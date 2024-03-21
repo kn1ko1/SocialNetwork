@@ -34,7 +34,7 @@ const App = () => {
 // 	)
 // }
 
-function Navbar(props) {
+function Navbar() {
   const renderHome = () => {
     const appContainer = document.querySelector('.app-container');
     ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
@@ -55,11 +55,20 @@ function Navbar(props) {
     const appContainer = document.querySelector('.app-container');
     ReactDOM.render( /*#__PURE__*/React.createElement(Group, null), appContainer);
   };
-  const renderLogin = () => {
-    //Some logout logic and function needs implemented here rather than lines below
-
+  const logout = async () => {
+    const response = await fetch("http://localhost:8080/auth/logout", {
+      method: "POST",
+      credentials: "include"
+    });
     const appContainer = document.querySelector('.app-container');
     ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
+    const cookieHeader = response.headers.get('set-cookie');
+    if (cookieHeader) {
+      document.cookie = cookieHeader;
+      console.log("Logout successful!");
+    } else {
+      console.log("Failed to logout");
+    }
   };
   return /*#__PURE__*/React.createElement("nav", {
     className: "navbar navbar-expand-md bg-body-tertiary"
@@ -115,17 +124,15 @@ function Navbar(props) {
   }, /*#__PURE__*/React.createElement("a", {
     className: "nav-link",
     href: "#",
-    onClick: renderLogin
+    onClick: logout
   }, "LOGOUT"))))));
 }
-function Login(props) {
+function Login() {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [redirectVar, setRedirectVar] = useState(false);
   const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const errorMessage = document.querySelector(".error-message");
-  const [showForm, setShowForm] = useState(true);
 
   //this is the sign in button
   const submit = async e => {
@@ -219,7 +226,7 @@ function Login(props) {
     onClick: renderRegister
   }, "Register")));
 }
-function Register(props) {
+function Register() {
   const [email, setEmail] = useState("");
   const [encryptedPassword, setEncryptedPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -229,7 +236,6 @@ function Register(props) {
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
   const [isPublic, setIsPublic] = useState("public");
-  const [redirectVar, setRedirectVar] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
 
   //this is register button
@@ -545,25 +551,106 @@ function PostForm({
     type: "submit"
   }, "Submit"))));
 }
+const PostCard = () => {
+  return /*#__PURE__*/React.createElement("section", {
+    style: {
+      backgroundColor: '#eee'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container my-5 py-5"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "row d-flex justify-content-center"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "col-md-12 col-lg-10 col-xl-8"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-body"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "d-flex flex-start align-items-center"
+  }, /*#__PURE__*/React.createElement("img", {
+    className: "rounded-circle shadow-1-strong me-3",
+    src: "https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp",
+    alt: "avatar",
+    width: "60",
+    height: "60"
+  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h6", {
+    className: "fw-bold text-primary mb-1"
+  }, "Lily Coleman"), /*#__PURE__*/React.createElement("p", {
+    className: "text-muted small mb-0"
+  }, "Shared publicly - Jan 2020"))), /*#__PURE__*/React.createElement("p", {
+    className: "mt-3 mb-4 pb-2"
+  }, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip consequat."), /*#__PURE__*/React.createElement("div", {
+    className: "small d-flex justify-content-start"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "#!",
+    className: "d-flex align-items-center me-3"
+  }, /*#__PURE__*/React.createElement("i", {
+    className: "far fa-thumbs-up me-2"
+  }), /*#__PURE__*/React.createElement("p", {
+    className: "mb-0"
+  }, "Like")), /*#__PURE__*/React.createElement("a", {
+    href: "#!",
+    className: "d-flex align-items-center me-3"
+  }, /*#__PURE__*/React.createElement("i", {
+    className: "far fa-comment-dots me-2"
+  }), /*#__PURE__*/React.createElement("p", {
+    className: "mb-0"
+  }, "Comment")), /*#__PURE__*/React.createElement("a", {
+    href: "#!",
+    className: "d-flex align-items-center me-3"
+  }, /*#__PURE__*/React.createElement("i", {
+    className: "fas fa-share me-2"
+  }), /*#__PURE__*/React.createElement("p", {
+    className: "mb-0"
+  }, "Share")))), /*#__PURE__*/React.createElement("div", {
+    className: "card-footer py-3 border-0",
+    style: {
+      backgroundColor: '#f8f9fa'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "d-flex flex-start w-100"
+  }, /*#__PURE__*/React.createElement("img", {
+    className: "rounded-circle shadow-1-strong me-3",
+    src: "https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp",
+    alt: "avatar",
+    width: "40",
+    height: "40"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "form-outline w-100"
+  }, /*#__PURE__*/React.createElement("textarea", {
+    className: "form-control",
+    id: "textAreaExample",
+    rows: "4",
+    style: {
+      background: '#fff'
+    }
+  }), /*#__PURE__*/React.createElement("label", {
+    className: "form-label",
+    htmlFor: "textAreaExample"
+  }, "Message"))), /*#__PURE__*/React.createElement("div", {
+    className: "float-end mt-2 pt-1"
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "btn btn-primary btn-sm"
+  }, "Post comment"), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "btn btn-outline-primary btn-sm"
+  }, "Cancel"))))))));
+};
 
 // Display information relating to homepage
 function Home() {
-  const [users, setUsers] = useState([]);
   const [almostPrivatePosts, setAlmostPrivatePosts] = useState([]);
   const [privatePosts, setPrivatePosts] = useState([]);
   const [publicPostsWithComments, setPublicPostsWithComments] = useState([]);
-  const [userEvents, setUserEvents] = useState([]);
   const [userGroups, setUserGroups] = useState([]);
-  const [userNotifications, setUserNotifications] = useState([]);
   useEffect(() => {
     fetch('http://localhost:8080/api/home').then(response => response.json()).then(data => {
-      setUsers(data.allUsers);
       setAlmostPrivatePosts(data.almostPrivatePosts);
       setPrivatePosts(data.privatePosts);
       setPublicPostsWithComments(data.publicPostsWithComments);
-      setUserEvents(data.userEvents);
       setUserGroups(data.userGroups);
-      setUserNotifications(data.userNotifications);
     }).catch(error => {
       console.error('Error fetching data:', error);
     });
@@ -572,11 +659,15 @@ function Home() {
     className: "homePage"
   }, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement(PostForm, {
     groupId: 0
+<<<<<<< HEAD
   }), /*#__PURE__*/React.createElement(PostCard, null), /*#__PURE__*/React.createElement("div", {
     className: "allUsersList"
   }, /*#__PURE__*/React.createElement("h2", null, "All Users"), /*#__PURE__*/React.createElement("ul", null, users.map(user => /*#__PURE__*/React.createElement("li", {
     key: user.userId
   }, user.username, " - ", user.email, " ")))), /*#__PURE__*/React.createElement("div", {
+=======
+  }), /*#__PURE__*/React.createElement("div", {
+>>>>>>> main
     className: "almostPrivatePosts"
   }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), /*#__PURE__*/React.createElement("ul", null, almostPrivatePosts !== null && almostPrivatePosts.map(almostPrivatePost => /*#__PURE__*/React.createElement("li", {
     key: almostPrivatePost.createdAt
@@ -588,20 +679,15 @@ function Home() {
     className: "publicPostsWithComments"
   }, /*#__PURE__*/React.createElement("h2", null, "Public Posts"), /*#__PURE__*/React.createElement("ul", null, publicPostsWithComments !== null && publicPostsWithComments.map(publicPostsWithComment => /*#__PURE__*/React.createElement("li", {
     key: publicPostsWithComment.post.CreatedAt
-  }, publicPostsWithComment.post.Body, " - ", publicPostsWithComment.post.UserId, " ")))), /*#__PURE__*/React.createElement("div", {
-    className: "userEvents"
-  }, /*#__PURE__*/React.createElement("h2", null, "Events"), /*#__PURE__*/React.createElement("ul", null, userEvents !== null && userEvents.map(userEvent => /*#__PURE__*/React.createElement("li", {
-    key: userEvent.createdAt
-  }, userEvent.Title, " ")))), /*#__PURE__*/React.createElement("div", {
+  }, publicPostsWithComment.post.Body, " - ", publicPostsWithComment.post.UserId, " ", publicPostsWithComment.post.ImageURL !== null && /*#__PURE__*/React.createElement("img", {
+    src: publicPostsWithComment.post.ImageURL
+  }))))), /*#__PURE__*/React.createElement("div", {
     className: "userGroups"
   }, /*#__PURE__*/React.createElement("h2", null, "Groups"), /*#__PURE__*/React.createElement("ul", null, userGroups !== null && userGroups.map(userGroup => /*#__PURE__*/React.createElement("li", {
     key: userGroup.createdAt
-  }, userGroup.Title, " ")))), /*#__PURE__*/React.createElement("div", {
-    className: "userNotifications"
-  }, /*#__PURE__*/React.createElement("h2", null, "Notifications"), /*#__PURE__*/React.createElement("ul", null, userNotifications !== null && userNotifications.map(userNotification => /*#__PURE__*/React.createElement("li", {
-    key: userNotification.createdAt
-  }, userNotification.NotificationType, " ")))));
+  }, userGroup.Title, " ")))));
 }
+<<<<<<< HEAD
 
 // function Profile() {
 
@@ -786,5 +872,7 @@ const PostCard = () => {
     className: "btn btn-outline-primary btn-sm"
   }, "Cancel"))))))));
 };
+=======
+>>>>>>> main
 const root = document.querySelector("#root");
 ReactDOM.render( /*#__PURE__*/React.createElement(App, null), root);

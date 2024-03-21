@@ -65,13 +65,6 @@ func NewDummyRepository() *DummyRepository {
 func (r *DummyRepository) GetHomeDataForUser(userId int) (transport.HomeModel, error) {
 	var homeModel transport.HomeModel
 
-	homeModel.AllUsers = make([]models.User, sutTableRuns)
-	for i := 0; i < sutTableRuns; i++ {
-		u := validUser
-		u.UserId = i + 1
-		homeModel.AllUsers[i] = u
-	}
-
 	homeModel.AlmostPrivatePosts = make([]transport.PostWithComments, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
 		ap := validPost
@@ -111,25 +104,11 @@ func (r *DummyRepository) GetHomeDataForUser(userId int) (transport.HomeModel, e
 		}
 	}
 
-	homeModel.UserEvents = make([]models.Event, sutTableRuns)
-	for i := 0; i < sutTableRuns; i++ {
-		e := validEvent
-		e.EventId = i + 1
-		homeModel.UserEvents[i] = e
-	}
-
 	homeModel.UserGroups = make([]models.Group, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
 		g := validGroup
 		g.GroupId = i + 1
 		homeModel.UserGroups[i] = g
-	}
-
-	homeModel.UserNotifications = make([]models.Notification, sutTableRuns)
-	for i := 0; i < sutTableRuns; i++ {
-		n := validNotification
-		n.NotificationId = i + 1
-		homeModel.UserNotifications[i] = n
 	}
 
 	return homeModel, nil

@@ -44,7 +44,7 @@ func addApiHandlers(rt *router.Router) {
 	// r := repo.NewDummyRepository()
 	r := repo.NewSQLiteRepository()
 	loginHandler := auth.NewLoginHandler(r)
-	// logoutHandler := auth.NewLogoutHandler(r)
+	logoutHandler := auth.NewLogoutHandler(r)
 	registrationHandler := auth.NewRegistrationHandler(r)
 	usersHandler := api.NewUsersHandler(r)
 	userByIdHandler := api.NewUserByIdHandler(r)
@@ -80,7 +80,7 @@ func addApiHandlers(rt *router.Router) {
 
 	// Auth Handlers
 	rt.AddHandler(regexp.MustCompile(`^/auth/login$`), loginHandler)
-	// rt.AddHandler(regexp.MustCompile(`^/auth/logoutn$`), logoutHandler)
+	rt.AddHandler(regexp.MustCompile(`^/auth/logout$`), logoutHandler)
 	rt.AddHandler(regexp.MustCompile(`^/auth/registration$`), registrationHandler)
 
 	// // User Handlers

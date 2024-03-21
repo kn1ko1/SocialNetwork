@@ -19,8 +19,8 @@ func NewLogoutHandler(r repo.IRepository) *LoginHandler {
 func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
-	case http.MethodGet:
-		h.get(w, r)
+	case http.MethodPost:
+		h.post(w)
 		return
 	// All unimplemented methods default to a "method not allowed" error
 	default:
@@ -29,10 +29,10 @@ func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *LogoutHandler) get(w http.ResponseWriter, r *http.Request) {
-	// handlers.SetupCORS(&w, r)
+func (h *LogoutHandler) post(w http.ResponseWriter) {
+
 	cookie := http.Cookie{
-		Name:     cookieName,
+		Name:     CookieName,
 		Value:    "",
 		Path:     "/",
 		Expires:  time.Unix(0, 0),
