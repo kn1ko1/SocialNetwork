@@ -446,8 +446,6 @@ function PostForm({
   const [selectedFile, setSelectedFile] = useState(null);
 
   // Needs to be changed to get info from... cookie?
-  const userId = Number(36);
-
   // Upon submitting:
   const submit = async e => {
     e.preventDefault(); // prevent reload.
@@ -458,7 +456,6 @@ function PostForm({
     formData.append('body', body);
     formData.append('privacy', privacy);
     formData.append('groupId', groupId);
-    formData.append('userId', userId);
     if (selectedFile) {
       formData.append('image', selectedFile);
     }
@@ -554,6 +551,8 @@ function PostForm({
 function PostCard({
   post
 }) {
+  console.log("post", post);
+  console.log("post.post.userId", post.post.userId);
   return /*#__PURE__*/React.createElement("div", {
     className: "card"
   }, /*#__PURE__*/React.createElement("div", {
@@ -562,17 +561,17 @@ function PostCard({
     className: "d-flex flex-start align-items-center"
   }, /*#__PURE__*/React.createElement("img", {
     className: "rounded-circle shadow-1-strong me-3",
-    src: post.avatar,
+    src: post.post.imageURL,
     alt: "avatar",
     width: "60",
     height: "60"
   }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h6", {
     className: "fw-bold text-primary mb-1"
-  }, post.author), /*#__PURE__*/React.createElement("p", {
+  }, post.post.userId), /*#__PURE__*/React.createElement("p", {
     className: "text-muted small mb-0"
-  }, post.createdAt))), /*#__PURE__*/React.createElement("p", {
+  }, post.post.createdAt))), /*#__PURE__*/React.createElement("p", {
     className: "mt-3 mb-4 pb-2"
-  }, post.body), /*#__PURE__*/React.createElement("div", {
+  }, post.post.body), /*#__PURE__*/React.createElement("div", {
     className: "small d-flex justify-content-start"
   }, /*#__PURE__*/React.createElement("a", {
     href: "#!",

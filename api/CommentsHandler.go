@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"socialnetwork/auth"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
@@ -31,7 +32,7 @@ func (h *CommentsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.post(w, r)
 		return
 	case http.MethodGet:
-		h.get(w, r)
+		h.get(w)
 		return
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -40,6 +41,21 @@ func (h *CommentsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
+
+	cookie, err := r.Cookie(auth.CookieName)
+	if err != nil {
+
+		utils.HandleError("Error verifying cookie", err)
+		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
+		return
+	}
+
+	user, exists := auth.SessionMap[cookie.Value]
+	if !exists {
+		utils.HandleError("Error finding User, need to log in again", err)
+		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
+		return
+	}
 	contentType := r.Header.Get("Content-Type")
 	var comment models.Comment
 	switch contentType {
@@ -63,7 +79,7 @@ func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
 		comment.UpdatedAt = ctime
 		comment.ImageURL = ""
 		comment.PostId = 1
-		comment.UserId = 1
+		comment.UserId = user.UserId
 	}
 	// Validate the post
 	if validationErr := comment.Validate(); validationErr != nil {
@@ -103,7 +119,7 @@ func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
 
 	// Encode and write the response
 	w.WriteHeader(http.StatusCreated)
-	err := json.NewEncoder(w).Encode(result)
+	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -111,7 +127,7 @@ func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *CommentsHandler) get(w http.ResponseWriter, r *http.Request) {
+func (h *CommentsHandler) get(w http.ResponseWriter) {
 
 	allComments, err := h.Repo.GetAllComments()
 	if err != nil {

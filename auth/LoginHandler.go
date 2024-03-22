@@ -35,16 +35,15 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 	var loginInfo transport.LoginInfo
 
-	cookie, err := r.Cookie(CookieName)
-	if err == nil {
-		log.Println("[auth/LoginHandler] here")
-		_, exists := sessionMap[cookie.Value]
-		if exists {
-			utils.HandleError("Login failed - user already logged in:", err)
-			http.Error(w, "user already logged in", http.StatusBadRequest)
-			return
-		}
-	}
+	// cookie, err := r.Cookie(CookieName)
+	// if err == nil {
+	// 	_, exists := sessionMap[cookie.Value]
+	// 	if exists {
+	// 		utils.HandleError("Login failed - user already logged in:", err)
+	// 		http.Error(w, "user already logged in", http.StatusBadRequest)
+	// 		return
+	// 	}
+	// }
 
 	json.NewDecoder(r.Body).Decode(&loginInfo)
 
@@ -84,10 +83,10 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	sessionMap[CookieValue] = &user
-	log.Println("[auth/LoginHandler] User from sessionMap:", sessionMap[CookieValue])
+	SessionMap[CookieValue] = &user
+	log.Println("[auth/LoginHandler] User from sessionMap:", SessionMap[CookieValue])
 
-	cookie = &http.Cookie{
+	cookie := &http.Cookie{
 		Name:     CookieName,
 		Value:    CookieValue,
 		Path:     "/",

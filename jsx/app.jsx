@@ -466,8 +466,6 @@ function PostForm({ groupId }) {
 	const [selectedFile, setSelectedFile] = useState(null);
 
 	// Needs to be changed to get info from... cookie?
-	const userId = Number(36);
-
 	// Upon submitting:
 	const submit = async (e) => {
 		e.preventDefault(); // prevent reload.
@@ -478,7 +476,6 @@ function PostForm({ groupId }) {
 		formData.append('body', body);
 		formData.append('privacy', privacy);
 		formData.append('groupId', groupId);
-		formData.append('userId', userId);
 		if (selectedFile) {
 			formData.append('image', selectedFile);
 		}
@@ -581,22 +578,24 @@ function PostForm({ groupId }) {
 
 
 function PostCard({ post }) {
+	console.log("post", post)
+	console.log("post.post.userId", post.post.userId)
 	return (
 		<div className="card">
 			<div className="card-body">
 				<div className="d-flex flex-start align-items-center">
 					<img className="rounded-circle shadow-1-strong me-3"
-						src={post.avatar} alt="avatar" width="60" height="60" />
+						src={post.post.imageURL} alt="avatar" width="60" height="60" />
 					<div>
-						<h6 className="fw-bold text-primary mb-1">{post.author}</h6>
+						<h6 className="fw-bold text-primary mb-1">{post.post.userId}</h6>
 						<p className="text-muted small mb-0">
-							{post.createdAt}
+							{post.post.createdAt}
 						</p>
 					</div>
 				</div>
 
 				<p className="mt-3 mb-4 pb-2">
-					{post.body}
+					{post.post.body}
 				</p>
 
 				<div className="small d-flex justify-content-start">

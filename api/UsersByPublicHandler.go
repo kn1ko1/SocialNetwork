@@ -25,7 +25,7 @@ func (h *UsersByPublicHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 	switch r.Method {
 
 	case http.MethodGet:
-		h.get(w, r)
+		h.get(w)
 		return
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -33,7 +33,7 @@ func (h *UsersByPublicHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 	}
 }
 
-func (h *UsersByPublicHandler) get(w http.ResponseWriter, r *http.Request) {
+func (h *UsersByPublicHandler) get(w http.ResponseWriter) {
 
 	userUsers, err := h.Repo.GetUsersByPublic()
 	if err != nil {

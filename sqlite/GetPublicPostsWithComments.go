@@ -14,7 +14,7 @@ func GetPublicPostsWithComments(database *sql.DB) ([]transport.PostWithComments,
 	// Query to fetch posts and their corresponding comments using foreign keys
 	query := `
 SELECT 
-	   p.PostId, p.Body, p.CreatedAt, p.GroupId, p.ImageURL, p.Privacy, p.UpdatedAt,
+	   p.PostId, p.Body, p.CreatedAt, p.GroupId, p.ImageURL, p.Privacy, p.UpdatedAt, p.UserId,
 	c.CommentId, c.Body, c.CreatedAt, c.ImageURL, c.UpdatedAt, c.UserId
 FROM 
 	   POSTS p
@@ -41,7 +41,7 @@ WHERE
 		var comment models.Comment
 
 		rows.Scan(
-			&post.PostId, &post.Body, &post.CreatedAt, &post.GroupId, &post.ImageURL, &post.Privacy, &post.UpdatedAt,
+			&post.PostId, &post.Body, &post.CreatedAt, &post.GroupId, &post.ImageURL, &post.Privacy, &post.UpdatedAt, &post.UserId,
 			&comment.CommentId, &comment.Body, &comment.CreatedAt, &comment.ImageURL, &comment.UpdatedAt, &comment.UserId,
 		)
 

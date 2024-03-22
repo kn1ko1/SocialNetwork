@@ -38,7 +38,7 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 	// Checks cookies
 	cookie, err := r.Cookie(CookieName)
 	if err == nil {
-		_, exists := sessionMap[cookie.Value]
+		_, exists := SessionMap[cookie.Value]
 		if exists {
 			utils.HandleError("Login failed - user already logged in:", err)
 			http.Error(w, "user already logged in", http.StatusBadRequest)

@@ -14,7 +14,7 @@ const (
 
 var (
 	CookieValue = GenerateNewUUID()
-	sessionMap  = make(map[string]*models.User)
+	SessionMap  = make(map[string]*models.User)
 	// followersMap = make(map[int][]int)
 	// followingMap = make(map[int][]int)
 	// groupsMap    = make(map[int][]int)
