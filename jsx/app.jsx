@@ -61,24 +61,61 @@ function Navbar() {
 		ReactDOM.render(<Group />, appContainer);
 	};
 
+	// const logout = async () => {
+
+	// 	const response = await fetch("http://localhost:8080/auth/logout", {
+	// 		method: "POST",
+	// 		credentials: "include",
+	// 	});
+	// 	const appContainer = document.querySelector('.app-container');
+	// 	ReactDOM.render(<Login />, appContainer);
+
+	// 	const cookieHeader = response.headers.get('set-cookie');
+	// 	if (cookieHeader) {
+	// 		document.cookie = cookieHeader;
+	// 		console.log("Logout successful!");
+	// 	} else {
+	// 		console.log("Failed to logout");
+	// 	}
+	// };
+
 	const logout = async () => {
+	
+		try {
+			const response = await fetch("http://localhost:8080/auth/logout", {
+				method: "POST",
+				credentials: "include",
+			});
+	
+			
 
-		const response = await fetch("http://localhost:8080/auth/logout", {
-			method: "POST",
-			credentials: "include",
-		});
-		const appContainer = document.querySelector('.app-container');
-		ReactDOM.render(<Login />, appContainer);
+			if (response.ok) {
+				const appContainer = document.querySelector('.app-container');
+				ReactDOM.render(<Login />, appContainer);
+	
+				const cookieHeader = response.headers.get('Set-Cookie');  
 
-		const cookieHeader = response.headers.get('set-cookie');
-		if (cookieHeader) {
-			document.cookie = cookieHeader;
-			console.log("Logout successful!");
-		} else {
-			console.log("Failed to logout");
+				console.log("this is cookieHeader;" , cookieHeader)
+				if (cookieHeader) {
+					// document.cookie = cookieHeader;
+                      console.log("HERE?")
+					  // Check if the protocol is not HTTPS before setting the Secure attribute
+					  const secureAttribute = window.location.protocol !== 'https:' ? '' : '; Secure';
+					    // Add SameSite=None attribute to the cookie
+						const sameSiteAttribute = '; SameSite=None';
+					  document.cookie = `${cookieHeader}${secureAttribute}${sameSiteAttribute}`;
+
+					console.log("Logout successful!");
+				} else {
+					console.log("Failed to set cookie after logout");
+				}
+			} else {
+				console.log("Failed to logout. Server response not OK.");
+			}
+		} catch (error) {
+			console.error("An error occurred during logout:", error);
 		}
 	};
-
 
 
 

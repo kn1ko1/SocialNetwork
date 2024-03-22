@@ -55,19 +55,53 @@ function Navbar() {
     const appContainer = document.querySelector('.app-container');
     ReactDOM.render( /*#__PURE__*/React.createElement(Group, null), appContainer);
   };
+
+  // const logout = async () => {
+
+  // 	const response = await fetch("http://localhost:8080/auth/logout", {
+  // 		method: "POST",
+  // 		credentials: "include",
+  // 	});
+  // 	const appContainer = document.querySelector('.app-container');
+  // 	ReactDOM.render(<Login />, appContainer);
+
+  // 	const cookieHeader = response.headers.get('set-cookie');
+  // 	if (cookieHeader) {
+  // 		document.cookie = cookieHeader;
+  // 		console.log("Logout successful!");
+  // 	} else {
+  // 		console.log("Failed to logout");
+  // 	}
+  // };
+
   const logout = async () => {
-    const response = await fetch("http://localhost:8080/auth/logout", {
-      method: "POST",
-      credentials: "include"
-    });
-    const appContainer = document.querySelector('.app-container');
-    ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
-    const cookieHeader = response.headers.get('set-cookie');
-    if (cookieHeader) {
-      document.cookie = cookieHeader;
-      console.log("Logout successful!");
-    } else {
-      console.log("Failed to logout");
+    try {
+      const response = await fetch("http://localhost:8080/auth/logout", {
+        method: "POST",
+        credentials: "include"
+      });
+      if (response.ok) {
+        const appContainer = document.querySelector('.app-container');
+        ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
+        const cookieHeader = response.headers.get('Set-Cookie');
+        console.log("this is cookieHeader;", cookieHeader);
+        if (cookieHeader) {
+          // document.cookie = cookieHeader;
+          console.log("HERE?");
+          // Check if the protocol is not HTTPS before setting the Secure attribute
+          const secureAttribute = window.location.protocol !== 'https:' ? '' : '; Secure';
+          // Add SameSite=None attribute to the cookie
+          const sameSiteAttribute = '; SameSite=None';
+          document.cookie = `${cookieHeader}${secureAttribute}${sameSiteAttribute}`;
+          console.log("Logout successful!");
+        } else {
+          console.log("Failed to set cookie after logout");
+        }
+      } else {
+        console.log("Failed to logout. Server response not OK.");
+      }
+    } catch (error) {
+      console.error("An error occurred during logout:", error);
     }
   };
   return /*#__PURE__*/React.createElement("nav", {
@@ -659,15 +693,7 @@ function Home() {
     className: "homePage"
   }, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement(PostForm, {
     groupId: 0
-<<<<<<< HEAD
-  }), /*#__PURE__*/React.createElement(PostCard, null), /*#__PURE__*/React.createElement("div", {
-    className: "allUsersList"
-  }, /*#__PURE__*/React.createElement("h2", null, "All Users"), /*#__PURE__*/React.createElement("ul", null, users.map(user => /*#__PURE__*/React.createElement("li", {
-    key: user.userId
-  }, user.username, " - ", user.email, " ")))), /*#__PURE__*/React.createElement("div", {
-=======
   }), /*#__PURE__*/React.createElement("div", {
->>>>>>> main
     className: "almostPrivatePosts"
   }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), /*#__PURE__*/React.createElement("ul", null, almostPrivatePosts !== null && almostPrivatePosts.map(almostPrivatePost => /*#__PURE__*/React.createElement("li", {
     key: almostPrivatePost.createdAt
@@ -687,192 +713,5 @@ function Home() {
     key: userGroup.createdAt
   }, userGroup.Title, " ")))));
 }
-<<<<<<< HEAD
-
-// function Profile() {
-
-// 	const [usernameOrEmail, setUsernameOrEmail] = useState("")
-// 	const [password, setPassword] = useState("")
-
-// 	//this is the sign in button
-// 	const submit = async (e) => {
-// 		e.preventDefault() // prevent reload.
-
-// 		//this is user input 
-// 		const userToLogin = {
-// 			usernameOrEmail,
-// 			password,
-// 		}
-
-// 		try {
-// 			//check credentials with backend
-// 			const response = await fetch('http://localhost:8080/auth/login', {
-// 				method: 'POST',
-// 				headers: { 'Content-Type': 'application/json' },
-// 				credentials: 'include',
-// 				body: JSON.stringify(userToLogin),
-// 			});
-
-// 			if (!response.ok) {
-// 				errorMessage.innerHTML = 'Invalid credentials'
-// 				throw new Error('Invalid credentials');
-// 			}
-
-// 			//takes response from backend and processes
-// 			const data = await response.json();
-// 			if (data.success) {
-// 				setIsLoggedIn(true);
-// 			} else {
-// 				errorMessage.innerHTML = 'Invalid credentials'
-// 				throw new Error('Invalid credentials');
-// 			}
-// 		} catch (error) {
-// 			errorMessage.innerHTML = 'Invalid credentials'
-// 			setError('Invalid credentials');
-// 		}
-// 	};
-
-// 	//if credentials frontend match backend then we render home
-// 	if (isLoggedIn) {
-// 		const appContainer = document.querySelector('.app-container');
-// 		ReactDOM.render(<Home />, appContainer);
-// 	}
-
-// 	//this is the register button, when pressed will serve registration form
-// 	const renderRegister = () => {
-// 		const appContainer = document.querySelector('.app-container');
-// 		ReactDOM.render(<Register />, appContainer);
-// 	};
-
-// 	return (
-// 		<div className="login-container">
-// 			<main className="form-signin w-100 m-auto" style={{ display: "block" }}>
-// 				<h1 className="h3 mb-3 fw-normal login-text">log in</h1>
-// 				<form onSubmit={submit}>
-// 					<div className="form-floating">
-// 						<label htmlFor="floatingInput" className="login-text">Email address</label>
-// 						<input
-// 							type="email"
-// 							className="form-control login-text"
-// 							id="floatingInput"
-// 							placeholder="name@example.com"
-// 							onChange={(e) => setUsernameOrEmail(e.target.value)}
-// 						/>
-// 					</div>
-
-// 					<div className="form-floating">
-// 						<label htmlFor="floatingPassword" className="login-text">Password</label>
-// 						<input
-// 							type="password"
-// 							className="form-control login-text"
-// 							id="floatingPassword"
-// 							placeholder="Password"
-// 							onChange={(e) => setPassword(e.target.value)}
-// 						/>
-// 					</div>
-// 					<button className="w-100 btn btn-lg btn-primary login-button" type="submit">
-// 						Sign in
-// 					</button>
-// 				</form>
-// 				<div className="error-message"></div>
-// 				<br /> {/* Add a line break for spacing */}
-// 				<span className="login-text">Don't have an account? &nbsp;</span>
-// 				<button className="w-100 btn btn-lg btn-primary login-button" onClick={renderRegister}>
-// 					Register
-// 				</button>
-// 			</main>
-// 		</div>
-// 	)
-// }
-
-const PostCard = () => {
-  return /*#__PURE__*/React.createElement("section", {
-    style: {
-      backgroundColor: '#eee'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "container my-5 py-5"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "row d-flex justify-content-center"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "col-md-12 col-lg-10 col-xl-8"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "card"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "card-body"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "d-flex flex-start align-items-center"
-  }, /*#__PURE__*/React.createElement("img", {
-    className: "rounded-circle shadow-1-strong me-3",
-    src: "https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp",
-    alt: "avatar",
-    width: "60",
-    height: "60"
-  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h6", {
-    className: "fw-bold text-primary mb-1"
-  }, "Lily Coleman"), /*#__PURE__*/React.createElement("p", {
-    className: "text-muted small mb-0"
-  }, "Shared publicly - Jan 2020"))), /*#__PURE__*/React.createElement("p", {
-    className: "mt-3 mb-4 pb-2"
-  }, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip consequat."), /*#__PURE__*/React.createElement("div", {
-    className: "small d-flex justify-content-start"
-  }, /*#__PURE__*/React.createElement("a", {
-    href: "#!",
-    className: "d-flex align-items-center me-3"
-  }, /*#__PURE__*/React.createElement("i", {
-    className: "far fa-thumbs-up me-2"
-  }), /*#__PURE__*/React.createElement("p", {
-    className: "mb-0"
-  }, "Like")), /*#__PURE__*/React.createElement("a", {
-    href: "#!",
-    className: "d-flex align-items-center me-3"
-  }, /*#__PURE__*/React.createElement("i", {
-    className: "far fa-comment-dots me-2"
-  }), /*#__PURE__*/React.createElement("p", {
-    className: "mb-0"
-  }, "Comment")), /*#__PURE__*/React.createElement("a", {
-    href: "#!",
-    className: "d-flex align-items-center me-3"
-  }, /*#__PURE__*/React.createElement("i", {
-    className: "fas fa-share me-2"
-  }), /*#__PURE__*/React.createElement("p", {
-    className: "mb-0"
-  }, "Share")))), /*#__PURE__*/React.createElement("div", {
-    className: "card-footer py-3 border-0",
-    style: {
-      backgroundColor: '#f8f9fa'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "d-flex flex-start w-100"
-  }, /*#__PURE__*/React.createElement("img", {
-    className: "rounded-circle shadow-1-strong me-3",
-    src: "https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp",
-    alt: "avatar",
-    width: "40",
-    height: "40"
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "form-outline w-100"
-  }, /*#__PURE__*/React.createElement("textarea", {
-    className: "form-control",
-    id: "textAreaExample",
-    rows: "4",
-    style: {
-      background: '#fff'
-    }
-  }), /*#__PURE__*/React.createElement("label", {
-    className: "form-label",
-    htmlFor: "textAreaExample"
-  }, "Message"))), /*#__PURE__*/React.createElement("div", {
-    className: "float-end mt-2 pt-1"
-  }, /*#__PURE__*/React.createElement("button", {
-    type: "button",
-    className: "btn btn-primary btn-sm"
-  }, "Post comment"), /*#__PURE__*/React.createElement("button", {
-    type: "button",
-    className: "btn btn-outline-primary btn-sm"
-  }, "Cancel"))))))));
-};
-=======
->>>>>>> main
 const root = document.querySelector("#root");
 ReactDOM.render( /*#__PURE__*/React.createElement(App, null), root);
