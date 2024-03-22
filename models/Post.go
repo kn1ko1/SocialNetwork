@@ -6,14 +6,14 @@ import (
 )
 
 type Post struct {
-	PostId    int
-	Body      string
-	CreatedAt int64
-	GroupId   int
-	ImageURL  string
-	Privacy   string
-	UpdatedAt int64
-	UserId    int
+	PostId    int    `json:"postId"`
+	Body      string `json:"body"`
+	CreatedAt int64  `json:"createdAt"`
+	GroupId   int    `json:"groupId"`
+	ImageURL  string `json:"imageURL"`
+	Privacy   string `json:"privacy"`
+	UpdatedAt int64  `json:"updatedAt"`
+	UserId    int    `json:"userId"`
 }
 
 func (p *Post) Validate() error {

@@ -30,7 +30,7 @@ func (h *GroupsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.post(w, r)
 		return
 	case http.MethodGet:
-		h.get(w, r)
+		h.get(w)
 		return
 	// All unimplemented methods default to a "method not allowed" error
 	default:
@@ -88,7 +88,7 @@ func (h *GroupsHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *GroupsHandler) get(w http.ResponseWriter, r *http.Request) {
+func (h *GroupsHandler) get(w http.ResponseWriter) {
 	allGroups, err := h.Repo.GetAllGroups()
 	if err != nil {
 		utils.HandleError("Failed to get group in GroupHandler. ", err)

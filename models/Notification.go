@@ -6,14 +6,14 @@ import (
 )
 
 type Notification struct {
-	NotificationId   int
-	CreatedAt        int64
-	NotificationType string
-	ObjectId         int
-	SenderId         int
-	Status           string
-	TargetId         int
-	UpdatedAt        int64
+	NotificationId   int    `json:"notificationId"`
+	CreatedAt        int64  `json:"createdAt"`
+	NotificationType string `json:"notificationType"`
+	ObjectId         int    `json:"objectId"`
+	SenderId         int    `json:"senderId"`
+	Status           string `json:"status"`
+	TargetId         int    `json:"targetId"`
+	UpdatedAt        int64  `json:"updatedAt"`
 }
 
 func (n *Notification) Validate() error {
