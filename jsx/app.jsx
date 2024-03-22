@@ -85,6 +85,7 @@ function Navbar() {
 			const response = await fetch("http://localhost:8080/auth/logout", {
 				method: "POST",
 				credentials: "include",
+				
 			});
 	
 			
