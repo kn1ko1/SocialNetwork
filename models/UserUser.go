@@ -6,11 +6,11 @@ import (
 )
 
 type UserUser struct {
-	UserUserId int
-	CreatedAt  int64
-	FollowerId int
-	SubjectId  int
-	UpdatedAt  int64
+	UserUserId int   `json:"userUserId"`
+	CreatedAt  int64 `json:"createdAt"`
+	FollowerId int   `json:"followerId"`
+	SubjectId  int   `json:"subjectId"`
+	UpdatedAt  int64 `json:"updatedAt"`
 }
 
 func (uu *UserUser) Validate() error {

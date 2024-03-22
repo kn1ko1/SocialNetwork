@@ -6,12 +6,12 @@ import (
 )
 
 type Group struct {
-	GroupId     int
-	CreatedAt   int64
-	CreatorId   int
-	Description string
-	Title       string
-	UpdatedAt   int64
+	GroupId     int    `json:"groupId"`
+	CreatedAt   int64  `json:"createdAt"`
+	CreatorId   int    `json:"creatorId"`
+	Description string `json:"description"`
+	Title       string `json:"title"`
+	UpdatedAt   int64  `json:"updatedAt"`
 }
 
 func (g *Group) Validate() error {

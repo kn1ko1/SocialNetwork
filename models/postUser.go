@@ -6,11 +6,11 @@ import (
 )
 
 type PostUser struct {
-	PostUserId int
-	CreatedAt  int64
-	PostId     int
-	UpdatedAt  int64
-	UserId     int
+	PostUserId int   `json:"postUserId"`
+	CreatedAt  int64 `json:"createdAt"`
+	PostId     int   `json:"postId"`
+	UpdatedAt  int64 `json:"updatedAt"`
+	UserId     int   `json:"userId"`
 }
 
 func (pu *PostUser) Validate() error {

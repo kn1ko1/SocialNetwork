@@ -551,18 +551,10 @@ function PostForm({
     type: "submit"
   }, "Submit"))));
 }
-const PostCard = () => {
-  return /*#__PURE__*/React.createElement("section", {
-    style: {
-      backgroundColor: '#eee'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "container my-5 py-5"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "row d-flex justify-content-center"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "col-md-12 col-lg-10 col-xl-8"
-  }, /*#__PURE__*/React.createElement("div", {
+function PostCard({
+  post
+}) {
+  return /*#__PURE__*/React.createElement("div", {
     className: "card"
   }, /*#__PURE__*/React.createElement("div", {
     className: "card-body"
@@ -570,17 +562,17 @@ const PostCard = () => {
     className: "d-flex flex-start align-items-center"
   }, /*#__PURE__*/React.createElement("img", {
     className: "rounded-circle shadow-1-strong me-3",
-    src: "https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp",
+    src: post.avatar,
     alt: "avatar",
     width: "60",
     height: "60"
   }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h6", {
     className: "fw-bold text-primary mb-1"
-  }, "Lily Coleman"), /*#__PURE__*/React.createElement("p", {
+  }, post.author), /*#__PURE__*/React.createElement("p", {
     className: "text-muted small mb-0"
-  }, "Shared publicly - Jan 2020"))), /*#__PURE__*/React.createElement("p", {
+  }, post.createdAt))), /*#__PURE__*/React.createElement("p", {
     className: "mt-3 mb-4 pb-2"
-  }, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip consequat."), /*#__PURE__*/React.createElement("div", {
+  }, post.body), /*#__PURE__*/React.createElement("div", {
     className: "small d-flex justify-content-start"
   }, /*#__PURE__*/React.createElement("a", {
     href: "#!",
@@ -612,7 +604,7 @@ const PostCard = () => {
     className: "d-flex flex-start w-100"
   }, /*#__PURE__*/React.createElement("img", {
     className: "rounded-circle shadow-1-strong me-3",
-    src: "https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp",
+    src: post.avatar,
     alt: "avatar",
     width: "40",
     height: "40"
@@ -636,8 +628,8 @@ const PostCard = () => {
   }, "Post comment"), /*#__PURE__*/React.createElement("button", {
     type: "button",
     className: "btn btn-outline-primary btn-sm"
-  }, "Cancel"))))))));
-};
+  }, "Cancel"))));
+}
 
 // Display information relating to homepage
 function Home() {
@@ -661,19 +653,20 @@ function Home() {
     groupId: 0
   }), /*#__PURE__*/React.createElement("div", {
     className: "almostPrivatePosts"
-  }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), /*#__PURE__*/React.createElement("ul", null, almostPrivatePosts !== null && almostPrivatePosts.map(almostPrivatePost => /*#__PURE__*/React.createElement("li", {
-    key: almostPrivatePost.createdAt
-  }, almostPrivatePost.body, " - ", almostPrivatePost.UserId)))), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? almostPrivatePosts.map(almostPrivatePost => /*#__PURE__*/React.createElement(PostCard, {
+    key: almostPrivatePost.createdAt,
+    post: almostPrivatePost
+  })) : /*#__PURE__*/React.createElement("p", null, "No almost private posts")), /*#__PURE__*/React.createElement("div", {
     className: "privatePosts"
-  }, /*#__PURE__*/React.createElement("h2", null, "Private Posts"), /*#__PURE__*/React.createElement("ul", null, privatePosts !== null && privatePosts.map(privatePost => /*#__PURE__*/React.createElement("li", {
-    key: privatePost.createdAt
-  }, privatePost.body, " - ", privatePost.UserId, " ")))), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), privatePosts !== null && privatePosts.length > 0 ? privatePosts.map(privatePost => /*#__PURE__*/React.createElement(PostCard, {
+    key: privatePost.createdAt,
+    post: privatePost
+  })) : /*#__PURE__*/React.createElement("p", null, "No private posts")), /*#__PURE__*/React.createElement("div", {
     className: "publicPostsWithComments"
-  }, /*#__PURE__*/React.createElement("h2", null, "Public Posts"), /*#__PURE__*/React.createElement("ul", null, publicPostsWithComments !== null && publicPostsWithComments.map(publicPostsWithComment => /*#__PURE__*/React.createElement("li", {
-    key: publicPostsWithComment.post.CreatedAt
-  }, publicPostsWithComment.post.Body, " - ", publicPostsWithComment.post.UserId, " ", publicPostsWithComment.post.ImageURL !== null && /*#__PURE__*/React.createElement("img", {
-    src: publicPostsWithComment.post.ImageURL
-  }))))), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h2", null, "Public Posts With Comments"), publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? publicPostsWithComments.map(publicPostsWithComments => /*#__PURE__*/React.createElement(PostCard, {
+    key: publicPostsWithComments.createdAt,
+    post: publicPostsWithComments
+  })) : /*#__PURE__*/React.createElement("p", null, "public posts")), /*#__PURE__*/React.createElement("div", {
     className: "userGroups"
   }, /*#__PURE__*/React.createElement("h2", null, "Groups"), /*#__PURE__*/React.createElement("ul", null, userGroups !== null && userGroups.map(userGroup => /*#__PURE__*/React.createElement("li", {
     key: userGroup.createdAt

@@ -580,70 +580,59 @@ function PostForm({ groupId }) {
 }
 
 
-const PostCard = () => {
+function PostCard({ post }) {
 	return (
-		<section style={{ backgroundColor: '#eee' }}>
-			<div className="container my-5 py-5">
-				<div className="row d-flex justify-content-center">
-					<div className="col-md-12 col-lg-10 col-xl-8">
-						<div className="card">
-							<div className="card-body">
-								<div className="d-flex flex-start align-items-center">
-									<img className="rounded-circle shadow-1-strong me-3"
-										src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="60"
-										height="60" />
-									<div>
-										<h6 className="fw-bold text-primary mb-1">Lily Coleman</h6>
-										<p className="text-muted small mb-0">
-											Shared publicly - Jan 2020
-										</p>
-									</div>
-								</div>
-
-								<p className="mt-3 mb-4 pb-2">
-									Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-									tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-									quis nostrud exercitation ullamco laboris nisi ut aliquip consequat.
-								</p>
-
-								<div className="small d-flex justify-content-start">
-									<a href="#!" className="d-flex align-items-center me-3">
-										<i className="far fa-thumbs-up me-2"></i>
-										<p className="mb-0">Like</p>
-									</a>
-									<a href="#!" className="d-flex align-items-center me-3">
-										<i className="far fa-comment-dots me-2"></i>
-										<p className="mb-0">Comment</p>
-									</a>
-									<a href="#!" className="d-flex align-items-center me-3">
-										<i className="fas fa-share me-2"></i>
-										<p className="mb-0">Share</p>
-									</a>
-								</div>
-							</div>
-							<div className="card-footer py-3 border-0" style={{ backgroundColor: '#f8f9fa' }}>
-								<div className="d-flex flex-start w-100">
-									<img className="rounded-circle shadow-1-strong me-3"
-										src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="40"
-										height="40" />
-									<div className="form-outline w-100">
-										<textarea className="form-control" id="textAreaExample" rows="4"
-											style={{ background: '#fff' }}></textarea>
-										<label className="form-label" htmlFor="textAreaExample">Message</label>
-									</div>
-								</div>
-								<div className="float-end mt-2 pt-1">
-									<button type="button" className="btn btn-primary btn-sm">Post comment</button>
-									<button type="button" className="btn btn-outline-primary btn-sm">Cancel</button>
-								</div>
-							</div>
-						</div>
+		<div className="card">
+			<div className="card-body">
+				<div className="d-flex flex-start align-items-center">
+					<img className="rounded-circle shadow-1-strong me-3"
+						src={post.avatar} alt="avatar" width="60" height="60" />
+					<div>
+						<h6 className="fw-bold text-primary mb-1">{post.author}</h6>
+						<p className="text-muted small mb-0">
+							{post.createdAt}
+						</p>
 					</div>
 				</div>
+
+				<p className="mt-3 mb-4 pb-2">
+					{post.body}
+				</p>
+
+				<div className="small d-flex justify-content-start">
+					<a href="#!" className="d-flex align-items-center me-3">
+						<i className="far fa-thumbs-up me-2"></i>
+						<p className="mb-0">Like</p>
+					</a>
+					<a href="#!" className="d-flex align-items-center me-3">
+						<i className="far fa-comment-dots me-2"></i>
+						<p className="mb-0">Comment</p>
+					</a>
+					<a href="#!" className="d-flex align-items-center me-3">
+						<i className="fas fa-share me-2"></i>
+						<p className="mb-0">Share</p>
+					</a>
+				</div>
 			</div>
-		</section>
+			<div className="card-footer py-3 border-0" style={{ backgroundColor: '#f8f9fa' }}>
+				<div className="d-flex flex-start w-100">
+					<img className="rounded-circle shadow-1-strong me-3"
+						src={post.avatar} alt="avatar" width="40" height="40" />
+					<div className="form-outline w-100">
+						<textarea className="form-control" id="textAreaExample" rows="4"
+							style={{ background: '#fff' }}></textarea>
+						<label className="form-label" htmlFor="textAreaExample">Message</label>
+					</div>
+				</div>
+				<div className="float-end mt-2 pt-1">
+					<button type="button" className="btn btn-primary btn-sm">Post comment</button>
+					<button type="button" className="btn btn-outline-primary btn-sm">Cancel</button>
+				</div>
+			</div>
+		</div>
 	);
-};
+}
+
 
 // Display information relating to homepage
 function Home() {
@@ -667,51 +656,50 @@ function Home() {
 	}, []);
 
 	return (
-
 		<main className="homePage">
-
 			<Navbar />
 			<PostForm groupId={0} />
-			{/* <PostCard /> */}
 
-
+			{/* Rendering Almost Private Posts */}
 			<div className="almostPrivatePosts">
 				<h2>Almost Private Posts</h2>
-				<ul>
-					{almostPrivatePosts !== null && almostPrivatePosts.map(almostPrivatePost => (
-						<li key={almostPrivatePost.createdAt}>
-							{almostPrivatePost.body} - {almostPrivatePost.UserId}
-							{/* Render whatever user properties you need */}
-						</li>
-					))}
-				</ul>
+				{almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? (
+					almostPrivatePosts.map(almostPrivatePost => (
+						<PostCard key={almostPrivatePost.createdAt} post={almostPrivatePost} />
+					))
+				) : (
+					<p>No almost private posts</p>
+				)}
 			</div>
 
+
+			{/* Rendering Private Posts */}
 			<div className="privatePosts">
-				<h2>Private Posts</h2>
-				<ul>
-					{privatePosts !== null && privatePosts.map(privatePost => (
-						<li key={privatePost.createdAt}>
-							{privatePost.body} - {privatePost.UserId} {/* Render whatever user properties you need */}
-						</li>
-					))}
-				</ul>
+				<h2>Almost Private Posts</h2>
+				{privatePosts !== null && privatePosts.length > 0 ? (
+					privatePosts.map(privatePost => (
+						<PostCard key={privatePost.createdAt} post={privatePost} />
+					))
+				) : (
+					<p>No private posts</p>
+				)}
 			</div>
 
+
+			{/* Rendering Public Posts */}
 			<div className="publicPostsWithComments">
-				<h2>Public Posts</h2>
-				<ul>
-					{publicPostsWithComments !== null && publicPostsWithComments.map(publicPostsWithComment => (
-						<li key={publicPostsWithComment.post.CreatedAt}>
-							{publicPostsWithComment.post.Body} - {publicPostsWithComment.post.UserId} {/* Render whatever user properties you need */}
-							{publicPostsWithComment.post.ImageURL !== null && (
-								<img src={publicPostsWithComment.post.ImageURL}/>
-							)}
-						</li>
-					))}
-				</ul>
+				<h2>Public Posts With Comments</h2>
+				{publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? (
+					publicPostsWithComments.map(publicPostsWithComments => (
+						<PostCard key={publicPostsWithComments.createdAt} post={publicPostsWithComments} />
+					))
+				) : (
+					<p>public posts</p>
+				)}
 			</div>
 
+
+			{/* Rendering User Groups */}
 			<div className="userGroups">
 				<h2>Groups</h2>
 				<ul>
@@ -722,7 +710,6 @@ function Home() {
 					))}
 				</ul>
 			</div>
-
 		</main>
 	);
 }

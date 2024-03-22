@@ -10,7 +10,7 @@ import (
 type User struct {
 	UserId            int    `json:"userId"`
 	Bio               string `json:"bio"`
-	CreatedAt         int64
+	CreatedAt         int64  `json:"createdAt"`
 	DOB               int64  `json:"dob"`
 	Email             string `json:"email"`
 	EncryptedPassword string `json:"encryptedPassword"`
@@ -18,7 +18,7 @@ type User struct {
 	ImageURL          string `json:"imageURL"`
 	IsPublic          bool   `json:"isPublic"`
 	LastName          string `json:"lastName"`
-	UpdatedAt         int64
+	UpdatedAt         int64  `json:"updatedAt"`
 	Username          string `json:"username"`
 }
 

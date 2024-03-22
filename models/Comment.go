@@ -6,13 +6,13 @@ import (
 )
 
 type Comment struct {
-	CommentId int
-	Body      string
-	CreatedAt int64
-	ImageURL  string
-	PostId    int
-	UpdatedAt int64
-	UserId    int
+	CommentId int    `json:"commentId"`
+	Body      string `json:"body"`
+	CreatedAt int64  `json:"createdAt"`
+	ImageURL  string `json:"imageURL"`
+	PostId    int    `json:"postId"`
+	UpdatedAt int64  `json:"updatedAt"`
+	UserId    int    `json:"userId"`
 }
 
 func (c *Comment) Validate() error {
