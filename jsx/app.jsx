@@ -61,24 +61,46 @@ function Navbar() {
 		ReactDOM.render(<Group />, appContainer);
 	};
 
+	// const logout = async () => {
+
+	// 	const response = await fetch("http://localhost:8080/auth/logout", {
+	// 		method: "POST",
+	// 		credentials: "include",
+	// 	});
+	// 	const appContainer = document.querySelector('.app-container');
+	// 	ReactDOM.render(<Login />, appContainer);
+
+	// 	const cookieHeader = response.headers.get('set-cookie');
+	// 	if (cookieHeader) {
+	// 		document.cookie = cookieHeader;
+	// 		console.log("Logout successful!");
+	// 	} else {
+	// 		console.log("Failed to logout");
+	// 	}
+	// };
+
 	const logout = async () => {
-
-		const response = await fetch("http://localhost:8080/auth/logout", {
-			method: "POST",
-			credentials: "include",
-		});
-		const appContainer = document.querySelector('.app-container');
-		ReactDOM.render(<Login />, appContainer);
-
-		const cookieHeader = response.headers.get('set-cookie');
-		if (cookieHeader) {
-			document.cookie = cookieHeader;
-			console.log("Logout successful!");
-		} else {
-			console.log("Failed to logout");
+	
+		try {
+			const response = await fetch("http://localhost:8080/auth/logout", {
+				method: "POST",
+				credentials: "include",
+				
+			});
+	
+			if (response.ok) {
+				const appContainer = document.querySelector('.app-container');
+				ReactDOM.render(<Login />, appContainer);
+	
+					console.log("Logout successful!");
+			
+			} else {
+				console.log("Failed to logout. Server response not OK.");
+			}
+		} catch (error) {
+			console.error("An error occurred during logout:", error);
 		}
 	};
-
 
 
 
