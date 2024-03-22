@@ -2,7 +2,6 @@ package auth
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"socialnetwork/repo"
 	"socialnetwork/transport"
@@ -35,16 +34,6 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 	var loginInfo transport.LoginInfo
 
-	// cookie, err := r.Cookie(CookieName)
-	// if err == nil {
-	// 	_, exists := sessionMap[cookie.Value]
-	// 	if exists {
-	// 		utils.HandleError("Login failed - user already logged in:", err)
-	// 		http.Error(w, "user already logged in", http.StatusBadRequest)
-	// 		return
-	// 	}
-	// }
-
 	json.NewDecoder(r.Body).Decode(&loginInfo)
 
 	user, err := h.Repo.GetUserByUsernameOrEmail(loginInfo.UsernameOrEmail)
@@ -54,7 +43,6 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("[auth/LoginHandler] User: ", user)
 	err = bcrypt.CompareHashAndPassword([]byte(user.EncryptedPassword), []byte(loginInfo.Password))
 	if err != nil {
 		utils.HandleError("Failed to retrieve user", err)
@@ -84,7 +72,6 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	SessionMap[CookieValue] = &user
-	log.Println("[auth/LoginHandler] User from sessionMap:", SessionMap[CookieValue])
 
 	cookie := &http.Cookie{
 		Name:     CookieName,
@@ -94,9 +81,6 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	}
-	log.Println("[auth/LoginHandler] cookie:", cookie)
-	log.Println("[auth/LoginHandler] cookie.name:", cookie.Name)
-	log.Println("[auth/LoginHandler] cookie.value:", cookie.Value)
 
 	http.SetCookie(w, cookie)
 	// Convert the response struct to JSON

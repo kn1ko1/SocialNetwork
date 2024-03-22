@@ -61,39 +61,21 @@ function Navbar() {
 		ReactDOM.render(<Group />, appContainer);
 	};
 
-	// const logout = async () => {
-
-	// 	const response = await fetch("http://localhost:8080/auth/logout", {
-	// 		method: "POST",
-	// 		credentials: "include",
-	// 	});
-	// 	const appContainer = document.querySelector('.app-container');
-	// 	ReactDOM.render(<Login />, appContainer);
-
-	// 	const cookieHeader = response.headers.get('set-cookie');
-	// 	if (cookieHeader) {
-	// 		document.cookie = cookieHeader;
-	// 		console.log("Logout successful!");
-	// 	} else {
-	// 		console.log("Failed to logout");
-	// 	}
-	// };
-
 	const logout = async () => {
-	
+
 		try {
 			const response = await fetch("http://localhost:8080/auth/logout", {
 				method: "POST",
 				credentials: "include",
-				
+
 			});
-	
+
 			if (response.ok) {
 				const appContainer = document.querySelector('.app-container');
 				ReactDOM.render(<Login />, appContainer);
-	
-					console.log("Logout successful!");
-			
+
+				console.log("Logout successful!");
+
 			} else {
 				console.log("Failed to logout. Server response not OK.");
 			}
@@ -600,10 +582,14 @@ function PostForm({ groupId }) {
 
 
 function PostCard({ post }) {
-	console.log("post", post)
-	console.log("post.post.userId", post.post.userId)
+	const milliseconds = post.post.createdAt;
+	const date = new Date(milliseconds);
+
+	// Format the date as desired (e.g., YYYY-MM-DD HH:MM:SS)
+	const formattedDate = date.toLocaleString();
+	console.log("ImageURL:", post.post.imageURL)
 	return (
-		<div className="card">
+		<div className="card" style={{ maxWidth: "600px", margin: "auto" }}>
 			<div className="card-body">
 				<div className="d-flex flex-start align-items-center">
 					<img className="rounded-circle shadow-1-strong me-3"
@@ -611,29 +597,20 @@ function PostCard({ post }) {
 					<div>
 						<h6 className="fw-bold text-primary mb-1">{post.post.userId}</h6>
 						<p className="text-muted small mb-0">
-							{post.post.createdAt}
+							{formattedDate}
 						</p>
 					</div>
 				</div>
 
-				<p className="mt-3 mb-4 pb-2">
+				{!post.post.imageURL ? null : (
+					<p className="mt-3 mb-2 pb-1">
+						<img src={post.post.imageURL} className="img-fluid" />
+					</p>
+				)}
+
+				<p className="mt-3 mb-2 pb-1">
 					{post.post.body}
 				</p>
-
-				<div className="small d-flex justify-content-start">
-					<a href="#!" className="d-flex align-items-center me-3">
-						<i className="far fa-thumbs-up me-2"></i>
-						<p className="mb-0">Like</p>
-					</a>
-					<a href="#!" className="d-flex align-items-center me-3">
-						<i className="far fa-comment-dots me-2"></i>
-						<p className="mb-0">Comment</p>
-					</a>
-					<a href="#!" className="d-flex align-items-center me-3">
-						<i className="fas fa-share me-2"></i>
-						<p className="mb-0">Share</p>
-					</a>
-				</div>
 			</div>
 			<div className="card-footer py-3 border-0" style={{ backgroundColor: '#f8f9fa' }}>
 				<div className="d-flex flex-start w-100">
@@ -680,7 +657,6 @@ function Home() {
 		<main className="homePage">
 			<Navbar />
 			<PostForm groupId={0} />
-
 			{/* Rendering Almost Private Posts */}
 			<div className="almostPrivatePosts">
 				<h2>Almost Private Posts</h2>
@@ -711,13 +687,14 @@ function Home() {
 			<div className="publicPostsWithComments">
 				<h2>Public Posts With Comments</h2>
 				{publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? (
-					publicPostsWithComments.map(publicPostsWithComments => (
-						<PostCard key={publicPostsWithComments.createdAt} post={publicPostsWithComments} />
+					publicPostsWithComments.map((publicPostsWithComment, index) => (
+						<PostCard key={index} post={publicPostsWithComment} />
 					))
 				) : (
 					<p>public posts</p>
 				)}
 			</div>
+
 
 
 			{/* Rendering User Groups */}

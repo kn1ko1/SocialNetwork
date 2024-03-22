@@ -17,6 +17,8 @@ func GetPostsAlmostPrivateWithComments(database *sql.DB, userId int) ([]transpor
         FROM POST_USERS pu
         JOIN POSTS p ON pu.PostId = p.PostId
         WHERE pu.UserId = ?
+		ORDER BY 
+    	p.CreatedAt DESC;
     `
 
 	rows, err := database.Query(query, userId)
