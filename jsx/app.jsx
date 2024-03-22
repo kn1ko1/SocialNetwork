@@ -117,7 +117,6 @@ function Navbar() {
 function Login() {
 	const [usernameOrEmail, setUsernameOrEmail] = useState("")
 	const [password, setPassword] = useState("")
-	const [error, setError] = useState(null);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const errorMessage = document.querySelector(".error-message")
 
@@ -155,7 +154,6 @@ function Login() {
 			}
 		} catch (error) {
 			errorMessage.innerHTML = 'Invalid credentials'
-			setError('Invalid credentials');
 		}
 	};
 
@@ -257,7 +255,7 @@ function Register() {
 				throw new Error('Invalid credentials');
 			}
 		} catch (error) {
-			setError('Invalid credentials');
+			throw new Error('Invalid credentials')
 		}
 	};
 
@@ -421,7 +419,7 @@ function Register() {
 }
 
 function Profile() {
-	
+
 	return (
 		<div>
 			<Navbar />
@@ -465,7 +463,6 @@ function PostForm({ groupId }) {
 	const [privacy, setPrivacy] = useState("");
 	const [selectedFile, setSelectedFile] = useState(null);
 
-	// Needs to be changed to get info from... cookie?
 	// Upon submitting:
 	const submit = async (e) => {
 		e.preventDefault(); // prevent reload.
@@ -578,32 +575,75 @@ function PostForm({ groupId }) {
 
 
 function PostCard({ post }) {
+	const [body, setBody] = useState("");
+	const [selectedFile, setSelectedFile] = useState(null);
+
 	const milliseconds = post.post.createdAt;
 	const date = new Date(milliseconds);
-
-	// Format the date as desired (e.g., YYYY-MM-DD HH:MM:SS)
 	const formattedDate = date.toLocaleString();
-	console.log("ImageURL:", post.post.imageURL)
+
+	const submit = async (e) => {
+		e.preventDefault(); // prevent reload.
+
+		const formData = new FormData();
+
+		// Append form data
+		formData.append('body', body);
+		formData.append('postId', post.post.postId);
+		if (selectedFile) {
+			formData.append('image', selectedFile);
+		}
+
+		console.log("Form data being sent to backend: ", formData);
+
+		// Send user data to golang api/PostHandler.go.
+		await fetch("http://localhost:8080/api/comments", {
+			method: "POST",
+			credentials: "include",
+			body: formData,
+		});
+
+		// Reset the form fields to their default state
+		setBody("");
+		setSelectedFile(null);
+
+
+		document.getElementById('commentTextArea').value = "";
+	};
+
+	// Function to handle file selection
+	const handleFileChange = (e) => {
+		setSelectedFile(e.target.files[0]);
+		// const file = e.target.files[0];
+	};
+
+	const handleSelectFile = () => {
+		const commentFileInput = document.getElementById('commentFileInput');
+		commentFileInput.click();
+	};
+	
+
 	return (
-		<div className="card" style={{ maxWidth: "600px" , margin: "auto" }}>
+		<div className="card" style={{ maxWidth: "600px", margin: "auto" }}>
 			<div className="card-body">
 				<div className="d-flex flex-start align-items-center">
 					<img className="rounded-circle shadow-1-strong me-3"
 						src={post.post.imageURL} alt="avatar" width="60" height="60" />
 					<div>
 						<h6 className="fw-bold text-primary mb-1">{post.post.userId}</h6>
+						{/* Date, formatted */}
 						<p className="text-muted small mb-0">
 							{formattedDate}
 						</p>
 					</div>
 				</div>
-
+				{/* Image, if there is one */}
 				{!post.post.imageURL ? null : (
 					<p className="mt-3 mb-2 pb-1">
 						<img src={post.post.imageURL} className="img-fluid" />
 					</p>
 				)}
-
+				{/* Post Body */}
 				<p className="mt-3 mb-2 pb-1">
 					{post.post.body}
 				</p>
@@ -613,20 +653,28 @@ function PostCard({ post }) {
 					<img className="rounded-circle shadow-1-strong me-3"
 						src={post.avatar} alt="avatar" width="40" height="40" />
 					<div className="form-outline w-100">
-						<textarea className="form-control" id="textAreaExample" rows="4"
-							style={{ background: '#fff' }}></textarea>
+						<textarea className="form-control" id="commentTextArea" rows="4"
+							style={{ background: '#fff' }} onChange={(e) => setBody(e.target.value)}></textarea>
+
 						<label className="form-label" htmlFor="textAreaExample">Message</label>
 					</div>
 				</div>
 				<div className="float-end mt-2 pt-1">
-					<button type="button" className="btn btn-primary btn-sm">Post comment</button>
-					<button type="button" className="btn btn-outline-primary btn-sm">Cancel</button>
+					<button type="button" className="btn btn-primary" onClick={handleSelectFile}>Select File</button>
+					<span>{selectedFile ? selectedFile.name : 'No file selected'}</span>
+					<input
+						type="file"
+						id="commentFileInput"
+						accept="image/*"
+						style={{ display: 'none' }}
+						onChange={handleFileChange}
+					/>
+					<button type="submit" className="btn btn-primary btn-sm" onClick={submit}>Post comment</button>
 				</div>
 			</div>
 		</div>
 	);
 }
-
 
 // Display information relating to homepage
 function Home() {
