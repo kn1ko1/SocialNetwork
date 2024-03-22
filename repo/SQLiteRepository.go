@@ -39,6 +39,11 @@ func (r *SQLiteRepository) GetHomeDataForUser(userId int) (transport.HomeModel, 
 	return sqlite.GetHomeDataForUser(r.identityDb, r.businessDb, userId)
 }
 
+// Profile
+func (r *SQLiteRepository) GetProfileDataForUser(userId int) (transport.ProfileModel, error) {
+	return sqlite.GetProfileDataForUser(r.businessDb, userId)
+}
+
 // Users
 func (r *SQLiteRepository) CreateUser(user models.User) (models.User, error) {
 	return sqlite.CreateUser(r.identityDb, user)

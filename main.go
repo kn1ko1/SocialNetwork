@@ -77,6 +77,7 @@ func addApiHandlers(rt *router.Router) {
 	// notificationByUserIdHandler := api.NewNotificationByUserIdHandler()
 
 	homeHandler := api.NewHomeHandler(r)
+	profileHandler := api.NewProfileHandler(r)
 
 	// Auth Handlers
 	rt.AddHandler(regexp.MustCompile(`^/auth/login$`), loginHandler)
@@ -125,6 +126,7 @@ func addApiHandlers(rt *router.Router) {
 	// rt.AddHandler(regexp.MustCompile(`^/api/notifications/{notificationId}$`), notificationByIdHandler)
 
 	rt.AddHandler(regexp.MustCompile(`^/api/home$`), homeHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/profile$`), profileHandler)
 }
 
 func addWSHandler(rt *router.Router) {

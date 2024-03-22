@@ -55,50 +55,16 @@ function Navbar() {
     const appContainer = document.querySelector('.app-container');
     ReactDOM.render( /*#__PURE__*/React.createElement(Group, null), appContainer);
   };
-
-  // const logout = async () => {
-
-  // 	const response = await fetch("http://localhost:8080/auth/logout", {
-  // 		method: "POST",
-  // 		credentials: "include",
-  // 	});
-  // 	const appContainer = document.querySelector('.app-container');
-  // 	ReactDOM.render(<Login />, appContainer);
-
-  // 	const cookieHeader = response.headers.get('set-cookie');
-  // 	if (cookieHeader) {
-  // 		document.cookie = cookieHeader;
-  // 		console.log("Logout successful!");
-  // 	} else {
-  // 		console.log("Failed to logout");
-  // 	}
-  // };
-
   const logout = async () => {
     try {
       const response = await fetch("http://localhost:8080/auth/logout", {
         method: "POST",
         credentials: "include"
       });
-      const cookieHeader = response.headers.get('Set-Cookie');
-      console.log("this is cookieHeader;", cookieHeader);
       if (response.ok) {
         const appContainer = document.querySelector('.app-container');
         ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
-
-        // if (cookieHeader) {
-        // 	// document.cookie = cookieHeader;
-        //       console.log("HERE?")
-        // 	  // Check if the protocol is not HTTPS before setting the Secure attribute
-        // 	  const secureAttribute = window.location.protocol !== 'https:' ? '' : '; Secure';
-        // 	    // Add SameSite=None attribute to the cookie
-        // 		const sameSiteAttribute = '; SameSite=None';
-        // 	  document.cookie = `${cookieHeader}${secureAttribute}${sameSiteAttribute}`;
-
         console.log("Logout successful!");
-        // } else {
-        // 	console.log("Failed to set cookie after logout");
-        //}
       } else {
         console.log("Failed to logout. Server response not OK.");
       }
@@ -590,7 +556,11 @@ function PostCard({
   console.log("post", post);
   console.log("post.post.userId", post.post.userId);
   return /*#__PURE__*/React.createElement("div", {
-    className: "card"
+    className: "card",
+    style: {
+      maxWidth: "600px",
+      margin: "auto"
+    }
   }, /*#__PURE__*/React.createElement("div", {
     className: "card-body"
   }, /*#__PURE__*/React.createElement("div", {

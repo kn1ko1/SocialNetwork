@@ -61,39 +61,18 @@ function Navbar() {
 		ReactDOM.render(<Group />, appContainer);
 	};
 
-	// const logout = async () => {
-
-	// 	const response = await fetch("http://localhost:8080/auth/logout", {
-	// 		method: "POST",
-	// 		credentials: "include",
-	// 	});
-	// 	const appContainer = document.querySelector('.app-container');
-	// 	ReactDOM.render(<Login />, appContainer);
-
-	// 	const cookieHeader = response.headers.get('set-cookie');
-	// 	if (cookieHeader) {
-	// 		document.cookie = cookieHeader;
-	// 		console.log("Logout successful!");
-	// 	} else {
-	// 		console.log("Failed to logout");
-	// 	}
-	// };
-
 	const logout = async () => {
 	
 		try {
 			const response = await fetch("http://localhost:8080/auth/logout", {
 				method: "POST",
 				credentials: "include",
-				
 			});
 	
 			if (response.ok) {
 				const appContainer = document.querySelector('.app-container');
 				ReactDOM.render(<Login />, appContainer);
-	
-					console.log("Logout successful!");
-			
+				console.log("Logout successful!");
 			} else {
 				console.log("Failed to logout. Server response not OK.");
 			}
@@ -101,8 +80,6 @@ function Navbar() {
 			console.error("An error occurred during logout:", error);
 		}
 	};
-
-
 
 	return (
 		<nav className="navbar navbar-expand-md bg-body-tertiary">
@@ -444,6 +421,7 @@ function Register() {
 }
 
 function Profile() {
+	
 	return (
 		<div>
 			<Navbar />
@@ -603,7 +581,7 @@ function PostCard({ post }) {
 	console.log("post", post)
 	console.log("post.post.userId", post.post.userId)
 	return (
-		<div className="card">
+		<div className="card" style={{ maxWidth: "600px" , margin: "auto" }}>
 			<div className="card-body">
 				<div className="d-flex flex-start align-items-center">
 					<img className="rounded-circle shadow-1-strong me-3"
