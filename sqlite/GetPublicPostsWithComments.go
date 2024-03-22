@@ -13,16 +13,17 @@ func GetPublicPostsWithComments(database *sql.DB) ([]transport.PostWithComments,
 
 	// Query to fetch posts and their corresponding comments using foreign keys
 	query := `
-SELECT 
-	   p.PostId, p.Body, p.CreatedAt, p.GroupId, p.ImageURL, p.Privacy, p.UpdatedAt, p.UserId,
-	c.CommentId, c.Body, c.CreatedAt, c.ImageURL, c.UpdatedAt, c.UserId
+	SELECT 
+    p.PostId, p.Body, p.CreatedAt, p.GroupId, p.ImageURL, p.Privacy, p.UpdatedAt, p.UserId,
+    c.CommentId, c.Body, c.CreatedAt, c.ImageURL, c.UpdatedAt, c.UserId
 FROM 
-	   POSTS p
+    POSTS p
 LEFT JOIN 
-	COMMENTS c ON p.PostId = c.PostId
+    COMMENTS c ON p.PostId = c.PostId
 WHERE 
-	p.GroupId = 0
-
+    p.GroupId = 0
+ORDER BY 
+    p.CreatedAt DESC;
 `
 
 	rows, err := database.Query(query)

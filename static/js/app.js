@@ -553,8 +553,12 @@ function PostForm({
 function PostCard({
   post
 }) {
-  console.log("post", post);
-  console.log("post.post.userId", post.post.userId);
+  const milliseconds = post.post.createdAt;
+  const date = new Date(milliseconds);
+
+  // Format the date as desired (e.g., YYYY-MM-DD HH:MM:SS)
+  const formattedDate = date.toLocaleString();
+  console.log("ImageURL:", post.post.imageURL);
   return /*#__PURE__*/React.createElement("div", {
     className: "card",
     style: {
@@ -575,32 +579,14 @@ function PostCard({
     className: "fw-bold text-primary mb-1"
   }, post.post.userId), /*#__PURE__*/React.createElement("p", {
     className: "text-muted small mb-0"
-  }, post.post.createdAt))), /*#__PURE__*/React.createElement("p", {
-    className: "mt-3 mb-4 pb-2"
-  }, post.post.body), /*#__PURE__*/React.createElement("div", {
-    className: "small d-flex justify-content-start"
-  }, /*#__PURE__*/React.createElement("a", {
-    href: "#!",
-    className: "d-flex align-items-center me-3"
-  }, /*#__PURE__*/React.createElement("i", {
-    className: "far fa-thumbs-up me-2"
-  }), /*#__PURE__*/React.createElement("p", {
-    className: "mb-0"
-  }, "Like")), /*#__PURE__*/React.createElement("a", {
-    href: "#!",
-    className: "d-flex align-items-center me-3"
-  }, /*#__PURE__*/React.createElement("i", {
-    className: "far fa-comment-dots me-2"
-  }), /*#__PURE__*/React.createElement("p", {
-    className: "mb-0"
-  }, "Comment")), /*#__PURE__*/React.createElement("a", {
-    href: "#!",
-    className: "d-flex align-items-center me-3"
-  }, /*#__PURE__*/React.createElement("i", {
-    className: "fas fa-share me-2"
-  }), /*#__PURE__*/React.createElement("p", {
-    className: "mb-0"
-  }, "Share")))), /*#__PURE__*/React.createElement("div", {
+  }, formattedDate))), !post.post.imageURL ? null : /*#__PURE__*/React.createElement("p", {
+    className: "mt-3 mb-2 pb-1"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: post.post.imageURL,
+    className: "img-fluid"
+  })), /*#__PURE__*/React.createElement("p", {
+    className: "mt-3 mb-2 pb-1"
+  }, post.post.body)), /*#__PURE__*/React.createElement("div", {
     className: "card-footer py-3 border-0",
     style: {
       backgroundColor: '#f8f9fa'
@@ -668,9 +654,9 @@ function Home() {
     post: privatePost
   })) : /*#__PURE__*/React.createElement("p", null, "No private posts")), /*#__PURE__*/React.createElement("div", {
     className: "publicPostsWithComments"
-  }, /*#__PURE__*/React.createElement("h2", null, "Public Posts With Comments"), publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? publicPostsWithComments.map(publicPostsWithComments => /*#__PURE__*/React.createElement(PostCard, {
-    key: publicPostsWithComments.createdAt,
-    post: publicPostsWithComments
+  }, /*#__PURE__*/React.createElement("h2", null, "Public Posts With Comments"), publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? publicPostsWithComments.map((publicPostsWithComment, index) => /*#__PURE__*/React.createElement(PostCard, {
+    key: index,
+    post: publicPostsWithComment
   })) : /*#__PURE__*/React.createElement("p", null, "public posts")), /*#__PURE__*/React.createElement("div", {
     className: "userGroups"
   }, /*#__PURE__*/React.createElement("h2", null, "Groups"), /*#__PURE__*/React.createElement("ul", null, userGroups !== null && userGroups.map(userGroup => /*#__PURE__*/React.createElement("li", {
