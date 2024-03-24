@@ -618,7 +618,7 @@ function PostCard({ post }) {
 	};
 
 	const handleSelectFile = () => {
-		const commentFileInput = document.getElementById('commentFileInput');
+		const commentFileInput = document.getElementById(`commentFileInput${post.post.postId}`);
 		commentFileInput.click();
 	};
 	
@@ -664,7 +664,7 @@ function PostCard({ post }) {
 					<span>{selectedFile ? selectedFile.name : 'No file selected'}</span>
 					<input
 						type="file"
-						id="commentFileInput"
+						id={`commentFileInput${post.post.postId}`}
 						accept="image/*"
 						style={{ display: 'none' }}
 						onChange={handleFileChange}

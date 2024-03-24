@@ -587,7 +587,7 @@ function PostCard({
     // const file = e.target.files[0];
   };
   const handleSelectFile = () => {
-    const commentFileInput = document.getElementById('commentFileInput');
+    const commentFileInput = document.getElementById(`commentFileInput${post.post.postId}`);
     commentFileInput.click();
   };
   return /*#__PURE__*/React.createElement("div", {
@@ -651,7 +651,7 @@ function PostCard({
     onClick: handleSelectFile
   }, "Select File"), /*#__PURE__*/React.createElement("span", null, selectedFile ? selectedFile.name : 'No file selected'), /*#__PURE__*/React.createElement("input", {
     type: "file",
-    id: "commentFileInput",
+    id: `commentFileInput${post.post.postId}`,
     accept: "image/*",
     style: {
       display: 'none'
