@@ -661,7 +661,23 @@ function PostCard({
     type: "submit",
     className: "btn btn-primary btn-sm",
     onClick: submit
-  }, "Post comment"))));
+  }, "Post comment")), /*#__PURE__*/React.createElement("div", {
+    className: "comments"
+  }, /*#__PURE__*/React.createElement("h2", null, "Comments"), post.comments !== null && post.comments.length > 0 ? post.comments.map(comment => /*#__PURE__*/React.createElement("div", {
+    className: "card mt-3",
+    key: comment.createdAt
+  }, !comment.imageURL ? null : /*#__PURE__*/React.createElement("p", {
+    className: "mt-3 mb-2 pb-1"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: comment.imageURL,
+    className: "img-fluid"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "card-body"
+  }, /*#__PURE__*/React.createElement("p", {
+    className: "card-text"
+  }, comment.body)))) : /*#__PURE__*/React.createElement("p", {
+    className: "text-muted"
+  }, "No comments"))));
 }
 
 // Display information relating to homepage

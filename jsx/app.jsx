@@ -621,7 +621,7 @@ function PostCard({ post }) {
 		const commentFileInput = document.getElementById(`commentFileInput${post.post.postId}`);
 		commentFileInput.click();
 	};
-	
+
 
 	return (
 		<div className="card" style={{ maxWidth: "600px", margin: "auto" }}>
@@ -671,6 +671,27 @@ function PostCard({ post }) {
 					/>
 					<button type="submit" className="btn btn-primary btn-sm" onClick={submit}>Post comment</button>
 				</div>
+				<div className="comments">
+					<h2>Comments</h2>
+					{post.comments !== null && post.comments.length > 0 ? (
+						post.comments.map(comment => (
+							<div className="card mt-3" key={comment.createdAt}>
+								{!comment.imageURL ? null : (
+									<p className="mt-3 mb-2 pb-1">
+										<img src={comment.imageURL} className="img-fluid" />
+									</p>
+								)}
+								<div className="card-body">
+									<p className="card-text">{comment.body}</p>
+								</div>
+							</div>
+						))
+					) : (
+						<p className="text-muted">No comments</p>
+					)}
+				</div>
+
+
 			</div>
 		</div>
 	);
