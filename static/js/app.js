@@ -2,57 +2,31 @@ const {
   useState,
   useEffect
 } = React;
+let socket;
 const App = () => {
   return /*#__PURE__*/React.createElement("div", {
     className: "app-container"
   }, /*#__PURE__*/React.createElement(Login, null));
 };
-
-// function Dummy(props) {
-// 	return (
-// 		<div className="container-fluid text-center">
-// 		<div className="row mb-2">
-// 			<div className="col-lg-3">
-// 				<h1>Welcome</h1>
-// 			</div>
-// 			<div className="col-lg-6">
-// 				<h1>Welcome</h1>
-// 			</div>
-// 			<div className="col-lg-3">
-// 				<h1>Welcome</h1>
-// 			</div>
-// 		</div>
-// 		<div className="row">
-// 			<div className="col-6">
-// 				<h1>Welcome</h1>
-// 			</div>
-// 			<div className="col-6">
-// 				<h1>Welcome</h1>
-// 			</div>
-// 		</div>
-// 	</div>
-// 	)
-// }
-
 function Navbar() {
   const renderHome = () => {
-    const appContainer = document.querySelector('.app-container');
+    const appContainer = document.querySelector(".app-container");
     ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
   };
   const renderProfile = () => {
-    const appContainer = document.querySelector('.app-container');
+    const appContainer = document.querySelector(".app-container");
     ReactDOM.render( /*#__PURE__*/React.createElement(Profile, null), appContainer);
   };
   const renderNotifications = () => {
-    const appContainer = document.querySelector('.app-container');
+    const appContainer = document.querySelector(".app-container");
     ReactDOM.render( /*#__PURE__*/React.createElement(Notifications, null), appContainer);
   };
   const renderChat = () => {
-    const appContainer = document.querySelector('.app-container');
+    const appContainer = document.querySelector(".app-container");
     ReactDOM.render( /*#__PURE__*/React.createElement(Chat, null), appContainer);
   };
   const renderGroup = () => {
-    const appContainer = document.querySelector('.app-container');
+    const appContainer = document.querySelector(".app-container");
     ReactDOM.render( /*#__PURE__*/React.createElement(Group, null), appContainer);
   };
   const logout = async () => {
@@ -62,7 +36,14 @@ function Navbar() {
         credentials: "include"
       });
       if (response.ok) {
-        const appContainer = document.querySelector('.app-container');
+        socket.close();
+        socket.addEventListener("close", event => {
+          console.log("The connection has been closed successfully.");
+        });
+        // socket.onclose = function (event) {
+        // 	console.log("WebSocket connection closed.", event)
+        // }
+        const appContainer = document.querySelector(".app-container");
         ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
         console.log("Logout successful!");
       } else {
@@ -139,24 +120,24 @@ function Login() {
   const submit = async e => {
     e.preventDefault(); // prevent reload.
 
-    //this is user input 
+    //this is user input
     const userToLogin = {
       usernameOrEmail,
       password
     };
     try {
       //check credentials with backend
-      const response = await fetch('http://localhost:8080/auth/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8080/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify(userToLogin)
       });
       if (!response.ok) {
-        errorMessage.innerHTML = 'Invalid credentials';
-        throw new Error('Invalid credentials');
+        errorMessage.innerHTML = "Invalid credentials";
+        throw new Error("Invalid credentials");
       }
 
       //takes response from backend and processes
@@ -164,24 +145,28 @@ function Login() {
       if (data.success) {
         setIsLoggedIn(true);
       } else {
-        errorMessage.innerHTML = 'Invalid credentials';
-        throw new Error('Invalid credentials');
+        errorMessage.innerHTML = "Invalid credentials";
+        throw new Error("Invalid credentials");
       }
     } catch (error) {
-      errorMessage.innerHTML = 'Invalid credentials';
+      errorMessage.innerHTML = "Invalid credentials";
     }
   };
 
   //if credentials frontend match backend then we render home
   if (isLoggedIn) {
-    const appContainer = document.querySelector('.app-container');
+    const appContainer = document.querySelector(".app-container");
     //ReactDOM.render(<Home />, appContainer);
     ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
+    socket = new WebSocket("ws://localhost:8080/ws");
+    socket.onopen = function (event) {
+      console.log("WebSocket connection established.");
+    };
   }
 
   //this is the register button, when pressed will serve registration form
   const renderRegister = () => {
-    const appContainer = document.querySelector('.app-container');
+    const appContainer = document.querySelector(".app-container");
     ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), appContainer);
   };
   return /*#__PURE__*/React.createElement("div", {
@@ -264,7 +249,7 @@ function Register() {
         body: JSON.stringify(newUser)
       });
       if (!response.ok) {
-        throw new Error('Invalid credentials');
+        throw new Error("Invalid credentials");
       }
 
       //takes response from backend and processes
@@ -272,22 +257,22 @@ function Register() {
       if (data.success) {
         setIsRegistered(true);
       } else {
-        throw new Error('Invalid credentials');
+        throw new Error("Invalid credentials");
       }
     } catch (error) {
-      throw new Error('Invalid credentials');
+      throw new Error("Invalid credentials");
     }
   };
 
   //if credentials frontend succesfully create a new user then we render home
   if (isRegistered) {
-    const appContainer = document.querySelector('.app-container');
+    const appContainer = document.querySelector(".app-container");
     ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
   }
 
   //this is the login button, when pressed will serve login form
   const renderLogin = () => {
-    const appContainer = document.querySelector('.app-container');
+    const appContainer = document.querySelector(".app-container");
     ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
   };
   return /*#__PURE__*/React.createElement("div", {
@@ -430,15 +415,15 @@ function Profile() {
   const [userFollowerData, setUserFollowerData] = useState([]);
   const [userFollowsData, setUserFollowsData] = useState([]);
   useEffect(() => {
-    fetch('http://localhost:8080/api/profile', {
-      method: 'GET',
-      credentials: 'include',
+    fetch("http://localhost:8080/api/profile", {
+      method: "GET",
+      credentials: "include",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       }
     }).then(response => {
       if (!response.ok) {
-        throw new Error('Failed to fetch profile data');
+        throw new Error("Failed to fetch profile data");
       }
       return response.json();
     }).then(data => {
@@ -463,14 +448,14 @@ function Profile() {
       // const usersIFollowDataElement = document.getElementById('usersIFollowData');
       // usersIFollowDataElement.innerHTML = JSON.stringify(data.userFollowsData, null, 2);
     }).catch(error => {
-      console.error('Error fetching profile data:', error);
+      console.error("Error fetching profile data:", error);
     });
   }, []);
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("div", {
     id: "profileData"
   }, /*#__PURE__*/React.createElement("h2", null, "My Profile"), /*#__PURE__*/React.createElement("div", {
     id: "myProfileData"
-  }), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "User ID:"), " ", profileUserData.userId), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Username:"), " ", profileUserData.username), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Email:"), " ", profileUserData.email), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "First Name:"), " ", profileUserData.firstName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Last Name:"), " ", profileUserData.lastName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Date of Birth:"), " ", new Date(profileUserData.dob).toLocaleDateString()), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Bio:"), " ", profileUserData.bio), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Image URL:"), " ", profileUserData.imageURL), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Public Profile:"), " ", profileUserData.isPublic ? 'Yes' : 'No'), /*#__PURE__*/React.createElement("h2", null, "My Posts"), /*#__PURE__*/React.createElement("div", {
+  }), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "User ID:"), " ", profileUserData.userId), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Username:"), " ", profileUserData.username), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Email:"), " ", profileUserData.email), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "First Name:"), " ", profileUserData.firstName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Last Name:"), " ", profileUserData.lastName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Date of Birth:"), " ", new Date(profileUserData.dob).toLocaleDateString()), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Bio:"), " ", profileUserData.bio), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Image URL:"), " ", profileUserData.imageURL), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Public Profile:"), " ", profileUserData.isPublic ? "Yes" : "No"), /*#__PURE__*/React.createElement("h2", null, "My Posts"), /*#__PURE__*/React.createElement("div", {
     id: "myPostsData"
   }, userPostData.map(post => /*#__PURE__*/React.createElement("div", {
     key: post.postId
@@ -509,11 +494,11 @@ function PostForm({
     const formData = new FormData();
 
     // Append form data
-    formData.append('body', body);
-    formData.append('privacy', privacy);
-    formData.append('groupId', groupId);
+    formData.append("body", body);
+    formData.append("privacy", privacy);
+    formData.append("groupId", groupId);
     if (selectedFile) {
-      formData.append('image', selectedFile);
+      formData.append("image", selectedFile);
     }
     console.log("Form data being sent to backend: ", formData);
 
@@ -528,7 +513,7 @@ function PostForm({
     setBody("");
     setPrivacy("");
     setSelectedFile(null);
-    document.getElementById('postFormBody').value = "";
+    document.getElementById("postFormBody").value = "";
   };
 
   // Function to handle file selection
@@ -537,7 +522,7 @@ function PostForm({
     // const file = e.target.files[0];
   };
   const handleSelectFile = () => {
-    const fileInput = document.getElementById('fileInput');
+    const fileInput = document.getElementById("fileInput");
     fileInput.click();
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
@@ -561,12 +546,12 @@ function PostForm({
     type: "button",
     className: "btn btn-primary",
     onClick: handleSelectFile
-  }, "Select File"), /*#__PURE__*/React.createElement("span", null, selectedFile ? selectedFile.name : 'No file selected'), /*#__PURE__*/React.createElement("input", {
+  }, "Select File"), /*#__PURE__*/React.createElement("span", null, selectedFile ? selectedFile.name : "No file selected"), /*#__PURE__*/React.createElement("input", {
     type: "file",
     id: "fileInput",
     accept: "image/*",
     style: {
-      display: 'none'
+      display: "none"
     },
     onChange: handleFileChange
   })), /*#__PURE__*/React.createElement("br", null), " ", /*#__PURE__*/React.createElement("div", {
@@ -618,10 +603,10 @@ function PostCard({
     const formData = new FormData();
 
     // Append form data
-    formData.append('body', body);
-    formData.append('postId', post.post.postId);
+    formData.append("body", body);
+    formData.append("postId", post.post.postId);
     if (selectedFile) {
-      formData.append('image', selectedFile);
+      formData.append("image", selectedFile);
     }
     console.log("Form data being sent to backend: ", formData);
 
@@ -635,7 +620,7 @@ function PostCard({
     // Reset the form fields to their default state
     setBody("");
     setSelectedFile(null);
-    document.getElementById('commentTextArea').value = "";
+    document.getElementById("commentTextArea").value = "";
   };
 
   // Function to handle file selection
@@ -677,7 +662,7 @@ function PostCard({
   }, post.post.body)), /*#__PURE__*/React.createElement("div", {
     className: "card-footer py-3 border-0",
     style: {
-      backgroundColor: '#f8f9fa'
+      backgroundColor: "#f8f9fa"
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "d-flex flex-start w-100"
@@ -694,7 +679,7 @@ function PostCard({
     id: "commentTextArea",
     rows: "4",
     style: {
-      background: '#fff'
+      background: "#fff"
     },
     onChange: e => setBody(e.target.value)
   }), /*#__PURE__*/React.createElement("label", {
@@ -706,12 +691,12 @@ function PostCard({
     type: "button",
     className: "btn btn-primary",
     onClick: handleSelectFile
-  }, "Select File"), /*#__PURE__*/React.createElement("span", null, selectedFile ? selectedFile.name : 'No file selected'), /*#__PURE__*/React.createElement("input", {
+  }, "Select File"), /*#__PURE__*/React.createElement("span", null, selectedFile ? selectedFile.name : "No file selected"), /*#__PURE__*/React.createElement("input", {
     type: "file",
     id: `commentFileInput${post.post.postId}`,
     accept: "image/*",
     style: {
-      display: 'none'
+      display: "none"
     },
     onChange: handleFileChange
   }), /*#__PURE__*/React.createElement("button", {
@@ -765,13 +750,13 @@ function Home() {
   const [publicPostsWithComments, setPublicPostsWithComments] = useState([]);
   const [userGroups, setUserGroups] = useState([]);
   useEffect(() => {
-    fetch('http://localhost:8080/api/home').then(response => response.json()).then(data => {
+    fetch("http://localhost:8080/api/home").then(response => response.json()).then(data => {
       setAlmostPrivatePosts(data.almostPrivatePosts);
       setPrivatePosts(data.privatePosts);
       setPublicPostsWithComments(data.publicPostsWithComments);
       setUserGroups(data.userGroups);
     }).catch(error => {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
     });
   }, []);
   return /*#__PURE__*/React.createElement("main", {

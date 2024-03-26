@@ -1,5 +1,7 @@
 const { useState, useEffect } = React
 
+let socket
+
 const App = () => {
 	return (
 		<div className="app-container">
@@ -8,104 +10,100 @@ const App = () => {
 	)
 }
 
-// function Dummy(props) {
-// 	return (
-// 		<div className="container-fluid text-center">
-// 		<div className="row mb-2">
-// 			<div className="col-lg-3">
-// 				<h1>Welcome</h1>
-// 			</div>
-// 			<div className="col-lg-6">
-// 				<h1>Welcome</h1>
-// 			</div>
-// 			<div className="col-lg-3">
-// 				<h1>Welcome</h1>
-// 			</div>
-// 		</div>
-// 		<div className="row">
-// 			<div className="col-6">
-// 				<h1>Welcome</h1>
-// 			</div>
-// 			<div className="col-6">
-// 				<h1>Welcome</h1>
-// 			</div>
-// 		</div>
-// 	</div>
-// 	)
-// }
-
 function Navbar() {
-
 	const renderHome = () => {
-		const appContainer = document.querySelector('.app-container');
-		ReactDOM.render(<Home />, appContainer);
-	};
+		const appContainer = document.querySelector(".app-container")
+		ReactDOM.render(<Home />, appContainer)
+	}
 
 	const renderProfile = () => {
-		const appContainer = document.querySelector('.app-container');
-		ReactDOM.render(<Profile />, appContainer);
-	};
+		const appContainer = document.querySelector(".app-container")
+		ReactDOM.render(<Profile />, appContainer)
+	}
 
 	const renderNotifications = () => {
-		const appContainer = document.querySelector('.app-container');
-		ReactDOM.render(<Notifications />, appContainer);
-	};
+		const appContainer = document.querySelector(".app-container")
+		ReactDOM.render(<Notifications />, appContainer)
+	}
 
 	const renderChat = () => {
-		const appContainer = document.querySelector('.app-container');
-		ReactDOM.render(<Chat />, appContainer);
-	};
+		const appContainer = document.querySelector(".app-container")
+		ReactDOM.render(<Chat />, appContainer)
+	}
 
 	const renderGroup = () => {
-		const appContainer = document.querySelector('.app-container');
-		ReactDOM.render(<Group />, appContainer);
-	};
+		const appContainer = document.querySelector(".app-container")
+		ReactDOM.render(<Group />, appContainer)
+	}
 
 	const logout = async () => {
-
 		try {
 			const response = await fetch("http://localhost:8080/auth/logout", {
 				method: "POST",
 				credentials: "include",
-			});
+			})
 
 			if (response.ok) {
-				const appContainer = document.querySelector('.app-container');
-				ReactDOM.render(<Login />, appContainer);
-				console.log("Logout successful!");
+				socket.close()
+				socket.addEventListener("close", (event) => {
+					console.log("The connection has been closed successfully.")
+				})
+				const appContainer = document.querySelector(".app-container")
+				ReactDOM.render(<Login />, appContainer)
+				console.log("Logout successful!")
 			} else {
-				console.log("Failed to logout. Server response not OK.");
+				console.log("Failed to logout. Server response not OK.")
 			}
 		} catch (error) {
-			console.error("An error occurred during logout:", error);
+			console.error("An error occurred during logout:", error)
 		}
-	};
+	}
 
 	return (
 		<nav className="navbar navbar-expand-md bg-body-tertiary">
 			<div className="container-fluid">
-				<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<button
+					className="navbar-toggler"
+					type="button"
+					data-bs-toggle="collapse"
+					data-bs-target="#navbarSupportedContent"
+					aria-controls="navbarSupportedContent"
+					aria-expanded="false"
+					aria-label="Toggle navigation"
+				>
 					<span className="navbar-toggler-icon"></span>
 				</button>
 				<div className="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul className="navbar-nav me-auto mx-auto mb-2 mb-lg-0">
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={renderProfile}>PROFILE</a>
+							<a className="nav-link" href="#" onClick={renderProfile}>
+								PROFILE
+							</a>
 						</li>
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={renderHome}>HOME</a>
+							<a className="nav-link" href="#" onClick={renderHome}>
+								HOME
+							</a>
 						</li>
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={renderNotifications}>NOTIFICATIONS</a>
+							<a className="nav-link" href="#" onClick={renderNotifications}>
+								NOTIFICATIONS
+							</a>
 						</li>
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={renderChat}>CHAT</a>
+							<a className="nav-link" href="#" onClick={renderChat}>
+								CHAT
+							</a>
 						</li>
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={renderGroup}>GROUP</a>
+							<a className="nav-link" href="#" onClick={renderGroup}>
+								GROUP
+							</a>
 						</li>
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={logout}>LOGOUT</a>
+							<a className="nav-link" href="#" onClick={logout}>
+								LOGOUT
+							</a>
 						</li>
 					</ul>
 				</div>
@@ -117,14 +115,14 @@ function Navbar() {
 function Login() {
 	const [usernameOrEmail, setUsernameOrEmail] = useState("")
 	const [password, setPassword] = useState("")
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(false)
 	const errorMessage = document.querySelector(".error-message")
 
 	//this is the sign in button
 	const submit = async (e) => {
 		e.preventDefault() // prevent reload.
 
-		//this is user input 
+		//this is user input
 		const userToLogin = {
 			usernameOrEmail,
 			password,
@@ -132,73 +130,88 @@ function Login() {
 
 		try {
 			//check credentials with backend
-			const response = await fetch('http://localhost:8080/auth/login', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				credentials: 'include',
+			const response = await fetch("http://localhost:8080/auth/login", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				credentials: "include",
 				body: JSON.stringify(userToLogin),
-			});
+			})
 
 			if (!response.ok) {
-				errorMessage.innerHTML = 'Invalid credentials'
-				throw new Error('Invalid credentials');
+				errorMessage.innerHTML = "Invalid credentials"
+				throw new Error("Invalid credentials")
 			}
 
 			//takes response from backend and processes
-			const data = await response.json();
+			const data = await response.json()
 			if (data.success) {
-				setIsLoggedIn(true);
+				setIsLoggedIn(true)
 			} else {
-				errorMessage.innerHTML = 'Invalid credentials'
-				throw new Error('Invalid credentials');
+				errorMessage.innerHTML = "Invalid credentials"
+				throw new Error("Invalid credentials")
 			}
 		} catch (error) {
-			errorMessage.innerHTML = 'Invalid credentials'
+			errorMessage.innerHTML = "Invalid credentials"
 		}
-	};
+	}
 
 	//if credentials frontend match backend then we render home
 	if (isLoggedIn) {
-		const appContainer = document.querySelector('.app-container');
+		const appContainer = document.querySelector(".app-container")
 		//ReactDOM.render(<Home />, appContainer);
-		ReactDOM.render(<Home />, appContainer);
+		ReactDOM.render(<Home />, appContainer)
+		socket = new WebSocket("ws://localhost:8080/ws")
+		socket.onopen = function (event) {
+			console.log("WebSocket connection established.")
+		}
 	}
 
 	//this is the register button, when pressed will serve registration form
 	const renderRegister = () => {
-		const appContainer = document.querySelector('.app-container');
-		ReactDOM.render(<Register />, appContainer);
-	};
-
+		const appContainer = document.querySelector(".app-container")
+		ReactDOM.render(<Register />, appContainer)
+	}
 
 	return (
 		<div className="container login-container">
 			<h1 className="h3 mb-3 fw-normal login-text">log in</h1>
 			<form onSubmit={submit}>
 				<div class="mb-3">
-					<label for="exampleInputEmail1" class="form-label">Email address</label>
+					<label for="exampleInputEmail1" class="form-label">
+						Email address
+					</label>
 					<input
 						type="email"
 						className="form-control form-control-lg"
 						id="exampleInputEmail1"
 						aria-describedby="emailHelp"
-						onChange={(e) => setUsernameOrEmail(e.target.value)} />
+						onChange={(e) => setUsernameOrEmail(e.target.value)}
+					/>
 				</div>
 				<div class="mb-3">
-					<label for="exampleInputPassword1" class="form-label">Password</label>
+					<label for="exampleInputPassword1" class="form-label">
+						Password
+					</label>
 					<input
 						type="password"
 						className="form-control form-control-lg"
 						id="exampleInputPassword1"
-						onChange={(e) => setPassword(e.target.value)} />
+						onChange={(e) => setPassword(e.target.value)}
+					/>
 				</div>
-				<button type="submit" class="btn btn-primary">Log in</button>
+				<button type="submit" class="btn btn-primary">
+					Log in
+				</button>
 			</form>
 			<div className="error-message"></div>
 			<br /> {/* Add a line break for spacing */}
 			<div className="mb3">
 				<span className="login-text">Don't have an account? &nbsp;</span>
-				<button type="submit" className="btn btn-primary" onClick={renderRegister}>
+				<button
+					type="submit"
+					className="btn btn-primary"
+					onClick={renderRegister}
+				>
 					Register
 				</button>
 			</div>
@@ -207,20 +220,20 @@ function Login() {
 }
 
 function Register() {
-	const [email, setEmail] = useState("");
-	const [encryptedPassword, setEncryptedPassword] = useState("");
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [dob, setDob] = useState("");
-	const [imageURL, setImageURL] = useState("");
-	const [username, setUsername] = useState("");
-	const [bio, setBio] = useState("");
-	const [isPublic, setIsPublic] = useState("public");
-	const [isRegistered, setIsRegistered] = useState(false);
+	const [email, setEmail] = useState("")
+	const [encryptedPassword, setEncryptedPassword] = useState("")
+	const [firstName, setFirstName] = useState("")
+	const [lastName, setLastName] = useState("")
+	const [dob, setDob] = useState("")
+	const [imageURL, setImageURL] = useState("")
+	const [username, setUsername] = useState("")
+	const [bio, setBio] = useState("")
+	const [isPublic, setIsPublic] = useState("public")
+	const [isRegistered, setIsRegistered] = useState(false)
 
 	//this is register button
 	const submit = async (e) => {
-		e.preventDefault(); // prevent reload.
+		e.preventDefault() // prevent reload.
 
 		// Create new user as JS object.
 		const newUser = {
@@ -233,7 +246,7 @@ function Register() {
 			username,
 			bio,
 			isPublic,
-		};
+		}
 
 		try {
 			// Send user data to backend
@@ -241,44 +254,40 @@ function Register() {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(newUser),
-			});
+			})
 
 			if (!response.ok) {
-				throw new Error('Invalid credentials');
+				throw new Error("Invalid credentials")
 			}
 
 			//takes response from backend and processes
-			const data = await response.json();
+			const data = await response.json()
 			if (data.success) {
-				setIsRegistered(true);
+				setIsRegistered(true)
 			} else {
-				throw new Error('Invalid credentials');
+				throw new Error("Invalid credentials")
 			}
 		} catch (error) {
-			throw new Error('Invalid credentials')
+			throw new Error("Invalid credentials")
 		}
-	};
+	}
 
 	//if credentials frontend succesfully create a new user then we render home
 	if (isRegistered) {
-		const appContainer = document.querySelector('.app-container');
-		ReactDOM.render(<Home />, appContainer);
+		const appContainer = document.querySelector(".app-container")
+		ReactDOM.render(<Home />, appContainer)
 	}
 
 	//this is the login button, when pressed will serve login form
 	const renderLogin = () => {
-		const appContainer = document.querySelector('.app-container');
-		ReactDOM.render(<Login />, appContainer);
-	};
-
+		const appContainer = document.querySelector(".app-container")
+		ReactDOM.render(<Login />, appContainer)
+	}
 
 	return (
 		<div className="container login-container">
 			<h1 className="h3 mb-3 fw-normal login-text">register</h1>
 			<form onSubmit={submit}>
-
-
-
 				<div className="mb-3">
 					<label htmlFor="floatingInput">Email address</label>
 					<input
@@ -287,7 +296,8 @@ function Register() {
 						className="form-control"
 						id="floatingInput"
 						placeholder="name@example.com"
-						onChange={(e) => setEmail(e.target.value)} />
+						onChange={(e) => setEmail(e.target.value)}
+					/>
 				</div>
 
 				<div className="mb-3">
@@ -298,7 +308,8 @@ function Register() {
 						className="form-control reginput"
 						id="regpassword"
 						placeholder="Password"
-						onChange={(e) => setEncryptedPassword(e.target.value)} />
+						onChange={(e) => setEncryptedPassword(e.target.value)}
+					/>
 				</div>
 
 				<div className="mb-3">
@@ -309,7 +320,8 @@ function Register() {
 						className="form-control reginput"
 						id="firstName"
 						placeholder="John"
-						onChange={(e) => setFirstName(e.target.value)} />
+						onChange={(e) => setFirstName(e.target.value)}
+					/>
 				</div>
 
 				<div className="mb-3">
@@ -320,7 +332,8 @@ function Register() {
 						className="form-control reginput"
 						id="lastName"
 						placeholder="Doe"
-						onChange={(e) => setLastName(e.target.value)} />
+						onChange={(e) => setLastName(e.target.value)}
+					/>
 				</div>
 
 				<div className="mb-3">
@@ -331,7 +344,8 @@ function Register() {
 						className="form-control reginput"
 						id="dob"
 						placeholder="16/01/1998"
-						onChange={(e) => setDob(e.target.value)} />
+						onChange={(e) => setDob(e.target.value)}
+					/>
 				</div>
 
 				<div className="mb-3">
@@ -341,7 +355,8 @@ function Register() {
 						className="form-control reginput"
 						id="imageURL"
 						placeholder="https://..."
-						onChange={(e) => setImageURL(e.target.value)} />
+						onChange={(e) => setImageURL(e.target.value)}
+					/>
 				</div>
 
 				<div className="mb-3">
@@ -351,7 +366,8 @@ function Register() {
 						className="form-control reginput"
 						id="username"
 						placeholder="Johnny"
-						onChange={(e) => setUsername(e.target.value)} />
+						onChange={(e) => setUsername(e.target.value)}
+					/>
 				</div>
 
 				<div className="form-check">
@@ -384,7 +400,6 @@ function Register() {
 					</label>
 				</div>
 
-
 				<div className="mb-3">
 					<label htmlFor="about">About me</label>
 					<input
@@ -394,18 +409,14 @@ function Register() {
 						placeholder="About Me"
 						cols="30"
 						rows="10"
-						onChange={(e) => setBio(e.target.value)} />
+						onChange={(e) => setBio(e.target.value)}
+					/>
 				</div>
 
-
-
-				<button className="btn btn-primary" type="submit">Register</button>
-
+				<button className="btn btn-primary" type="submit">
+					Register
+				</button>
 			</form>
-
-
-
-
 			<div className="error-message"></div>
 			<br /> {/* Add a line break for spacing */}
 			<div className="mb3">
@@ -415,104 +426,133 @@ function Register() {
 				</button>
 			</div>
 		</div>
-	);
+	)
 }
 
 function Profile() {
-const [profileUserData, setProfileUserData] = useState({});
-const [userPostData, setUserPostData] = useState([]);
-const [userFollowerData, setUserFollowerData] = useState([]);
-const [userFollowsData, setUserFollowsData] = useState([]);
+	const [profileUserData, setProfileUserData] = useState({})
+	const [userPostData, setUserPostData] = useState([])
+	const [userFollowerData, setUserFollowerData] = useState([])
+	const [userFollowsData, setUserFollowsData] = useState([])
 
-useEffect(() => {
-	fetch('http://localhost:8080/api/profile', {
-		method: 'GET',
-		credentials: 'include',
-		headers: {
-			'Content-Type': 'application/json'
-		}
-	})
-	.then(response => {
-		if (!response.ok) {
-			throw new Error('Failed to fetch profile data');
-		}
-		return response.json();
-	})
-	.then(data => {
-		// Update the HTML elements with the profile data under each category
-		// const myProfileDataElement = document.getElementById('myProfileData');
-		// myProfileDataElement.innerHTML = JSON.stringify(data.profileUserData, null, 2);
-	
-		setProfileUserData(data.profileUserData)
+	useEffect(() => {
+		fetch("http://localhost:8080/api/profile", {
+			method: "GET",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error("Failed to fetch profile data")
+				}
+				return response.json()
+			})
+			.then((data) => {
+				// Update the HTML elements with the profile data under each category
+				// const myProfileDataElement = document.getElementById('myProfileData');
+				// myProfileDataElement.innerHTML = JSON.stringify(data.profileUserData, null, 2);
 
-		setUserPostData(data.userPostData)
-        console.log("userPostData", data.userPostData)
+				setProfileUserData(data.profileUserData)
 
-		setUserFollowerData(data.userFollowerData)
-		console.log("userFollowerData", data.userFollowerData)
+				setUserPostData(data.userPostData)
+				console.log("userPostData", data.userPostData)
 
-		setUserFollowsData(data.userFollowsData)
-		console.log("userFollowsData", data.userFollowsData)
+				setUserFollowerData(data.userFollowerData)
+				console.log("userFollowerData", data.userFollowerData)
 
-		// const myPostsDataElement = document.getElementById('myPostsData');
-		// myPostsDataElement.innerHTML = JSON.stringify(data.userPostData, null, 2);
-	
-		// const myFollowersDataElement = document.getElementById('myFollowersData');
-		// myFollowersDataElement.innerHTML = JSON.stringify(data.userFollowerData, null, 2);
-	
-		// const usersIFollowDataElement = document.getElementById('usersIFollowData');
-		// usersIFollowDataElement.innerHTML = JSON.stringify(data.userFollowsData, null, 2);
-	})
-	.catch(error => {
-		console.error('Error fetching profile data:', error);
-	});
-}, []);
+				setUserFollowsData(data.userFollowsData)
+				console.log("userFollowsData", data.userFollowsData)
 
-return (
-        <div>
-            <Navbar />
-           <div id="profileData">
-    <h2>My Profile</h2>
-    <div id="myProfileData"></div>
-	                    <p><strong>User ID:</strong> {profileUserData.userId}</p>
-                        <p><strong>Username:</strong> {profileUserData.username}</p>
-						<p><strong>Email:</strong> {profileUserData.email}</p>
-						<p><strong>First Name:</strong> {profileUserData.firstName}</p>
-						<p><strong>Last Name:</strong> {profileUserData.lastName}</p>
-						<p><strong>Date of Birth:</strong> {new Date(profileUserData.dob).toLocaleDateString()}</p>
-						<p><strong>Bio:</strong> {profileUserData.bio}</p>
-						<p><strong>Image URL:</strong> {profileUserData.imageURL}</p>
-						<p><strong>Public Profile:</strong> {profileUserData.isPublic ? 'Yes' : 'No'}</p>
+				// const myPostsDataElement = document.getElementById('myPostsData');
+				// myPostsDataElement.innerHTML = JSON.stringify(data.userPostData, null, 2);
 
-						<h2>My Posts</h2>
-                <div id="myPostsData">
-                    {userPostData.map(post => (
-                        <div key={post.postId}>
-                            <p><strong>Post ID:</strong> {post.postId}</p>
-                            <p><strong>Created At:</strong> {post.createdAt}</p>
-                            <p><strong>Body:</strong> {post.body}</p>
-                            <p><strong>Image URL:</strong> {post.imageURL}</p>
-                        </div>
-                    ))}
-                </div>
+				// const myFollowersDataElement = document.getElementById('myFollowersData');
+				// myFollowersDataElement.innerHTML = JSON.stringify(data.userFollowerData, null, 2);
 
-	
+				// const usersIFollowDataElement = document.getElementById('usersIFollowData');
+				// usersIFollowDataElement.innerHTML = JSON.stringify(data.userFollowsData, null, 2);
+			})
+			.catch((error) => {
+				console.error("Error fetching profile data:", error)
+			})
+	}, [])
+
+	return (
+		<div>
+			<Navbar />
+			<div id="profileData">
+				<h2>My Profile</h2>
+				<div id="myProfileData"></div>
+				<p>
+					<strong>User ID:</strong> {profileUserData.userId}
+				</p>
+				<p>
+					<strong>Username:</strong> {profileUserData.username}
+				</p>
+				<p>
+					<strong>Email:</strong> {profileUserData.email}
+				</p>
+				<p>
+					<strong>First Name:</strong> {profileUserData.firstName}
+				</p>
+				<p>
+					<strong>Last Name:</strong> {profileUserData.lastName}
+				</p>
+				<p>
+					<strong>Date of Birth:</strong>{" "}
+					{new Date(profileUserData.dob).toLocaleDateString()}
+				</p>
+				<p>
+					<strong>Bio:</strong> {profileUserData.bio}
+				</p>
+				<p>
+					<strong>Image URL:</strong> {profileUserData.imageURL}
+				</p>
+				<p>
+					<strong>Public Profile:</strong>{" "}
+					{profileUserData.isPublic ? "Yes" : "No"}
+				</p>
+
+				<h2>My Posts</h2>
+				<div id="myPostsData">
+					{userPostData.map((post) => (
+						<div key={post.postId}>
+							<p>
+								<strong>Post ID:</strong> {post.postId}
+							</p>
+							<p>
+								<strong>Created At:</strong> {post.createdAt}
+							</p>
+							<p>
+								<strong>Body:</strong> {post.body}
+							</p>
+							<p>
+								<strong>Image URL:</strong> {post.imageURL}
+							</p>
+						</div>
+					))}
+				</div>
+
 				<h2>My Followers</h2>
-<div id="myFollowersData">
-    {userFollowerData && userFollowerData.map(follower => (
-        <p key={follower.userId}>{follower.userId}</p>
-    ))}
-</div>
+				<div id="myFollowersData">
+					{userFollowerData &&
+						userFollowerData.map((follower) => (
+							<p key={follower.userId}>{follower.userId}</p>
+						))}
+				</div>
 
-<h2>Users I Follow</h2>
-<div id="usersIFollowData">
-    {userFollowsData && userFollowsData.map(user => (
-        <p key={user.userId}>{user.userId}</p>
-    ))}
-</div>
-	</div>
-</div>
-    );
+				<h2>Users I Follow</h2>
+				<div id="usersIFollowData">
+					{userFollowsData &&
+						userFollowsData.map((user) => (
+							<p key={user.userId}>{user.userId}</p>
+						))}
+				</div>
+			</div>
+		</div>
+	)
 }
 
 function Chat() {
@@ -530,7 +570,6 @@ function Group() {
 			<Navbar />
 			<h1>Group</h1>
 		</div>
-
 	)
 }
 
@@ -545,52 +584,51 @@ function Notifications() {
 
 // Main post form, defaults to sending posts to public group (0)
 function PostForm({ groupId }) {
-	const [body, setBody] = useState("");
-	const [privacy, setPrivacy] = useState("");
-	const [selectedFile, setSelectedFile] = useState(null);
+	const [body, setBody] = useState("")
+	const [privacy, setPrivacy] = useState("")
+	const [selectedFile, setSelectedFile] = useState(null)
 
 	// Upon submitting:
 	const submit = async (e) => {
-		e.preventDefault(); // prevent reload.
+		e.preventDefault() // prevent reload.
 
-		const formData = new FormData();
+		const formData = new FormData()
 
 		// Append form data
-		formData.append('body', body);
-		formData.append('privacy', privacy);
-		formData.append('groupId', groupId);
+		formData.append("body", body)
+		formData.append("privacy", privacy)
+		formData.append("groupId", groupId)
 		if (selectedFile) {
-			formData.append('image', selectedFile);
+			formData.append("image", selectedFile)
 		}
 
-		console.log("Form data being sent to backend: ", formData);
+		console.log("Form data being sent to backend: ", formData)
 
 		// Send user data to golang api/PostHandler.go.
 		await fetch("http://localhost:8080/api/posts", {
 			method: "POST",
 			credentials: "include",
 			body: formData,
-		});
+		})
 
 		// Reset the form fields to their default state
-		setBody("");
-		setPrivacy("");
-		setSelectedFile(null);
+		setBody("")
+		setPrivacy("")
+		setSelectedFile(null)
 
-		document.getElementById('postFormBody').value = "";
-	};
-
+		document.getElementById("postFormBody").value = ""
+	}
 
 	// Function to handle file selection
 	const handleFileChange = (e) => {
-		setSelectedFile(e.target.files[0]);
+		setSelectedFile(e.target.files[0])
 		// const file = e.target.files[0];
-	};
+	}
 
 	const handleSelectFile = () => {
-		const fileInput = document.getElementById('fileInput');
-		fileInput.click();
-	};
+		const fileInput = document.getElementById("fileInput")
+		fileInput.click()
+	}
 
 	return (
 		<div>
@@ -606,17 +644,20 @@ function PostForm({ groupId }) {
 							onChange={(e) => setBody(e.target.value)}
 						/>
 					</div>
-
 					<div>
-						<button type="button" className="btn btn-primary" onClick={handleSelectFile}>
+						<button
+							type="button"
+							className="btn btn-primary"
+							onClick={handleSelectFile}
+						>
 							Select File
 						</button>
-						<span>{selectedFile ? selectedFile.name : 'No file selected'}</span>
+						<span>{selectedFile ? selectedFile.name : "No file selected"}</span>
 						<input
 							type="file"
 							id="fileInput"
 							accept="image/*"
-							style={{ display: 'none' }}
+							style={{ display: "none" }}
 							onChange={handleFileChange}
 						/>
 					</div>
@@ -633,7 +674,9 @@ function PostForm({ groupId }) {
 								onClick={(e) => setPrivacy(e.target.value)}
 								className="form-check-input"
 							/>
-							<label htmlFor="post-public-status" className="form-check-label">Public</label>
+							<label htmlFor="post-public-status" className="form-check-label">
+								Public
+							</label>
 						</div>
 						<div className="form-check">
 							<input
@@ -646,81 +689,84 @@ function PostForm({ groupId }) {
 								onClick={(e) => setPrivacy(e.target.value)}
 								className="form-check-input"
 							/>
-							<label htmlFor="private-status" className="form-check-label">Private</label>
+							<label htmlFor="private-status" className="form-check-label">
+								Private
+							</label>
 						</div>
 					</div>
-
 					<button className="w-100 btn btn-lg btn-primary" type="submit">
 						Submit
 					</button>
 				</form>
 			</main>
 		</div>
-	);
+	)
 }
 
-
 function PostCard({ post }) {
-	const [body, setBody] = useState("");
-	const [selectedFile, setSelectedFile] = useState(null);
+	const [body, setBody] = useState("")
+	const [selectedFile, setSelectedFile] = useState(null)
 
-	const milliseconds = post.post.createdAt;
-	const date = new Date(milliseconds);
-	const formattedDate = date.toLocaleString();
+	const milliseconds = post.post.createdAt
+	const date = new Date(milliseconds)
+	const formattedDate = date.toLocaleString()
 
 	const submit = async (e) => {
-		e.preventDefault(); // prevent reload.
+		e.preventDefault() // prevent reload.
 
-		const formData = new FormData();
+		const formData = new FormData()
 
 		// Append form data
-		formData.append('body', body);
-		formData.append('postId', post.post.postId);
+		formData.append("body", body)
+		formData.append("postId", post.post.postId)
 		if (selectedFile) {
-			formData.append('image', selectedFile);
+			formData.append("image", selectedFile)
 		}
 
-		console.log("Form data being sent to backend: ", formData);
+		console.log("Form data being sent to backend: ", formData)
 
 		// Send user data to golang api/PostHandler.go.
 		await fetch("http://localhost:8080/api/comments", {
 			method: "POST",
 			credentials: "include",
 			body: formData,
-		});
+		})
 
 		// Reset the form fields to their default state
-		setBody("");
-		setSelectedFile(null);
+		setBody("")
+		setSelectedFile(null)
 
-
-		document.getElementById('commentTextArea').value = "";
-	};
+		document.getElementById("commentTextArea").value = ""
+	}
 
 	// Function to handle file selection
 	const handleFileChange = (e) => {
-		setSelectedFile(e.target.files[0]);
+		setSelectedFile(e.target.files[0])
 		// const file = e.target.files[0];
-	};
+	}
 
 	const handleSelectFile = () => {
-		const commentFileInput = document.getElementById(`commentFileInput${post.post.postId}`);
-		commentFileInput.click();
-	};
-
+		const commentFileInput = document.getElementById(
+			`commentFileInput${post.post.postId}`
+		)
+		commentFileInput.click()
+	}
 
 	return (
 		<div className="card" style={{ maxWidth: "600px", margin: "auto" }}>
 			<div className="card-body">
 				<div className="d-flex flex-start align-items-center">
-					<img className="rounded-circle shadow-1-strong me-3"
-						src={post.post.imageURL} alt="avatar" width="60" height="60" />
+					<img
+						className="rounded-circle shadow-1-strong me-3"
+						src={post.post.imageURL}
+						alt="avatar"
+						width="60"
+						height="60"
+					/>
 					<div>
 						<h6 className="fw-bold text-primary mb-1">{post.post.userId}</h6>
 						{/* Date, formatted */}
-						<p className="text-muted small mb-0">
-							{formattedDate}
-						</p>
+						<p className="text-muted small mb-0">{formattedDate}</p>
 					</div>
 				</div>
 				{/* Image, if there is one */}
@@ -730,37 +776,62 @@ function PostCard({ post }) {
 					</p>
 				)}
 				{/* Post Body */}
-				<p className="mt-3 mb-2 pb-1">
-					{post.post.body}
-				</p>
+				<p className="mt-3 mb-2 pb-1">{post.post.body}</p>
 			</div>
-			<div className="card-footer py-3 border-0" style={{ backgroundColor: '#f8f9fa' }}>
+			<div
+				className="card-footer py-3 border-0"
+				style={{ backgroundColor: "#f8f9fa" }}
+			>
 				<div className="d-flex flex-start w-100">
-					<img className="rounded-circle shadow-1-strong me-3"
-						src={post.avatar} alt="avatar" width="40" height="40" />
+					<img
+						className="rounded-circle shadow-1-strong me-3"
+						src={post.avatar}
+						alt="avatar"
+						width="40"
+						height="40"
+					/>
 					<div className="form-outline w-100">
-						<textarea className="form-control" id="commentTextArea" rows="4"
-							style={{ background: '#fff' }} onChange={(e) => setBody(e.target.value)}></textarea>
+						<textarea
+							className="form-control"
+							id="commentTextArea"
+							rows="4"
+							style={{ background: "#fff" }}
+							onChange={(e) => setBody(e.target.value)}
+						></textarea>
 
-						<label className="form-label" htmlFor="textAreaExample">Message</label>
+						<label className="form-label" htmlFor="textAreaExample">
+							Message
+						</label>
 					</div>
 				</div>
 				<div className="float-end mt-2 pt-1">
-					<button type="button" className="btn btn-primary" onClick={handleSelectFile}>Select File</button>
-					<span>{selectedFile ? selectedFile.name : 'No file selected'}</span>
+					<button
+						type="button"
+						className="btn btn-primary"
+						onClick={handleSelectFile}
+					>
+						Select File
+					</button>
+					<span>{selectedFile ? selectedFile.name : "No file selected"}</span>
 					<input
 						type="file"
 						id={`commentFileInput${post.post.postId}`}
 						accept="image/*"
-						style={{ display: 'none' }}
+						style={{ display: "none" }}
 						onChange={handleFileChange}
 					/>
-					<button type="submit" className="btn btn-primary btn-sm" onClick={submit}>Post comment</button>
+					<button
+						type="submit"
+						className="btn btn-primary btn-sm"
+						onClick={submit}
+					>
+						Post comment
+					</button>
 				</div>
 				<div className="comments">
 					<h2>Comments</h2>
 					{post.comments !== null && post.comments.length > 0 ? (
-						post.comments.map(comment => (
+						post.comments.map((comment) => (
 							<CommentCard key={comment.createdAt} comment={comment} />
 						))
 					) : (
@@ -769,17 +840,22 @@ function PostCard({ post }) {
 				</div>
 			</div>
 		</div>
-	);
+	)
 }
 
 function CommentCard({ comment }) {
-	const formattedDate = new Date(comment.createdAt).toLocaleString();
+	const formattedDate = new Date(comment.createdAt).toLocaleString()
 
 	return (
 		<div className="card mt-3">
 			<div className="d-flex flex-start align-items-center">
-				<img className="rounded-circle shadow-1-strong me-3"
-					src={comment.imageURL} alt="avatar" width="60" height="60" />
+				<img
+					className="rounded-circle shadow-1-strong me-3"
+					src={comment.imageURL}
+					alt="avatar"
+					width="60"
+					height="60"
+				/>
 				<div>
 					<h6 className="fw-bold text-primary mb-1">{comment.userId}</h6>
 					<p className="text-muted small mb-0">{formattedDate}</p>
@@ -794,30 +870,29 @@ function CommentCard({ comment }) {
 				<p className="card-text">{comment.body}</p>
 			</div>
 		</div>
-	);
+	)
 }
-
 
 // Display information relating to homepage
 function Home() {
-	const [almostPrivatePosts, setAlmostPrivatePosts] = useState([]);
-	const [privatePosts, setPrivatePosts] = useState([]);
-	const [publicPostsWithComments, setPublicPostsWithComments] = useState([]);
-	const [userGroups, setUserGroups] = useState([]);
+	const [almostPrivatePosts, setAlmostPrivatePosts] = useState([])
+	const [privatePosts, setPrivatePosts] = useState([])
+	const [publicPostsWithComments, setPublicPostsWithComments] = useState([])
+	const [userGroups, setUserGroups] = useState([])
 
 	useEffect(() => {
-		fetch('http://localhost:8080/api/home')
-			.then(response => response.json())
-			.then(data => {
+		fetch("http://localhost:8080/api/home")
+			.then((response) => response.json())
+			.then((data) => {
 				setAlmostPrivatePosts(data.almostPrivatePosts)
 				setPrivatePosts(data.privatePosts)
 				setPublicPostsWithComments(data.publicPostsWithComments)
 				setUserGroups(data.userGroups)
 			})
-			.catch(error => {
-				console.error('Error fetching data:', error);
-			});
-	}, []);
+			.catch((error) => {
+				console.error("Error fetching data:", error)
+			})
+	}, [])
 
 	return (
 		<main className="homePage">
@@ -827,20 +902,22 @@ function Home() {
 			<div className="almostPrivatePosts">
 				<h2>Almost Private Posts</h2>
 				{almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? (
-					almostPrivatePosts.map(almostPrivatePost => (
-						<PostCard key={almostPrivatePost.createdAt} post={almostPrivatePost} />
+					almostPrivatePosts.map((almostPrivatePost) => (
+						<PostCard
+							key={almostPrivatePost.createdAt}
+							post={almostPrivatePost}
+						/>
 					))
 				) : (
 					<p>No almost private posts</p>
 				)}
 			</div>
 
-
 			{/* Rendering Private Posts */}
 			<div className="privatePosts">
 				<h2>Almost Private Posts</h2>
 				{privatePosts !== null && privatePosts.length > 0 ? (
-					privatePosts.map(privatePost => (
+					privatePosts.map((privatePost) => (
 						<PostCard key={privatePost.createdAt} post={privatePost} />
 					))
 				) : (
@@ -848,11 +925,11 @@ function Home() {
 				)}
 			</div>
 
-
 			{/* Rendering Public Posts */}
 			<div className="publicPostsWithComments">
 				<h2>Public Posts With Comments</h2>
-				{publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? (
+				{publicPostsWithComments !== null &&
+				publicPostsWithComments.length > 0 ? (
 					publicPostsWithComments.map((publicPostsWithComment, index) => (
 						<PostCard key={index} post={publicPostsWithComment} />
 					))
@@ -861,21 +938,21 @@ function Home() {
 				)}
 			</div>
 
-
-
 			{/* Rendering User Groups */}
 			<div className="userGroups">
 				<h2>Groups</h2>
 				<ul>
-					{userGroups !== null && userGroups.map(userGroup => (
-						<li key={userGroup.createdAt}>
-							{userGroup.Title} {/* Render whatever user properties you need */}
-						</li>
-					))}
+					{userGroups !== null &&
+						userGroups.map((userGroup) => (
+							<li key={userGroup.createdAt}>
+								{userGroup.Title}{" "}
+								{/* Render whatever user properties you need */}
+							</li>
+						))}
 				</ul>
 			</div>
 		</main>
-	);
+	)
 }
 
 const root = document.querySelector("#root")
