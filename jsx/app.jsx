@@ -675,27 +675,42 @@ function PostCard({ post }) {
 					<h2>Comments</h2>
 					{post.comments !== null && post.comments.length > 0 ? (
 						post.comments.map(comment => (
-							<div className="card mt-3" key={comment.createdAt}>
-								{!comment.imageURL ? null : (
-									<p className="mt-3 mb-2 pb-1">
-										<img src={comment.imageURL} className="img-fluid" />
-									</p>
-								)}
-								<div className="card-body">
-									<p className="card-text">{comment.body}</p>
-								</div>
-							</div>
+							<CommentCard key={comment.createdAt} comment={comment} />
 						))
 					) : (
 						<p className="text-muted">No comments</p>
 					)}
 				</div>
-
-
 			</div>
 		</div>
 	);
 }
+
+function CommentCard({ comment }) {
+	const formattedDate = new Date(comment.createdAt).toLocaleString();
+
+	return (
+		<div className="card mt-3">
+			<div className="d-flex flex-start align-items-center">
+				<img className="rounded-circle shadow-1-strong me-3"
+					src={comment.imageURL} alt="avatar" width="60" height="60" />
+				<div>
+					<h6 className="fw-bold text-primary mb-1">{comment.userId}</h6>
+					<p className="text-muted small mb-0">{formattedDate}</p>
+				</div>
+			</div>
+			{comment.imageURL && (
+				<div className="mt-3 mb-2 pb-1">
+					<img src={comment.imageURL} className="img-fluid" alt="comment" />
+				</div>
+			)}
+			<div className="card-body">
+				<p className="card-text">{comment.body}</p>
+			</div>
+		</div>
+	);
+}
+
 
 // Display information relating to homepage
 function Home() {
