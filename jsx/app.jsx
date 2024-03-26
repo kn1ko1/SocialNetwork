@@ -419,15 +419,101 @@ function Register() {
 }
 
 function Profile() {
+const [profileUserData, setProfileUserData] = useState({});
+const [userPostData, setUserPostData] = useState([]);
+const [userFollowerData, setUserFollowerData] = useState([]);
+const [userFollowsData, setUserFollowsData] = useState([]);
 
-	return (
-		<div>
-			<Navbar />
-			<h1>Profile</h1>
-		</div>
-	)
+useEffect(() => {
+	fetch('http://localhost:8080/api/profile', {
+		method: 'GET',
+		credentials: 'include',
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	})
+	.then(response => {
+		if (!response.ok) {
+			throw new Error('Failed to fetch profile data');
+		}
+		return response.json();
+	})
+	.then(data => {
+		// Update the HTML elements with the profile data under each category
+		// const myProfileDataElement = document.getElementById('myProfileData');
+		// myProfileDataElement.innerHTML = JSON.stringify(data.profileUserData, null, 2);
+	
+		setProfileUserData(data.profileUserData)
+
+		setUserPostData(data.userPostData)
+        console.log("userPostData", data.userPostData)
+
+		setUserFollowerData(data.userFollowerData)
+		console.log("userFollowerData", data.userFollowerData)
+
+		setUserFollowsData(data.userFollowsData)
+		console.log("userFollowsData", data.userFollowsData)
+
+		// const myPostsDataElement = document.getElementById('myPostsData');
+		// myPostsDataElement.innerHTML = JSON.stringify(data.userPostData, null, 2);
+	
+		// const myFollowersDataElement = document.getElementById('myFollowersData');
+		// myFollowersDataElement.innerHTML = JSON.stringify(data.userFollowerData, null, 2);
+	
+		// const usersIFollowDataElement = document.getElementById('usersIFollowData');
+		// usersIFollowDataElement.innerHTML = JSON.stringify(data.userFollowsData, null, 2);
+	})
+	.catch(error => {
+		console.error('Error fetching profile data:', error);
+	});
+}, []);
+
+return (
+        <div>
+            <Navbar />
+           <div id="profileData">
+    <h2>My Profile</h2>
+    <div id="myProfileData"></div>
+	                    <p><strong>User ID:</strong> {profileUserData.userId}</p>
+                        <p><strong>Username:</strong> {profileUserData.username}</p>
+						<p><strong>Email:</strong> {profileUserData.email}</p>
+						<p><strong>First Name:</strong> {profileUserData.firstName}</p>
+						<p><strong>Last Name:</strong> {profileUserData.lastName}</p>
+						<p><strong>Date of Birth:</strong> {new Date(profileUserData.dob).toLocaleDateString()}</p>
+						<p><strong>Bio:</strong> {profileUserData.bio}</p>
+						<p><strong>Image URL:</strong> {profileUserData.imageURL}</p>
+						<p><strong>Public Profile:</strong> {profileUserData.isPublic ? 'Yes' : 'No'}</p>
+
+						<h2>My Posts</h2>
+                <div id="myPostsData">
+                    {userPostData.map(post => (
+                        <div key={post.postId}>
+                            <p><strong>Post ID:</strong> {post.postId}</p>
+                            <p><strong>Created At:</strong> {post.createdAt}</p>
+                            <p><strong>Body:</strong> {post.body}</p>
+                            <p><strong>Image URL:</strong> {post.imageURL}</p>
+                        </div>
+                    ))}
+                </div>
+
+	
+				<h2>My Followers</h2>
+<div id="myFollowersData">
+    {userFollowerData && userFollowerData.map(follower => (
+        <p key={follower.userId}>{follower.userId}</p>
+    ))}
+</div>
+
+<h2>Users I Follow</h2>
+<div id="usersIFollowData">
+    {userFollowsData && userFollowsData.map(user => (
+        <p key={user.userId}>{user.userId}</p>
+    ))}
+</div>
+	</div>
+</div>
+    );
 }
-
 
 function Chat() {
 	return (

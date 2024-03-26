@@ -425,7 +425,64 @@ function Register() {
   }, "Log in")));
 }
 function Profile() {
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Profile"));
+  const [profileUserData, setProfileUserData] = useState({});
+  const [userPostData, setUserPostData] = useState([]);
+  const [userFollowerData, setUserFollowerData] = useState([]);
+  const [userFollowsData, setUserFollowsData] = useState([]);
+  useEffect(() => {
+    fetch('http://localhost:8080/api/profile', {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch profile data');
+      }
+      return response.json();
+    }).then(data => {
+      // Update the HTML elements with the profile data under each category
+      // const myProfileDataElement = document.getElementById('myProfileData');
+      // myProfileDataElement.innerHTML = JSON.stringify(data.profileUserData, null, 2);
+
+      setProfileUserData(data.profileUserData);
+      setUserPostData(data.userPostData);
+      console.log("userPostData", data.userPostData);
+      setUserFollowerData(data.userFollowerData);
+      console.log("userFollowerData", data.userFollowerData);
+      setUserFollowsData(data.userFollowsData);
+      console.log("userFollowsData", data.userFollowsData);
+
+      // const myPostsDataElement = document.getElementById('myPostsData');
+      // myPostsDataElement.innerHTML = JSON.stringify(data.userPostData, null, 2);
+
+      // const myFollowersDataElement = document.getElementById('myFollowersData');
+      // myFollowersDataElement.innerHTML = JSON.stringify(data.userFollowerData, null, 2);
+
+      // const usersIFollowDataElement = document.getElementById('usersIFollowData');
+      // usersIFollowDataElement.innerHTML = JSON.stringify(data.userFollowsData, null, 2);
+    }).catch(error => {
+      console.error('Error fetching profile data:', error);
+    });
+  }, []);
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("div", {
+    id: "profileData"
+  }, /*#__PURE__*/React.createElement("h2", null, "My Profile"), /*#__PURE__*/React.createElement("div", {
+    id: "myProfileData"
+  }), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "User ID:"), " ", profileUserData.userId), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Username:"), " ", profileUserData.username), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Email:"), " ", profileUserData.email), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "First Name:"), " ", profileUserData.firstName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Last Name:"), " ", profileUserData.lastName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Date of Birth:"), " ", new Date(profileUserData.dob).toLocaleDateString()), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Bio:"), " ", profileUserData.bio), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Image URL:"), " ", profileUserData.imageURL), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Public Profile:"), " ", profileUserData.isPublic ? 'Yes' : 'No'), /*#__PURE__*/React.createElement("h2", null, "My Posts"), /*#__PURE__*/React.createElement("div", {
+    id: "myPostsData"
+  }, userPostData.map(post => /*#__PURE__*/React.createElement("div", {
+    key: post.postId
+  }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Post ID:"), " ", post.postId), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Created At:"), " ", post.createdAt), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Body:"), " ", post.body), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Image URL:"), " ", post.imageURL)))), /*#__PURE__*/React.createElement("h2", null, "My Followers"), /*#__PURE__*/React.createElement("div", {
+    id: "myFollowersData"
+  }, userFollowerData && userFollowerData.map(follower => /*#__PURE__*/React.createElement("p", {
+    key: follower.userId
+  }, follower.userId))), /*#__PURE__*/React.createElement("h2", null, "Users I Follow"), /*#__PURE__*/React.createElement("div", {
+    id: "usersIFollowData"
+  }, userFollowsData && userFollowsData.map(user => /*#__PURE__*/React.createElement("p", {
+    key: user.userId
+  }, user.userId)))));
 }
 function Chat() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"));
