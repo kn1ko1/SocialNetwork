@@ -6,12 +6,12 @@ import (
 )
 
 type EventUser struct {
-	EventUserId int
-	CreatedAt   int64
-	EventId     int
-	IsGoing     bool
-	UpdatedAt   int64
-	UserId      int
+	EventUserId int   `json:"eventUserId"`
+	CreatedAt   int64 `json:"createdAt"`
+	EventId     int   `json:"eventId"`
+	IsGoing     bool  `json:"isGoing"`
+	UpdatedAt   int64 `json:"updatedAt"`
+	UserId      int   `json:"userId"`
 }
 
 func (eu *EventUser) Validate() error {

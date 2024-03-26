@@ -32,7 +32,7 @@ func (h *EventsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.post(w, r)
 		return
 	case http.MethodGet:
-		h.get(w, r)
+		h.get(w)
 		return
 	// All unimplemented methods default to a "method not allowed" error
 	default:
@@ -99,7 +99,7 @@ func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *EventsHandler) get(w http.ResponseWriter, r *http.Request) {
+func (h *EventsHandler) get(w http.ResponseWriter) {
 	events, err := h.Repo.GetAllEvents()
 	if err != nil {
 		utils.HandleError("Failed to retrieve events from DB. ", err)

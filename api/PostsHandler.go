@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"socialnetwork/auth"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
@@ -42,9 +43,23 @@ func (h *PostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 	ctime := time.Now().UTC().UnixMilli()
+	cookie, err := r.Cookie(auth.CookieName)
+	if err != nil {
+
+		utils.HandleError("Error verifying cookie", err)
+		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
+		return
+	}
+
+	user, exists := auth.SessionMap[cookie.Value]
+	if !exists {
+		utils.HandleError("Error finding User, need to log in again", err)
+		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
+		return
+	}
 
 	// Parse form data
-	err := r.ParseMultipartForm(10 << 20)
+	err = r.ParseMultipartForm(10 << 20)
 	if err != nil {
 		utils.HandleError("Failed to parse form data:", err)
 		http.Error(w, "Failed to parse form data", http.StatusBadRequest)
@@ -57,18 +72,13 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 	groupID, _ := strconv.Atoi(groupIDStr)
 	imageURL := ""
 	privacy := r.FormValue("privacy")
-	//
-	//
-	// I dunno, get it from cookies.  To be added...
-	userId := 1
-	//
-	//
+	userId := user.UserId
+
 	log.Println("[api/PostsHandler] Received Post:", body)
 	log.Println("[api/PostsHandler] GroupId:", groupID)
 	log.Println("[api/PostsHandler] Privacy:", privacy)
-	log.Println("[api/PostsHandler] From UserId:", userId)
-	//
-	//
+	log.Println("[api/PostsHandler] UserId:", userId)
+
 	// Handle file upload
 	file, fileHeader, _ := r.FormFile("image")
 	if file != nil {

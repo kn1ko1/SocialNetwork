@@ -114,6 +114,11 @@ func (r *DummyRepository) GetHomeDataForUser(userId int) (transport.HomeModel, e
 	return homeModel, nil
 }
 
+func (r *DummyRepository) GetProfileDataForUser(userId int) (transport.ProfileModel, error) {
+	var profileModel transport.ProfileModel
+	return profileModel, errors.New("not implimented yet")
+}
+
 func (r *DummyRepository) CreateUser(user models.User) (models.User, error) {
 	user.UserId = 1
 	return user, nil

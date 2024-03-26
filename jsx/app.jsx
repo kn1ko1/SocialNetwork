@@ -3,7 +3,6 @@ const { useState, useEffect } = React
 const App = () => {
 	return (
 		<div className="app-container">
-
 			<Login />
 		</div>
 	)
@@ -35,7 +34,7 @@ const App = () => {
 // 	)
 // }
 
-function Navbar(props) {
+function Navbar() {
 
 	const renderHome = () => {
 		const appContainer = document.querySelector('.app-container');
@@ -62,14 +61,25 @@ function Navbar(props) {
 		ReactDOM.render(<Group />, appContainer);
 	};
 
-	const renderLogin = () => {
+	const logout = async () => {
 
-		//Some logout logic and function needs implemented here rather than lines below
+		try {
+			const response = await fetch("http://localhost:8080/auth/logout", {
+				method: "POST",
+				credentials: "include",
+			});
 
-		const appContainer = document.querySelector('.app-container');
-		ReactDOM.render(<Login />, appContainer);
+			if (response.ok) {
+				const appContainer = document.querySelector('.app-container');
+				ReactDOM.render(<Login />, appContainer);
+				console.log("Logout successful!");
+			} else {
+				console.log("Failed to logout. Server response not OK.");
+			}
+		} catch (error) {
+			console.error("An error occurred during logout:", error);
+		}
 	};
-
 
 	return (
 		<nav className="navbar navbar-expand-md bg-body-tertiary">
@@ -95,7 +105,7 @@ function Navbar(props) {
 							<a className="nav-link" href="#" onClick={renderGroup}>GROUP</a>
 						</li>
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={renderLogin}>LOGOUT</a>
+							<a className="nav-link" href="#" onClick={logout}>LOGOUT</a>
 						</li>
 					</ul>
 				</div>
@@ -104,14 +114,11 @@ function Navbar(props) {
 	)
 }
 
-function Login(props) {
+function Login() {
 	const [usernameOrEmail, setUsernameOrEmail] = useState("")
 	const [password, setPassword] = useState("")
-	const [redirectVar, setRedirectVar] = useState(false)
-	const [error, setError] = useState(null);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const errorMessage = document.querySelector(".error-message")
-	const [showForm, setShowForm] = useState(true);
 
 	//this is the sign in button
 	const submit = async (e) => {
@@ -147,7 +154,6 @@ function Login(props) {
 			}
 		} catch (error) {
 			errorMessage.innerHTML = 'Invalid credentials'
-			setError('Invalid credentials');
 		}
 	};
 
@@ -200,7 +206,7 @@ function Login(props) {
 	)
 }
 
-function Register(props) {
+function Register() {
 	const [email, setEmail] = useState("");
 	const [encryptedPassword, setEncryptedPassword] = useState("");
 	const [firstName, setFirstName] = useState("");
@@ -210,7 +216,6 @@ function Register(props) {
 	const [username, setUsername] = useState("");
 	const [bio, setBio] = useState("");
 	const [isPublic, setIsPublic] = useState("public");
-	const [redirectVar, setRedirectVar] = useState(false);
 	const [isRegistered, setIsRegistered] = useState(false);
 
 	//this is register button
@@ -250,7 +255,7 @@ function Register(props) {
 				throw new Error('Invalid credentials');
 			}
 		} catch (error) {
-			setError('Invalid credentials');
+			throw new Error('Invalid credentials')
 		}
 	};
 
@@ -414,13 +419,14 @@ function Register(props) {
 }
 
 function Profile() {
- 	return (
- 		<div>
+
+	return (
+		<div>
 			<Navbar />
- 	<h1>Profile</h1>
- 		</div>
- 	)
- }
+			<h1>Profile</h1>
+		</div>
+	)
+}
 
 
 function Chat() {
@@ -433,29 +439,50 @@ function Chat() {
 }
 
 function Group() {
+	const [Title, setTitle] = useState("");
+	const [Description, setDescription] = useState("")
+
+	// Upon submitting:
+	const create = async (e) => {
+		e.preventDefault(); // prevent reload.
+
+		const groupData = new FormData();
+
+		// Append form data
+		groupData.append('Title', Title);
+		groupData.append('Description', Description);
+	
+		console.log("Group data being sent to backend: ", Title);
+		console.log("Group data being sent to backend: ", Description);
+		
+		// Send user data to golang api/PostHandler.go.
+		await fetch("http://localhost:8080/api/groups", {
+			method: "POST",
+			credentials: "include",
+			body: groupData,
+		})
+	}
 	return (
 		<div>
 			<Navbar />
-			<form>
+			<form onSubmit={create}>
   <div className="mb-3">
-    <label htmlFor="exampleInputEmail1" className="form-label">Title</label>
-    <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
-    <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
+    <label htmlFor="exampleTitle" className="form-label">Title</label>
+    <input type="text" className="form-control" id="exampleTitle" aria-describedby="emailHelp" onChange={(e) => setTitle(e.target.value)}/>
+	
   </div>
   <div className="mb-3">
     <label htmlFor="exampleInputPassword1" className="form-label">Description</label>
-    <input type="password" className="form-control" id="exampleInputPassword1" />
+    <input type="text" className="form-control" id="exampleDescription" onChange={(e) => setDescription(e.target.value)} />
   </div>
-  <div className="mb-3 form-check">
-    <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-    <label className="form-check-label" for="exampleCheck1">Check me out</label>
-  </div>
-  <button type="submit" className="btn btn-primary">Submit</button>
+  <button type="submit" className="btn btn-primary">Create</button>
 </form>
 			<h1>Group</h1>
 		</div>
+
 	)
 }
+
 
 function Notifications() {
 	return (
@@ -472,41 +499,36 @@ function PostForm({ groupId }) {
 	const [privacy, setPrivacy] = useState("");
 	const [selectedFile, setSelectedFile] = useState(null);
 
-	// Needs to be changed to get info from... cookie?
-	const userId = Number(36);
-
 	// Upon submitting:
 	const submit = async (e) => {
 		e.preventDefault(); // prevent reload.
-	
+
 		const formData = new FormData();
-	
+
 		// Append form data
 		formData.append('body', body);
 		formData.append('privacy', privacy);
 		formData.append('groupId', groupId);
-		formData.append('userId', userId);
 		if (selectedFile) {
 			formData.append('image', selectedFile);
 		}
-	
+
 		console.log("Form data being sent to backend: ", formData);
-	
+
 		// Send user data to golang api/PostHandler.go.
 		await fetch("http://localhost:8080/api/posts", {
 			method: "POST",
 			credentials: "include",
 			body: formData,
 		});
-	
+
 		// Reset the form fields to their default state
 		setBody("");
 		setPrivacy("");
 		setSelectedFile(null);
-	
+
 		document.getElementById('postFormBody').value = "";
 	};
-	
 
 	// Function to handle file selection
 	const handleFileChange = (e) => {
@@ -586,6 +608,130 @@ function PostForm({ groupId }) {
 	);
 }
 
+
+function PostCard({ post }) {
+	const [body, setBody] = useState("");
+	const [selectedFile, setSelectedFile] = useState(null);
+
+	const milliseconds = post.post.createdAt;
+	const date = new Date(milliseconds);
+	const formattedDate = date.toLocaleString();
+
+	const submit = async (e) => {
+		e.preventDefault(); // prevent reload.
+
+		const formData = new FormData();
+
+		// Append form data
+		formData.append('body', body);
+		formData.append('postId', post.post.postId);
+		if (selectedFile) {
+			formData.append('image', selectedFile);
+		}
+
+		console.log("Form data being sent to backend: ", formData);
+
+		// Send user data to golang api/PostHandler.go.
+		await fetch("http://localhost:8080/api/comments", {
+			method: "POST",
+			credentials: "include",
+			body: formData,
+		});
+
+		// Reset the form fields to their default state
+		setBody("");
+		setSelectedFile(null);
+
+
+		document.getElementById('commentTextArea').value = "";
+	};
+
+	// Function to handle file selection
+	const handleFileChange = (e) => {
+		setSelectedFile(e.target.files[0]);
+		// const file = e.target.files[0];
+	};
+
+	const handleSelectFile = () => {
+		const commentFileInput = document.getElementById(`commentFileInput${post.post.postId}`);
+		commentFileInput.click();
+	};
+
+
+	return (
+		<div className="card" style={{ maxWidth: "600px", margin: "auto" }}>
+			<div className="card-body">
+				<div className="d-flex flex-start align-items-center">
+					<img className="rounded-circle shadow-1-strong me-3"
+						src={post.post.imageURL} alt="avatar" width="60" height="60" />
+					<div>
+						<h6 className="fw-bold text-primary mb-1">{post.post.userId}</h6>
+						{/* Date, formatted */}
+						<p className="text-muted small mb-0">
+							{formattedDate}
+						</p>
+					</div>
+				</div>
+				{/* Image, if there is one */}
+				{!post.post.imageURL ? null : (
+					<p className="mt-3 mb-2 pb-1">
+						<img src={post.post.imageURL} className="img-fluid" />
+					</p>
+				)}
+				{/* Post Body */}
+				<p className="mt-3 mb-2 pb-1">
+					{post.post.body}
+				</p>
+			</div>
+			<div className="card-footer py-3 border-0" style={{ backgroundColor: '#f8f9fa' }}>
+				<div className="d-flex flex-start w-100">
+					<img className="rounded-circle shadow-1-strong me-3"
+						src={post.avatar} alt="avatar" width="40" height="40" />
+					<div className="form-outline w-100">
+						<textarea className="form-control" id="commentTextArea" rows="4"
+							style={{ background: '#fff' }} onChange={(e) => setBody(e.target.value)}></textarea>
+
+						<label className="form-label" htmlFor="textAreaExample">Message</label>
+					</div>
+				</div>
+				<div className="float-end mt-2 pt-1">
+					<button type="button" className="btn btn-primary" onClick={handleSelectFile}>Select File</button>
+					<span>{selectedFile ? selectedFile.name : 'No file selected'}</span>
+					<input
+						type="file"
+						id={`commentFileInput${post.post.postId}`}
+						accept="image/*"
+						style={{ display: 'none' }}
+						onChange={handleFileChange}
+					/>
+					<button type="submit" className="btn btn-primary btn-sm" onClick={submit}>Post comment</button>
+				</div>
+				<div className="comments">
+					<h2>Comments</h2>
+					{post.comments !== null && post.comments.length > 0 ? (
+						post.comments.map(comment => (
+							<div className="card mt-3" key={comment.createdAt}>
+								{!comment.imageURL ? null : (
+									<p className="mt-3 mb-2 pb-1">
+										<img src={comment.imageURL} className="img-fluid" />
+									</p>
+								)}
+								<div className="card-body">
+									<p className="card-text">{comment.body}</p>
+								</div>
+							</div>
+						))
+					) : (
+						<p className="text-muted">No comments</p>
+					)}
+				</div>
+
+
+			</div>
+		</div>
+	);
+}
+
 // Display information relating to homepage
 function Home() {
 	const [almostPrivatePosts, setAlmostPrivatePosts] = useState([]);
@@ -608,47 +754,50 @@ function Home() {
 	}, []);
 
 	return (
-		
 		<main className="homePage">
-			
 			<Navbar />
 			<PostForm groupId={0} />
-
-
+			{/* Rendering Almost Private Posts */}
 			<div className="almostPrivatePosts">
 				<h2>Almost Private Posts</h2>
-				<ul>
-					{almostPrivatePosts !== null && almostPrivatePosts.map(almostPrivatePost => (
-						<li key={almostPrivatePost.createdAt}>
-							{almostPrivatePost.body} - {almostPrivatePost.UserId}
-							{/* Render whatever user properties you need */}
-						</li>
-					))}
-				</ul>
+				{almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? (
+					almostPrivatePosts.map(almostPrivatePost => (
+						<PostCard key={almostPrivatePost.createdAt} post={almostPrivatePost} />
+					))
+				) : (
+					<p>No almost private posts</p>
+				)}
 			</div>
 
+
+			{/* Rendering Private Posts */}
 			<div className="privatePosts">
-				<h2>Private Posts</h2>
-				<ul>
-					{privatePosts !== null && privatePosts.map(privatePost => (
-						<li key={privatePost.createdAt}>
-							{privatePost.body} - {privatePost.UserId} {/* Render whatever user properties you need */}
-						</li>
-					))}
-				</ul>
+				<h2>Almost Private Posts</h2>
+				{privatePosts !== null && privatePosts.length > 0 ? (
+					privatePosts.map(privatePost => (
+						<PostCard key={privatePost.createdAt} post={privatePost} />
+					))
+				) : (
+					<p>No private posts</p>
+				)}
 			</div>
 
+
+			{/* Rendering Public Posts */}
 			<div className="publicPostsWithComments">
-				<h2>Public Posts</h2>
-				<ul>
-					{publicPostsWithComments !== null && publicPostsWithComments.map(publicPostsWithComment => (
-						<li key={publicPostsWithComment.post.CreatedAt}>
-							{publicPostsWithComment.post.Body} - {publicPostsWithComment.post.UserId} {/* Render whatever user properties you need */}
-						</li>
-					))}
-				</ul>
+				<h2>Public Posts With Comments</h2>
+				{publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? (
+					publicPostsWithComments.map((publicPostsWithComment, index) => (
+						<PostCard key={index} post={publicPostsWithComment} />
+					))
+				) : (
+					<p>public posts</p>
+				)}
 			</div>
 
+
+
+			{/* Rendering User Groups */}
 			<div className="userGroups">
 				<h2>Groups</h2>
 				<ul>
@@ -659,107 +808,9 @@ function Home() {
 					))}
 				</ul>
 			</div>
-		
 		</main>
 	);
 }
-
-// function Profile() {
-
-// 	const [usernameOrEmail, setUsernameOrEmail] = useState("")
-// 	const [password, setPassword] = useState("")
-
-// 	//this is the sign in button
-// 	const submit = async (e) => {
-// 		e.preventDefault() // prevent reload.
-
-// 		//this is user input 
-// 		const userToLogin = {
-// 			usernameOrEmail,
-// 			password,
-// 		}
-
-// 		try {
-// 			//check credentials with backend
-// 			const response = await fetch('http://localhost:8080/auth/login', {
-// 				method: 'POST',
-// 				headers: { 'Content-Type': 'application/json' },
-// 				credentials: 'include',
-// 				body: JSON.stringify(userToLogin),
-// 			});
-
-// 			if (!response.ok) {
-// 				errorMessage.innerHTML = 'Invalid credentials'
-// 				throw new Error('Invalid credentials');
-// 			}
-
-// 			//takes response from backend and processes
-// 			const data = await response.json();
-// 			if (data.success) {
-// 				setIsLoggedIn(true);
-// 			} else {
-// 				errorMessage.innerHTML = 'Invalid credentials'
-// 				throw new Error('Invalid credentials');
-// 			}
-// 		} catch (error) {
-// 			errorMessage.innerHTML = 'Invalid credentials'
-// 			setError('Invalid credentials');
-// 		}
-// 	};
-
-// 	//if credentials frontend match backend then we render home
-// 	if (isLoggedIn) {
-// 		const appContainer = document.querySelector('.app-container');
-// 		ReactDOM.render(<Home />, appContainer);
-// 	}
-
-// 	//this is the register button, when pressed will serve registration form
-// 	const renderRegister = () => {
-// 		const appContainer = document.querySelector('.app-container');
-// 		ReactDOM.render(<Register />, appContainer);
-// 	};
-
-
-// 	return (
-// 		<div className="login-container">
-// 			<main className="form-signin w-100 m-auto" style={{ display: "block" }}>
-// 				<h1 className="h3 mb-3 fw-normal login-text">log in</h1>
-// 				<form onSubmit={submit}>
-// 					<div className="form-floating">
-// 						<label htmlFor="floatingInput" className="login-text">Email address</label>
-// 						<input
-// 							type="email"
-// 							className="form-control login-text"
-// 							id="floatingInput"
-// 							placeholder="name@example.com"
-// 							onChange={(e) => setUsernameOrEmail(e.target.value)}
-// 						/>
-// 					</div>
-
-// 					<div className="form-floating">
-// 						<label htmlFor="floatingPassword" className="login-text">Password</label>
-// 						<input
-// 							type="password"
-// 							className="form-control login-text"
-// 							id="floatingPassword"
-// 							placeholder="Password"
-// 							onChange={(e) => setPassword(e.target.value)}
-// 						/>
-// 					</div>
-// 					<button className="w-100 btn btn-lg btn-primary login-button" type="submit">
-// 						Sign in
-// 					</button>
-// 				</form>
-// 				<div className="error-message"></div>
-// 				<br /> {/* Add a line break for spacing */}
-// 				<span className="login-text">Don't have an account? &nbsp;</span>
-// 				<button className="w-100 btn btn-lg btn-primary login-button" onClick={renderRegister}>
-// 					Register
-// 				</button>
-// 			</main>
-// 		</div>
-// 	)
-// }
 
 const root = document.querySelector("#root")
 ReactDOM.render(<App />, root)

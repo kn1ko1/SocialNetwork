@@ -16,6 +16,8 @@ func GetPostsPrivateWithComments(database *sql.DB, userId int) ([]transport.Post
         FROM POSTS p
         JOIN USER_USERS uu ON uu.SubjectId = p.UserId
         WHERE uu.FollowerId = ? AND p.Privacy = 'private'
+		ORDER BY 
+    	p.CreatedAt DESC;
     `
 
 	rows, err := database.Query(query, userId)

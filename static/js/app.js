@@ -34,7 +34,7 @@ const App = () => {
 // 	)
 // }
 
-function Navbar(props) {
+function Navbar() {
   const renderHome = () => {
     const appContainer = document.querySelector('.app-container');
     ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
@@ -55,11 +55,22 @@ function Navbar(props) {
     const appContainer = document.querySelector('.app-container');
     ReactDOM.render( /*#__PURE__*/React.createElement(Group, null), appContainer);
   };
-  const renderLogin = () => {
-    //Some logout logic and function needs implemented here rather than lines below
-
-    const appContainer = document.querySelector('.app-container');
-    ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
+  const logout = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/auth/logout", {
+        method: "POST",
+        credentials: "include"
+      });
+      if (response.ok) {
+        const appContainer = document.querySelector('.app-container');
+        ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
+        console.log("Logout successful!");
+      } else {
+        console.log("Failed to logout. Server response not OK.");
+      }
+    } catch (error) {
+      console.error("An error occurred during logout:", error);
+    }
   };
   return /*#__PURE__*/React.createElement("nav", {
     className: "navbar navbar-expand-md bg-body-tertiary"
@@ -115,17 +126,14 @@ function Navbar(props) {
   }, /*#__PURE__*/React.createElement("a", {
     className: "nav-link",
     href: "#",
-    onClick: renderLogin
+    onClick: logout
   }, "LOGOUT"))))));
 }
-function Login(props) {
+function Login() {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [redirectVar, setRedirectVar] = useState(false);
-  const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const errorMessage = document.querySelector(".error-message");
-  const [showForm, setShowForm] = useState(true);
 
   //this is the sign in button
   const submit = async e => {
@@ -161,7 +169,6 @@ function Login(props) {
       }
     } catch (error) {
       errorMessage.innerHTML = 'Invalid credentials';
-      setError('Invalid credentials');
     }
   };
 
@@ -219,7 +226,7 @@ function Login(props) {
     onClick: renderRegister
   }, "Register")));
 }
-function Register(props) {
+function Register() {
   const [email, setEmail] = useState("");
   const [encryptedPassword, setEncryptedPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -229,7 +236,6 @@ function Register(props) {
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
   const [isPublic, setIsPublic] = useState("public");
-  const [redirectVar, setRedirectVar] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
 
   //this is register button
@@ -269,7 +275,7 @@ function Register(props) {
         throw new Error('Invalid credentials');
       }
     } catch (error) {
-      setError('Invalid credentials');
+      throw new Error('Invalid credentials');
     }
   };
 
@@ -425,41 +431,56 @@ function Chat() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"));
 }
 function Group() {
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("form", null, /*#__PURE__*/React.createElement("div", {
+  const [Title, setTitle] = useState("");
+  const [Description, setDescription] = useState("");
+
+  // Upon submitting:
+  const create = async e => {
+    e.preventDefault(); // prevent reload.
+
+    const groupData = new FormData();
+
+    // Append form data
+    groupData.append('Title', Title);
+    groupData.append('Description', Description);
+    console.log("Group data being sent to backend: ", groupData.Title);
+    console.log("Group data being sent to backend: ", Title);
+    console.log("Group data being sent to backend: ", groupData.Description);
+
+    // Send user data to golang api/PostHandler.go.
+    await fetch("http://localhost:8080/api/groups", {
+      method: "POST",
+      credentials: "include",
+      body: groupData
+    });
+  };
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("form", {
+    onSubmit: create
+  }, /*#__PURE__*/React.createElement("div", {
     className: "mb-3"
   }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "exampleInputEmail1",
+    htmlFor: "exampleTitle",
     className: "form-label"
   }, "Title"), /*#__PURE__*/React.createElement("input", {
-    type: "email",
+    type: "text",
     className: "form-control",
-    id: "exampleInputEmail1",
-    "aria-describedby": "emailHelp"
-  }), /*#__PURE__*/React.createElement("div", {
-    id: "emailHelp",
-    className: "form-text"
-  }, "We'll never share your email with anyone else.")), /*#__PURE__*/React.createElement("div", {
+    id: "exampleTitle",
+    "aria-describedby": "emailHelp",
+    onChange: e => setTitle(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
     className: "mb-3"
   }, /*#__PURE__*/React.createElement("label", {
     htmlFor: "exampleInputPassword1",
     className: "form-label"
   }, "Description"), /*#__PURE__*/React.createElement("input", {
-    type: "password",
+    type: "text",
     className: "form-control",
-    id: "exampleInputPassword1"
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "mb-3 form-check"
-  }, /*#__PURE__*/React.createElement("input", {
-    type: "checkbox",
-    className: "form-check-input",
-    id: "exampleCheck1"
-  }), /*#__PURE__*/React.createElement("label", {
-    className: "form-check-label",
-    for: "exampleCheck1"
-  }, "Check me out")), /*#__PURE__*/React.createElement("button", {
+    id: "exampleDescription",
+    onChange: e => setDescription(e.target.value)
+  })), /*#__PURE__*/React.createElement("button", {
     type: "submit",
     className: "btn btn-primary"
-  }, "Submit")), /*#__PURE__*/React.createElement("h1", null, "Group"));
+  }, "Create")), /*#__PURE__*/React.createElement("h1", null, "Group"));
 }
 function Notifications() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Notifications"));
@@ -473,9 +494,6 @@ function PostForm({
   const [privacy, setPrivacy] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
 
-  // Needs to be changed to get info from... cookie?
-  const userId = Number(36);
-
   // Upon submitting:
   const submit = async e => {
     e.preventDefault(); // prevent reload.
@@ -486,7 +504,6 @@ function PostForm({
     formData.append('body', body);
     formData.append('privacy', privacy);
     formData.append('groupId', groupId);
-    formData.append('userId', userId);
     if (selectedFile) {
       formData.append('image', selectedFile);
     }
@@ -579,6 +596,138 @@ function PostForm({
     type: "submit"
   }, "Submit"))));
 }
+function PostCard({
+  post
+}) {
+  const [body, setBody] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const milliseconds = post.post.createdAt;
+  const date = new Date(milliseconds);
+  const formattedDate = date.toLocaleString();
+  const submit = async e => {
+    e.preventDefault(); // prevent reload.
+
+    const formData = new FormData();
+
+    // Append form data
+    formData.append('body', body);
+    formData.append('postId', post.post.postId);
+    if (selectedFile) {
+      formData.append('image', selectedFile);
+    }
+    console.log("Form data being sent to backend: ", formData);
+
+    // Send user data to golang api/PostHandler.go.
+    await fetch("http://localhost:8080/api/comments", {
+      method: "POST",
+      credentials: "include",
+      body: formData
+    });
+
+    // Reset the form fields to their default state
+    setBody("");
+    setSelectedFile(null);
+    document.getElementById('commentTextArea').value = "";
+  };
+
+  // Function to handle file selection
+  const handleFileChange = e => {
+    setSelectedFile(e.target.files[0]);
+    // const file = e.target.files[0];
+  };
+  const handleSelectFile = () => {
+    const commentFileInput = document.getElementById(`commentFileInput${post.post.postId}`);
+    commentFileInput.click();
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      maxWidth: "600px",
+      margin: "auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-body"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "d-flex flex-start align-items-center"
+  }, /*#__PURE__*/React.createElement("img", {
+    className: "rounded-circle shadow-1-strong me-3",
+    src: post.post.imageURL,
+    alt: "avatar",
+    width: "60",
+    height: "60"
+  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h6", {
+    className: "fw-bold text-primary mb-1"
+  }, post.post.userId), /*#__PURE__*/React.createElement("p", {
+    className: "text-muted small mb-0"
+  }, formattedDate))), !post.post.imageURL ? null : /*#__PURE__*/React.createElement("p", {
+    className: "mt-3 mb-2 pb-1"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: post.post.imageURL,
+    className: "img-fluid"
+  })), /*#__PURE__*/React.createElement("p", {
+    className: "mt-3 mb-2 pb-1"
+  }, post.post.body)), /*#__PURE__*/React.createElement("div", {
+    className: "card-footer py-3 border-0",
+    style: {
+      backgroundColor: '#f8f9fa'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "d-flex flex-start w-100"
+  }, /*#__PURE__*/React.createElement("img", {
+    className: "rounded-circle shadow-1-strong me-3",
+    src: post.avatar,
+    alt: "avatar",
+    width: "40",
+    height: "40"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "form-outline w-100"
+  }, /*#__PURE__*/React.createElement("textarea", {
+    className: "form-control",
+    id: "commentTextArea",
+    rows: "4",
+    style: {
+      background: '#fff'
+    },
+    onChange: e => setBody(e.target.value)
+  }), /*#__PURE__*/React.createElement("label", {
+    className: "form-label",
+    htmlFor: "textAreaExample"
+  }, "Message"))), /*#__PURE__*/React.createElement("div", {
+    className: "float-end mt-2 pt-1"
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "btn btn-primary",
+    onClick: handleSelectFile
+  }, "Select File"), /*#__PURE__*/React.createElement("span", null, selectedFile ? selectedFile.name : 'No file selected'), /*#__PURE__*/React.createElement("input", {
+    type: "file",
+    id: `commentFileInput${post.post.postId}`,
+    accept: "image/*",
+    style: {
+      display: 'none'
+    },
+    onChange: handleFileChange
+  }), /*#__PURE__*/React.createElement("button", {
+    type: "submit",
+    className: "btn btn-primary btn-sm",
+    onClick: submit
+  }, "Post comment")), /*#__PURE__*/React.createElement("div", {
+    className: "comments"
+  }, /*#__PURE__*/React.createElement("h2", null, "Comments"), post.comments !== null && post.comments.length > 0 ? post.comments.map(comment => /*#__PURE__*/React.createElement("div", {
+    className: "card mt-3",
+    key: comment.createdAt
+  }, !comment.imageURL ? null : /*#__PURE__*/React.createElement("p", {
+    className: "mt-3 mb-2 pb-1"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: comment.imageURL,
+    className: "img-fluid"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "card-body"
+  }, /*#__PURE__*/React.createElement("p", {
+    className: "card-text"
+  }, comment.body)))) : /*#__PURE__*/React.createElement("p", {
+    className: "text-muted"
+  }, "No comments"))));
+}
 
 // Display information relating to homepage
 function Home() {
@@ -602,118 +751,24 @@ function Home() {
     groupId: 0
   }), /*#__PURE__*/React.createElement("div", {
     className: "almostPrivatePosts"
-  }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), /*#__PURE__*/React.createElement("ul", null, almostPrivatePosts !== null && almostPrivatePosts.map(almostPrivatePost => /*#__PURE__*/React.createElement("li", {
-    key: almostPrivatePost.createdAt
-  }, almostPrivatePost.body, " - ", almostPrivatePost.UserId)))), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? almostPrivatePosts.map(almostPrivatePost => /*#__PURE__*/React.createElement(PostCard, {
+    key: almostPrivatePost.createdAt,
+    post: almostPrivatePost
+  })) : /*#__PURE__*/React.createElement("p", null, "No almost private posts")), /*#__PURE__*/React.createElement("div", {
     className: "privatePosts"
-  }, /*#__PURE__*/React.createElement("h2", null, "Private Posts"), /*#__PURE__*/React.createElement("ul", null, privatePosts !== null && privatePosts.map(privatePost => /*#__PURE__*/React.createElement("li", {
-    key: privatePost.createdAt
-  }, privatePost.body, " - ", privatePost.UserId, " ")))), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), privatePosts !== null && privatePosts.length > 0 ? privatePosts.map(privatePost => /*#__PURE__*/React.createElement(PostCard, {
+    key: privatePost.createdAt,
+    post: privatePost
+  })) : /*#__PURE__*/React.createElement("p", null, "No private posts")), /*#__PURE__*/React.createElement("div", {
     className: "publicPostsWithComments"
-  }, /*#__PURE__*/React.createElement("h2", null, "Public Posts"), /*#__PURE__*/React.createElement("ul", null, publicPostsWithComments !== null && publicPostsWithComments.map(publicPostsWithComment => /*#__PURE__*/React.createElement("li", {
-    key: publicPostsWithComment.post.CreatedAt
-  }, publicPostsWithComment.post.Body, " - ", publicPostsWithComment.post.UserId, " ")))), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h2", null, "Public Posts With Comments"), publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? publicPostsWithComments.map((publicPostsWithComment, index) => /*#__PURE__*/React.createElement(PostCard, {
+    key: index,
+    post: publicPostsWithComment
+  })) : /*#__PURE__*/React.createElement("p", null, "public posts")), /*#__PURE__*/React.createElement("div", {
     className: "userGroups"
   }, /*#__PURE__*/React.createElement("h2", null, "Groups"), /*#__PURE__*/React.createElement("ul", null, userGroups !== null && userGroups.map(userGroup => /*#__PURE__*/React.createElement("li", {
     key: userGroup.createdAt
   }, userGroup.Title, " ")))));
 }
-
-// function Profile() {
-
-// 	const [usernameOrEmail, setUsernameOrEmail] = useState("")
-// 	const [password, setPassword] = useState("")
-
-// 	//this is the sign in button
-// 	const submit = async (e) => {
-// 		e.preventDefault() // prevent reload.
-
-// 		//this is user input 
-// 		const userToLogin = {
-// 			usernameOrEmail,
-// 			password,
-// 		}
-
-// 		try {
-// 			//check credentials with backend
-// 			const response = await fetch('http://localhost:8080/auth/login', {
-// 				method: 'POST',
-// 				headers: { 'Content-Type': 'application/json' },
-// 				credentials: 'include',
-// 				body: JSON.stringify(userToLogin),
-// 			});
-
-// 			if (!response.ok) {
-// 				errorMessage.innerHTML = 'Invalid credentials'
-// 				throw new Error('Invalid credentials');
-// 			}
-
-// 			//takes response from backend and processes
-// 			const data = await response.json();
-// 			if (data.success) {
-// 				setIsLoggedIn(true);
-// 			} else {
-// 				errorMessage.innerHTML = 'Invalid credentials'
-// 				throw new Error('Invalid credentials');
-// 			}
-// 		} catch (error) {
-// 			errorMessage.innerHTML = 'Invalid credentials'
-// 			setError('Invalid credentials');
-// 		}
-// 	};
-
-// 	//if credentials frontend match backend then we render home
-// 	if (isLoggedIn) {
-// 		const appContainer = document.querySelector('.app-container');
-// 		ReactDOM.render(<Home />, appContainer);
-// 	}
-
-// 	//this is the register button, when pressed will serve registration form
-// 	const renderRegister = () => {
-// 		const appContainer = document.querySelector('.app-container');
-// 		ReactDOM.render(<Register />, appContainer);
-// 	};
-
-// 	return (
-// 		<div className="login-container">
-// 			<main className="form-signin w-100 m-auto" style={{ display: "block" }}>
-// 				<h1 className="h3 mb-3 fw-normal login-text">log in</h1>
-// 				<form onSubmit={submit}>
-// 					<div className="form-floating">
-// 						<label htmlFor="floatingInput" className="login-text">Email address</label>
-// 						<input
-// 							type="email"
-// 							className="form-control login-text"
-// 							id="floatingInput"
-// 							placeholder="name@example.com"
-// 							onChange={(e) => setUsernameOrEmail(e.target.value)}
-// 						/>
-// 					</div>
-
-// 					<div className="form-floating">
-// 						<label htmlFor="floatingPassword" className="login-text">Password</label>
-// 						<input
-// 							type="password"
-// 							className="form-control login-text"
-// 							id="floatingPassword"
-// 							placeholder="Password"
-// 							onChange={(e) => setPassword(e.target.value)}
-// 						/>
-// 					</div>
-// 					<button className="w-100 btn btn-lg btn-primary login-button" type="submit">
-// 						Sign in
-// 					</button>
-// 				</form>
-// 				<div className="error-message"></div>
-// 				<br /> {/* Add a line break for spacing */}
-// 				<span className="login-text">Don't have an account? &nbsp;</span>
-// 				<button className="w-100 btn btn-lg btn-primary login-button" onClick={renderRegister}>
-// 					Register
-// 				</button>
-// 			</main>
-// 		</div>
-// 	)
-// }
-
 const root = document.querySelector("#root");
 ReactDOM.render( /*#__PURE__*/React.createElement(App, null), root);

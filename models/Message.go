@@ -6,13 +6,13 @@ import (
 )
 
 type Message struct {
-	MessageId   int
-	Body        string
-	CreatedAt   int64
-	MessageType string
-	SenderId    int
-	TargetId    int
-	UpdatedAt   int64
+	MessageId   int    `json:"messageId"`
+	Body        string `json:"body"`
+	CreatedAt   int64  `json:"createdAt"`
+	MessageType string `json:"messageType"`
+	SenderId    int    `json:"senderId"`
+	TargetId    int    `json:"targetId"`
+	UpdatedAt   int64  `json:"updatedAt"`
 }
 
 func (m *Message) Validate() error {
