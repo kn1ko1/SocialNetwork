@@ -72,7 +72,6 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cookieValue := GenerateNewUUID()
-
 	SessionMap[cookieValue] = &user
 
 	cookie := &http.Cookie{

@@ -2,6 +2,7 @@ package auth
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"socialnetwork/repo"
 	"strings"
@@ -41,7 +42,7 @@ func (h *LogoutHandler) post(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 		Secure:   strings.HasPrefix(r.Header.Get("X-Forwarded-Proto"), "https"),
 		Domain:   "localhost",
-		SameSite: http.SameSiteNoneMode, // Set SameSite attribute to None
+		SameSite: http.SameSiteLaxMode,
 	}
 
 	http.SetCookie(w, &cookie)
@@ -53,6 +54,8 @@ func (h *LogoutHandler) post(w http.ResponseWriter, r *http.Request) {
 		Success: true,
 		Message: "Logout successful",
 	}
+
+	log.Println("[api/LogoutHandler] response from setCookie:", response)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
