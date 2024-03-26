@@ -425,7 +425,41 @@ function Chat() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"));
 }
 function Group() {
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Group"));
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("form", null, /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "exampleInputEmail1",
+    className: "form-label"
+  }, "Title"), /*#__PURE__*/React.createElement("input", {
+    type: "email",
+    className: "form-control",
+    id: "exampleInputEmail1",
+    "aria-describedby": "emailHelp"
+  }), /*#__PURE__*/React.createElement("div", {
+    id: "emailHelp",
+    className: "form-text"
+  }, "We'll never share your email with anyone else.")), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "exampleInputPassword1",
+    className: "form-label"
+  }, "Description"), /*#__PURE__*/React.createElement("input", {
+    type: "password",
+    className: "form-control",
+    id: "exampleInputPassword1"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3 form-check"
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "checkbox",
+    className: "form-check-input",
+    id: "exampleCheck1"
+  }), /*#__PURE__*/React.createElement("label", {
+    className: "form-check-label",
+    for: "exampleCheck1"
+  }, "Check me out")), /*#__PURE__*/React.createElement("button", {
+    type: "submit",
+    className: "btn btn-primary"
+  }, "Submit")), /*#__PURE__*/React.createElement("h1", null, "Group"));
 }
 function Notifications() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Notifications"));
