@@ -122,6 +122,19 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
+	// Sets up a new Cookie
+	cookieValue := GenerateNewUUID()
+	SessionMap[cookieValue] = &processedUser
+
+	cookie = &http.Cookie{
+		Name:     CookieName,
+		Value:    cookieValue,
+		Path:     "/",
+		Expires:  time.Now().Add(timeout),
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	}
+	http.SetCookie(w, cookie)
 	// Convert the response struct to JSON
 	jsonResponse, err := json.Marshal(response)
 	if err != nil {
@@ -139,19 +152,4 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
-
-	// Sets up a new Cookie
-	CookieValue = GenerateNewUUID()
-	//sessionMap[CookieValue] = &processedUser
-
-	cookie = &http.Cookie{
-		Name:     CookieName,
-		Value:    CookieValue,
-		Path:     "/",
-		Expires:  time.Now().Add(timeout),
-		HttpOnly: true,
-		SameSite: http.SameSiteLaxMode,
-	}
-	http.SetCookie(w, cookie)
-	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

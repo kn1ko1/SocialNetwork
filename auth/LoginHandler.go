@@ -71,11 +71,13 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	SessionMap[CookieValue] = &user
+	cookieValue := GenerateNewUUID()
+
+	SessionMap[cookieValue] = &user
 
 	cookie := &http.Cookie{
 		Name:     CookieName,
-		Value:    CookieValue,
+		Value:    cookieValue,
 		Path:     "/",
 		Expires:  time.Now().Add(timeout),
 		HttpOnly: true,
