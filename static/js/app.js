@@ -242,7 +242,6 @@ function Register() {
         },
         body: JSON.stringify(newUser)
       });
-      console.log("newUser:", newUser);
       if (!response.ok) {
         throw new Error("Invalid credentials");
       }
@@ -432,14 +431,21 @@ function Profile() {
       // myProfileDataElement.innerHTML = JSON.stringify(data.profileUserData, null, 2);
 
       // Set privacy setting based on isPublic value (0 or 1)
-      setPrivacySetting(data.profileUserData.isPublic === 1 ? 'public' : 'private');
+
       setProfileUserData(data.profileUserData);
-      setUserPostData(data.userPostData);
+      setUserPostData(data.userPostData || []);
       console.log("userPostData", data.userPostData);
-      setUserFollowerData(data.userFollowerData);
+      setUserFollowerData(data.userFollowerData || []);
       console.log("userFollowerData", data.userFollowerData);
-      setUserFollowsData(data.userFollowsData);
+      setUserFollowsData(data.userFollowsData || []);
       console.log("userFollowsData", data.userFollowsData);
+      console.log("data.profileUserData.isPublic", data.profileUserData.isPublic);
+
+      // Update the privacy setting based on the fetched isPublic value
+      const isPublicValue = data.profileUserData.isPublic;
+      const privacyStatus = isPublicValue === true ? 'public' : 'private';
+      console.log('Privacy Status:', privacyStatus); // Log the privacy status
+      setPrivacySetting(privacyStatus);
 
       // const myPostsDataElement = document.getElementById('myPostsData');
       // myPostsDataElement.innerHTML = JSON.stringify(data.userPostData, null, 2);
@@ -576,7 +582,7 @@ function PostForm({
     setBody("");
     setPrivacy("");
     setSelectedFile(null);
-    document.getElementById("postFormBody").value = "";
+    document.getElementById('postFormBody').value = "";
   };
 
   // Function to handle file selection
@@ -786,7 +792,6 @@ function PostCard({
 function CommentCard({
   comment
 }) {
-  console.log(comment);
   const formattedDate = new Date(comment.createdAt).toLocaleString();
   return /*#__PURE__*/React.createElement("div", {
     className: "card mt-3"
