@@ -212,9 +212,11 @@ function Register() {
   const [imageURL, setImageURL] = useState("");
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
-  const [isPublic, setIsPublic] = useState("public");
+  const [isPublic, setIsPublic] = useState(true);
   const [isRegistered, setIsRegistered] = useState(false);
-
+  const handleChange = e => {
+    setIsPublic(e.target.value === "true");
+  };
   //this is register button
   const submit = async e => {
     e.preventDefault(); // prevent reload.
@@ -240,6 +242,7 @@ function Register() {
         },
         body: JSON.stringify(newUser)
       });
+      console.log("newUser:", newUser);
       if (!response.ok) {
         throw new Error("Invalid credentials");
       }
@@ -358,10 +361,10 @@ function Register() {
     className: "form-check-input",
     type: "radio",
     id: "public-status",
-    value: "public",
+    value: true,
     name: "status",
-    checked: isPublic === "public",
-    onChange: e => setIsPublic(e.target.value)
+    checked: isPublic === true,
+    onChange: handleChange
   }), /*#__PURE__*/React.createElement("label", {
     className: "form-check-label",
     htmlFor: "public-status"
@@ -371,10 +374,10 @@ function Register() {
     className: "form-check-input",
     type: "radio",
     id: "private-status",
-    value: "private",
+    value: false,
     name: "status",
-    checked: isPublic === "private",
-    onChange: e => setIsPublic(e.target.value)
+    checked: isPublic === false,
+    onChange: handleChange
   }), /*#__PURE__*/React.createElement("label", {
     className: "form-check-label",
     htmlFor: "private-status"
@@ -482,7 +485,55 @@ function Chat() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"));
 }
 function Group() {
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Group"));
+  const [Title, setTitle] = useState("");
+  const [Description, setDescription] = useState("");
+
+  // Upon submitting:
+  const create = async e => {
+    e.preventDefault(); // prevent reload.
+
+    const groupData = new FormData();
+
+    // Append form data
+    groupData.append('group-title', Title);
+    groupData.append('group-description', Description);
+    console.log("Group data being sent to backend: ", Title);
+    console.log("Group data being sent to backend: ", Description);
+
+    // Send user data to golang api/PostHandler.go.
+    await fetch("http://localhost:8080/api/groups", {
+      method: "POST",
+      credentials: "include",
+      body: groupData
+    });
+  };
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("form", {
+    onSubmit: create
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "exampleTitle",
+    className: "form-label"
+  }, "Title"), /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    className: "form-control",
+    id: "exampleTitle",
+    "aria-describedby": "emailHelp",
+    onChange: e => setTitle(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "exampleInputPassword1",
+    className: "form-label"
+  }, "Description"), /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    className: "form-control",
+    id: "exampleDescription",
+    onChange: e => setDescription(e.target.value)
+  })), /*#__PURE__*/React.createElement("button", {
+    type: "submit",
+    className: "btn btn-primary"
+  }, "Create")), /*#__PURE__*/React.createElement("h1", null, "Group"));
 }
 function Notifications() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Notifications"));
@@ -735,6 +786,7 @@ function PostCard({
 function CommentCard({
   comment
 }) {
+  console.log(comment);
   const formattedDate = new Date(comment.createdAt).toLocaleString();
   return /*#__PURE__*/React.createElement("div", {
     className: "card mt-3"
