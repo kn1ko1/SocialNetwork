@@ -57,10 +57,6 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	dateInMilliseconds := date.UTC().UnixMilli()
-	log.Println("[auth/RegistrationHandler] date", date)
-	log.Println("[auth/RegistrationHandler]registeringUser.DOB ", dateInMilliseconds)
-	t := time.Unix(dateInMilliseconds/1000, 0)
-	log.Println("[auth/RegistrationHandler]date converted back ", t.Format("02-01-2006"))
 
 	// Encrypt Password for Storage
 	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(registeringUser.EncryptedPassword), bcrypt.DefaultCost)
