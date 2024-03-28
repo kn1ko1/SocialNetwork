@@ -449,6 +449,9 @@ function PostForm({
     // Append form data
     formData.append('body', body);
     formData.append('privacy', privacy);
+    if (privacy === "private") {
+      groupId = -1;
+    }
     formData.append('groupId', groupId);
     if (selectedFile) {
       formData.append('image', selectedFile);
