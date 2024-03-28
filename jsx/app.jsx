@@ -437,6 +437,7 @@ function Profile() {
 	const [userPostData, setUserPostData] = useState([])
 	const [userFollowerData, setUserFollowerData] = useState([])
 	const [userFollowsData, setUserFollowsData] = useState([])
+	const [privacySetting, setPrivacySetting] = useState('');
 
 	useEffect(() => {
 		fetch("http://localhost:8080/api/profile", {
@@ -456,6 +457,9 @@ function Profile() {
 				// Update the HTML elements with the profile data under each category
 				// const myProfileDataElement = document.getElementById('myProfileData');
 				// myProfileDataElement.innerHTML = JSON.stringify(data.profileUserData, null, 2);
+
+				 // Set privacy setting based on isPublic value (0 or 1)
+				 setPrivacySetting(data.profileUserData.isPublic === 1 ? 'public' : 'private');
 
 				setProfileUserData(data.profileUserData)
 
@@ -488,6 +492,28 @@ function Profile() {
 			<div id="profileData">
 				<h2>My Profile</h2>
 				<div id="myProfileData"></div>
+
+				<div>
+                    <label>
+                        <input
+                            type="radio"
+                            value="public"
+                            checked={privacySetting === 'public'}
+                            // onChange={handlePrivacyChange}
+                        />
+                        Public
+                    </label>
+                    <label>
+                        <input
+                            type="radio"
+                            value="private"
+                            checked={privacySetting === 'private'}
+                            // onChange={handlePrivacyChange}
+                        />
+                        Private
+                    </label>
+                </div>
+
 				<p>
 					<strong>User ID:</strong> {profileUserData.userId}
 				</p>
@@ -513,10 +539,7 @@ function Profile() {
 				<p>
 					<strong>Image URL:</strong> {profileUserData.imageURL}
 				</p>
-				<p>
-					<strong>Public Profile:</strong>{" "}
-					{profileUserData.isPublic ? "Yes" : "No"}
-				</p>
+			
 
 				<h2>My Posts</h2>
 				<div id="myPostsData">
