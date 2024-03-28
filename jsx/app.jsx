@@ -115,96 +115,106 @@ function Navbar() {
 }
 
 function Login() {
-	const [usernameOrEmail, setUsernameOrEmail] = useState("")
-	const [password, setPassword] = useState("")
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const errorMessage = document.querySelector(".error-message")
+    const [usernameOrEmail, setUsernameOrEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
-	//this is the sign in button
-	const submit = async (e) => {
-		e.preventDefault() // prevent reload.
+    const handleUsernameOrEmailChange = (e) => {
+   	 setUsernameOrEmail(e.target.value);
+    };
 
-		//this is user input 
-		const userToLogin = {
-			usernameOrEmail,
-			password,
-		}
+    const handlePasswordChange = (e) => {
+   	 setPassword(e.target.value);
+    };
 
-		try {
-			//check credentials with backend
-			const response = await fetch('http://localhost:8080/auth/login', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				credentials: 'include',
-				body: JSON.stringify(userToLogin),
-			});
+    const handleSubmit = async (e) => {
+   	 e.preventDefault();
 
-			if (!response.ok) {
-				errorMessage.innerHTML = 'Invalid credentials'
-				throw new Error('Invalid credentials');
-			}
+   	 const userToLogin = {
+   		 usernameOrEmail,
+   		 password,
+   	 };
 
-			//takes response from backend and processes
-			const data = await response.json();
-			if (data.success) {
-				setIsLoggedIn(true);
-			} else {
-				errorMessage.innerHTML = 'Invalid credentials'
-				throw new Error('Invalid credentials');
-			}
-		} catch (error) {
-			errorMessage.innerHTML = 'Invalid credentials'
-		}
-	};
+   	 try {
+   		 const response = await fetch('http://localhost:8080/auth/login', {
+   			 method: 'POST',
+   			 headers: { 'Content-Type': 'application/json' },
+   			 credentials: 'include',
+   			 body: JSON.stringify(userToLogin),
+   		 });
 
-	//if credentials frontend match backend then we render home
-	if (isLoggedIn) {
-		const appContainer = document.querySelector('.app-container');
-		//ReactDOM.render(<Home />, appContainer);
-		ReactDOM.render(<Home />, appContainer);
-	}
+   		 if (!response.ok) {
+   			 setErrorMessage('Invalid credentials');
+   			 throw new Error('Invalid credentials');
+   		 }
 
-	//this is the register button, when pressed will serve registration form
-	const renderRegister = () => {
-		const appContainer = document.querySelector('.app-container');
-		ReactDOM.render(<Register />, appContainer);
-	};
+   		 const data = await response.json();
+   		 if (data.success) {
+   			 setIsLoggedIn(true);
+   			 setErrorMessage('');
+   		 } else {
+   			 setErrorMessage('Invalid credentials');
+   			 throw new Error('Invalid credentials');
+   		 }
+   	 } catch (error) {
+   		 setErrorMessage('Invalid credentials');
+   	 }
+    };
 
+    const renderRegister = () => {
+   	 const appContainer = document.querySelector('.app-container');
+   	 ReactDOM.render(<Register />, appContainer);
+    };
 
-	return (
-		<div className="container login-container">
-			<h1 className="h3 mb-3 fw-normal login-text">log in</h1>
-			<form onSubmit={submit}>
-				<div class="mb-3">
-					<label for="exampleInputEmail1" class="form-label">Email address</label>
-					<input
-						type="email"
-						className="form-control form-control-lg"
-						id="exampleInputEmail1"
-						aria-describedby="emailHelp"
-						onChange={(e) => setUsernameOrEmail(e.target.value)} />
-				</div>
-				<div class="mb-3">
-					<label for="exampleInputPassword1" class="form-label">Password</label>
-					<input
-						type="password"
-						className="form-control form-control-lg"
-						id="exampleInputPassword1"
-						onChange={(e) => setPassword(e.target.value)} />
-				</div>
-				<button type="submit" class="btn btn-primary">Log in</button>
-			</form>
-			<div className="error-message"></div>
-			<br /> {/* Add a line break for spacing */}
-			<div className="mb3">
-				<span className="login-text">Don't have an account? &nbsp;</span>
-				<button type="submit" className="btn btn-primary" onClick={renderRegister}>
-					Register
-				</button>
-			</div>
-		</div>
-	)
+    if (isLoggedIn) {
+   	 const appContainer = document.querySelector('.app-container');
+   	 ReactDOM.render(<Home />, appContainer);
+    }
+
+    return (
+   	 <div className="container login-container">
+   		 <h1 className="h3 mb-3 fw-normal login-text">Log in</h1>
+   		 <form onSubmit={handleSubmit}>
+   			 <div className="mb-3">
+   				 <label htmlFor="exampleInputEmail1" className="form-label">
+   					 Email address
+   				 </label>
+   				 <input
+   					 type="email"
+   					 className="form-control form-control-lg"
+   					 id="exampleInputEmail1"
+   					 aria-describedby="emailHelp"
+   					 onChange={handleUsernameOrEmailChange}
+   				 />
+   			 </div>
+   			 <div className="mb-3">
+   				 <label htmlFor="exampleInputPassword1" className="form-label">
+   					 Password
+   				 </label>
+   				 <input
+   					 type="password"
+   					 className="form-control form-control-lg"
+   					 id="exampleInputPassword1"
+   					 onChange={handlePasswordChange}
+   				 />
+   			 </div>
+   			 <button type="submit" className="btn btn-primary">
+   				 Log in
+   			 </button>
+   		 </form>
+   		 {errorMessage && <div className="error-message">{errorMessage}</div>}
+   		 <br />
+   		 <div className="mb3">
+   			 <span className="login-text">Don't have an account? &nbsp;</span>
+   			 <button type="button" className="btn btn-primary" onClick={renderRegister}>
+   				 Register
+   			 </button>
+   		 </div>
+   	 </div>
+    );
 }
+
 
 function Register() {
 	const [email, setEmail] = useState("");
