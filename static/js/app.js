@@ -472,7 +472,55 @@ function Chat() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"));
 }
 function Group() {
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Group"));
+  const [Title, setTitle] = useState("");
+  const [Description, setDescription] = useState("");
+
+  // Upon submitting:
+  const create = async e => {
+    e.preventDefault(); // prevent reload.
+
+    const groupData = new FormData();
+
+    // Append form data
+    groupData.append('group-title', Title);
+    groupData.append('group-description', Description);
+    console.log("Group data being sent to backend: ", Title);
+    console.log("Group data being sent to backend: ", Description);
+
+    // Send user data to golang api/PostHandler.go.
+    await fetch("http://localhost:8080/api/groups", {
+      method: "POST",
+      credentials: "include",
+      body: groupData
+    });
+  };
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("form", {
+    onSubmit: create
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "exampleTitle",
+    className: "form-label"
+  }, "Title"), /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    className: "form-control",
+    id: "exampleTitle",
+    "aria-describedby": "emailHelp",
+    onChange: e => setTitle(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "exampleInputPassword1",
+    className: "form-label"
+  }, "Description"), /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    className: "form-control",
+    id: "exampleDescription",
+    onChange: e => setDescription(e.target.value)
+  })), /*#__PURE__*/React.createElement("button", {
+    type: "submit",
+    className: "btn btn-primary"
+  }, "Create")), /*#__PURE__*/React.createElement("h1", null, "Group"));
 }
 function Notifications() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Notifications"));

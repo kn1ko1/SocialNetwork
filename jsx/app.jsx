@@ -576,13 +576,49 @@ function Chat() {
 }
 
 function Group() {
+	const [Title, setTitle] = useState("");
+	const [Description, setDescription] = useState("")
+
+	// Upon submitting:
+	const create = async (e) => {
+		e.preventDefault(); // prevent reload.
+
+		const groupData = new FormData();
+
+		// Append form data
+		groupData.append('group-title', Title);
+		groupData.append('group-description', Description);
+	
+		console.log("Group data being sent to backend: ", Title);
+		console.log("Group data being sent to backend: ", Description);
+		
+		// Send user data to golang api/PostHandler.go.
+		await fetch("http://localhost:8080/api/groups", {
+			method: "POST",
+			credentials: "include",
+			body: groupData,
+		})
+	}
 	return (
 		<div>
 			<Navbar />
+			<form onSubmit={create}>
+  <div className="mb-3">
+    <label htmlFor="exampleTitle" className="form-label">Title</label>
+    <input type="text" className="form-control" id="exampleTitle" aria-describedby="emailHelp" onChange={(e) => setTitle(e.target.value)}/>
+	
+  </div>
+  <div className="mb-3">
+    <label htmlFor="exampleInputPassword1" className="form-label">Description</label>
+    <input type="text" className="form-control" id="exampleDescription" onChange={(e) => setDescription(e.target.value)} />
+  </div>
+  <button type="submit" className="btn btn-primary">Create</button>
+</form>
 			<h1>Group</h1>
 		</div>
 	)
 }
+
 
 function Notifications() {
 	return (
@@ -632,8 +668,8 @@ function PostForm({ groupId }) {
 		setPrivacy("")
 		setSelectedFile(null)
 
-		document.getElementById("postFormBody").value = ""
-	}
+		document.getElementById('postFormBody').value = "";
+	};
 
 	// Function to handle file selection
 	const handleFileChange = (e) => {
