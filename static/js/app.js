@@ -426,12 +426,6 @@ function Profile() {
       }
       return response.json();
     }).then(data => {
-      // Update the HTML elements with the profile data under each category
-      // const myProfileDataElement = document.getElementById('myProfileData');
-      // myProfileDataElement.innerHTML = JSON.stringify(data.profileUserData, null, 2);
-
-      // Set privacy setting based on isPublic value (0 or 1)
-
       setProfileUserData(data.profileUserData);
       setUserPostData(data.userPostData || []);
       console.log("userPostData", data.userPostData);
@@ -446,19 +440,35 @@ function Profile() {
       const privacyStatus = isPublicValue === true ? 'public' : 'private';
       console.log('Privacy Status:', privacyStatus); // Log the privacy status
       setPrivacySetting(privacyStatus);
-
-      // const myPostsDataElement = document.getElementById('myPostsData');
-      // myPostsDataElement.innerHTML = JSON.stringify(data.userPostData, null, 2);
-
-      // const myFollowersDataElement = document.getElementById('myFollowersData');
-      // myFollowersDataElement.innerHTML = JSON.stringify(data.userFollowerData, null, 2);
-
-      // const usersIFollowDataElement = document.getElementById('usersIFollowData');
-      // usersIFollowDataElement.innerHTML = JSON.stringify(data.userFollowsData, null, 2);
     }).catch(error => {
       console.error("Error fetching profile data:", error);
     });
   }, []);
+  const handlePrivacyChange = event => {
+    const newPrivacySetting = event.target.value;
+    setPrivacySetting(newPrivacySetting);
+
+    // Update the database with the new privacy status
+    fetch("http://localhost:8080/api/profile/privacy", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      // THIS NUMBER OR TRUE FALSE NEEDS LOOKED AT
+      body: JSON.stringify({
+        userId: profileUserData.userId,
+        isPublic: newPrivacySetting === 'public' ? true : false
+      })
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error("Failed to update privacy status");
+      }
+      // Handle successful update
+      console.log("privacy status update response", response);
+    }).catch(error => {
+      console.error("Error updating privacy status:", error);
+    });
+  };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("div", {
     id: "profileData"
   }, /*#__PURE__*/React.createElement("h2", null, "My Profile"), /*#__PURE__*/React.createElement("div", {
@@ -466,13 +476,13 @@ function Profile() {
   }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", null, /*#__PURE__*/React.createElement("input", {
     type: "radio",
     value: "public",
-    checked: privacySetting === 'public'
-    // onChange={handlePrivacyChange}
+    checked: privacySetting === 'public',
+    onChange: handlePrivacyChange
   }), "Public"), /*#__PURE__*/React.createElement("label", null, /*#__PURE__*/React.createElement("input", {
     type: "radio",
     value: "private",
-    checked: privacySetting === 'private'
-    // onChange={handlePrivacyChange}
+    checked: privacySetting === 'private',
+    onChange: handlePrivacyChange
   }), "Private")), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "User ID:"), " ", profileUserData.userId), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Username:"), " ", profileUserData.username), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Email:"), " ", profileUserData.email), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "First Name:"), " ", profileUserData.firstName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Last Name:"), " ", profileUserData.lastName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Date of Birth:"), " ", new Date(profileUserData.dob).toLocaleDateString()), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Bio:"), " ", profileUserData.bio), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Image URL:"), " ", profileUserData.imageURL), /*#__PURE__*/React.createElement("h2", null, "My Posts"), /*#__PURE__*/React.createElement("div", {
     id: "myPostsData"
   }, userPostData.map(post => /*#__PURE__*/React.createElement("div", {

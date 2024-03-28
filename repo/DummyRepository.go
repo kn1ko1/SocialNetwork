@@ -119,6 +119,10 @@ func (r *DummyRepository) GetProfileDataForUser(userId int) (transport.ProfileMo
 	return profileModel, errors.New("not implimented yet")
 }
 
+func (r *DummyRepository) UpdateIsPublic(userId int, isPublic bool) error {
+	return errors.New("not implimented yet")
+}
+
 func (r *DummyRepository) CreateUser(user models.User) (models.User, error) {
 	user.UserId = 1
 	return user, nil

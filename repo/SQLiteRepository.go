@@ -43,6 +43,9 @@ func (r *SQLiteRepository) GetHomeDataForUser(userId int) (transport.HomeModel, 
 func (r *SQLiteRepository) GetProfileDataForUser(userId int) (transport.ProfileModel, error) {
 	return sqlite.GetProfileDataForUser(r.businessDb, userId)
 }
+func (r *SQLiteRepository) UpdateIsPublic(userId int, isPublic bool) error {
+	return sqlite.UpdateIsPublic(r.identityDb, userId, isPublic)
+}
 
 // Users
 func (r *SQLiteRepository) CreateUser(user models.User) (models.User, error) {

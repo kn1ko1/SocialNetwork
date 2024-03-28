@@ -462,11 +462,6 @@ function Profile() {
 				return response.json()
 			})
 			.then((data) => {
-				// Update the HTML elements with the profile data under each category
-				// const myProfileDataElement = document.getElementById('myProfileData');
-				// myProfileDataElement.innerHTML = JSON.stringify(data.profileUserData, null, 2);
-
-				 // Set privacy setting based on isPublic value (0 or 1)
 				
 				setProfileUserData(data.profileUserData)
 
@@ -486,20 +481,36 @@ function Profile() {
  const privacyStatus = isPublicValue === true ? 'public' : 'private';
  console.log('Privacy Status:', privacyStatus); // Log the privacy status
  setPrivacySetting(privacyStatus);
-
-				// const myPostsDataElement = document.getElementById('myPostsData');
-				// myPostsDataElement.innerHTML = JSON.stringify(data.userPostData, null, 2);
-
-				// const myFollowersDataElement = document.getElementById('myFollowersData');
-				// myFollowersDataElement.innerHTML = JSON.stringify(data.userFollowerData, null, 2);
-
-				// const usersIFollowDataElement = document.getElementById('usersIFollowData');
-				// usersIFollowDataElement.innerHTML = JSON.stringify(data.userFollowsData, null, 2);
 			})
 			.catch((error) => {
 				console.error("Error fetching profile data:", error)
 			})
 	}, [])
+
+	const handlePrivacyChange = (event) => {
+        const newPrivacySetting = event.target.value;
+        setPrivacySetting(newPrivacySetting);
+
+        // Update the database with the new privacy status
+        fetch("http://localhost:8080/api/profile/privacy", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+			// THIS NUMBER OR TRUE FALSE NEEDS LOOKED AT
+            body: JSON.stringify({ userId: profileUserData.userId, isPublic: newPrivacySetting === 'public' ? true : false }),
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to update privacy status");
+            }
+            // Handle successful update
+			console.log("privacy status update response", response)
+        })
+        .catch((error) => {
+            console.error("Error updating privacy status:", error);
+        });
+    };
 
 	return (
 		<div>
@@ -514,7 +525,7 @@ function Profile() {
                             type="radio"
                             value="public"
                             checked={privacySetting === 'public'}
-                            // onChange={handlePrivacyChange}
+                            onChange={handlePrivacyChange}
                         />
                         Public
                     </label>
@@ -523,7 +534,7 @@ function Profile() {
                             type="radio"
                             value="private"
                             checked={privacySetting === 'private'}
-                            // onChange={handlePrivacyChange}
+                            onChange={handlePrivacyChange}
                         />
                         Private
                     </label>
