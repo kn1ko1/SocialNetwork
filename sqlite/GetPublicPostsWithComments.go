@@ -51,8 +51,10 @@ ORDER BY
 			postWithComment.Comments = []models.Comment{}
 			postMap[post.PostId] = &postWithComment
 		}
+		if comment.CommentId != 0 {
+			postMap[post.PostId].Comments = append(postMap[post.PostId].Comments, comment)
+		}
 
-		postMap[post.PostId].Comments = append(postMap[post.PostId].Comments, comment)
 	}
 
 	if err := rows.Err(); err != nil {
@@ -63,6 +65,5 @@ ORDER BY
 	for _, postWithComment := range postMap {
 		result = append(result, *postWithComment)
 	}
-
 	return result, nil
 }

@@ -219,17 +219,21 @@ function Login() {
 
 
 function Register() {
-	const [email, setEmail] = useState("")
-	const [encryptedPassword, setEncryptedPassword] = useState("")
-	const [firstName, setFirstName] = useState("")
-	const [lastName, setLastName] = useState("")
-	const [dob, setDob] = useState("")
-	const [imageURL, setImageURL] = useState("")
-	const [username, setUsername] = useState("")
-	const [bio, setBio] = useState("")
-	const [isPublic, setIsPublic] = useState("public")
-	const [isRegistered, setIsRegistered] = useState(false)
+	const [email, setEmail] = useState("");
+	const [encryptedPassword, setEncryptedPassword] = useState("");
+	const [firstName, setFirstName] = useState("");
+	const [lastName, setLastName] = useState("");
+	const [dob, setDob] = useState("");
+	const [imageURL, setImageURL] = useState("");
+	const [username, setUsername] = useState("");
+	const [bio, setBio] = useState("");
+	const [isPublic, setIsPublic] = useState(true);
+	const [isRegistered, setIsRegistered] = useState(false);
 
+
+	const handleChange = e => {
+		setIsPublic(e.target.value === "true");
+	};
 	//this is register button
 	const submit = async (e) => {
 		e.preventDefault() // prevent reload.
@@ -245,7 +249,9 @@ function Register() {
 			username,
 			bio,
 			isPublic,
-		}
+		};
+
+
 
 		try {
 			// Send user data to backend
@@ -378,10 +384,10 @@ function Register() {
 						className="form-check-input"
 						type="radio"
 						id="public-status"
-						value="public"
+						value={true}
 						name="status"
-						checked={isPublic === "public"}
-						onChange={(e) => setIsPublic(e.target.value)}
+						checked={isPublic === true}
+						onChange={handleChange}
 					/>
 					<label className="form-check-label" htmlFor="public-status">
 						Public
@@ -393,15 +399,17 @@ function Register() {
 						className="form-check-input"
 						type="radio"
 						id="private-status"
-						value="private"
+						value={false}
 						name="status"
-						checked={isPublic === "private"}
-						onChange={(e) => setIsPublic(e.target.value)}
+						checked={isPublic === false}
+						onChange={handleChange}
 					/>
 					<label className="form-check-label" htmlFor="private-status">
 						Private
 					</label>
 				</div>
+
+
 
 				<div className="mb-3">
 					<label htmlFor="about">About me</label>
