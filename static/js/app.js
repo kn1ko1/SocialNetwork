@@ -40,9 +40,6 @@ function Navbar() {
         socket.addEventListener("close", event => {
           console.log("The connection has been closed successfully.");
         });
-        // socket.onclose = function (event) {
-        // 	console.log("WebSocket connection closed.", event)
-        // }
         const appContainer = document.querySelector(".app-container");
         ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
         console.log("Logout successful!");
@@ -114,15 +111,6 @@ function Login() {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-<<<<<<< HEAD
-  const errorMessage = document.querySelector(".error-message");
-
-  //this is the sign in button
-  const submit = async e => {
-    e.preventDefault(); // prevent reload.
-
-    //this is user input
-=======
   const [errorMessage, setErrorMessage] = useState('');
   const handleUsernameOrEmailChange = e => {
     setUsernameOrEmail(e.target.value);
@@ -132,62 +120,28 @@ function Login() {
   };
   const handleSubmit = async e => {
     e.preventDefault();
->>>>>>> main
     const userToLogin = {
       usernameOrEmail,
       password
     };
     try {
-<<<<<<< HEAD
-      //check credentials with backend
-      const response = await fetch("http://localhost:8080/auth/login", {
-        method: "POST",
-=======
       const response = await fetch('http://localhost:8080/auth/login', {
         method: 'POST',
->>>>>>> main
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json'
         },
-        credentials: "include",
+        credentials: 'include',
         body: JSON.stringify(userToLogin)
       });
       if (!response.ok) {
-<<<<<<< HEAD
-        errorMessage.innerHTML = "Invalid credentials";
-        throw new Error("Invalid credentials");
-=======
         setErrorMessage('Invalid credentials');
         throw new Error('Invalid credentials');
->>>>>>> main
       }
       const data = await response.json();
       if (data.success) {
         setIsLoggedIn(true);
         setErrorMessage('');
       } else {
-<<<<<<< HEAD
-        errorMessage.innerHTML = "Invalid credentials";
-        throw new Error("Invalid credentials");
-      }
-    } catch (error) {
-      errorMessage.innerHTML = "Invalid credentials";
-    }
-  };
-
-  //if credentials frontend match backend then we render home
-  if (isLoggedIn) {
-    const appContainer = document.querySelector(".app-container");
-    //ReactDOM.render(<Home />, appContainer);
-    ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
-    socket = new WebSocket("ws://localhost:8080/ws");
-    socket.onopen = function (event) {
-      console.log("WebSocket connection established.");
-    };
-  }
-
-  //this is the register button, when pressed will serve registration form
-=======
         setErrorMessage('Invalid credentials');
         throw new Error('Invalid credentials');
       }
@@ -195,14 +149,17 @@ function Login() {
       setErrorMessage('Invalid credentials');
     }
   };
->>>>>>> main
   const renderRegister = () => {
-    const appContainer = document.querySelector(".app-container");
+    const appContainer = document.querySelector('.app-container');
     ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), appContainer);
   };
   if (isLoggedIn) {
     const appContainer = document.querySelector('.app-container');
     ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
+    socket = new WebSocket("ws://localhost:8080/ws");
+    socket.onopen = function (event) {
+      console.log("WebSocket connection established.");
+    };
   }
   return /*#__PURE__*/React.createElement("div", {
     className: "container login-container"
@@ -529,18 +486,12 @@ function PostForm({
     const formData = new FormData();
 
     // Append form data
-<<<<<<< HEAD
-    formData.append("body", body);
-    formData.append("privacy", privacy);
-    formData.append("groupId", groupId);
-=======
     formData.append('body', body);
     formData.append('privacy', privacy);
     if (privacy === "private") {
       groupId = -1;
     }
     formData.append('groupId', groupId);
->>>>>>> main
     if (selectedFile) {
       formData.append("image", selectedFile);
     }

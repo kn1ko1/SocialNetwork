@@ -168,7 +168,11 @@ function Login() {
 	if (isLoggedIn) {
 		const appContainer = document.querySelector('.app-container');
 		ReactDOM.render(<Home />, appContainer);
+		socket = new WebSocket("ws://localhost:8080/ws");
+		socket.onopen = function (event) {
+		  console.log("WebSocket connection established.");
 	}
+}
 
 	return (
 		<div className="container login-container">
