@@ -113,71 +113,69 @@ function Navbar() {
 }
 
 function Login() {
-	const [usernameOrEmail, setUsernameOrEmail] = useState("")
-	const [password, setPassword] = useState("")
-	const [isLoggedIn, setIsLoggedIn] = useState(false)
-	const errorMessage = document.querySelector(".error-message")
+	const [usernameOrEmail, setUsernameOrEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [errorMessage, setErrorMessage] = useState('');
 
-	//this is the sign in button
-	const submit = async (e) => {
-		e.preventDefault() // prevent reload.
+	const handleUsernameOrEmailChange = (e) => {
+		setUsernameOrEmail(e.target.value);
+	};
 
-		//this is user input
+	const handlePasswordChange = (e) => {
+		setPassword(e.target.value);
+	};
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+
 		const userToLogin = {
 			usernameOrEmail,
 			password,
-		}
+		};
 
 		try {
-			//check credentials with backend
-			const response = await fetch("http://localhost:8080/auth/login", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				credentials: "include",
+			const response = await fetch('http://localhost:8080/auth/login', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include',
 				body: JSON.stringify(userToLogin),
 			})
 
 			if (!response.ok) {
-				errorMessage.innerHTML = "Invalid credentials"
-				throw new Error("Invalid credentials")
+				setErrorMessage('Invalid credentials');
+				throw new Error('Invalid credentials');
 			}
 
-			//takes response from backend and processes
-			const data = await response.json()
+			const data = await response.json();
 			if (data.success) {
-				setIsLoggedIn(true)
+				setIsLoggedIn(true);
+				setErrorMessage('');
 			} else {
-				errorMessage.innerHTML = "Invalid credentials"
-				throw new Error("Invalid credentials")
+				setErrorMessage('Invalid credentials');
+				throw new Error('Invalid credentials');
 			}
 		} catch (error) {
-			errorMessage.innerHTML = "Invalid credentials"
+			setErrorMessage('Invalid credentials');
 		}
 	}
 
-	//if credentials frontend match backend then we render home
-	if (isLoggedIn) {
-		const appContainer = document.querySelector(".app-container")
-		//ReactDOM.render(<Home />, appContainer);
-		ReactDOM.render(<Home />, appContainer)
-		socket = new WebSocket("ws://localhost:8080/ws")
-		socket.onopen = function (event) {
-			console.log("WebSocket connection established.")
-		}
-	}
-
-	//this is the register button, when pressed will serve registration form
 	const renderRegister = () => {
-		const appContainer = document.querySelector(".app-container")
-		ReactDOM.render(<Register />, appContainer)
+		const appContainer = document.querySelector('.app-container');
+		ReactDOM.render(<Register />, appContainer);
+	};
+
+	if (isLoggedIn) {
+		const appContainer = document.querySelector('.app-container');
+		ReactDOM.render(<Home />, appContainer);
 	}
 
 	return (
 		<div className="container login-container">
-			<h1 className="h3 mb-3 fw-normal login-text">log in</h1>
-			<form onSubmit={submit}>
-				<div class="mb-3">
-					<label for="exampleInputEmail1" class="form-label">
+			<h1 className="h3 mb-3 fw-normal login-text">Log in</h1>
+			<form onSubmit={handleSubmit}>
+				<div className="mb-3">
+					<label htmlFor="exampleInputEmail1" className="form-label">
 						Email address
 					</label>
 					<input
@@ -185,39 +183,36 @@ function Login() {
 						className="form-control form-control-lg"
 						id="exampleInputEmail1"
 						aria-describedby="emailHelp"
-						onChange={(e) => setUsernameOrEmail(e.target.value)}
+						onChange={handleUsernameOrEmailChange}
 					/>
 				</div>
-				<div class="mb-3">
-					<label for="exampleInputPassword1" class="form-label">
+				<div className="mb-3">
+					<label htmlFor="exampleInputPassword1" className="form-label">
 						Password
 					</label>
 					<input
 						type="password"
 						className="form-control form-control-lg"
 						id="exampleInputPassword1"
-						onChange={(e) => setPassword(e.target.value)}
+						onChange={handlePasswordChange}
 					/>
 				</div>
-				<button type="submit" class="btn btn-primary">
+				<button type="submit" className="btn btn-primary">
 					Log in
 				</button>
 			</form>
-			<div className="error-message"></div>
-			<br /> {/* Add a line break for spacing */}
+			{errorMessage && <div className="error-message">{errorMessage}</div>}
+			<br />
 			<div className="mb3">
 				<span className="login-text">Don't have an account? &nbsp;</span>
-				<button
-					type="submit"
-					className="btn btn-primary"
-					onClick={renderRegister}
-				>
+				<button type="button" className="btn btn-primary" onClick={renderRegister}>
 					Register
 				</button>
 			</div>
 		</div>
-	)
+	);
 }
+
 
 function Register() {
 	const [email, setEmail] = useState("")
@@ -582,6 +577,8 @@ function Notifications() {
 	)
 }
 
+
+
 // Main post form, defaults to sending posts to public group (0)
 function PostForm({ groupId }) {
 	const [body, setBody] = useState("")
@@ -595,9 +592,12 @@ function PostForm({ groupId }) {
 		const formData = new FormData()
 
 		// Append form data
-		formData.append("body", body)
-		formData.append("privacy", privacy)
-		formData.append("groupId", groupId)
+		formData.append('body', body);
+		formData.append('privacy', privacy);
+		if (privacy === "private") {
+			groupId = -1
+		}
+		formData.append('groupId', groupId);
 		if (selectedFile) {
 			formData.append("image", selectedFile)
 		}
@@ -703,6 +703,16 @@ function PostForm({ groupId }) {
 	)
 }
 
+const postCardStyle = {
+	maxWidth: '600px',
+	background: 'linear-gradient(to bottom, #c7ddef, #ffffff)', // Light blue/grey to white gradient
+	borderRadius: '10px',
+	boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth
+	padding: '20px',
+	margin: 'auto',
+	marginBottom: '20px', // Adjust spacing between post cards
+};
+
 function PostCard({ post }) {
 	const [body, setBody] = useState("")
 	const [selectedFile, setSelectedFile] = useState(null)
@@ -753,7 +763,7 @@ function PostCard({ post }) {
 	}
 
 	return (
-		<div className="card" style={{ maxWidth: "600px", margin: "auto" }}>
+		<div className="card" style={postCardStyle}>
 			<div className="card-body">
 				<div className="d-flex flex-start align-items-center">
 					<img

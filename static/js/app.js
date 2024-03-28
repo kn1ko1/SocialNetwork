@@ -111,9 +111,10 @@ function Navbar() {
   }, "LOGOUT"))))));
 }
 function Login() {
-  const [usernameOrEmail, setUsernameOrEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [usernameOrEmail, setUsernameOrEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+<<<<<<< HEAD
   const errorMessage = document.querySelector(".error-message");
 
   //this is the sign in button
@@ -121,14 +122,30 @@ function Login() {
     e.preventDefault(); // prevent reload.
 
     //this is user input
+=======
+  const [errorMessage, setErrorMessage] = useState('');
+  const handleUsernameOrEmailChange = e => {
+    setUsernameOrEmail(e.target.value);
+  };
+  const handlePasswordChange = e => {
+    setPassword(e.target.value);
+  };
+  const handleSubmit = async e => {
+    e.preventDefault();
+>>>>>>> main
     const userToLogin = {
       usernameOrEmail,
       password
     };
     try {
+<<<<<<< HEAD
       //check credentials with backend
       const response = await fetch("http://localhost:8080/auth/login", {
         method: "POST",
+=======
+      const response = await fetch('http://localhost:8080/auth/login', {
+        method: 'POST',
+>>>>>>> main
         headers: {
           "Content-Type": "application/json"
         },
@@ -136,15 +153,20 @@ function Login() {
         body: JSON.stringify(userToLogin)
       });
       if (!response.ok) {
+<<<<<<< HEAD
         errorMessage.innerHTML = "Invalid credentials";
         throw new Error("Invalid credentials");
+=======
+        setErrorMessage('Invalid credentials');
+        throw new Error('Invalid credentials');
+>>>>>>> main
       }
-
-      //takes response from backend and processes
       const data = await response.json();
       if (data.success) {
         setIsLoggedIn(true);
+        setErrorMessage('');
       } else {
+<<<<<<< HEAD
         errorMessage.innerHTML = "Invalid credentials";
         throw new Error("Invalid credentials");
       }
@@ -165,48 +187,61 @@ function Login() {
   }
 
   //this is the register button, when pressed will serve registration form
+=======
+        setErrorMessage('Invalid credentials');
+        throw new Error('Invalid credentials');
+      }
+    } catch (error) {
+      setErrorMessage('Invalid credentials');
+    }
+  };
+>>>>>>> main
   const renderRegister = () => {
     const appContainer = document.querySelector(".app-container");
     ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), appContainer);
   };
+  if (isLoggedIn) {
+    const appContainer = document.querySelector('.app-container');
+    ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
+  }
   return /*#__PURE__*/React.createElement("div", {
     className: "container login-container"
   }, /*#__PURE__*/React.createElement("h1", {
     className: "h3 mb-3 fw-normal login-text"
-  }, "log in"), /*#__PURE__*/React.createElement("form", {
-    onSubmit: submit
+  }, "Log in"), /*#__PURE__*/React.createElement("form", {
+    onSubmit: handleSubmit
   }, /*#__PURE__*/React.createElement("div", {
-    class: "mb-3"
+    className: "mb-3"
   }, /*#__PURE__*/React.createElement("label", {
-    for: "exampleInputEmail1",
-    class: "form-label"
+    htmlFor: "exampleInputEmail1",
+    className: "form-label"
   }, "Email address"), /*#__PURE__*/React.createElement("input", {
     type: "email",
     className: "form-control form-control-lg",
     id: "exampleInputEmail1",
     "aria-describedby": "emailHelp",
-    onChange: e => setUsernameOrEmail(e.target.value)
+    onChange: handleUsernameOrEmailChange
   })), /*#__PURE__*/React.createElement("div", {
-    class: "mb-3"
+    className: "mb-3"
   }, /*#__PURE__*/React.createElement("label", {
-    for: "exampleInputPassword1",
-    class: "form-label"
+    htmlFor: "exampleInputPassword1",
+    className: "form-label"
   }, "Password"), /*#__PURE__*/React.createElement("input", {
     type: "password",
     className: "form-control form-control-lg",
     id: "exampleInputPassword1",
-    onChange: e => setPassword(e.target.value)
+    onChange: handlePasswordChange
   })), /*#__PURE__*/React.createElement("button", {
     type: "submit",
-    class: "btn btn-primary"
-  }, "Log in")), /*#__PURE__*/React.createElement("div", {
+    className: "btn btn-primary"
+  }, "Log in")), errorMessage && /*#__PURE__*/React.createElement("div", {
     className: "error-message"
-  }), /*#__PURE__*/React.createElement("br", null), " ", /*#__PURE__*/React.createElement("div", {
+  }, errorMessage), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("div", {
     className: "mb3"
   }, /*#__PURE__*/React.createElement("span", {
     className: "login-text"
   }, "Don't have an account? \xA0"), /*#__PURE__*/React.createElement("button", {
-    type: "submit",
+    type: "button",
     className: "btn btn-primary",
     onClick: renderRegister
   }, "Register")));
@@ -494,9 +529,18 @@ function PostForm({
     const formData = new FormData();
 
     // Append form data
+<<<<<<< HEAD
     formData.append("body", body);
     formData.append("privacy", privacy);
     formData.append("groupId", groupId);
+=======
+    formData.append('body', body);
+    formData.append('privacy', privacy);
+    if (privacy === "private") {
+      groupId = -1;
+    }
+    formData.append('groupId', groupId);
+>>>>>>> main
     if (selectedFile) {
       formData.append("image", selectedFile);
     }
@@ -589,6 +633,17 @@ function PostForm({
     type: "submit"
   }, "Submit"))));
 }
+const postCardStyle = {
+  maxWidth: '600px',
+  background: 'linear-gradient(to bottom, #c7ddef, #ffffff)',
+  // Light blue/grey to white gradient
+  borderRadius: '10px',
+  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+  // Optional: Add shadow for depth
+  padding: '20px',
+  margin: 'auto',
+  marginBottom: '20px' // Adjust spacing between post cards
+};
 function PostCard({
   post
 }) {
@@ -634,10 +689,7 @@ function PostCard({
   };
   return /*#__PURE__*/React.createElement("div", {
     className: "card",
-    style: {
-      maxWidth: "600px",
-      margin: "auto"
-    }
+    style: postCardStyle
   }, /*#__PURE__*/React.createElement("div", {
     className: "card-body"
   }, /*#__PURE__*/React.createElement("div", {
