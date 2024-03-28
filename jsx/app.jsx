@@ -467,14 +467,7 @@ function Notifications() {
 	)
 }
 
-const postCardStyle = {
-	maxWidth: '600px',
-	background: 'linear-gradient(to bottom, #c7ddef, #ffffff)', // Light blue/grey to white gradient
-	borderRadius: '10px',
-	boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth
-	padding: '20px',
-	marginBottom: '20px', // Adjust spacing between post cards
-  };
+
 
 // Main post form, defaults to sending posts to public group (0)
 function PostForm({ groupId }) {
@@ -530,7 +523,7 @@ function PostForm({ groupId }) {
 
 	return (
 		<div>
-			<main className="postForm container" style={postCardStyle}>
+			<main className="postForm container" style={{ maxWidth: "400px" }}>
 				<h1 className="h3 mb-3 fw-normal">Post Message Here</h1>
 				<form onSubmit={submit}>
 					<div className="form-floating mb-3">
@@ -595,6 +588,15 @@ function PostForm({ groupId }) {
 	);
 }
 
+const postCardStyle = {
+	maxWidth: '600px',
+	background: 'linear-gradient(to bottom, #c7ddef, #ffffff)', // Light blue/grey to white gradient
+	borderRadius: '10px',
+	boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth
+	padding: '20px',
+	margin: 'auto',
+	marginBottom: '20px', // Adjust spacing between post cards
+};
 
 function PostCard({ post }) {
 	const [body, setBody] = useState("");
@@ -646,7 +648,7 @@ function PostCard({ post }) {
 
 
 	return (
-		<div className="card" style={{ maxWidth: "600px", margin: "auto" }}>
+		<div className="card" style={postCardStyle}>
 			<div className="card-body">
 				<div className="d-flex flex-start align-items-center">
 					<img className="rounded-circle shadow-1-strong me-3"
