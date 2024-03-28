@@ -40,30 +40,35 @@ func (h *GroupsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *GroupsHandler) post(w http.ResponseWriter, r *http.Request) {
-	contentType := r.Header.Get("Content-Type")
+	// contentType := r.Header.Get("Content-Type")
 	var group models.Group
-	switch contentType {
-	case "application/json":
-		err := json.NewDecoder(r.Body).Decode(&group)
-		if err != nil {
-			utils.HandleError("Failed to decode request body:", err)
-			http.Error(w, "Failed to decode request body", http.StatusBadRequest)
-			return
-		}
-	case "application/x-www-form-urlencoded":
-		err := r.ParseForm()
-		if err != nil {
-			utils.HandleError("Failed to parse form:", err)
-			http.Error(w, "internal server error", http.StatusInternalServerError)
-			return
-		}
+	// switch contentType {
+	// case "application/json":
+		// err := json.NewDecoder(r.Body).Decode(&group)
+		// if err != nil {
+		// 	utils.HandleError("Failed to decode request body:", err)
+		// 	http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+		// 	return
+		// }
+	// case "application/x-www-form-urlencoded":
+	// 	err := r.ParseForm()
+	// 	if err != nil {
+	// 		utils.HandleError("Failed to parse form:", err)
+	// 		http.Error(w, "internal server error", http.StatusInternalServerError)
+	// 		return
+	// 	}
 		ctime := time.Now().UTC().UnixMilli()
 		group.CreatedAt = ctime
-		group.CreatorId = 1
+		user, err := getUser(r)
+		if err != nil{log.Println("Problem getting user ID.", err)}
+		log.Println("This createdat:", group.CreatedAt)
+		group.CreatorId = user.UserId
 		group.Description = r.PostFormValue("group-description")
+		log.Println("this group description:", group.Description)
 		group.Title = r.PostFormValue("group-title")
+		log.Println("this group title:", group.Title)
 		group.UpdatedAt = ctime
-	}
+	//}
 	// Validate the group
 	if validationErr := group.Validate(); validationErr != nil {
 		utils.HandleError("Validation failed:", validationErr)
@@ -80,7 +85,7 @@ func (h *GroupsHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusCreated)
 	// Encode and write the response
-	err := json.NewEncoder(w).Encode(result)
+	err = json.NewEncoder(w).Encode(result)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

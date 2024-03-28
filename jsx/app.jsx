@@ -449,8 +449,8 @@ function Group() {
 		const groupData = new FormData();
 
 		// Append form data
-		groupData.append('Title', Title);
-		groupData.append('Description', Description);
+		groupData.append('group-title', Title);
+		groupData.append('group-description', Description);
 	
 		console.log("Group data being sent to backend: ", Title);
 		console.log("Group data being sent to backend: ", Description);

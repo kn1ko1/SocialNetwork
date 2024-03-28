@@ -441,11 +441,10 @@ function Group() {
     const groupData = new FormData();
 
     // Append form data
-    groupData.append('Title', Title);
-    groupData.append('Description', Description);
-    console.log("Group data being sent to backend: ", groupData.Title);
+    groupData.append('group-title', Title);
+    groupData.append('group-description', Description);
     console.log("Group data being sent to backend: ", Title);
-    console.log("Group data being sent to backend: ", groupData.Description);
+    console.log("Group data being sent to backend: ", Description);
 
     // Send user data to golang api/PostHandler.go.
     await fetch("http://localhost:8080/api/groups", {
