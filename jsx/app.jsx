@@ -273,6 +273,10 @@ function Register() {
 
 	//if credentials frontend succesfully create a new user then we render home
 	if (isRegistered) {
+		socket = new WebSocket("ws://localhost:8080/ws");
+		socket.onopen = function (event) {
+		  console.log("WebSocket connection established.");
+	}
 		const appContainer = document.querySelector(".app-container")
 		ReactDOM.render(<Home />, appContainer)
 	}
