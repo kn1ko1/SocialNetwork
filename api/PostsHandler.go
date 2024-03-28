@@ -70,6 +70,7 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 	body := r.FormValue("body")
 	groupIDStr := r.FormValue("groupId")
 	groupID, _ := strconv.Atoi(groupIDStr)
+
 	imageURL := ""
 	privacy := r.FormValue("privacy")
 	userId := user.UserId

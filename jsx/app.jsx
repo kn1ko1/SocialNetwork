@@ -115,104 +115,104 @@ function Navbar() {
 }
 
 function Login() {
-    const [usernameOrEmail, setUsernameOrEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+	const [usernameOrEmail, setUsernameOrEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [errorMessage, setErrorMessage] = useState('');
 
-    const handleUsernameOrEmailChange = (e) => {
-   	 setUsernameOrEmail(e.target.value);
-    };
+	const handleUsernameOrEmailChange = (e) => {
+		setUsernameOrEmail(e.target.value);
+	};
 
-    const handlePasswordChange = (e) => {
-   	 setPassword(e.target.value);
-    };
+	const handlePasswordChange = (e) => {
+		setPassword(e.target.value);
+	};
 
-    const handleSubmit = async (e) => {
-   	 e.preventDefault();
+	const handleSubmit = async (e) => {
+		e.preventDefault();
 
-   	 const userToLogin = {
-   		 usernameOrEmail,
-   		 password,
-   	 };
+		const userToLogin = {
+			usernameOrEmail,
+			password,
+		};
 
-   	 try {
-   		 const response = await fetch('http://localhost:8080/auth/login', {
-   			 method: 'POST',
-   			 headers: { 'Content-Type': 'application/json' },
-   			 credentials: 'include',
-   			 body: JSON.stringify(userToLogin),
-   		 });
+		try {
+			const response = await fetch('http://localhost:8080/auth/login', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include',
+				body: JSON.stringify(userToLogin),
+			});
 
-   		 if (!response.ok) {
-   			 setErrorMessage('Invalid credentials');
-   			 throw new Error('Invalid credentials');
-   		 }
+			if (!response.ok) {
+				setErrorMessage('Invalid credentials');
+				throw new Error('Invalid credentials');
+			}
 
-   		 const data = await response.json();
-   		 if (data.success) {
-   			 setIsLoggedIn(true);
-   			 setErrorMessage('');
-   		 } else {
-   			 setErrorMessage('Invalid credentials');
-   			 throw new Error('Invalid credentials');
-   		 }
-   	 } catch (error) {
-   		 setErrorMessage('Invalid credentials');
-   	 }
-    };
+			const data = await response.json();
+			if (data.success) {
+				setIsLoggedIn(true);
+				setErrorMessage('');
+			} else {
+				setErrorMessage('Invalid credentials');
+				throw new Error('Invalid credentials');
+			}
+		} catch (error) {
+			setErrorMessage('Invalid credentials');
+		}
+	};
 
-    const renderRegister = () => {
-   	 const appContainer = document.querySelector('.app-container');
-   	 ReactDOM.render(<Register />, appContainer);
-    };
+	const renderRegister = () => {
+		const appContainer = document.querySelector('.app-container');
+		ReactDOM.render(<Register />, appContainer);
+	};
 
-    if (isLoggedIn) {
-   	 const appContainer = document.querySelector('.app-container');
-   	 ReactDOM.render(<Home />, appContainer);
-    }
+	if (isLoggedIn) {
+		const appContainer = document.querySelector('.app-container');
+		ReactDOM.render(<Home />, appContainer);
+	}
 
-    return (
-   	 <div className="container login-container">
-   		 <h1 className="h3 mb-3 fw-normal login-text">Log in</h1>
-   		 <form onSubmit={handleSubmit}>
-   			 <div className="mb-3">
-   				 <label htmlFor="exampleInputEmail1" className="form-label">
-   					 Email address
-   				 </label>
-   				 <input
-   					 type="email"
-   					 className="form-control form-control-lg"
-   					 id="exampleInputEmail1"
-   					 aria-describedby="emailHelp"
-   					 onChange={handleUsernameOrEmailChange}
-   				 />
-   			 </div>
-   			 <div className="mb-3">
-   				 <label htmlFor="exampleInputPassword1" className="form-label">
-   					 Password
-   				 </label>
-   				 <input
-   					 type="password"
-   					 className="form-control form-control-lg"
-   					 id="exampleInputPassword1"
-   					 onChange={handlePasswordChange}
-   				 />
-   			 </div>
-   			 <button type="submit" className="btn btn-primary">
-   				 Log in
-   			 </button>
-   		 </form>
-   		 {errorMessage && <div className="error-message">{errorMessage}</div>}
-   		 <br />
-   		 <div className="mb3">
-   			 <span className="login-text">Don't have an account? &nbsp;</span>
-   			 <button type="button" className="btn btn-primary" onClick={renderRegister}>
-   				 Register
-   			 </button>
-   		 </div>
-   	 </div>
-    );
+	return (
+		<div className="container login-container">
+			<h1 className="h3 mb-3 fw-normal login-text">Log in</h1>
+			<form onSubmit={handleSubmit}>
+				<div className="mb-3">
+					<label htmlFor="exampleInputEmail1" className="form-label">
+						Email address
+					</label>
+					<input
+						type="email"
+						className="form-control form-control-lg"
+						id="exampleInputEmail1"
+						aria-describedby="emailHelp"
+						onChange={handleUsernameOrEmailChange}
+					/>
+				</div>
+				<div className="mb-3">
+					<label htmlFor="exampleInputPassword1" className="form-label">
+						Password
+					</label>
+					<input
+						type="password"
+						className="form-control form-control-lg"
+						id="exampleInputPassword1"
+						onChange={handlePasswordChange}
+					/>
+				</div>
+				<button type="submit" className="btn btn-primary">
+					Log in
+				</button>
+			</form>
+			{errorMessage && <div className="error-message">{errorMessage}</div>}
+			<br />
+			<div className="mb3">
+				<span className="login-text">Don't have an account? &nbsp;</span>
+				<button type="button" className="btn btn-primary" onClick={renderRegister}>
+					Register
+				</button>
+			</div>
+		</div>
+	);
 }
 
 
@@ -553,6 +553,8 @@ function Notifications() {
 	)
 }
 
+
+
 // Main post form, defaults to sending posts to public group (0)
 function PostForm({ groupId }) {
 	const [body, setBody] = useState("");
@@ -568,6 +570,9 @@ function PostForm({ groupId }) {
 		// Append form data
 		formData.append('body', body);
 		formData.append('privacy', privacy);
+		if (privacy === "private") {
+			groupId = -1
+		}
 		formData.append('groupId', groupId);
 		if (selectedFile) {
 			formData.append('image', selectedFile);
@@ -669,6 +674,15 @@ function PostForm({ groupId }) {
 	);
 }
 
+const postCardStyle = {
+	maxWidth: '600px',
+	background: 'linear-gradient(to bottom, #c7ddef, #ffffff)', // Light blue/grey to white gradient
+	borderRadius: '10px',
+	boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth
+	padding: '20px',
+	margin: 'auto',
+	marginBottom: '20px', // Adjust spacing between post cards
+};
 
 function PostCard({ post }) {
 	const [body, setBody] = useState("");
@@ -720,7 +734,7 @@ function PostCard({ post }) {
 
 
 	return (
-		<div className="card" style={{ maxWidth: "600px", margin: "auto" }}>
+		<div className="card" style={postCardStyle}>
 			<div className="card-body">
 				<div className="d-flex flex-start align-items-center">
 					<img className="rounded-circle shadow-1-strong me-3"
