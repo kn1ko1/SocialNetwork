@@ -711,6 +711,7 @@ function PostCard({ post }) {
 }
 
 function CommentCard({ comment }) {
+	console.log(comment)
 	const formattedDate = new Date(comment.createdAt).toLocaleString();
 
 	return (

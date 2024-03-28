@@ -679,6 +679,7 @@ function PostCard({
 function CommentCard({
   comment
 }) {
+  console.log(comment);
   const formattedDate = new Date(comment.createdAt).toLocaleString();
   return /*#__PURE__*/React.createElement("div", {
     className: "card mt-3"
