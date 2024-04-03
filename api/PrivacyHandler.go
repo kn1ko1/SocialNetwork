@@ -41,7 +41,7 @@ func (h *PrivacyHandler) UpdatePrivacyStatus(w http.ResponseWriter, r *http.Requ
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
-
+	log.Println("updateRequest", updateRequest)
 	err = h.Repo.UpdateIsPublic(updateRequest.UserId, updateRequest.IsPublic)
 	if err != nil {
 		http.Error(w, "Failed to update privacy status", http.StatusInternalServerError)

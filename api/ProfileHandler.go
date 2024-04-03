@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"socialnetwork/repo"
-	"socialnetwork/transport"
 	"socialnetwork/utils"
 )
 
@@ -46,18 +45,6 @@ func (h *ProfileHandler) get(w http.ResponseWriter, r *http.Request) {
 		utils.HandleError("Failed to get profileData in ProfileData. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
-	}
-
-	profileData.ProfileUserData = transport.ProfileRegistrationInfo{
-		UserId:    user.UserId,
-		Bio:       user.Bio,
-		DOB:       user.DOB,
-		Email:     user.Email,
-		FirstName: user.FirstName,
-		ImageURL:  user.ImageURL,
-		IsPublic:  user.IsPublic,
-		LastName:  user.LastName,
-		Username:  user.Username,
 	}
 
 	err = json.NewEncoder(w).Encode(profileData)
