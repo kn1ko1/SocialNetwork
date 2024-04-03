@@ -431,7 +431,6 @@ function Profile() {
       setUserFollowerData(data.userFollowerData || []);
       setUserFollowsData(data.userFollowsData || []);
       setIsPublicValue(data.profileUserData.isPublic);
-      console.log("data.profileUserData.isPublic:", data.profileUserData.isPublic);
     } catch (error) {
       console.error("Error fetching profile data:", error);
     }
@@ -439,9 +438,6 @@ function Profile() {
   useEffect(() => {
     fetchProfileData();
   }, []);
-  useEffect(() => {
-    console.log("privacy status in useEffect ", isPublicValue);
-  }, [isPublicValue]);
 
   // useEffect(() => {
   // 	// This effect will re-render the component whenever isPublicValue changes
@@ -467,7 +463,6 @@ function Profile() {
 
       // Update the local state with the new privacy setting
       setIsPublicValue(newPrivacySetting);
-      console.log("newPrivacySetting:", newPrivacySetting);
     }).catch(error => {
       console.error("Error updating privacy status:", error);
     });
