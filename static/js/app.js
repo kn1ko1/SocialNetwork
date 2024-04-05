@@ -8,6 +8,36 @@ const App = () => {
     className: "app-container"
   }, /*#__PURE__*/React.createElement(Login, null));
 };
+
+// // Const for getting userId in the frontend
+// const currentUserId = () => {
+// 	const [userId, setUserId] = useState(null);
+
+// 	useEffect(() => {
+// 		const fetchUserId = async () => {
+// 			try {
+// 				const response = await fetch('http://localhost:8080/api/user-id', {
+// 					credentials: 'include',
+// 				});
+
+// 				if (response.ok) {
+// 					const data = await response.json();
+// 					setUserId(data.userId);
+// 				} else {
+// 					// Handle unauthorized or other error cases
+// 					console.error('Failed to fetch userId');
+// 				}
+// 			} catch (error) {
+// 				console.error('Error fetching userId:', error);
+// 			}
+// 		};
+
+// 		fetchUserId();
+// 	}, []);
+
+// 	return userId;
+// };
+
 function Navbar() {
   const renderHome = () => {
     const appContainer = document.querySelector(".app-container");
@@ -503,61 +533,71 @@ function Chat() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"));
 }
 function Group() {
-  const [Title, setTitle] = useState("");
-  const [Description, setDescription] = useState("");
-
-  // Upon submitting:
-  const create = async e => {
-    e.preventDefault(); // prevent reload.
-
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [error, setError] = useState(null);
+  const handleSubmit = async e => {
+    e.preventDefault();
     const groupData = new FormData();
+    groupData.append('group-title', title);
+    groupData.append('group-description', description);
+    try {
+      const response = await fetch('http://localhost:8080/api/groups', {
+        method: 'POST',
+        credentials: 'include',
+        body: groupData
+      });
+      if (!response.ok) {
+        throw new Error('Failed to create group');
+      }
 
-    // Append form data
-    groupData.append('group-title', Title);
-    groupData.append('group-description', Description);
-    console.log("Group data being sent to backend: ", Title);
-    console.log("Group data being sent to backend: ", Description);
-
-    // Send user data to golang api/PostHandler.go.
-    await fetch("http://localhost:8080/api/groups", {
-      method: "POST",
-      credentials: "include",
-      body: groupData
-    });
+      // Reset form fields on successful submission
+      setTitle('');
+      setDescription('');
+      setError(null);
+    } catch (error) {
+      setError('Failed to create group. Please try again.');
+      console.error('Error creating group:', error);
+    }
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("form", {
-    onSubmit: create
+    onSubmit: handleSubmit
   }, /*#__PURE__*/React.createElement("div", {
     className: "mb-3"
   }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "exampleTitle",
+    htmlFor: "titleInput",
     className: "form-label"
   }, "Title"), /*#__PURE__*/React.createElement("input", {
     type: "text",
     className: "form-control",
-    id: "exampleTitle",
-    "aria-describedby": "emailHelp",
+    id: "titleInput",
+    value: title,
     onChange: e => setTitle(e.target.value)
   })), /*#__PURE__*/React.createElement("div", {
     className: "mb-3"
   }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "exampleInputPassword1",
+    htmlFor: "descriptionInput",
     className: "form-label"
   }, "Description"), /*#__PURE__*/React.createElement("input", {
     type: "text",
     className: "form-control",
-    id: "exampleDescription",
+    id: "descriptionInput",
+    value: description,
     onChange: e => setDescription(e.target.value)
-  })), /*#__PURE__*/React.createElement("button", {
+  })), error && /*#__PURE__*/React.createElement("div", {
+    className: "alert alert-danger"
+  }, error), /*#__PURE__*/React.createElement("button", {
     type: "submit",
     className: "btn btn-primary"
-  }, "Create")), /*#__PURE__*/React.createElement("h1", null, "Group"));
+  }, "Create")));
 }
 function Notifications() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Notifications"));
 }
 
-// Main post form, defaults to sending posts to public group (0)
+// PostForm component
+// This component renders a form for creating a new post.
+// It accepts a `groupId` prop to determine the group for the post.
 function PostForm({
   groupId
 }) {
@@ -565,42 +605,44 @@ function PostForm({
   const [privacy, setPrivacy] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
 
-  // Upon submitting:
+  // Handler for form submission
   const submit = async e => {
-    e.preventDefault(); // prevent reload.
+    e.preventDefault(); // Prevent page reload
 
     const formData = new FormData();
 
     // Append form data
-    formData.append('body', body);
-    formData.append('privacy', privacy);
+    formData.append("body", body);
+    formData.append("privacy", privacy);
     if (privacy === "private") {
-      groupId = -1;
+      groupId = -1; // Set groupId to -1 for private posts
     }
-    formData.append('groupId', groupId);
+    formData.append("groupId", groupId);
     if (selectedFile) {
       formData.append("image", selectedFile);
     }
     console.log("Form data being sent to backend: ", formData);
+    try {
+      // Send user data to the server
+      await fetch("http://localhost:8080/api/posts", {
+        method: "POST",
+        credentials: "include",
+        body: formData
+      });
 
-    // Send user data to golang api/PostHandler.go.
-    await fetch("http://localhost:8080/api/posts", {
-      method: "POST",
-      credentials: "include",
-      body: formData
-    });
-
-    // Reset the form fields to their default state
-    setBody("");
-    setPrivacy("");
-    setSelectedFile(null);
-    document.getElementById('postFormBody').value = "";
+      // Reset form fields after successful submission
+      setBody("");
+      setPrivacy("");
+      setSelectedFile(null);
+      document.getElementById("postFormBody").value = "";
+    } catch (error) {
+      console.error("Error submitting post:", error);
+    }
   };
 
-  // Function to handle file selection
+  // Handler for file selection
   const handleFileChange = e => {
     setSelectedFile(e.target.files[0]);
-    // const file = e.target.files[0];
   };
   const handleSelectFile = () => {
     const fileInput = document.getElementById("fileInput");
@@ -684,6 +726,7 @@ const postCardStyle = {
 function PostCard({
   post
 }) {
+  const [isFollowing, setIsFollowing] = useState(false);
   const [body, setBody] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const milliseconds = post.post.createdAt;
@@ -724,6 +767,23 @@ function PostCard({
     const commentFileInput = document.getElementById(`commentFileInput${post.post.postId}`);
     commentFileInput.click();
   };
+  const handleFollow = async () => {
+    try {
+      // Make a request to follow the user
+      const response = await fetch(`http://localhost:8080/api/userUser/${post.post.userId}`, {
+        method: "POST",
+        credentials: "include"
+      });
+      if (response.ok) {
+        setIsFollowing(true);
+        console.log("Successfully followed the user.");
+      } else {
+        console.error("Failed to follow the user.");
+      }
+    } catch (error) {
+      console.error("Error following the user:", error);
+    }
+  };
   return /*#__PURE__*/React.createElement("div", {
     className: "card",
     style: postCardStyle
@@ -737,9 +797,15 @@ function PostCard({
     alt: "avatar",
     width: "60",
     height: "60"
-  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h6", {
-    className: "fw-bold text-primary mb-1"
-  }, post.post.userId), /*#__PURE__*/React.createElement("p", {
+  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "d-flex align-items-center mb-1"
+  }, /*#__PURE__*/React.createElement("h6", {
+    className: "fw-bold text-primary mb-0 me-2"
+  }, post.post.userId), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary btn-sm",
+    onClick: handleFollow,
+    disabled: isFollowing
+  }, isFollowing ? "Following" : "Follow")), /*#__PURE__*/React.createElement("p", {
     className: "text-muted small mb-0"
   }, formattedDate))), !post.post.imageURL ? null : /*#__PURE__*/React.createElement("p", {
     className: "mt-3 mb-2 pb-1"

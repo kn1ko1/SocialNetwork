@@ -4,9 +4,13 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"socialnetwork/auth"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
+	"strconv"
+	"strings"
+	"time"
 )
 
 // Allowed methods: POST
@@ -35,14 +39,39 @@ func (h *UserUsersHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *UserUsersHandler) post(w http.ResponseWriter, r *http.Request) {
-	var userUser models.UserUser
-	err := json.NewDecoder(r.Body).Decode(&userUser)
+	ctime := time.Now().UTC().UnixMilli()
+	cookie, err := r.Cookie(auth.CookieName)
 	if err != nil {
-		utils.HandleError("Failed to decode request body:", err)
-		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+
+		utils.HandleError("Error verifying cookie", err)
+		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
 		return
 	}
-	log.Println("Received userUser:", userUser.SubjectId, userUser.FollowerId)
+
+	follower, exists := auth.SessionMap[cookie.Value]
+	if !exists {
+		utils.HandleError("Error finding User, need to log in again", err)
+		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
+		return
+	}
+	fields := strings.Split(r.URL.Path, "/")
+	subjectIdStr := fields[len(fields)-1]
+
+	subjectId, err := strconv.Atoi(subjectIdStr)
+	if err != nil {
+		utils.HandleError("Invalid subject ID. ", err)
+		http.Error(w, "internal server errror", http.StatusInternalServerError)
+		return
+	}
+
+	userUser := models.UserUser{
+		CreatedAt:  ctime,
+		FollowerId: follower.UserId,
+		SubjectId:  subjectId,
+		UpdatedAt:  ctime,
+	}
+
+	log.Println("[api/UserUsersHandler] Following.  FollowerId:", userUser.FollowerId, ". SubjectId:", userUser.SubjectId)
 
 	// Validate the post
 	if validationErr := userUser.Validate(); validationErr != nil {
