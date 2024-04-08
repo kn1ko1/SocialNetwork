@@ -2,7 +2,6 @@ package sqlite
 
 import (
 	"database/sql"
-	"log"
 	"socialnetwork/transport"
 	"socialnetwork/utils"
 )
@@ -33,7 +32,6 @@ func GetHomeDataForUser(identityDB, businessDb *sql.DB, userId int) (transport.H
 			}
 		}
 	}
-	log.Println("[sqlite/GetHomeDataForUser]:", userHomeData.AllUsers)
 	// Get public posts with comments
 	userHomeData.PublicPostsWithComments, err = GetPublicPostsWithComments(businessDb)
 	if err != nil {

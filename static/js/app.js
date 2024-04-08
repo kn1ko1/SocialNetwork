@@ -728,15 +728,20 @@ function FollowButton({
   isFollowed
 }) {
   const [isFollowing, setIsFollowing] = useState(isFollowed);
-  const handleFollowToggle = () => {
-    // Toggle the follow state locally
+  const handleFollowToggle = async () => {
+    if (isFollowing) {
+      // If already following, unfollow the user
+      await handleUnfollow(userId);
+    } else {
+      // If not following, follow the user
+      await handleFollow(userId);
+    }
+    // Toggle the local follow state
     setIsFollowing(!isFollowing);
-    // Call the provided onFollowToggle function with the updated follow state
-    handleFollow(userId);
   };
-  const handleFollow = async userId => {
+  const handleFollow = async subjectId => {
     try {
-      const response = await fetch(`http://localhost:8080/api/userUsers/${userId}`, {
+      const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
         method: "POST",
         credentials: "include"
       });
@@ -745,6 +750,23 @@ function FollowButton({
         return true; // Return true if the follow request is successful
       } else {
         console.error("Failed to follow the user.");
+      }
+    } catch (error) {
+      console.error("Error following the user:", error);
+    }
+    return false; // Return false if the follow request fails
+  };
+  const handleUnfollow = async subjectId => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
+        method: "DELETE",
+        credentials: "include"
+      });
+      if (response.ok) {
+        console.log("Successfully unfollowed the user.");
+        return true; // Return true if the follow request is successful
+      } else {
+        console.error("Failed to unfollow the user.");
       }
     } catch (error) {
       console.error("Error following the user:", error);

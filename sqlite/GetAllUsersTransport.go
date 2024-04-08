@@ -2,7 +2,6 @@ package sqlite
 
 import (
 	"database/sql"
-	"log"
 	"socialnetwork/transport"
 	"socialnetwork/utils"
 )
@@ -36,6 +35,6 @@ func GetAllUsersTransport(database *sql.DB) ([]transport.UserTransport, error) {
 		utils.HandleError("Error iterating over rows in GetAllUsersTransport.", err)
 		return nil, err
 	}
-	log.Println("[sqlite/GetAllUsersTransport]:", users)
+
 	return users, nil
 }
