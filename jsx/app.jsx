@@ -170,9 +170,9 @@ function Login() {
 		ReactDOM.render(<Home />, appContainer);
 		socket = new WebSocket("ws://localhost:8080/ws");
 		socket.onopen = function (event) {
-		  console.log("WebSocket connection established.");
+			console.log("WebSocket connection established.");
+		}
 	}
-}
 
 	return (
 		<div className="container login-container">
@@ -251,8 +251,6 @@ function Register() {
 			isPublic,
 		};
 
-
-
 		try {
 			// Send user data to backend
 			const response = await fetch("http://localhost:8080/auth/registration", {
@@ -281,8 +279,8 @@ function Register() {
 	if (isRegistered) {
 		socket = new WebSocket("ws://localhost:8080/ws");
 		socket.onopen = function (event) {
-		  console.log("WebSocket connection established.");
-	}
+			console.log("WebSocket connection established.");
+		}
 		const appContainer = document.querySelector(".app-container")
 		ReactDOM.render(<Home />, appContainer)
 	}
@@ -441,54 +439,72 @@ function Register() {
 }
 
 function Profile() {
-	const [profileUserData, setProfileUserData] = useState({})
-	const [userPostData, setUserPostData] = useState([])
-	const [userFollowerData, setUserFollowerData] = useState([])
-	const [userFollowsData, setUserFollowsData] = useState([])
+	const [profileUserData, setProfileUserData] = useState({});
+	const [userPostData, setUserPostData] = useState([]);
+	const [userFollowerData, setUserFollowerData] = useState([]);
+	const [userFollowsData, setUserFollowsData] = useState([]);
+	const [isPublicValue, setIsPublicValue] = useState(null);
+
+	const fetchProfileData = async () => {
+		try {
+			const response = await fetch("http://localhost:8080/api/profile", {
+				method: "GET",
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+
+			if (!response.ok) {
+				throw new Error("Failed to fetch profile data");
+			}
+
+			const data = await response.json();
+			setProfileUserData(data.profileUserData);
+			setUserPostData(data.userPostData || []);
+			setUserFollowerData(data.userFollowerData || []);
+			setUserFollowsData(data.userFollowsData || []);
+			setIsPublicValue(data.profileUserData.isPublic);
+		} catch (error) {
+			console.error("Error fetching profile data:", error);
+		}
+	};
 
 	useEffect(() => {
-		fetch("http://localhost:8080/api/profile", {
-			method: "GET",
-			credentials: "include",
+		fetchProfileData();
+	}, []);
+
+	// useEffect(() => {
+	// 	// This effect will re-render the component whenever isPublicValue changes
+	// }, [isPublicValue]);
+
+	const handlePrivacyChange = (event) => {
+		const newPrivacySetting = JSON.parse(event.target.value);
+
+		// Update the database with the new privacy status
+		fetch("http://localhost:8080/api/profile/privacy", {
+			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
 			},
+			body: JSON.stringify({
+				userId: profileUserData.userId,
+				isPublic: newPrivacySetting,
+			}),
 		})
 			.then((response) => {
 				if (!response.ok) {
-					throw new Error("Failed to fetch profile data")
+					throw new Error("Failed to update privacy status");
 				}
-				return response.json()
-			})
-			.then((data) => {
-				// Update the HTML elements with the profile data under each category
-				// const myProfileDataElement = document.getElementById('myProfileData');
-				// myProfileDataElement.innerHTML = JSON.stringify(data.profileUserData, null, 2);
+				
 
-				setProfileUserData(data.profileUserData)
-
-				setUserPostData(data.userPostData)
-				console.log("userPostData", data.userPostData)
-
-				setUserFollowerData(data.userFollowerData)
-				console.log("userFollowerData", data.userFollowerData)
-
-				setUserFollowsData(data.userFollowsData)
-				console.log("userFollowsData", data.userFollowsData)
-
-				// const myPostsDataElement = document.getElementById('myPostsData');
-				// myPostsDataElement.innerHTML = JSON.stringify(data.userPostData, null, 2);
-
-				// const myFollowersDataElement = document.getElementById('myFollowersData');
-				// myFollowersDataElement.innerHTML = JSON.stringify(data.userFollowerData, null, 2);
-
-				// const usersIFollowDataElement = document.getElementById('usersIFollowData');
-				// usersIFollowDataElement.innerHTML = JSON.stringify(data.userFollowsData, null, 2);
+				// Update the local state with the new privacy setting
+				setIsPublicValue(newPrivacySetting);
 			})
 			.catch((error) => {
-				console.error("Error fetching profile data:", error)
-			})
-	}, [])
+				console.error("Error updating privacy status:", error);
+			});
+	};
 
 	return (
 		<div>
@@ -496,6 +512,28 @@ function Profile() {
 			<div id="profileData">
 				<h2>My Profile</h2>
 				<div id="myProfileData"></div>
+
+				<div id="isPublicToggle">
+					<label>
+						<input
+							type="radio"
+							value={true}
+							checked={isPublicValue === true} // Check if isPublicValue is true
+							onChange={handlePrivacyChange}
+						/>
+						Public
+					</label>
+					<label>
+						<input
+							type="radio"
+							value={false}
+							checked={isPublicValue === false} // Check if isPublicValue is false
+							onChange={handlePrivacyChange}
+						/>
+						Private
+					</label>
+				</div>
+
 				<p>
 					<strong>User ID:</strong> {profileUserData.userId}
 				</p>
@@ -521,10 +559,7 @@ function Profile() {
 				<p>
 					<strong>Image URL:</strong> {profileUserData.imageURL}
 				</p>
-				<p>
-					<strong>Public Profile:</strong>{" "}
-					{profileUserData.isPublic ? "Yes" : "No"}
-				</p>
+
 
 				<h2>My Posts</h2>
 				<div id="myPostsData">
@@ -588,10 +623,10 @@ function Group() {
 		// Append form data
 		groupData.append('group-title', Title);
 		groupData.append('group-description', Description);
-	
+
 		console.log("Group data being sent to backend: ", Title);
 		console.log("Group data being sent to backend: ", Description);
-		
+
 		// Send user data to golang api/PostHandler.go.
 		await fetch("http://localhost:8080/api/groups", {
 			method: "POST",
@@ -603,17 +638,17 @@ function Group() {
 		<div>
 			<Navbar />
 			<form onSubmit={create}>
-  <div className="mb-3">
-    <label htmlFor="exampleTitle" className="form-label">Title</label>
-    <input type="text" className="form-control" id="exampleTitle" aria-describedby="emailHelp" onChange={(e) => setTitle(e.target.value)}/>
-	
-  </div>
-  <div className="mb-3">
-    <label htmlFor="exampleInputPassword1" className="form-label">Description</label>
-    <input type="text" className="form-control" id="exampleDescription" onChange={(e) => setDescription(e.target.value)} />
-  </div>
-  <button type="submit" className="btn btn-primary">Create</button>
-</form>
+				<div className="mb-3">
+					<label htmlFor="exampleTitle" className="form-label">Title</label>
+					<input type="text" className="form-control" id="exampleTitle" aria-describedby="emailHelp" onChange={(e) => setTitle(e.target.value)} />
+
+				</div>
+				<div className="mb-3">
+					<label htmlFor="exampleInputPassword1" className="form-label">Description</label>
+					<input type="text" className="form-control" id="exampleDescription" onChange={(e) => setDescription(e.target.value)} />
+				</div>
+				<button type="submit" className="btn btn-primary">Create</button>
+			</form>
 			<h1>Group</h1>
 		</div>
 	)
@@ -990,7 +1025,7 @@ function Home() {
 			<div className="publicPostsWithComments">
 				<h2>Public Posts With Comments</h2>
 				{publicPostsWithComments !== null &&
-				publicPostsWithComments.length > 0 ? (
+					publicPostsWithComments.length > 0 ? (
 					publicPostsWithComments.map((publicPostsWithComment, index) => (
 						<PostCard key={index} post={publicPostsWithComment} />
 					))

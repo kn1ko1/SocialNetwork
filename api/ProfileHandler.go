@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"socialnetwork/repo"
-	"socialnetwork/transport"
 	"socialnetwork/utils"
 )
 
@@ -48,18 +47,6 @@ func (h *ProfileHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	profileData.ProfileUserData = transport.ProfileRegistrationInfo{
-		UserId:    user.UserId,
-		Bio:       user.Bio,
-		DOB:       user.DOB,
-		Email:     user.Email,
-		FirstName: user.FirstName,
-		ImageURL:  user.ImageURL,
-		IsPublic:  user.IsPublic,
-		LastName:  user.LastName,
-		Username:  user.Username,
-	}
-
 	err = json.NewEncoder(w).Encode(profileData)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
@@ -67,3 +54,30 @@ func (h *ProfileHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+// func (h *ProfileHandler) UpdatePrivacyStatus(w http.ResponseWriter, r *http.Request) {
+// 	// Decode the request body to get the updated privacy status
+// 	var updateRequest struct {
+// 		UserId   int  `json:"userId"`
+// 		IsPublic bool `json:"isPublic"`
+// 	}
+// 	err := json.NewDecoder(r.Body).Decode(&updateRequest)
+// 	if err != nil {
+// 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+// 		return
+// 	}
+
+// 	// Call the repository method to update the IsPublic field
+// 	err = h.Repo.UpdateUserPrivacyStatus(updateRequest.UserId, updateRequest.IsPublic)
+// 	if err != nil {
+// 		http.Error(w, "Failed to update privacy status", http.StatusInternalServerError)
+// 		return
+// 	}
+// 	// Update the user's privacy status in the database
+// 	// This is a simplified example, you would typically use a database query to update the user's privacy status
+// 	log.Printf("Updating privacy status for user %s to %t", updateRequest.UserId, updateRequest.IsPublic)
+
+// 	// Send a success response
+// 	w.WriteHeader(http.StatusOK)
+// 	json.NewEncoder(w).Encode(map[string]string{"message": "Privacy status updated successfully"})
+// }

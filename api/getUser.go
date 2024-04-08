@@ -24,12 +24,5 @@ func getUser(r *http.Request) (*models.User, error) {
 		return nil, err
 	}
 
-	//
-	// For testing only
-	// ret := models.GenerateValidUser()
-	// ret.UserId = rand.Intn(101)
-	//
-	//
-	log.Println("api/getUser.go.  UserId is:", ret.UserId)
 	return ret, nil
 }

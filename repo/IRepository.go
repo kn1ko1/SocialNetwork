@@ -14,6 +14,7 @@ type IRepository interface {
 
 	//Profile
 	GetProfileDataForUser(userId int) (transport.ProfileModel, error)
+	UpdateIsPublic(userId int, isPublic bool) error
 
 	// User
 	CreateUser(user models.User) (models.User, error)
