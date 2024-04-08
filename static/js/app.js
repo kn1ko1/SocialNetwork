@@ -505,6 +505,27 @@ function Chat() {
 function Group() {
   const [Title, setTitle] = useState("");
   const [Description, setDescription] = useState("");
+  const fetchGroupData = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/groups", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch profile data");
+      }
+      const data = await response.json();
+      console.log("This is fetched data", data);
+    } catch (error) {
+      console.error("Error fetching profile data:", error);
+    }
+  };
+  useEffect(() => {
+    fetchGroupData();
+  }, []);
 
   // Upon submitting:
   const create = async e => {
@@ -524,6 +545,22 @@ function Group() {
       credentials: "include",
       body: groupData
     });
+    setTitle("");
+    setDescription("");
+    document.getElementById("exampleTitle").value = "";
+    document.getElementById("exampleDescription").value = "";
+    const response = await fetch("http://localhost:8080/api/groups", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    if (!response.ok) {
+      throw new Error("failed to fetch group data");
+    }
+    const data = await response.json();
+    console.log("This is second get request", data);
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("form", {
     onSubmit: create
