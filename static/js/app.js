@@ -723,6 +723,39 @@ const postCardStyle = {
   margin: 'auto',
   marginBottom: '20px' // Adjust spacing between post cards
 };
+function FollowButton({
+  userId,
+  isFollowed
+}) {
+  const [isFollowing, setIsFollowing] = useState(isFollowed);
+  const handleFollowToggle = () => {
+    // Toggle the follow state locally
+    setIsFollowing(!isFollowing);
+    // Call the provided onFollowToggle function with the updated follow state
+    handleFollow(userId);
+  };
+  const handleFollow = async userId => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/userUsers/${userId}`, {
+        method: "POST",
+        credentials: "include"
+      });
+      if (response.ok) {
+        console.log("Successfully followed the user.");
+        return true; // Return true if the follow request is successful
+      } else {
+        console.error("Failed to follow the user.");
+      }
+    } catch (error) {
+      console.error("Error following the user:", error);
+    }
+    return false; // Return false if the follow request fails
+  };
+  return /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary btn-sm",
+    onClick: handleFollowToggle
+  }, isFollowing ? 'Unfollow' : 'Follow');
+}
 function PostCard({
   post
 }) {
@@ -732,6 +765,10 @@ function PostCard({
   const milliseconds = post.post.createdAt;
   const date = new Date(milliseconds);
   const formattedDate = date.toLocaleString();
+  const handleFollowClick = async () => {
+    const followSuccess = await handleFollow(post.post.userId);
+    setIsFollowing(followSuccess);
+  };
   const submit = async e => {
     e.preventDefault(); // prevent reload.
 
@@ -767,23 +804,6 @@ function PostCard({
     const commentFileInput = document.getElementById(`commentFileInput${post.post.postId}`);
     commentFileInput.click();
   };
-  const handleFollow = async () => {
-    try {
-      // Make a request to follow the user
-      const response = await fetch(`http://localhost:8080/api/userUser/${post.post.userId}`, {
-        method: "POST",
-        credentials: "include"
-      });
-      if (response.ok) {
-        setIsFollowing(true);
-        console.log("Successfully followed the user.");
-      } else {
-        console.error("Failed to follow the user.");
-      }
-    } catch (error) {
-      console.error("Error following the user:", error);
-    }
-  };
   return /*#__PURE__*/React.createElement("div", {
     className: "card",
     style: postCardStyle
@@ -803,7 +823,7 @@ function PostCard({
     className: "fw-bold text-primary mb-0 me-2"
   }, post.post.userId), /*#__PURE__*/React.createElement("button", {
     className: "btn btn-primary btn-sm",
-    onClick: handleFollow,
+    onClick: handleFollowClick,
     disabled: isFollowing
   }, isFollowing ? "Following" : "Follow")), /*#__PURE__*/React.createElement("p", {
     className: "text-muted small mb-0"
@@ -900,16 +920,19 @@ function CommentCard({
 
 // Display information relating to homepage
 function Home() {
+  const [userList, setUserList] = useState([]);
   const [almostPrivatePosts, setAlmostPrivatePosts] = useState([]);
   const [privatePosts, setPrivatePosts] = useState([]);
   const [publicPostsWithComments, setPublicPostsWithComments] = useState([]);
   const [userGroups, setUserGroups] = useState([]);
   useEffect(() => {
     fetch("http://localhost:8080/api/home").then(response => response.json()).then(data => {
+      setUserList(data.userList);
       setAlmostPrivatePosts(data.almostPrivatePosts);
       setPrivatePosts(data.privatePosts);
       setPublicPostsWithComments(data.publicPostsWithComments);
       setUserGroups(data.userGroups);
+      console.log(data.userList);
     }).catch(error => {
       console.error("Error fetching data:", error);
     });
@@ -919,13 +942,22 @@ function Home() {
   }, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement(PostForm, {
     groupId: 0
   }), /*#__PURE__*/React.createElement("div", {
+    className: "userList"
+  }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList !== null && userList.length > 0 ? userList.map((user, index) => /*#__PURE__*/React.createElement("div", {
+    key: index
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "userListUsername"
+  }, user.username, " "), /*#__PURE__*/React.createElement(FollowButton, {
+    userId: user.userId,
+    isFollowed: user.isFollowed
+  }))) : /*#__PURE__*/React.createElement("p", null, "No Users?!")), /*#__PURE__*/React.createElement("div", {
     className: "almostPrivatePosts"
   }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? almostPrivatePosts.map(almostPrivatePost => /*#__PURE__*/React.createElement(PostCard, {
     key: almostPrivatePost.createdAt,
     post: almostPrivatePost
   })) : /*#__PURE__*/React.createElement("p", null, "No almost private posts")), /*#__PURE__*/React.createElement("div", {
     className: "privatePosts"
-  }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), privatePosts !== null && privatePosts.length > 0 ? privatePosts.map(privatePost => /*#__PURE__*/React.createElement(PostCard, {
+  }, /*#__PURE__*/React.createElement("h2", null, "Private Posts"), privatePosts !== null && privatePosts.length > 0 ? privatePosts.map(privatePost => /*#__PURE__*/React.createElement(PostCard, {
     key: privatePost.createdAt,
     post: privatePost
   })) : /*#__PURE__*/React.createElement("p", null, "No private posts")), /*#__PURE__*/React.createElement("div", {

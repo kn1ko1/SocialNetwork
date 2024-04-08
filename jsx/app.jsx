@@ -859,6 +859,47 @@ const postCardStyle = {
 	marginBottom: '20px', // Adjust spacing between post cards
 };
 
+
+
+
+function FollowButton({ userId, isFollowed }) {
+	const [isFollowing, setIsFollowing] = useState(isFollowed);
+
+	const handleFollowToggle = () => {
+		// Toggle the follow state locally
+		setIsFollowing(!isFollowing);
+		// Call the provided onFollowToggle function with the updated follow state
+		handleFollow(userId);
+	};
+	
+	const handleFollow = async (userId) => {
+		try {
+		  const response = await fetch(`http://localhost:8080/api/userUsers/${userId}`, {
+			method: "POST",
+			credentials: "include",
+		  });
+	  
+		  if (response.ok) {
+			console.log("Successfully followed the user.");
+			return true; // Return true if the follow request is successful
+		  } else {
+			console.error("Failed to follow the user.");
+		  }
+		} catch (error) {
+		  console.error("Error following the user:", error);
+		}
+	  
+		return false; // Return false if the follow request fails
+	  };
+	return (
+		<button
+			className="btn btn-primary btn-sm"
+			onClick={handleFollowToggle}>
+			{isFollowing ? 'Unfollow' : 'Follow'}
+		</button>
+	);
+}
+
 function PostCard({ post }) {
 	const [isFollowing, setIsFollowing] = useState(false);
 	const [body, setBody] = useState("")
@@ -867,6 +908,11 @@ function PostCard({ post }) {
 	const milliseconds = post.post.createdAt
 	const date = new Date(milliseconds)
 	const formattedDate = date.toLocaleString()
+
+	const handleFollowClick = async () => {
+		const followSuccess = await handleFollow(post.post.userId);
+		setIsFollowing(followSuccess);
+	};
 
 	const submit = async (e) => {
 		e.preventDefault() // prevent reload.
@@ -910,26 +956,6 @@ function PostCard({ post }) {
 	}
 
 
-	const handleFollow = async () => {
-		try {
-			// Make a request to follow the user
-			const response = await fetch(`http://localhost:8080/api/userUser/${post.post.userId}`, {
-				method: "POST",
-				credentials: "include",
-			});
-
-			if (response.ok) {
-				setIsFollowing(true);
-				console.log("Successfully followed the user.");
-			} else {
-				console.error("Failed to follow the user.");
-			}
-		} catch (error) {
-			console.error("Error following the user:", error);
-		}
-	};
-
-
 	return (
 		<div className="card" style={postCardStyle}>
 			<div className="card-body">
@@ -946,7 +972,7 @@ function PostCard({ post }) {
 							<h6 className="fw-bold text-primary mb-0 me-2">{post.post.userId}</h6>
 							<button
 								className="btn btn-primary btn-sm"
-								onClick={handleFollow}
+								onClick={handleFollowClick}
 								disabled={isFollowing}
 							>
 								{isFollowing ? "Following" : "Follow"}
@@ -1061,6 +1087,7 @@ function CommentCard({ comment }) {
 
 // Display information relating to homepage
 function Home() {
+	const [userList, setUserList] = useState([])
 	const [almostPrivatePosts, setAlmostPrivatePosts] = useState([])
 	const [privatePosts, setPrivatePosts] = useState([])
 	const [publicPostsWithComments, setPublicPostsWithComments] = useState([])
@@ -1070,20 +1097,37 @@ function Home() {
 		fetch("http://localhost:8080/api/home")
 			.then((response) => response.json())
 			.then((data) => {
+				setUserList(data.userList)
 				setAlmostPrivatePosts(data.almostPrivatePosts)
 				setPrivatePosts(data.privatePosts)
 				setPublicPostsWithComments(data.publicPostsWithComments)
 				setUserGroups(data.userGroups)
+				console.log(data.userList)
 			})
 			.catch((error) => {
 				console.error("Error fetching data:", error)
 			})
+
 	}, [])
 
 	return (
 		<main className="homePage">
 			<Navbar />
 			<PostForm groupId={0} />
+			<div className="userList">
+				<h2>UserList</h2>
+				{userList !== null && userList.length > 0 ? (
+					userList.map((user, index) => (
+						<div key={index}>
+							<div className="userListUsername">{user.username} </div>
+							<FollowButton userId={user.userId} isFollowed={user.isFollowed} />
+						</div>
+					))
+				) : (
+					<p>No Users?!</p>
+				)}
+			</div>
+
 			{/* Rendering Almost Private Posts */}
 			<div className="almostPrivatePosts">
 				<h2>Almost Private Posts</h2>
@@ -1101,7 +1145,7 @@ function Home() {
 
 			{/* Rendering Private Posts */}
 			<div className="privatePosts">
-				<h2>Almost Private Posts</h2>
+				<h2>Private Posts</h2>
 				{privatePosts !== null && privatePosts.length > 0 ? (
 					privatePosts.map((privatePost) => (
 						<PostCard key={privatePost.createdAt} post={privatePost} />
