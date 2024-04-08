@@ -619,7 +619,6 @@ function Group() {
 	)
 }
 
-
 function Notifications() {
 	return (
 		<div>
