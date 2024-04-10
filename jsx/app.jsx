@@ -11,36 +11,40 @@ const App = () => {
 }
 
 // // Const for getting userId in the frontend
-// const currentUserId = () => {
-// 	const [userId, setUserId] = useState(null);
+const CurrentUserId = () => {
+	const [userId, setUserId] = useState(null);
 
-// 	useEffect(() => {
-// 		const fetchUserId = async () => {
-// 			try {
-// 				const response = await fetch('http://localhost:8080/api/user-id', {
-// 					credentials: 'include',
-// 				});
+	useEffect(() => {
+		const fetchUserId = async () => {
+			try {
+				const response = await fetch('http://localhost:8080/api/userId', {
+					credentials: 'include',
+				});
+				console.log("response: ", response)
+				if (response.ok) {
+					const userId = await response.json();
+					setUserId(userId);
+				} else {
+					console.error('Failed to fetch userId');
+				}
+			} catch (error) {
+				console.error('Error fetching userId:', error);
+			}
+		};
 
-// 				if (response.ok) {
-// 					const data = await response.json();
-// 					setUserId(data.userId);
-// 				} else {
-// 					// Handle unauthorized or other error cases
-// 					console.error('Failed to fetch userId');
-// 				}
-// 			} catch (error) {
-// 				console.error('Error fetching userId:', error);
-// 			}
-// 		};
+		fetchUserId();
+	}, []);
 
-// 		fetchUserId();
-// 	}, []);
+	return userId; // Return only the userId state value
+};
 
-// 	return userId;
-// };
+
+
 
 
 function Navbar() {
+	const userId = CurrentUserId();
+
 	const renderHome = () => {
 		const appContainer = document.querySelector(".app-container")
 		ReactDOM.render(<Home />, appContainer)
@@ -48,7 +52,7 @@ function Navbar() {
 
 	const renderProfile = () => {
 		const appContainer = document.querySelector(".app-container")
-		ReactDOM.render(<Profile />, appContainer)
+		ReactDOM.render(<Profile userId={userId} />, appContainer)
 	}
 
 	const renderNotifications = () => {
@@ -468,16 +472,17 @@ function Register() {
 	)
 }
 
-function Profile() {
+function Profile({ userId }) {
 	const [profileUserData, setProfileUserData] = useState({});
 	const [userPostData, setUserPostData] = useState([]);
 	const [userFollowerData, setUserFollowerData] = useState([]);
 	const [userFollowsData, setUserFollowsData] = useState([]);
 	const [isPublicValue, setIsPublicValue] = useState(null);
+	console.log("userId", userId)
 
 	const fetchProfileData = async () => {
 		try {
-			const response = await fetch("http://localhost:8080/api/profile", {
+			const response = await fetch(`http://localhost:8080/api/profile/${userId}`, {
 				method: "GET",
 				credentials: "include",
 				headers: {
@@ -1120,6 +1125,11 @@ function Home() {
 	const [publicPostsWithComments, setPublicPostsWithComments] = useState([])
 	const [userGroups, setUserGroups] = useState([])
 
+	const renderProfile = (userId) => {
+		const appContainer = document.querySelector(".app-container")
+		ReactDOM.render(<Profile userId={userId} />, appContainer)
+	}
+
 	useEffect(() => {
 		fetch("http://localhost:8080/api/home")
 			.then((response) => response.json())
@@ -1129,7 +1139,6 @@ function Home() {
 				setPrivatePosts(data.privatePosts)
 				setPublicPostsWithComments(data.publicPostsWithComments)
 				setUserGroups(data.userGroups)
-				console.log(data.userList)
 			})
 			.catch((error) => {
 				console.error("Error fetching data:", error)
@@ -1146,7 +1155,9 @@ function Home() {
 				{userList !== null && userList.length > 0 ? (
 					userList.map((user, index) => (
 						<div key={index}>
-							<div className="userListUsername">{user.username} </div>
+							<a className="nav-link" href="#" onClick={() => renderProfile(user.userId)}>
+								{user.username}
+							</a>
 							<FollowButton userId={user.userId} isFollowed={user.isFollowed} />
 						</div>
 					))

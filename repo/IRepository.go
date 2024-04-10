@@ -9,6 +9,7 @@ import (
 )
 
 type IRepository interface {
+
 	// Home (name tbc)
 	GetHomeDataForUser(userId int) (transport.HomeModel, error)
 

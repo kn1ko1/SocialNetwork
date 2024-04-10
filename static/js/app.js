@@ -10,42 +10,40 @@ const App = () => {
 };
 
 // // Const for getting userId in the frontend
-// const currentUserId = () => {
-// 	const [userId, setUserId] = useState(null);
-
-// 	useEffect(() => {
-// 		const fetchUserId = async () => {
-// 			try {
-// 				const response = await fetch('http://localhost:8080/api/user-id', {
-// 					credentials: 'include',
-// 				});
-
-// 				if (response.ok) {
-// 					const data = await response.json();
-// 					setUserId(data.userId);
-// 				} else {
-// 					// Handle unauthorized or other error cases
-// 					console.error('Failed to fetch userId');
-// 				}
-// 			} catch (error) {
-// 				console.error('Error fetching userId:', error);
-// 			}
-// 		};
-
-// 		fetchUserId();
-// 	}, []);
-
-// 	return userId;
-// };
-
+const CurrentUserId = () => {
+  const [userId, setUserId] = useState(null);
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/userId', {
+          credentials: 'include'
+        });
+        console.log("response: ", response);
+        if (response.ok) {
+          const userId = await response.json();
+          setUserId(userId);
+        } else {
+          console.error('Failed to fetch userId');
+        }
+      } catch (error) {
+        console.error('Error fetching userId:', error);
+      }
+    };
+    fetchUserId();
+  }, []);
+  return userId; // Return only the userId state value
+};
 function Navbar() {
+  const userId = CurrentUserId();
   const renderHome = () => {
     const appContainer = document.querySelector(".app-container");
     ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
   };
   const renderProfile = () => {
     const appContainer = document.querySelector(".app-container");
-    ReactDOM.render( /*#__PURE__*/React.createElement(Profile, null), appContainer);
+    ReactDOM.render( /*#__PURE__*/React.createElement(Profile, {
+      userId: userId
+    }), appContainer);
   };
   const renderNotifications = () => {
     const appContainer = document.querySelector(".app-container");
@@ -437,15 +435,18 @@ function Register() {
     onClick: renderLogin
   }, "Log in")));
 }
-function Profile() {
+function Profile({
+  userId
+}) {
   const [profileUserData, setProfileUserData] = useState({});
   const [userPostData, setUserPostData] = useState([]);
   const [userFollowerData, setUserFollowerData] = useState([]);
   const [userFollowsData, setUserFollowsData] = useState([]);
   const [isPublicValue, setIsPublicValue] = useState(null);
+  console.log("userId", userId);
   const fetchProfileData = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/profile", {
+      const response = await fetch(`http://localhost:8080/api/profile/${userId}`, {
         method: "GET",
         credentials: "include",
         headers: {
@@ -947,6 +948,12 @@ function Home() {
   const [privatePosts, setPrivatePosts] = useState([]);
   const [publicPostsWithComments, setPublicPostsWithComments] = useState([]);
   const [userGroups, setUserGroups] = useState([]);
+  const renderProfile = userId => {
+    const appContainer = document.querySelector(".app-container");
+    ReactDOM.render( /*#__PURE__*/React.createElement(Profile, {
+      userId: userId
+    }), appContainer);
+  };
   useEffect(() => {
     fetch("http://localhost:8080/api/home").then(response => response.json()).then(data => {
       setUserList(data.userList);
@@ -954,7 +961,6 @@ function Home() {
       setPrivatePosts(data.privatePosts);
       setPublicPostsWithComments(data.publicPostsWithComments);
       setUserGroups(data.userGroups);
-      console.log(data.userList);
     }).catch(error => {
       console.error("Error fetching data:", error);
     });
@@ -967,9 +973,11 @@ function Home() {
     className: "userList"
   }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList !== null && userList.length > 0 ? userList.map((user, index) => /*#__PURE__*/React.createElement("div", {
     key: index
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "userListUsername"
-  }, user.username, " "), /*#__PURE__*/React.createElement(FollowButton, {
+  }, /*#__PURE__*/React.createElement("a", {
+    className: "nav-link",
+    href: "#",
+    onClick: () => renderProfile(user.userId)
+  }, user.username), /*#__PURE__*/React.createElement(FollowButton, {
     userId: user.userId,
     isFollowed: user.isFollowed
   }))) : /*#__PURE__*/React.createElement("p", null, "No Users?!")), /*#__PURE__*/React.createElement("div", {
