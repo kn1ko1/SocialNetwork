@@ -34,17 +34,10 @@ const CurrentUserId = () => {
   return userId; // Return only the userId state value
 };
 function Navbar() {
-  const userId = CurrentUserId();
+  const navUserId = CurrentUserId();
   const renderHome = () => {
     const appContainer = document.querySelector(".app-container");
     ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
-  };
-  const renderProfile = () => {
-    const appContainer = document.querySelector(".app-container");
-    ReactDOM.render( /*#__PURE__*/React.createElement(Profile, {
-      userId: userId,
-      editable: true
-    }), appContainer);
   };
   const renderNotifications = () => {
     const appContainer = document.querySelector(".app-container");
@@ -103,7 +96,7 @@ function Navbar() {
   }, /*#__PURE__*/React.createElement("a", {
     className: "nav-link",
     href: "#",
-    onClick: renderProfile
+    onClick: () => renderProfile(navUserId, true)
   }, "PROFILE")), /*#__PURE__*/React.createElement("li", {
     className: "nav-item"
   }, /*#__PURE__*/React.createElement("a", {
@@ -436,9 +429,16 @@ function Register() {
     onClick: renderLogin
   }, "Log in")));
 }
+const renderProfile = (userId, isEditable) => {
+  const appContainer = document.querySelector(".app-container");
+  ReactDOM.render( /*#__PURE__*/React.createElement(Profile, {
+    userId: userId,
+    isEditable: isEditable
+  }), appContainer);
+};
 function Profile({
   userId,
-  editable
+  isEditable
 }) {
   const [profileUserData, setProfileUserData] = useState({});
   const [userPostData, setUserPostData] = useState([]);
@@ -470,12 +470,7 @@ function Profile({
   };
   useEffect(() => {
     fetchProfileData();
-  }, []);
-
-  // useEffect(() => {
-  // 	// This effect will re-render the component whenever isPublicValue changes
-  // }, [isPublicValue]);
-
+  }, [userId]);
   const handlePrivacyChange = event => {
     const newPrivacySetting = JSON.parse(event.target.value);
 
@@ -504,7 +499,7 @@ function Profile({
     id: "profileData"
   }, /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Profile"), /*#__PURE__*/React.createElement("div", {
     id: "myProfileData"
-  }), editable ? /*#__PURE__*/React.createElement("div", {
+  }), isEditable ? /*#__PURE__*/React.createElement("div", {
     id: "isPublicToggle"
   }, /*#__PURE__*/React.createElement("label", null, /*#__PURE__*/React.createElement("input", {
     type: "radio",
@@ -844,8 +839,10 @@ function PostCard({
     height: "60"
   }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "d-flex align-items-center mb-1"
-  }, /*#__PURE__*/React.createElement("h6", {
-    className: "fw-bold text-primary mb-0 me-2"
+  }, /*#__PURE__*/React.createElement("a", {
+    className: "fw-bold text-primary mb-0 me-2",
+    href: "#",
+    onClick: () => renderProfile(post.post.userId)
   }, post.post.userId), /*#__PURE__*/React.createElement("button", {
     className: "btn btn-primary btn-sm",
     onClick: handleFollowClick,
@@ -927,7 +924,8 @@ function CommentCard({
     width: "60",
     height: "60"
   }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h6", {
-    className: "fw-bold text-primary mb-1"
+    className: "fw-bold text-primary mb-1",
+    onClick: () => renderProfile(comment.userId)
   }, comment.userId), /*#__PURE__*/React.createElement("p", {
     className: "text-muted small mb-0"
   }, formattedDate))), comment.imageURL && /*#__PURE__*/React.createElement("div", {
@@ -950,12 +948,6 @@ function Home() {
   const [privatePosts, setPrivatePosts] = useState([]);
   const [publicPostsWithComments, setPublicPostsWithComments] = useState([]);
   const [userGroups, setUserGroups] = useState([]);
-  const renderProfile = userId => {
-    const appContainer = document.querySelector(".app-container");
-    ReactDOM.render( /*#__PURE__*/React.createElement(Profile, {
-      userId: userId
-    }), appContainer);
-  };
   useEffect(() => {
     fetch("http://localhost:8080/api/home").then(response => response.json()).then(data => {
       setUserList(data.userList);

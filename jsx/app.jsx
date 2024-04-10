@@ -43,16 +43,11 @@ const CurrentUserId = () => {
 
 
 function Navbar() {
-	const userId = CurrentUserId();
+	const navUserId = CurrentUserId();
 
 	const renderHome = () => {
 		const appContainer = document.querySelector(".app-container")
 		ReactDOM.render(<Home />, appContainer)
-	}
-
-	const renderProfile = () => {
-		const appContainer = document.querySelector(".app-container")
-		ReactDOM.render(<Profile userId={userId} editable={true} />, appContainer)
 	}
 
 	const renderNotifications = () => {
@@ -110,7 +105,7 @@ function Navbar() {
 				<div className="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul className="navbar-nav me-auto mx-auto mb-2 mb-lg-0">
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={renderProfile}>
+							<a className="nav-link" href="#" onClick={() => renderProfile(navUserId, true)}>
 								PROFILE
 							</a>
 						</li>
@@ -472,7 +467,13 @@ function Register() {
 	)
 }
 
-function Profile({ userId, editable }) {
+
+const renderProfile = (userId, isEditable) => {
+	const appContainer = document.querySelector(".app-container");
+	ReactDOM.render(<Profile userId={userId} isEditable={isEditable} />, appContainer);
+};
+
+function Profile({ userId, isEditable }) {
 	const [profileUserData, setProfileUserData] = useState({});
 	const [userPostData, setUserPostData] = useState([]);
 	const [userFollowerData, setUserFollowerData] = useState([]);
@@ -507,11 +508,7 @@ function Profile({ userId, editable }) {
 
 	useEffect(() => {
 		fetchProfileData();
-	}, []);
-
-	// useEffect(() => {
-	// 	// This effect will re-render the component whenever isPublicValue changes
-	// }, [isPublicValue]);
+	}, [userId]);
 
 	const handlePrivacyChange = (event) => {
 		const newPrivacySetting = JSON.parse(event.target.value);
@@ -548,7 +545,7 @@ function Profile({ userId, editable }) {
 				<h2>{profileUserData.username}'s Profile</h2>
 				<div id="myProfileData"></div>
 
-				{editable ? (
+				{isEditable ? (
 					<div id="isPublicToggle">
 						<label>
 							<input
@@ -1007,7 +1004,10 @@ function PostCard({ post }) {
 					/>
 					<div>
 						<div className="d-flex align-items-center mb-1">
-							<h6 className="fw-bold text-primary mb-0 me-2">{post.post.userId}</h6>
+							<a className="fw-bold text-primary mb-0 me-2" href="#" onClick={() => renderProfile(post.post.userId)}>
+								{post.post.userId}
+							</a>
+
 							<button
 								className="btn btn-primary btn-sm"
 								onClick={handleFollowClick}
@@ -1107,7 +1107,8 @@ function CommentCard({ comment }) {
 					height="60"
 				/>
 				<div>
-					<h6 className="fw-bold text-primary mb-1">{comment.userId}</h6>
+					
+					<h6 className="fw-bold text-primary mb-1" onClick={() => renderProfile(comment.userId)}>{comment.userId}</h6>
 					<p className="text-muted small mb-0">{formattedDate}</p>
 				</div>
 			</div>
@@ -1130,11 +1131,6 @@ function Home() {
 	const [privatePosts, setPrivatePosts] = useState([])
 	const [publicPostsWithComments, setPublicPostsWithComments] = useState([])
 	const [userGroups, setUserGroups] = useState([])
-
-	const renderProfile = (userId) => {
-		const appContainer = document.querySelector(".app-container")
-		ReactDOM.render(<Profile userId={userId} />, appContainer)
-	}
 
 	useEffect(() => {
 		fetch("http://localhost:8080/api/home")

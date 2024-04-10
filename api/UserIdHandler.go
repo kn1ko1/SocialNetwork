@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
@@ -41,11 +40,9 @@ func (h *UserIdHandler) get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	log.Println("I made it to UserIdHandler")
 	// Encode and write the response
 	w.WriteHeader(http.StatusCreated)
 	err = json.NewEncoder(w).Encode(user.UserId)
-	log.Println("api/UserIdHandler Current Is is: ", user.UserId)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
