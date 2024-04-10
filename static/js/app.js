@@ -34,7 +34,7 @@ const CurrentUserId = () => {
   return userId; // Return only the userId state value
 };
 function Navbar() {
-  const userId = CurrentUserId();
+  const navUserId = CurrentUserId();
   const renderHome = () => {
     const appContainer = document.querySelector(".app-container");
     ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
@@ -96,7 +96,7 @@ function Navbar() {
   }, /*#__PURE__*/React.createElement("a", {
     className: "nav-link",
     href: "#",
-    onClick: () => renderProfile(userId, true)
+    onClick: () => renderProfile(navUserId, true)
   }, "PROFILE")), /*#__PURE__*/React.createElement("li", {
     className: "nav-item"
   }, /*#__PURE__*/React.createElement("a", {
@@ -469,12 +469,7 @@ function Profile({
   };
   useEffect(() => {
     fetchProfileData();
-  }, []);
-
-  // useEffect(() => {
-  // 	// This effect will re-render the component whenever isPublicValue changes
-  // }, [isPublicValue]);
-
+  }, [userId]);
   const handlePrivacyChange = event => {
     const newPrivacySetting = JSON.parse(event.target.value);
 
@@ -928,7 +923,8 @@ function CommentCard({
     width: "60",
     height: "60"
   }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h6", {
-    className: "fw-bold text-primary mb-1"
+    className: "fw-bold text-primary mb-1",
+    onClick: () => renderProfile(comment.userId)
   }, comment.userId), /*#__PURE__*/React.createElement("p", {
     className: "text-muted small mb-0"
   }, formattedDate))), comment.imageURL && /*#__PURE__*/React.createElement("div", {

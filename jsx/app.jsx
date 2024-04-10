@@ -43,7 +43,7 @@ const CurrentUserId = () => {
 
 
 function Navbar() {
-	const userId = CurrentUserId();
+	const navUserId = CurrentUserId();
 
 	const renderHome = () => {
 		const appContainer = document.querySelector(".app-container")
@@ -105,7 +105,7 @@ function Navbar() {
 				<div className="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul className="navbar-nav me-auto mx-auto mb-2 mb-lg-0">
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={() => renderProfile(userId, true)}>
+							<a className="nav-link" href="#" onClick={() => renderProfile(navUserId, true)}>
 								PROFILE
 							</a>
 						</li>
@@ -507,11 +507,7 @@ function Profile({ userId, isEditable }) {
 
 	useEffect(() => {
 		fetchProfileData();
-	}, []);
-
-	// useEffect(() => {
-	// 	// This effect will re-render the component whenever isPublicValue changes
-	// }, [isPublicValue]);
+	}, [userId]);
 
 	const handlePrivacyChange = (event) => {
 		const newPrivacySetting = JSON.parse(event.target.value);
@@ -1110,7 +1106,8 @@ function CommentCard({ comment }) {
 					height="60"
 				/>
 				<div>
-					<h6 className="fw-bold text-primary mb-1">{comment.userId}</h6>
+					
+					<h6 className="fw-bold text-primary mb-1" onClick={() => renderProfile(comment.userId)}>{comment.userId}</h6>
 					<p className="text-muted small mb-0">{formattedDate}</p>
 				</div>
 			</div>
