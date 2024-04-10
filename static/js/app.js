@@ -525,13 +525,8 @@ function Profile({
   }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Post ID:"), " ", post.postId), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Created At:"), " ", post.createdAt), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Body:"), " ", post.body), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Image URL:"), " ", post.imageURL)))), /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Followers"), /*#__PURE__*/React.createElement("div", {
     id: "myFollowersData"
   }, userFollowerData && userFollowerData.map(follower => /*#__PURE__*/React.createElement("p", {
-<<<<<<< HEAD
-    key: follower.userId
-  }, follower.userId))), /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Followed"), /*#__PURE__*/React.createElement("div", {
-=======
     key: follower.followerId
-  }, follower.followerId))), /*#__PURE__*/React.createElement("h2", null, "Users I Follow"), /*#__PURE__*/React.createElement("div", {
->>>>>>> Martin
+  }, follower.followerId))), /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Followed"), /*#__PURE__*/React.createElement("div", {
     id: "usersIFollowData"
   }, userFollowsData && userFollowsData.map(user => /*#__PURE__*/React.createElement("p", {
     key: user.subjectId
