@@ -531,8 +531,9 @@ function Chat() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"));
 }
 function Group() {
-  const [Title, setTitle] = useState("");
-  const [Description, setDescription] = useState("");
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [groupData, setGroupData] = useState([]);
   const fetchGroupData = async () => {
     try {
       const response = await fetch("http://localhost:8080/api/groups", {
@@ -543,29 +544,28 @@ function Group() {
         }
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch profile data");
+        throw new Error("Failed to fetch group data");
       }
       const data = await response.json();
-      console.log("This is fetched data", data);
+      setGroupData(data); // Set the fetched group data to state
+      console.log("Fetched group data:", data);
     } catch (error) {
-      console.error("Error fetching profile data:", error);
+      console.error("Error fetching group data:", error);
     }
   };
   useEffect(() => {
     fetchGroupData();
   }, []);
-
-  // Upon submitting:
   const create = async e => {
     e.preventDefault(); // prevent reload.
 
     const groupData = new FormData();
 
     // Append form data
-    groupData.append('group-title', Title);
-    groupData.append('group-description', Description);
-    console.log("Group data being sent to backend: ", Title);
-    console.log("Group data being sent to backend: ", Description);
+    groupData.append('group-title', title);
+    groupData.append('group-description', description);
+    console.log("Group data being sent to backend:", title);
+    console.log("Group data being sent to backend:", description);
 
     // Send user data to golang api/PostHandler.go.
     await fetch("http://localhost:8080/api/groups", {
@@ -577,20 +577,9 @@ function Group() {
     setDescription("");
     document.getElementById("exampleTitle").value = "";
     document.getElementById("exampleDescription").value = "";
-    const response = await fetch("http://localhost:8080/api/groups", {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error("failed to fetch group data");
-    }
-    const data = await response.json();
-    console.log("This is second get request", data);
+    fetchGroupData(); // Fetch updated group data after creating a new group
   };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("form", {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("form", {
     onSubmit: create
   }, /*#__PURE__*/React.createElement("div", {
     className: "mb-3"
@@ -602,6 +591,7 @@ function Group() {
     className: "form-control",
     id: "exampleTitle",
     "aria-describedby": "emailHelp",
+    value: title,
     onChange: e => setTitle(e.target.value)
   })), /*#__PURE__*/React.createElement("div", {
     className: "mb-3"
@@ -612,11 +602,16 @@ function Group() {
     type: "text",
     className: "form-control",
     id: "exampleDescription",
+    value: description,
     onChange: e => setDescription(e.target.value)
   })), /*#__PURE__*/React.createElement("button", {
     type: "submit",
     className: "btn btn-primary"
-  }, "Create")), /*#__PURE__*/React.createElement("h1", null, "Group"));
+  }, "Create")), /*#__PURE__*/React.createElement("h1", null, "Group"), /*#__PURE__*/React.createElement("div", {
+    id: "groupData"
+  }, groupData.map(group => /*#__PURE__*/React.createElement("div", {
+    key: group.title
+  }, /*#__PURE__*/React.createElement("h3", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description)))));
 }
 
 // function Group() {
