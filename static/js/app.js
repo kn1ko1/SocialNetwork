@@ -461,6 +461,7 @@ function Profile() {
       setUserFollowerData(data.userFollowerData || []);
       setUserFollowsData(data.userFollowsData || []);
       setIsPublicValue(data.profileUserData.isPublic);
+      console.log("This is my data with followers", data);
     } catch (error) {
       console.error("Error fetching profile data:", error);
     }
@@ -522,12 +523,12 @@ function Profile() {
   }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Post ID:"), " ", post.postId), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Created At:"), " ", post.createdAt), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Body:"), " ", post.body), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Image URL:"), " ", post.imageURL)))), /*#__PURE__*/React.createElement("h2", null, "My Followers"), /*#__PURE__*/React.createElement("div", {
     id: "myFollowersData"
   }, userFollowerData && userFollowerData.map(follower => /*#__PURE__*/React.createElement("p", {
-    key: follower.userId
-  }, follower.userId))), /*#__PURE__*/React.createElement("h2", null, "Users I Follow"), /*#__PURE__*/React.createElement("div", {
+    key: follower.followerId
+  }, follower.followerId))), /*#__PURE__*/React.createElement("h2", null, "Users I Follow"), /*#__PURE__*/React.createElement("div", {
     id: "usersIFollowData"
   }, userFollowsData && userFollowsData.map(user => /*#__PURE__*/React.createElement("p", {
-    key: user.userId
-  }, user.userId)))));
+    key: user.subjectId
+  }, user.subjectId)))));
 }
 function Chat() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"));
