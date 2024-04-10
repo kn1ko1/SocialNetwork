@@ -649,74 +649,165 @@ function Chat() {
 }
 
 function Group() {
-	const [title, setTitle] = useState('');
-	const [description, setDescription] = useState('');
-	const [error, setError] = useState(null);
+	const [Title, setTitle] = useState("");
+	const [Description, setDescription] = useState("")
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-
-		const groupData = new FormData();
-		groupData.append('group-title', title);
-		groupData.append('group-description', description);
-
+	const fetchGroupData = async () => {
 		try {
-			const response = await fetch('http://localhost:8080/api/groups', {
-				method: 'POST',
-				credentials: 'include',
-				body: groupData,
+			const response = await fetch("http://localhost:8080/api/groups", {
+				method: "GET",
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json",
+				},
 			});
 
 			if (!response.ok) {
-				throw new Error('Failed to create group');
+				throw new Error("Failed to fetch profile data");
+			}
+		const data = await response.json();
+		console.log("This is fetched data", data)
+	} catch (error) {
+		console.error("Error fetching profile data:", error);
+	}
+};
+	useEffect(() => {
+		fetchGroupData();
+}, []);
+
+	// Upon submitting:
+	const create = async (e) => {
+		e.preventDefault(); // prevent reload.
+
+		const groupData = new FormData();
+
+		// Append form data
+		groupData.append('group-title', Title);
+		groupData.append('group-description', Description);
+
+		console.log("Group data being sent to backend: ", Title);
+		console.log("Group data being sent to backend: ", Description);
+
+		// Send user data to golang api/PostHandler.go.
+		await fetch("http://localhost:8080/api/groups", {
+			method: "POST",
+			credentials: "include",
+			body: groupData,
+		})
+		setTitle("")
+		setDescription("")
+		document.getElementById("exampleTitle").value = ""
+		document.getElementById("exampleDescription").value = ""
+
+		const response = await fetch("http://localhost:8080/api/groups", {
+				method: "GET",
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+
+			if (!response.ok) {
+				throw new Error ("failed to fetch group data")
 			}
 
-			// Reset form fields on successful submission
-			setTitle('');
-			setDescription('');
-			setError(null);
-		} catch (error) {
-			setError('Failed to create group. Please try again.');
-			console.error('Error creating group:', error);
-		}
-	};
+			const data = await response.json()
+			console.log("This is second get request", data)
+
+	}
+
 
 	return (
 		<div>
 			<Navbar />
-			<form onSubmit={handleSubmit}>
+			<form onSubmit={create}>
 				<div className="mb-3">
-					<label htmlFor="titleInput" className="form-label">
-						Title
-					</label>
-					<input
-						type="text"
-						className="form-control"
-						id="titleInput"
-						value={title}
-						onChange={(e) => setTitle(e.target.value)}
-					/>
+					<label htmlFor="exampleTitle" className="form-label">Title</label>
+					<input type="text" className="form-control" id="exampleTitle" aria-describedby="emailHelp" onChange={(e) => setTitle(e.target.value)} />
+
 				</div>
 				<div className="mb-3">
-					<label htmlFor="descriptionInput" className="form-label">
-						Description
-					</label>
-					<input
-						type="text"
-						className="form-control"
-						id="descriptionInput"
-						value={description}
-						onChange={(e) => setDescription(e.target.value)}
-					/>
+					<label htmlFor="exampleInputPassword1" className="form-label">Description</label>
+					<input type="text" className="form-control" id="exampleDescription" onChange={(e) => setDescription(e.target.value)} />
 				</div>
-				{error && <div className="alert alert-danger">{error}</div>}
-				<button type="submit" className="btn btn-primary">
-					Create
-				</button>
+				<button type="submit" className="btn btn-primary">Create</button>
 			</form>
+			<h1>Group</h1>
+
+
 		</div>
-	);
+	)
 }
+
+// function Group() {
+// 	const [title, setTitle] = useState('');
+// 	const [description, setDescription] = useState('');
+// 	const [error, setError] = useState(null);
+
+// 	const handleSubmit = async (e) => {
+// 		e.preventDefault();
+
+// 		const groupData = new FormData();
+// 		groupData.append('group-title', title);
+// 		groupData.append('group-description', description);
+
+// 		try {
+// 			const response = await fetch('http://localhost:8080/api/groups', {
+// 				method: 'POST',
+// 				credentials: 'include',
+// 				body: groupData,
+// 			});
+
+// 			if (!response.ok) {
+// 				throw new Error('Failed to create group');
+// 			}
+
+// 			// Reset form fields on successful submission
+// 			setTitle('');
+// 			setDescription('');
+// 			setError(null);
+// 		} catch (error) {
+// 			setError('Failed to create group. Please try again.');
+// 			console.error('Error creating group:', error);
+// 		}
+// 	};
+
+// 	return (
+// 		<div>
+// 			<Navbar />
+// 			<form onSubmit={handleSubmit}>
+// 				<div className="mb-3">
+// 					<label htmlFor="titleInput" className="form-label">
+// 						Title
+// 					</label>
+// 					<input
+// 						type="text"
+// 						className="form-control"
+// 						id="titleInput"
+// 						value={title}
+// 						onChange={(e) => setTitle(e.target.value)}
+// 					/>
+// 				</div>
+// 				<div className="mb-3">
+// 					<label htmlFor="descriptionInput" className="form-label">
+// 						Description
+// 					</label>
+// 					<input
+// 						type="text"
+// 						className="form-control"
+// 						id="descriptionInput"
+// 						value={description}
+// 						onChange={(e) => setDescription(e.target.value)}
+// 					/>
+// 				</div>
+// 				{error && <div className="alert alert-danger">{error}</div>}
+// 				<button type="submit" className="btn btn-primary">
+// 					Create
+// 				</button>
+// 			</form>
+// 		</div>
+// 	);
+// }
 
 function Notifications() {
 	return (
