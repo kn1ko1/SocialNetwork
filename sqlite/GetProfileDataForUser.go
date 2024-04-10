@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	"log"
 	"socialnetwork/transport"
 	"socialnetwork/utils"
 )
@@ -33,17 +34,38 @@ func GetProfileDataForUser(identityDb *sql.DB, businessDb *sql.DB, userId int) (
 		// return userProfileData, err
 	}
 
-	userProfileData.UserFollowerData, err = GetUserUsersBySubjectId(businessDb, userId)
+	followerUserUsers, err := GetUserUsersBySubjectId(businessDb, userId)
 	if err != nil {
 		utils.HandleError("Error in GetProfileDataForUser", err)
 		// return userProfileData, err
 	}
+	log.Println("len(followerUserUsers)", len(followerUserUsers))
 
-	userProfileData.UserFollowsData, err = GetUserUsersByFollowerId(businessDb, userId)
+	// var userFollowersData []transport.UserTransport
+	for i := 0; i < len(followerUserUsers); i++ {
+		userFollowerData, err := GetUsernameByUserId(identityDb, followerUserUsers[i].FollowerId)
+		if err != nil {
+			utils.HandleError("Error in GetProfileDataForUser", err)
+		}
+		userProfileData.UserFollowerData = append(userProfileData.UserFollowerData, userFollowerData)
+	}
+
+	followsUsersUsers, err := GetUserUsersByFollowerId(businessDb, userId)
 	if err != nil {
 		utils.HandleError("Error in GetProfileDataForUser", err)
 		// return userProfileData, err
 	}
+	log.Println("len(followsUsersUsers)", len(followsUsersUsers))
+	//var userFollowsData []transport.UserTransport
+	for i := 0; i < len(followsUsersUsers); i++ {
+		userFollowData, err := GetUsernameByUserId(identityDb, followsUsersUsers[i].SubjectId)
+		if err != nil {
+			utils.HandleError("Error in GetProfileDataForUser", err)
+		}
+		userProfileData.UserFollowsData = append(userProfileData.UserFollowsData, userFollowData)
+	}
 
+	log.Println("this is userProfileData.UserFollowerData", userProfileData.UserFollowerData)
+	log.Println("this is userProfileData.UserFollowsData", userProfileData.UserFollowsData)
 	return userProfileData, nil
 }

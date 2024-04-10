@@ -626,7 +626,7 @@ function Profile({ userId, editable }) {
                 <div id="myFollowersData">
                     {userFollowerData &&
                         userFollowerData.map((follower) => (
-                            <p key={follower.followerId}>{follower.followerId}</p>
+                            <p key={follower.username}>{follower.username}</p>
                         ))}
                 </div>
 
@@ -634,7 +634,7 @@ function Profile({ userId, editable }) {
                 <div id="usersIFollowData">
                     {userFollowsData &&
                         userFollowsData.map((user) => (
-                            <p key={user.subjectId}>{user.subjectId}</p>
+                            <p key={user.username}>{user.username}</p>
                         ))}
                  </div>
             </div>

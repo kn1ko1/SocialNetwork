@@ -529,8 +529,8 @@ function Profile({
   }, follower.followerId))), /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Followed"), /*#__PURE__*/React.createElement("div", {
     id: "usersIFollowData"
   }, userFollowsData && userFollowsData.map(user => /*#__PURE__*/React.createElement("p", {
-    key: user.subjectId
-  }, user.subjectId)))));
+    key: user.username
+  }, user.username)))));
 }
 function Chat() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"));
