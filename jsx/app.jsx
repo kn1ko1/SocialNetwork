@@ -499,6 +499,7 @@ function Profile({ userId, editable }) {
 			setUserFollowerData(data.userFollowerData || []);
 			setUserFollowsData(data.userFollowsData || []);
 			setIsPublicValue(data.profileUserData.isPublic);
+			console.log("This is my data with followers", data)
 		} catch (error) {
 			console.error("Error fetching profile data:", error);
 		}
@@ -622,22 +623,22 @@ function Profile({ userId, editable }) {
 				</div>
 
 				<h2>{profileUserData.username}'s Followers</h2>
-				<div id="myFollowersData">
-					{userFollowerData &&
-						userFollowerData.map((follower) => (
-							<p key={follower.userId}>{follower.userId}</p>
-						))}
-				</div>
+                <div id="myFollowersData">
+                    {userFollowerData &&
+                        userFollowerData.map((follower) => (
+                            <p key={follower.followerId}>{follower.followerId}</p>
+                        ))}
+                </div>
 
-				<h2>{profileUserData.username}'s Followed</h2>
-				<div id="usersIFollowData">
-					{userFollowsData &&
-						userFollowsData.map((user) => (
-							<p key={user.userId}>{user.userId}</p>
-						))}
-				</div>
-			</div>
-		</div>
+                <h2>{profileUserData.username}'s Followed</h2>
+                <div id="usersIFollowData">
+                    {userFollowsData &&
+                        userFollowsData.map((user) => (
+                            <p key={user.subjectId}>{user.subjectId}</p>
+                        ))}
+                 </div>
+            </div>
+        </div>
 	)
 }
 
