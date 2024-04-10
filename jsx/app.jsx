@@ -648,10 +648,22 @@ function Chat() {
 	)
 }
 
+function GroupDetails({ group }) {
+	return (
+	  <div className="group-details">
+		<h2>{group.title}</h2>
+		<p>{group.description}</p>
+		{/* <p>Members: {group.members}</p> */}
+		{/* Add more details you want to display */}
+	  </div>
+	);
+  }
+
 function Group() {
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const [groupData, setGroupData] = useState([]);
+	const [selectedGroup, setSelectedGroup] = useState(null);
   
 	const fetchGroupData = async () => {
 	  try {
@@ -706,6 +718,10 @@ function Group() {
 	  fetchGroupData(); // Fetch updated group data after creating a new group
 	};
   
+	const handleGroupClick = (group) => {
+		setSelectedGroup(group);
+	  };
+
 	return (
 	  <div>
 		<form onSubmit={create}>
@@ -720,18 +736,22 @@ function Group() {
 		  <button type="submit" className="btn btn-primary">Create</button>
 		</form>
   
-		<h1>Group</h1>
-		<div id="groupData">
-		  {groupData.map((group) => (
-			<div key={group.title}>
-			  <h3>{group.title}</h3>
-			  <p>{group.description}</p>
-			</div>
-		  ))}
-		</div>
-	  </div>
-	);
-  }
+	    <h1>Group</h1>
+      <div id="groupData">
+        {groupData.map((group) => (
+          <div key={group.title} onClick={() => handleGroupClick(group)}>
+            <h3>{group.title}</h3>
+            <p>{group.description}</p>
+          </div>
+        ))}
+      </div>
+
+      {selectedGroup && (
+        <GroupDetails group={selectedGroup} />
+      )}
+    </div>
+  );
+}
 
 // function Group() {
 // 	const [title, setTitle] = useState('');

@@ -530,10 +530,18 @@ function Profile({
 function Chat() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"));
 }
+function GroupDetails({
+  group
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "group-details"
+  }, /*#__PURE__*/React.createElement("h2", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description));
+}
 function Group() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [groupData, setGroupData] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState(null);
   const fetchGroupData = async () => {
     try {
       const response = await fetch("http://localhost:8080/api/groups", {
@@ -579,6 +587,9 @@ function Group() {
     document.getElementById("exampleDescription").value = "";
     fetchGroupData(); // Fetch updated group data after creating a new group
   };
+  const handleGroupClick = group => {
+    setSelectedGroup(group);
+  };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("form", {
     onSubmit: create
   }, /*#__PURE__*/React.createElement("div", {
@@ -610,8 +621,11 @@ function Group() {
   }, "Create")), /*#__PURE__*/React.createElement("h1", null, "Group"), /*#__PURE__*/React.createElement("div", {
     id: "groupData"
   }, groupData.map(group => /*#__PURE__*/React.createElement("div", {
-    key: group.title
-  }, /*#__PURE__*/React.createElement("h3", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description)))));
+    key: group.title,
+    onClick: () => handleGroupClick(group)
+  }, /*#__PURE__*/React.createElement("h3", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description)))), selectedGroup && /*#__PURE__*/React.createElement(GroupDetails, {
+    group: selectedGroup
+  }));
 }
 
 // function Group() {
