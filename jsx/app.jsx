@@ -52,7 +52,7 @@ function Navbar() {
 
 	const renderProfile = () => {
 		const appContainer = document.querySelector(".app-container")
-		ReactDOM.render(<Profile userId={userId} />, appContainer)
+		ReactDOM.render(<Profile userId={userId} editable={true} />, appContainer)
 	}
 
 	const renderNotifications = () => {
@@ -472,13 +472,12 @@ function Register() {
 	)
 }
 
-function Profile({ userId }) {
+function Profile({ userId, editable }) {
 	const [profileUserData, setProfileUserData] = useState({});
 	const [userPostData, setUserPostData] = useState([]);
 	const [userFollowerData, setUserFollowerData] = useState([]);
 	const [userFollowsData, setUserFollowsData] = useState([]);
 	const [isPublicValue, setIsPublicValue] = useState(null);
-	console.log("userId", userId)
 
 	const fetchProfileData = async () => {
 		try {
@@ -545,29 +544,35 @@ function Profile({ userId }) {
 		<div>
 			<Navbar />
 			<div id="profileData">
-				<h2>My Profile</h2>
+				<h2>{profileUserData.username}'s Profile</h2>
 				<div id="myProfileData"></div>
 
-				<div id="isPublicToggle">
-					<label>
-						<input
-							type="radio"
-							value={true}
-							checked={isPublicValue === true} // Check if isPublicValue is true
-							onChange={handlePrivacyChange}
-						/>
-						Public
-					</label>
-					<label>
-						<input
-							type="radio"
-							value={false}
-							checked={isPublicValue === false} // Check if isPublicValue is false
-							onChange={handlePrivacyChange}
-						/>
-						Private
-					</label>
-				</div>
+				{editable ? (
+					<div id="isPublicToggle">
+						<label>
+							<input
+								type="radio"
+								value={true}
+								checked={isPublicValue === true} // Check if isPublicValue is true
+								onChange={handlePrivacyChange}
+							/>
+							Public
+						</label>
+						<label>
+							<input
+								type="radio"
+								value={false}
+								checked={isPublicValue === false} // Check if isPublicValue is false
+								onChange={handlePrivacyChange}
+							/>
+							Private
+						</label>
+					</div>
+				) : (
+					<p>
+						<strong>Privacy:</strong> {isPublicValue ? "Public" : "Private"}
+					</p>
+				)}
 
 				<p>
 					<strong>User ID:</strong> {profileUserData.userId}
@@ -596,7 +601,7 @@ function Profile({ userId }) {
 				</p>
 
 
-				<h2>My Posts</h2>
+				<h2>{profileUserData.username}'s Posts</h2>
 				<div id="myPostsData">
 					{userPostData.map((post) => (
 						<div key={post.postId}>
@@ -616,7 +621,7 @@ function Profile({ userId }) {
 					))}
 				</div>
 
-				<h2>My Followers</h2>
+				<h2>{profileUserData.username}'s Followers</h2>
 				<div id="myFollowersData">
 					{userFollowerData &&
 						userFollowerData.map((follower) => (
@@ -624,7 +629,7 @@ function Profile({ userId }) {
 						))}
 				</div>
 
-				<h2>Users I Follow</h2>
+				<h2>{profileUserData.username}'s Followed</h2>
 				<div id="usersIFollowData">
 					{userFollowsData &&
 						userFollowsData.map((user) => (

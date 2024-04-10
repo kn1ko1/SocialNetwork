@@ -42,7 +42,8 @@ function Navbar() {
   const renderProfile = () => {
     const appContainer = document.querySelector(".app-container");
     ReactDOM.render( /*#__PURE__*/React.createElement(Profile, {
-      userId: userId
+      userId: userId,
+      editable: true
     }), appContainer);
   };
   const renderNotifications = () => {
@@ -436,14 +437,14 @@ function Register() {
   }, "Log in")));
 }
 function Profile({
-  userId
+  userId,
+  editable
 }) {
   const [profileUserData, setProfileUserData] = useState({});
   const [userPostData, setUserPostData] = useState([]);
   const [userFollowerData, setUserFollowerData] = useState([]);
   const [userFollowsData, setUserFollowsData] = useState([]);
   const [isPublicValue, setIsPublicValue] = useState(null);
-  console.log("userId", userId);
   const fetchProfileData = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/profile/${userId}`, {
@@ -500,9 +501,9 @@ function Profile({
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("div", {
     id: "profileData"
-  }, /*#__PURE__*/React.createElement("h2", null, "My Profile"), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Profile"), /*#__PURE__*/React.createElement("div", {
     id: "myProfileData"
-  }), /*#__PURE__*/React.createElement("div", {
+  }), editable ? /*#__PURE__*/React.createElement("div", {
     id: "isPublicToggle"
   }, /*#__PURE__*/React.createElement("label", null, /*#__PURE__*/React.createElement("input", {
     type: "radio",
@@ -516,15 +517,15 @@ function Profile({
     checked: isPublicValue === false // Check if isPublicValue is false
     ,
     onChange: handlePrivacyChange
-  }), "Private")), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "User ID:"), " ", profileUserData.userId), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Username:"), " ", profileUserData.username), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Email:"), " ", profileUserData.email), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "First Name:"), " ", profileUserData.firstName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Last Name:"), " ", profileUserData.lastName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Date of Birth:"), " ", new Date(profileUserData.dob).toLocaleDateString()), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Bio:"), " ", profileUserData.bio), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Image URL:"), " ", profileUserData.imageURL), /*#__PURE__*/React.createElement("h2", null, "My Posts"), /*#__PURE__*/React.createElement("div", {
+  }), "Private")) : /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Privacy:"), " ", isPublicValue ? "Public" : "Private"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "User ID:"), " ", profileUserData.userId), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Username:"), " ", profileUserData.username), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Email:"), " ", profileUserData.email), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "First Name:"), " ", profileUserData.firstName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Last Name:"), " ", profileUserData.lastName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Date of Birth:"), " ", new Date(profileUserData.dob).toLocaleDateString()), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Bio:"), " ", profileUserData.bio), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Image URL:"), " ", profileUserData.imageURL), /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Posts"), /*#__PURE__*/React.createElement("div", {
     id: "myPostsData"
   }, userPostData.map(post => /*#__PURE__*/React.createElement("div", {
     key: post.postId
-  }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Post ID:"), " ", post.postId), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Created At:"), " ", post.createdAt), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Body:"), " ", post.body), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Image URL:"), " ", post.imageURL)))), /*#__PURE__*/React.createElement("h2", null, "My Followers"), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Post ID:"), " ", post.postId), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Created At:"), " ", post.createdAt), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Body:"), " ", post.body), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Image URL:"), " ", post.imageURL)))), /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Followers"), /*#__PURE__*/React.createElement("div", {
     id: "myFollowersData"
   }, userFollowerData && userFollowerData.map(follower => /*#__PURE__*/React.createElement("p", {
     key: follower.userId
-  }, follower.userId))), /*#__PURE__*/React.createElement("h2", null, "Users I Follow"), /*#__PURE__*/React.createElement("div", {
+  }, follower.userId))), /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Followed"), /*#__PURE__*/React.createElement("div", {
     id: "usersIFollowData"
   }, userFollowsData && userFollowsData.map(user => /*#__PURE__*/React.createElement("p", {
     key: user.userId
