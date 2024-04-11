@@ -15,18 +15,18 @@ const CurrentUserId = () => {
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/userId', {
-          credentials: 'include'
+        const response = await fetch("http://localhost:8080/api/userId", {
+          credentials: "include"
         });
         console.log("response: ", response);
         if (response.ok) {
           const userId = await response.json();
           setUserId(userId);
         } else {
-          console.error('Failed to fetch userId');
+          console.error("Failed to fetch userId");
         }
       } catch (error) {
-        console.error('Error fetching userId:', error);
+        console.error("Error fetching userId:", error);
       }
     };
     fetchUserId();
@@ -130,10 +130,10 @@ function Navbar() {
   }, "LOGOUT"))))));
 }
 function Login() {
-  const [usernameOrEmail, setUsernameOrEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [usernameOrEmail, setUsernameOrEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const handleUsernameOrEmailChange = e => {
     setUsernameOrEmail(e.target.value);
   };
@@ -147,36 +147,36 @@ function Login() {
       password
     };
     try {
-      const response = await fetch('http://localhost:8080/auth/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8080/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify(userToLogin)
       });
       if (!response.ok) {
-        setErrorMessage('Invalid credentials');
-        throw new Error('Invalid credentials');
+        setErrorMessage("Invalid credentials");
+        throw new Error("Invalid credentials");
       }
       const data = await response.json();
       if (data.success) {
         setIsLoggedIn(true);
-        setErrorMessage('');
+        setErrorMessage("");
       } else {
-        setErrorMessage('Invalid credentials');
-        throw new Error('Invalid credentials');
+        setErrorMessage("Invalid credentials");
+        throw new Error("Invalid credentials");
       }
     } catch (error) {
-      setErrorMessage('Invalid credentials');
+      setErrorMessage("Invalid credentials");
     }
   };
   const renderRegister = () => {
-    const appContainer = document.querySelector('.app-container');
+    const appContainer = document.querySelector(".app-container");
     ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), appContainer);
   };
   if (isLoggedIn) {
-    const appContainer = document.querySelector('.app-container');
+    const appContainer = document.querySelector(".app-container");
     ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
     socket = new WebSocket("ws://localhost:8080/ws");
     socket.onopen = function (event) {
@@ -528,7 +528,49 @@ function Profile({
   }, user.username)))));
 }
 function Chat() {
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"));
+  const [sendMessage, setSendMessage] = useState("");
+  const [receiveMessage, setReceiveMessage] = useState("");
+  let messages = document.getElementById("messages");
+  const handleMessages = e => {
+    setSendMessage(e.target.value);
+  };
+  const handleSubmit = e => {
+    e.preventDefault();
+    let bodymessage = {
+      id: 1,
+      message: sendMessage
+    };
+    let obj = {
+      code: 1,
+      body: JSON.stringify(bodymessage)
+    };
+    socket.send(JSON.stringify(obj));
+    setSendMessage("");
+  };
+  socket.onmessage = function (e) {
+    let data = JSON.parse(e.data);
+    let msg = JSON.parse(data.body).message;
+    // setReceiveMessage(msg)
+    // console.log("receiveMessage:", receiveMessage)
+    let entry = document.createElement("li");
+    entry.appendChild(document.createTextNode(msg));
+    messages.appendChild(entry);
+  };
+  const messageStyle = {
+    color: "orange"
+  };
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"), /*#__PURE__*/React.createElement("ul", {
+    id: "messages",
+    style: messageStyle
+  }), /*#__PURE__*/React.createElement("form", {
+    id: "chatbox",
+    onSubmit: handleSubmit
+  }, /*#__PURE__*/React.createElement("textarea", {
+    onChange: handleMessages
+  }), /*#__PURE__*/React.createElement("button", {
+    type: "submit",
+    className: "btn btn-primary"
+  }, "send")));
 }
 function GroupDetails({
   group
@@ -540,8 +582,8 @@ function GroupDetails({
   }));
 }
 function Group() {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [groupData, setGroupData] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   //const [showGroupDetails, setShowGroupDetails] = useState(false);
@@ -574,8 +616,8 @@ function Group() {
     const groupData = new FormData();
 
     // Append form data
-    groupData.append('group-title', title);
-    groupData.append('group-description', description);
+    groupData.append("group-title", title);
+    groupData.append("group-description", description);
     console.log("Group data being sent to backend:", title);
     console.log("Group data being sent to backend:", description);
 
@@ -760,15 +802,15 @@ function PostForm({
   }, "Submit"))));
 }
 const postCardStyle = {
-  maxWidth: '600px',
-  background: 'linear-gradient(to bottom, #c7ddef, #ffffff)',
+  maxWidth: "600px",
+  background: "linear-gradient(to bottom, #c7ddef, #ffffff)",
   // Light blue/grey to white gradient
-  borderRadius: '10px',
-  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+  borderRadius: "10px",
+  boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
   // Optional: Add shadow for depth
-  padding: '20px',
-  margin: 'auto',
-  marginBottom: '20px' // Adjust spacing between post cards
+  padding: "20px",
+  margin: "auto",
+  marginBottom: "20px" // Adjust spacing between post cards
 };
 function FollowButton({
   userId,
@@ -823,7 +865,7 @@ function FollowButton({
   return /*#__PURE__*/React.createElement("button", {
     className: "btn btn-primary btn-sm",
     onClick: handleFollowToggle
-  }, isFollowing ? 'Unfollow' : 'Follow');
+  }, isFollowing ? "Unfollow" : "Follow");
 }
 function PostCard({
   post

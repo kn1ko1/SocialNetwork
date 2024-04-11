@@ -12,38 +12,34 @@ const App = () => {
 
 // // Const for getting userId in the frontend
 const CurrentUserId = () => {
-	const [userId, setUserId] = useState(null);
+	const [userId, setUserId] = useState(null)
 
 	useEffect(() => {
 		const fetchUserId = async () => {
 			try {
-				const response = await fetch('http://localhost:8080/api/userId', {
-					credentials: 'include',
-				});
+				const response = await fetch("http://localhost:8080/api/userId", {
+					credentials: "include",
+				})
 				console.log("response: ", response)
 				if (response.ok) {
-					const userId = await response.json();
-					setUserId(userId);
+					const userId = await response.json()
+					setUserId(userId)
 				} else {
-					console.error('Failed to fetch userId');
+					console.error("Failed to fetch userId")
 				}
 			} catch (error) {
-				console.error('Error fetching userId:', error);
+				console.error("Error fetching userId:", error)
 			}
-		};
+		}
 
-		fetchUserId();
-	}, []);
+		fetchUserId()
+	}, [])
 
-	return userId; // Return only the userId state value
-};
-
-
-
-
+	return userId // Return only the userId state value
+}
 
 function Navbar() {
-	const navUserId = CurrentUserId();
+	const navUserId = CurrentUserId()
 
 	const renderHome = () => {
 		const appContainer = document.querySelector(".app-container")
@@ -105,7 +101,11 @@ function Navbar() {
 				<div className="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul className="navbar-nav me-auto mx-auto mb-2 mb-lg-0">
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={() => renderProfile(navUserId, true)}>
+							<a
+								className="nav-link"
+								href="#"
+								onClick={() => renderProfile(navUserId, true)}
+							>
 								PROFILE
 							</a>
 						</li>
@@ -142,64 +142,64 @@ function Navbar() {
 }
 
 function Login() {
-	const [usernameOrEmail, setUsernameOrEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [errorMessage, setErrorMessage] = useState('');
+	const [usernameOrEmail, setUsernameOrEmail] = useState("")
+	const [password, setPassword] = useState("")
+	const [isLoggedIn, setIsLoggedIn] = useState(false)
+	const [errorMessage, setErrorMessage] = useState("")
 
 	const handleUsernameOrEmailChange = (e) => {
-		setUsernameOrEmail(e.target.value);
-	};
+		setUsernameOrEmail(e.target.value)
+	}
 
 	const handlePasswordChange = (e) => {
-		setPassword(e.target.value);
-	};
+		setPassword(e.target.value)
+	}
 
 	const handleSubmit = async (e) => {
-		e.preventDefault();
+		e.preventDefault()
 
 		const userToLogin = {
 			usernameOrEmail,
 			password,
-		};
+		}
 
 		try {
-			const response = await fetch('http://localhost:8080/auth/login', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				credentials: 'include',
+			const response = await fetch("http://localhost:8080/auth/login", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				credentials: "include",
 				body: JSON.stringify(userToLogin),
 			})
 
 			if (!response.ok) {
-				setErrorMessage('Invalid credentials');
-				throw new Error('Invalid credentials');
+				setErrorMessage("Invalid credentials")
+				throw new Error("Invalid credentials")
 			}
 
-			const data = await response.json();
+			const data = await response.json()
 			if (data.success) {
-				setIsLoggedIn(true);
-				setErrorMessage('');
+				setIsLoggedIn(true)
+				setErrorMessage("")
 			} else {
-				setErrorMessage('Invalid credentials');
-				throw new Error('Invalid credentials');
+				setErrorMessage("Invalid credentials")
+				throw new Error("Invalid credentials")
 			}
 		} catch (error) {
-			setErrorMessage('Invalid credentials');
+			setErrorMessage("Invalid credentials")
 		}
 	}
 
 	const renderRegister = () => {
-		const appContainer = document.querySelector('.app-container');
-		ReactDOM.render(<Register />, appContainer);
-	};
+		const appContainer = document.querySelector(".app-container")
+		ReactDOM.render(<Register />, appContainer)
+	}
 
 	if (isLoggedIn) {
-		const appContainer = document.querySelector('.app-container');
-		ReactDOM.render(<Home />, appContainer);
-		socket = new WebSocket("ws://localhost:8080/ws");
+		const appContainer = document.querySelector(".app-container")
+		ReactDOM.render(<Home />, appContainer)
+		socket = new WebSocket("ws://localhost:8080/ws")
 		socket.onopen = function (event) {
-			console.log("WebSocket connection established.");
+			console.log("WebSocket connection established.")
 		}
 	}
 
@@ -238,31 +238,33 @@ function Login() {
 			<br />
 			<div className="mb3">
 				<span className="login-text">Don't have an account? &nbsp;</span>
-				<button type="button" className="btn btn-primary" onClick={renderRegister}>
+				<button
+					type="button"
+					className="btn btn-primary"
+					onClick={renderRegister}
+				>
 					Register
 				</button>
 			</div>
 		</div>
-	);
+	)
 }
 
-
 function Register() {
-	const [email, setEmail] = useState("");
-	const [encryptedPassword, setEncryptedPassword] = useState("");
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [dob, setDob] = useState("");
-	const [imageURL, setImageURL] = useState("");
-	const [username, setUsername] = useState("");
-	const [bio, setBio] = useState("");
-	const [isPublic, setIsPublic] = useState(true);
-	const [isRegistered, setIsRegistered] = useState(false);
+	const [email, setEmail] = useState("")
+	const [encryptedPassword, setEncryptedPassword] = useState("")
+	const [firstName, setFirstName] = useState("")
+	const [lastName, setLastName] = useState("")
+	const [dob, setDob] = useState("")
+	const [imageURL, setImageURL] = useState("")
+	const [username, setUsername] = useState("")
+	const [bio, setBio] = useState("")
+	const [isPublic, setIsPublic] = useState(true)
+	const [isRegistered, setIsRegistered] = useState(false)
 
-
-	const handleChange = e => {
-		setIsPublic(e.target.value === "true");
-	};
+	const handleChange = (e) => {
+		setIsPublic(e.target.value === "true")
+	}
 	//this is register button
 	const submit = async (e) => {
 		e.preventDefault() // prevent reload.
@@ -278,7 +280,7 @@ function Register() {
 			username,
 			bio,
 			isPublic,
-		};
+		}
 
 		try {
 			// Send user data to backend
@@ -306,9 +308,9 @@ function Register() {
 
 	//if credentials frontend succesfully create a new user then we render home
 	if (isRegistered) {
-		socket = new WebSocket("ws://localhost:8080/ws");
+		socket = new WebSocket("ws://localhost:8080/ws")
 		socket.onopen = function (event) {
-			console.log("WebSocket connection established.");
+			console.log("WebSocket connection established.")
 		}
 		const appContainer = document.querySelector(".app-container")
 		ReactDOM.render(<Home />, appContainer)
@@ -436,8 +438,6 @@ function Register() {
 					</label>
 				</div>
 
-
-
 				<div className="mb-3">
 					<label htmlFor="about">About me</label>
 					<input
@@ -467,51 +467,56 @@ function Register() {
 	)
 }
 
-
 const renderProfile = (userId, isEditable) => {
-	const appContainer = document.querySelector(".app-container");
-	ReactDOM.render(<Profile userId={userId} isEditable={isEditable} />, appContainer);
-};
+	const appContainer = document.querySelector(".app-container")
+	ReactDOM.render(
+		<Profile userId={userId} isEditable={isEditable} />,
+		appContainer
+	)
+}
 
 function Profile({ userId, isEditable }) {
-	const [profileUserData, setProfileUserData] = useState({});
-	const [userPostData, setUserPostData] = useState([]);
-	const [userFollowerData, setUserFollowerData] = useState([]);
-	const [userFollowsData, setUserFollowsData] = useState([]);
-	const [isPublicValue, setIsPublicValue] = useState(null);
+	const [profileUserData, setProfileUserData] = useState({})
+	const [userPostData, setUserPostData] = useState([])
+	const [userFollowerData, setUserFollowerData] = useState([])
+	const [userFollowsData, setUserFollowsData] = useState([])
+	const [isPublicValue, setIsPublicValue] = useState(null)
 
 	const fetchProfileData = async () => {
 		try {
-			const response = await fetch(`http://localhost:8080/api/profile/${userId}`, {
-				method: "GET",
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
+			const response = await fetch(
+				`http://localhost:8080/api/profile/${userId}`,
+				{
+					method: "GET",
+					credentials: "include",
+					headers: {
+						"Content-Type": "application/json",
+					},
+				}
+			)
 
 			if (!response.ok) {
-				throw new Error("Failed to fetch profile data");
+				throw new Error("Failed to fetch profile data")
 			}
 
-			const data = await response.json();
-			setProfileUserData(data.profileUserData);
-			setUserPostData(data.userPostData || []);
-			setUserFollowerData(data.userFollowerData || []);
-			setUserFollowsData(data.userFollowsData || []);
-			setIsPublicValue(data.profileUserData.isPublic);
+			const data = await response.json()
+			setProfileUserData(data.profileUserData)
+			setUserPostData(data.userPostData || [])
+			setUserFollowerData(data.userFollowerData || [])
+			setUserFollowsData(data.userFollowsData || [])
+			setIsPublicValue(data.profileUserData.isPublic)
 			console.log("This is my data with followers", data)
 		} catch (error) {
-			console.error("Error fetching profile data:", error);
+			console.error("Error fetching profile data:", error)
 		}
-	};
+	}
 
 	useEffect(() => {
-		fetchProfileData();
-	}, [userId]);
+		fetchProfileData()
+	}, [userId])
 
 	const handlePrivacyChange = (event) => {
-		const newPrivacySetting = JSON.parse(event.target.value);
+		const newPrivacySetting = JSON.parse(event.target.value)
 
 		// Update the database with the new privacy status
 		fetch("http://localhost:8080/api/profile/privacy", {
@@ -526,17 +531,16 @@ function Profile({ userId, isEditable }) {
 		})
 			.then((response) => {
 				if (!response.ok) {
-					throw new Error("Failed to update privacy status");
+					throw new Error("Failed to update privacy status")
 				}
 
-
 				// Update the local state with the new privacy setting
-				setIsPublicValue(newPrivacySetting);
+				setIsPublicValue(newPrivacySetting)
 			})
 			.catch((error) => {
-				console.error("Error updating privacy status:", error);
-			});
-	};
+				console.error("Error updating privacy status:", error)
+			})
+	}
 
 	return (
 		<div>
@@ -598,7 +602,6 @@ function Profile({ userId, isEditable }) {
 					<strong>Image URL:</strong> {profileUserData.imageURL}
 				</p>
 
-
 				<h2>{profileUserData.username}'s Posts</h2>
 				<div id="myPostsData">
 					{userPostData.map((post) => (
@@ -620,162 +623,209 @@ function Profile({ userId, isEditable }) {
 				</div>
 
 				<h2>{profileUserData.username}'s Followers</h2>
-                <div id="myFollowersData">
-                    {userFollowerData &&
-                        userFollowerData.map((follower) => (
-                            <p key={follower.username}>{follower.username}</p>
-                        ))}
-                </div>
+				<div id="myFollowersData">
+					{userFollowerData &&
+						userFollowerData.map((follower) => (
+							<p key={follower.username}>{follower.username}</p>
+						))}
+				</div>
 
-                <h2>{profileUserData.username}'s Followed</h2>
-                <div id="usersIFollowData">
-                    {userFollowsData &&
-                        userFollowsData.map((user) => (
-                            <p key={user.username}>{user.username}</p>
-                        ))}
-                 </div>
-            </div>
-        </div>
+				<h2>{profileUserData.username}'s Followed</h2>
+				<div id="usersIFollowData">
+					{userFollowsData &&
+						userFollowsData.map((user) => (
+							<p key={user.username}>{user.username}</p>
+						))}
+				</div>
+			</div>
+		</div>
 	)
 }
 
 function Chat() {
+	const [sendMessage, setSendMessage] = useState("")
+	const [receiveMessage, setReceiveMessage] = useState("")
+
+	let messages = document.getElementById("messages")
+
+	const handleMessages = (e) => {
+		setSendMessage(e.target.value)
+	}
+
+	const handleSubmit = (e) => {
+		e.preventDefault()
+		let bodymessage = { id: 1, message: sendMessage }
+		let obj = { code: 1, body: JSON.stringify(bodymessage) }
+		socket.send(JSON.stringify(obj))
+		setSendMessage("")
+	}
+
+	socket.onmessage = function (e) {
+		let data = JSON.parse(e.data)
+		let msg = JSON.parse(data.body).message
+		// setReceiveMessage(msg)
+		// console.log("receiveMessage:", receiveMessage)
+		let entry = document.createElement("li")
+		entry.appendChild(document.createTextNode(msg))
+		messages.appendChild(entry)
+	}
+
+	const messageStyle = {
+		color: "orange",
+	}
+
 	return (
 		<div>
 			<Navbar />
 			<h1>Chat</h1>
+			<ul id="messages" style={messageStyle}></ul>
+			<form id="chatbox" onSubmit={handleSubmit}>
+				<textarea onChange={handleMessages}></textarea>
+				<button type="submit" className="btn btn-primary">
+					send
+				</button>
+			</form>
 		</div>
 	)
 }
 
 function GroupDetails({ group }) {
 	return (
-		
-		
-	  <div className="group-details">
-		
-		<h2>{group.title}</h2>
-		<p>{group.description}</p>
-		{/* <p>Members: {group.members}</p> */}
-		{/* Add more details you want to display */}
-		 {/* Display the PostForm component for creating new posts */}
-		 <PostForm groupId={group.id} />
-	  </div>
-	);
-  }
-
-function Group() {
-	const [title, setTitle] = useState('');
-	const [description, setDescription] = useState('');
-	const [groupData, setGroupData] = useState([]);
-	const [selectedGroup, setSelectedGroup] = useState(null);
-	//const [showGroupDetails, setShowGroupDetails] = useState(false);
-  
-	const fetchGroupData = async () => {
-	  try {
-		const response = await fetch("http://localhost:8080/api/groups", {
-		  method: "GET",
-		  credentials: "include",
-		  headers: {
-			"Content-Type": "application/json",
-		  },
-		});
-  
-		if (!response.ok) {
-		  throw new Error("Failed to fetch group data");
-		}
-  
-		const data = await response.json();
-		setGroupData(data); // Set the fetched group data to state
-		console.log("Fetched group data:", data);
-	  } catch (error) {
-		console.error("Error fetching group data:", error);
-	  }
-	};
-  
-	useEffect(() => {
-	  fetchGroupData();
-	}, []);
-  
-	const create = async (e) => {
-	  e.preventDefault(); // prevent reload.
-  
-	  const groupData = new FormData();
-  
-	  // Append form data
-	  groupData.append('group-title', title);
-	  groupData.append('group-description', description);
-  
-	  console.log("Group data being sent to backend:", title);
-	  console.log("Group data being sent to backend:", description);
-  
-	  // Send user data to golang api/PostHandler.go.
-	  await fetch("http://localhost:8080/api/groups", {
-		method: "POST",
-		credentials: "include",
-		body: groupData,
-	  });
-  
-	  setTitle("");
-	  setDescription("");
-	  document.getElementById("exampleTitle").value = "";
-	  document.getElementById("exampleDescription").value = "";
-  
-	  fetchGroupData(); // Fetch updated group data after creating a new group
-	};
-  
-	const handleGroupClick = (group) => {
-		setSelectedGroup(group);
-		//setShowGroupDetails(true);
-	  };
-
-	  const handleGoBack = () => {
-		setSelectedGroup(null);
-		setShowGroupDetails(false); // Update showGroupDetails to false when going back
-	  };
-
-	return (
-		
-		<div>
-			<Navbar />
-		{selectedGroup ? (
-			<div>
-				<button onClick={() => setSelectedGroup(null)}>Go Back</button>
-				<GroupDetails group={selectedGroup} />
-			</div>
-		) : (
-	  <div>
-		<form onSubmit={create}>
-		  <div className="mb-3">
-			<label htmlFor="exampleTitle" className="form-label">Title</label>
-			<input type="text" className="form-control" id="exampleTitle" aria-describedby="emailHelp" value={title} onChange={(e) => setTitle(e.target.value)} />
-		  </div>
-		  <div className="mb-3">
-			<label htmlFor="exampleInputPassword1" className="form-label">Description</label>
-			<input type="text" className="form-control" id="exampleDescription" value={description} onChange={(e) => setDescription(e.target.value)} />
-		  </div>
-		  <button type="submit" className="btn btn-primary">Create</button>
-		</form>
-  
-	
-      <div id="groupData">
-        {groupData.map((group) => (
-          <div key={group.title} onClick={() => handleGroupClick(group)}>
-            <h3>{group.title}</h3>
-            <p>{group.description}</p>
-          </div>
-    
-      
-
-      
-      ))}
-    </div>
-	</div>
-		)}
-	 </div>
-  );
+		<div className="group-details">
+			<h2>{group.title}</h2>
+			<p>{group.description}</p>
+			{/* <p>Members: {group.members}</p> */}
+			{/* Add more details you want to display */}
+			{/* Display the PostForm component for creating new posts */}
+			<PostForm groupId={group.id} />
+		</div>
+	)
 }
 
+function Group() {
+	const [title, setTitle] = useState("")
+	const [description, setDescription] = useState("")
+	const [groupData, setGroupData] = useState([])
+	const [selectedGroup, setSelectedGroup] = useState(null)
+	//const [showGroupDetails, setShowGroupDetails] = useState(false);
+
+	const fetchGroupData = async () => {
+		try {
+			const response = await fetch("http://localhost:8080/api/groups", {
+				method: "GET",
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			})
+
+			if (!response.ok) {
+				throw new Error("Failed to fetch group data")
+			}
+
+			const data = await response.json()
+			setGroupData(data) // Set the fetched group data to state
+			console.log("Fetched group data:", data)
+		} catch (error) {
+			console.error("Error fetching group data:", error)
+		}
+	}
+
+	useEffect(() => {
+		fetchGroupData()
+	}, [])
+
+	const create = async (e) => {
+		e.preventDefault() // prevent reload.
+
+		const groupData = new FormData()
+
+		// Append form data
+		groupData.append("group-title", title)
+		groupData.append("group-description", description)
+
+		console.log("Group data being sent to backend:", title)
+		console.log("Group data being sent to backend:", description)
+
+		// Send user data to golang api/PostHandler.go.
+		await fetch("http://localhost:8080/api/groups", {
+			method: "POST",
+			credentials: "include",
+			body: groupData,
+		})
+
+		setTitle("")
+		setDescription("")
+		document.getElementById("exampleTitle").value = ""
+		document.getElementById("exampleDescription").value = ""
+
+		fetchGroupData() // Fetch updated group data after creating a new group
+	}
+
+	const handleGroupClick = (group) => {
+		setSelectedGroup(group)
+		//setShowGroupDetails(true);
+	}
+
+	const handleGoBack = () => {
+		setSelectedGroup(null)
+		setShowGroupDetails(false) // Update showGroupDetails to false when going back
+	}
+
+	return (
+		<div>
+			<Navbar />
+			{selectedGroup ? (
+				<div>
+					<button onClick={() => setSelectedGroup(null)}>Go Back</button>
+					<GroupDetails group={selectedGroup} />
+				</div>
+			) : (
+				<div>
+					<form onSubmit={create}>
+						<div className="mb-3">
+							<label htmlFor="exampleTitle" className="form-label">
+								Title
+							</label>
+							<input
+								type="text"
+								className="form-control"
+								id="exampleTitle"
+								aria-describedby="emailHelp"
+								value={title}
+								onChange={(e) => setTitle(e.target.value)}
+							/>
+						</div>
+						<div className="mb-3">
+							<label htmlFor="exampleInputPassword1" className="form-label">
+								Description
+							</label>
+							<input
+								type="text"
+								className="form-control"
+								id="exampleDescription"
+								value={description}
+								onChange={(e) => setDescription(e.target.value)}
+							/>
+						</div>
+						<button type="submit" className="btn btn-primary">
+							Create
+						</button>
+					</form>
+
+					<div id="groupData">
+						{groupData.map((group) => (
+							<div key={group.title} onClick={() => handleGroupClick(group)}>
+								<h3>{group.title}</h3>
+								<p>{group.description}</p>
+							</div>
+						))}
+					</div>
+				</div>
+			)}
+		</div>
+	)
+}
 
 function Notifications() {
 	return (
@@ -786,34 +836,32 @@ function Notifications() {
 	)
 }
 
-
-
 // PostForm component
 // This component renders a form for creating a new post.
 // It accepts a `groupId` prop to determine the group for the post.
 function PostForm({ groupId }) {
-	const [body, setBody] = useState("");
-	const [privacy, setPrivacy] = useState("");
-	const [selectedFile, setSelectedFile] = useState(null);
+	const [body, setBody] = useState("")
+	const [privacy, setPrivacy] = useState("")
+	const [selectedFile, setSelectedFile] = useState(null)
 
 	// Handler for form submission
 	const submit = async (e) => {
-		e.preventDefault(); // Prevent page reload
+		e.preventDefault() // Prevent page reload
 
-		const formData = new FormData();
+		const formData = new FormData()
 
 		// Append form data
-		formData.append("body", body);
-		formData.append("privacy", privacy);
+		formData.append("body", body)
+		formData.append("privacy", privacy)
 		if (privacy === "private") {
-			groupId = -1; // Set groupId to -1 for private posts
+			groupId = -1 // Set groupId to -1 for private posts
 		}
-		formData.append("groupId", groupId);
+		formData.append("groupId", groupId)
 		if (selectedFile) {
-			formData.append("image", selectedFile);
+			formData.append("image", selectedFile)
 		}
 
-		console.log("Form data being sent to backend: ", formData);
+		console.log("Form data being sent to backend: ", formData)
 
 		try {
 			// Send user data to the server
@@ -821,27 +869,27 @@ function PostForm({ groupId }) {
 				method: "POST",
 				credentials: "include",
 				body: formData,
-			});
+			})
 
 			// Reset form fields after successful submission
-			setBody("");
-			setPrivacy("");
-			setSelectedFile(null);
-			document.getElementById("postFormBody").value = "";
+			setBody("")
+			setPrivacy("")
+			setSelectedFile(null)
+			document.getElementById("postFormBody").value = ""
 		} catch (error) {
-			console.error("Error submitting post:", error);
+			console.error("Error submitting post:", error)
 		}
-	};
+	}
 
 	// Handler for file selection
 	const handleFileChange = (e) => {
-		setSelectedFile(e.target.files[0]);
-	};
+		setSelectedFile(e.target.files[0])
+	}
 
 	const handleSelectFile = () => {
-		const fileInput = document.getElementById("fileInput");
-		fileInput.click();
-	};
+		const fileInput = document.getElementById("fileInput")
+		fileInput.click()
+	}
 
 	return (
 		<div>
@@ -917,85 +965,85 @@ function PostForm({ groupId }) {
 }
 
 const postCardStyle = {
-	maxWidth: '600px',
-	background: 'linear-gradient(to bottom, #c7ddef, #ffffff)', // Light blue/grey to white gradient
-	borderRadius: '10px',
-	boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth
-	padding: '20px',
-	margin: 'auto',
-	marginBottom: '20px', // Adjust spacing between post cards
-};
-
-
-
+	maxWidth: "600px",
+	background: "linear-gradient(to bottom, #c7ddef, #ffffff)", // Light blue/grey to white gradient
+	borderRadius: "10px",
+	boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)", // Optional: Add shadow for depth
+	padding: "20px",
+	margin: "auto",
+	marginBottom: "20px", // Adjust spacing between post cards
+}
 
 function FollowButton({ userId, isFollowed }) {
-	const [isFollowing, setIsFollowing] = useState(isFollowed);
+	const [isFollowing, setIsFollowing] = useState(isFollowed)
 
 	const handleFollowToggle = async () => {
 		if (isFollowing) {
 			// If already following, unfollow the user
-			await handleUnfollow(userId);
+			await handleUnfollow(userId)
 		} else {
 			// If not following, follow the user
-			await handleFollow(userId);
+			await handleFollow(userId)
 		}
 		// Toggle the local follow state
-		setIsFollowing(!isFollowing);
-	};
-
+		setIsFollowing(!isFollowing)
+	}
 
 	const handleFollow = async (subjectId) => {
 		try {
-			const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
-				method: "POST",
-				credentials: "include",
-			});
+			const response = await fetch(
+				`http://localhost:8080/api/user/userUser/${subjectId}`,
+				{
+					method: "POST",
+					credentials: "include",
+				}
+			)
 
 			if (response.ok) {
-				console.log("Successfully followed the user.");
-				return true; // Return true if the follow request is successful
+				console.log("Successfully followed the user.")
+				return true // Return true if the follow request is successful
 			} else {
-				console.error("Failed to follow the user.");
+				console.error("Failed to follow the user.")
 			}
 		} catch (error) {
-			console.error("Error following the user:", error);
+			console.error("Error following the user:", error)
 		}
 
-		return false; // Return false if the follow request fails
-	};
+		return false // Return false if the follow request fails
+	}
 
 	const handleUnfollow = async (subjectId) => {
 		try {
-			const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
-				method: "DELETE",
-				credentials: "include",
-			});
+			const response = await fetch(
+				`http://localhost:8080/api/user/userUser/${subjectId}`,
+				{
+					method: "DELETE",
+					credentials: "include",
+				}
+			)
 
 			if (response.ok) {
-				console.log("Successfully unfollowed the user.");
-				return true; // Return true if the follow request is successful
+				console.log("Successfully unfollowed the user.")
+				return true // Return true if the follow request is successful
 			} else {
-				console.error("Failed to unfollow the user.");
+				console.error("Failed to unfollow the user.")
 			}
 		} catch (error) {
-			console.error("Error following the user:", error);
+			console.error("Error following the user:", error)
 		}
 
-		return false; // Return false if the follow request fails
-	};
+		return false // Return false if the follow request fails
+	}
 
 	return (
-		<button
-			className="btn btn-primary btn-sm"
-			onClick={handleFollowToggle}>
-			{isFollowing ? 'Unfollow' : 'Follow'}
+		<button className="btn btn-primary btn-sm" onClick={handleFollowToggle}>
+			{isFollowing ? "Unfollow" : "Follow"}
 		</button>
-	);
+	)
 }
 
 function PostCard({ post }) {
-	const [isFollowing, setIsFollowing] = useState(false);
+	const [isFollowing, setIsFollowing] = useState(false)
 	const [body, setBody] = useState("")
 	const [selectedFile, setSelectedFile] = useState(null)
 
@@ -1004,9 +1052,9 @@ function PostCard({ post }) {
 	const formattedDate = date.toLocaleString()
 
 	const handleFollowClick = async () => {
-		const followSuccess = await handleFollow(post.post.userId);
-		setIsFollowing(followSuccess);
-	};
+		const followSuccess = await handleFollow(post.post.userId)
+		setIsFollowing(followSuccess)
+	}
 
 	const submit = async (e) => {
 		e.preventDefault() // prevent reload.
@@ -1049,7 +1097,6 @@ function PostCard({ post }) {
 		commentFileInput.click()
 	}
 
-
 	return (
 		<div className="card" style={postCardStyle}>
 			<div className="card-body">
@@ -1063,7 +1110,11 @@ function PostCard({ post }) {
 					/>
 					<div>
 						<div className="d-flex align-items-center mb-1">
-							<a className="fw-bold text-primary mb-0 me-2" href="#" onClick={() => renderProfile(post.post.userId)}>
+							<a
+								className="fw-bold text-primary mb-0 me-2"
+								href="#"
+								onClick={() => renderProfile(post.post.userId)}
+							>
 								{post.post.userId}
 							</a>
 
@@ -1166,8 +1217,12 @@ function CommentCard({ comment }) {
 					height="60"
 				/>
 				<div>
-					
-					<h6 className="fw-bold text-primary mb-1" onClick={() => renderProfile(comment.userId)}>{comment.userId}</h6>
+					<h6
+						className="fw-bold text-primary mb-1"
+						onClick={() => renderProfile(comment.userId)}
+					>
+						{comment.userId}
+					</h6>
 					<p className="text-muted small mb-0">{formattedDate}</p>
 				</div>
 			</div>
@@ -1204,7 +1259,6 @@ function Home() {
 			.catch((error) => {
 				console.error("Error fetching data:", error)
 			})
-
 	}, [])
 
 	return (
@@ -1216,7 +1270,11 @@ function Home() {
 				{userList !== null && userList.length > 0 ? (
 					userList.map((user, index) => (
 						<div key={index}>
-							<a className="nav-link" href="#" onClick={() => renderProfile(user.userId)}>
+							<a
+								className="nav-link"
+								href="#"
+								onClick={() => renderProfile(user.userId)}
+							>
 								{user.username}
 							</a>
 							<FollowButton userId={user.userId} isFollowed={user.isFollowed} />
@@ -1258,7 +1316,7 @@ function Home() {
 			<div className="publicPostsWithComments">
 				<h2>Public Posts With Comments</h2>
 				{publicPostsWithComments !== null &&
-					publicPostsWithComments.length > 0 ? (
+				publicPostsWithComments.length > 0 ? (
 					publicPostsWithComments.map((publicPostsWithComment, index) => (
 						<PostCard key={index} post={publicPostsWithComment} />
 					))

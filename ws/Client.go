@@ -47,7 +47,7 @@ func (c *Client) Send(v any) {
 }
 
 func (c *Client) HandleMessage(msg WebSocketMessage) {
-	fmt.Println(msg)
+	fmt.Println("message is:", msg)
 	switch msg.Code {
 	case 1:
 		var t TestBody
@@ -75,5 +75,5 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		// 	fmt.Println("3 event")
 		// 	fmt.Println(msg.Body)
 	}
-	// c.SocketGroups[0].Broadcast <- msg
+	c.SocketGroups[0].Broadcast <- msg
 }
