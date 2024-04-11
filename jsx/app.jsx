@@ -650,11 +650,16 @@ function Chat() {
 
 function GroupDetails({ group }) {
 	return (
+		
+		
 	  <div className="group-details">
+		
 		<h2>{group.title}</h2>
 		<p>{group.description}</p>
 		{/* <p>Members: {group.members}</p> */}
 		{/* Add more details you want to display */}
+		 {/* Display the PostForm component for creating new posts */}
+		 <PostForm groupId={group.id} />
 	  </div>
 	);
   }
@@ -664,6 +669,7 @@ function Group() {
 	const [description, setDescription] = useState('');
 	const [groupData, setGroupData] = useState([]);
 	const [selectedGroup, setSelectedGroup] = useState(null);
+	//const [showGroupDetails, setShowGroupDetails] = useState(false);
   
 	const fetchGroupData = async () => {
 	  try {
@@ -720,9 +726,24 @@ function Group() {
   
 	const handleGroupClick = (group) => {
 		setSelectedGroup(group);
+		//setShowGroupDetails(true);
+	  };
+
+	  const handleGoBack = () => {
+		setSelectedGroup(null);
+		setShowGroupDetails(false); // Update showGroupDetails to false when going back
 	  };
 
 	return (
+		
+		<div>
+			<Navbar />
+		{selectedGroup ? (
+			<div>
+				<button onClick={() => setSelectedGroup(null)}>Go Back</button>
+				<GroupDetails group={selectedGroup} />
+			</div>
+		) : (
 	  <div>
 		<form onSubmit={create}>
 		  <div className="mb-3">
@@ -736,92 +757,25 @@ function Group() {
 		  <button type="submit" className="btn btn-primary">Create</button>
 		</form>
   
-	    <h1>Group</h1>
+	
       <div id="groupData">
         {groupData.map((group) => (
           <div key={group.title} onClick={() => handleGroupClick(group)}>
             <h3>{group.title}</h3>
             <p>{group.description}</p>
           </div>
-        ))}
-      </div>
+    
+      
 
-      {selectedGroup && (
-        <GroupDetails group={selectedGroup} />
-      )}
+      
+      ))}
     </div>
+	</div>
+		)}
+	 </div>
   );
 }
 
-// function Group() {
-// 	const [title, setTitle] = useState('');
-// 	const [description, setDescription] = useState('');
-// 	const [error, setError] = useState(null);
-
-// 	const handleSubmit = async (e) => {
-// 		e.preventDefault();
-
-// 		const groupData = new FormData();
-// 		groupData.append('group-title', title);
-// 		groupData.append('group-description', description);
-
-// 		try {
-// 			const response = await fetch('http://localhost:8080/api/groups', {
-// 				method: 'POST',
-// 				credentials: 'include',
-// 				body: groupData,
-// 			});
-
-// 			if (!response.ok) {
-// 				throw new Error('Failed to create group');
-// 			}
-
-// 			// Reset form fields on successful submission
-// 			setTitle('');
-// 			setDescription('');
-// 			setError(null);
-// 		} catch (error) {
-// 			setError('Failed to create group. Please try again.');
-// 			console.error('Error creating group:', error);
-// 		}
-// 	};
-
-// 	return (
-// 		<div>
-// 			<Navbar />
-// 			<form onSubmit={handleSubmit}>
-// 				<div className="mb-3">
-// 					<label htmlFor="titleInput" className="form-label">
-// 						Title
-// 					</label>
-// 					<input
-// 						type="text"
-// 						className="form-control"
-// 						id="titleInput"
-// 						value={title}
-// 						onChange={(e) => setTitle(e.target.value)}
-// 					/>
-// 				</div>
-// 				<div className="mb-3">
-// 					<label htmlFor="descriptionInput" className="form-label">
-// 						Description
-// 					</label>
-// 					<input
-// 						type="text"
-// 						className="form-control"
-// 						id="descriptionInput"
-// 						value={description}
-// 						onChange={(e) => setDescription(e.target.value)}
-// 					/>
-// 				</div>
-// 				{error && <div className="alert alert-danger">{error}</div>}
-// 				<button type="submit" className="btn btn-primary">
-// 					Create
-// 				</button>
-// 			</form>
-// 		</div>
-// 	);
-// }
 
 function Notifications() {
 	return (

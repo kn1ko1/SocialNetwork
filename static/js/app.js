@@ -535,13 +535,17 @@ function GroupDetails({
 }) {
   return /*#__PURE__*/React.createElement("div", {
     className: "group-details"
-  }, /*#__PURE__*/React.createElement("h2", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description));
+  }, /*#__PURE__*/React.createElement("h2", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description), /*#__PURE__*/React.createElement(PostForm, {
+    groupId: group.id
+  }));
 }
 function Group() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [groupData, setGroupData] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
+  //const [showGroupDetails, setShowGroupDetails] = useState(false);
+
   const fetchGroupData = async () => {
     try {
       const response = await fetch("http://localhost:8080/api/groups", {
@@ -589,8 +593,17 @@ function Group() {
   };
   const handleGroupClick = group => {
     setSelectedGroup(group);
+    //setShowGroupDetails(true);
   };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("form", {
+  const handleGoBack = () => {
+    setSelectedGroup(null);
+    setShowGroupDetails(false); // Update showGroupDetails to false when going back
+  };
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), selectedGroup ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setSelectedGroup(null)
+  }, "Go Back"), /*#__PURE__*/React.createElement(GroupDetails, {
+    group: selectedGroup
+  })) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("form", {
     onSubmit: create
   }, /*#__PURE__*/React.createElement("div", {
     className: "mb-3"
@@ -618,86 +631,13 @@ function Group() {
   })), /*#__PURE__*/React.createElement("button", {
     type: "submit",
     className: "btn btn-primary"
-  }, "Create")), /*#__PURE__*/React.createElement("h1", null, "Group"), /*#__PURE__*/React.createElement("div", {
+  }, "Create")), /*#__PURE__*/React.createElement("div", {
     id: "groupData"
   }, groupData.map(group => /*#__PURE__*/React.createElement("div", {
     key: group.title,
     onClick: () => handleGroupClick(group)
-  }, /*#__PURE__*/React.createElement("h3", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description)))), selectedGroup && /*#__PURE__*/React.createElement(GroupDetails, {
-    group: selectedGroup
-  }));
+  }, /*#__PURE__*/React.createElement("h3", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description))))));
 }
-
-// function Group() {
-// 	const [title, setTitle] = useState('');
-// 	const [description, setDescription] = useState('');
-// 	const [error, setError] = useState(null);
-
-// 	const handleSubmit = async (e) => {
-// 		e.preventDefault();
-
-// 		const groupData = new FormData();
-// 		groupData.append('group-title', title);
-// 		groupData.append('group-description', description);
-
-// 		try {
-// 			const response = await fetch('http://localhost:8080/api/groups', {
-// 				method: 'POST',
-// 				credentials: 'include',
-// 				body: groupData,
-// 			});
-
-// 			if (!response.ok) {
-// 				throw new Error('Failed to create group');
-// 			}
-
-// 			// Reset form fields on successful submission
-// 			setTitle('');
-// 			setDescription('');
-// 			setError(null);
-// 		} catch (error) {
-// 			setError('Failed to create group. Please try again.');
-// 			console.error('Error creating group:', error);
-// 		}
-// 	};
-
-// 	return (
-// 		<div>
-// 			<Navbar />
-// 			<form onSubmit={handleSubmit}>
-// 				<div className="mb-3">
-// 					<label htmlFor="titleInput" className="form-label">
-// 						Title
-// 					</label>
-// 					<input
-// 						type="text"
-// 						className="form-control"
-// 						id="titleInput"
-// 						value={title}
-// 						onChange={(e) => setTitle(e.target.value)}
-// 					/>
-// 				</div>
-// 				<div className="mb-3">
-// 					<label htmlFor="descriptionInput" className="form-label">
-// 						Description
-// 					</label>
-// 					<input
-// 						type="text"
-// 						className="form-control"
-// 						id="descriptionInput"
-// 						value={description}
-// 						onChange={(e) => setDescription(e.target.value)}
-// 					/>
-// 				</div>
-// 				{error && <div className="alert alert-danger">{error}</div>}
-// 				<button type="submit" className="btn btn-primary">
-// 					Create
-// 				</button>
-// 			</form>
-// 		</div>
-// 	);
-// }
-
 function Notifications() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Notifications"));
 }
