@@ -601,6 +601,8 @@ function Profile({ userId, isEditable }) {
 
 				<h2>{profileUserData.username}'s Posts</h2>
 				<div id="myPostsData">
+
+
 					{userPostData.map((post) => (
 						<div key={post.postId}>
 							<p>
@@ -620,22 +622,22 @@ function Profile({ userId, isEditable }) {
 				</div>
 
 				<h2>{profileUserData.username}'s Followers</h2>
-                <div id="myFollowersData">
-                    {userFollowerData &&
-                        userFollowerData.map((follower) => (
-                            <p key={follower.username}>{follower.username}</p>
-                        ))}
-                </div>
+				<div id="myFollowersData">
+					{userFollowerData &&
+						userFollowerData.map((follower) => (
+							<p key={follower.username}>{follower.username}</p>
+						))}
+				</div>
 
-                <h2>{profileUserData.username}'s Followed</h2>
-                <div id="usersIFollowData">
-                    {userFollowsData &&
-                        userFollowsData.map((user) => (
-                            <p key={user.username}>{user.username}</p>
-                        ))}
-                 </div>
-            </div>
-        </div>
+				<h2>{profileUserData.username}'s Followed</h2>
+				<div id="usersIFollowData">
+					{userFollowsData &&
+						userFollowsData.map((user) => (
+							<p key={user.username}>{user.username}</p>
+						))}
+				</div>
+			</div>
+		</div>
 	)
 }
 
@@ -727,6 +729,70 @@ function Notifications() {
 	)
 }
 
+function FollowButton({ userId, isFollowed }) {
+	const [isFollowing, setIsFollowing] = useState(isFollowed);
+
+	const handleFollowToggle = async () => {
+		if (isFollowing) {
+			// If already following, unfollow the user
+			await handleUnfollow(userId);
+		} else {
+			// If not following, follow the user
+			await handleFollow(userId);
+		}
+		// Toggle the local follow state
+		setIsFollowing(!isFollowing);
+	};
+
+
+	const handleFollow = async (subjectId) => {
+		try {
+			const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
+				method: "POST",
+				credentials: "include",
+			});
+
+			if (response.ok) {
+				console.log("Successfully followed the user.");
+				return true; // Return true if the follow request is successful
+			} else {
+				console.error("Failed to follow the user.");
+			}
+		} catch (error) {
+			console.error("Error following the user:", error);
+		}
+
+		return false; // Return false if the follow request fails
+	};
+
+	const handleUnfollow = async (subjectId) => {
+		try {
+			const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
+				method: "DELETE",
+				credentials: "include",
+			});
+
+			if (response.ok) {
+				console.log("Successfully unfollowed the user.");
+				return true; // Return true if the follow request is successful
+			} else {
+				console.error("Failed to unfollow the user.");
+			}
+		} catch (error) {
+			console.error("Error following the user:", error);
+		}
+
+		return false; // Return false if the follow request fails
+	};
+
+	return (
+		<button
+			className="btn btn-primary btn-sm"
+			onClick={handleFollowToggle}>
+			{isFollowing ? 'Unfollow' : 'Follow'}
+		</button>
+	);
+}
 
 
 // PostForm component
@@ -870,70 +936,6 @@ const postCardStyle = {
 
 
 
-function FollowButton({ userId, isFollowed }) {
-	const [isFollowing, setIsFollowing] = useState(isFollowed);
-
-	const handleFollowToggle = async () => {
-		if (isFollowing) {
-			// If already following, unfollow the user
-			await handleUnfollow(userId);
-		} else {
-			// If not following, follow the user
-			await handleFollow(userId);
-		}
-		// Toggle the local follow state
-		setIsFollowing(!isFollowing);
-	};
-
-
-	const handleFollow = async (subjectId) => {
-		try {
-			const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
-				method: "POST",
-				credentials: "include",
-			});
-
-			if (response.ok) {
-				console.log("Successfully followed the user.");
-				return true; // Return true if the follow request is successful
-			} else {
-				console.error("Failed to follow the user.");
-			}
-		} catch (error) {
-			console.error("Error following the user:", error);
-		}
-
-		return false; // Return false if the follow request fails
-	};
-
-	const handleUnfollow = async (subjectId) => {
-		try {
-			const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
-				method: "DELETE",
-				credentials: "include",
-			});
-
-			if (response.ok) {
-				console.log("Successfully unfollowed the user.");
-				return true; // Return true if the follow request is successful
-			} else {
-				console.error("Failed to unfollow the user.");
-			}
-		} catch (error) {
-			console.error("Error following the user:", error);
-		}
-
-		return false; // Return false if the follow request fails
-	};
-
-	return (
-		<button
-			className="btn btn-primary btn-sm"
-			onClick={handleFollowToggle}>
-			{isFollowing ? 'Unfollow' : 'Follow'}
-		</button>
-	);
-}
 
 function PostCard({ post }) {
 	const [isFollowing, setIsFollowing] = useState(false);
@@ -1107,7 +1109,7 @@ function CommentCard({ comment }) {
 					height="60"
 				/>
 				<div>
-					
+
 					<h6 className="fw-bold text-primary mb-1" onClick={() => renderProfile(comment.userId)}>{comment.userId}</h6>
 					<p className="text-muted small mb-0">{formattedDate}</p>
 				</div>
