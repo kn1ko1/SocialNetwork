@@ -497,7 +497,7 @@ function Profile({
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("div", {
     id: "profileData"
-  }, isPublicValue || isEditable ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "My Profile"), isEditable ? /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Profile"), isPublicValue || isEditable ? /*#__PURE__*/React.createElement(React.Fragment, null, isEditable ? /*#__PURE__*/React.createElement("div", {
     id: "isPublicToggle"
   }, /*#__PURE__*/React.createElement("label", null, /*#__PURE__*/React.createElement("input", {
     type: "radio",

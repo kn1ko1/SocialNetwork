@@ -544,9 +544,9 @@ function Profile({ userId, isEditable }) {
 		<div>
 			<Navbar />
 			<div id="profileData">
+			<h2>{profileUserData.username}'s Profile</h2>
 				{isPublicValue || isEditable ? (
 					<>
-						<h2>My Profile</h2>
 						{isEditable ? (
 							<div id="isPublicToggle">
 								<label>
