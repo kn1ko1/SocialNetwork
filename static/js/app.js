@@ -445,6 +445,9 @@ function Profile({
   const [userFollowerData, setUserFollowerData] = useState([]);
   const [userFollowsData, setUserFollowsData] = useState([]);
   const [isPublicValue, setIsPublicValue] = useState(null);
+  useEffect(() => {
+    fetchProfileData();
+  }, [userId]);
   const fetchProfileData = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/profile/${userId}`, {
@@ -468,9 +471,6 @@ function Profile({
       console.error("Error fetching profile data:", error);
     }
   };
-  useEffect(() => {
-    fetchProfileData();
-  }, [userId]);
   const handlePrivacyChange = event => {
     const newPrivacySetting = JSON.parse(event.target.value);
 
@@ -497,9 +497,7 @@ function Profile({
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("div", {
     id: "profileData"
-  }, /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Profile"), /*#__PURE__*/React.createElement("div", {
-    id: "myProfileData"
-  }), isEditable ? /*#__PURE__*/React.createElement("div", {
+  }, isPublicValue || isEditable ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "My Profile"), isEditable ? /*#__PURE__*/React.createElement("div", {
     id: "isPublicToggle"
   }, /*#__PURE__*/React.createElement("label", null, /*#__PURE__*/React.createElement("input", {
     type: "radio",
@@ -525,7 +523,7 @@ function Profile({
     id: "usersIFollowData"
   }, userFollowsData && userFollowsData.map(user => /*#__PURE__*/React.createElement("p", {
     key: user.username
-  }, user.username)))));
+  }, user.username)))) : /*#__PURE__*/React.createElement("p", null, "This profile is private.")));
 }
 function Chat() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"));

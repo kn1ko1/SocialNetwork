@@ -480,6 +480,10 @@ function Profile({ userId, isEditable }) {
 	const [userFollowsData, setUserFollowsData] = useState([]);
 	const [isPublicValue, setIsPublicValue] = useState(null);
 
+	useEffect(() => {
+		fetchProfileData();
+	}, [userId]);
+
 	const fetchProfileData = async () => {
 		try {
 			const response = await fetch(`http://localhost:8080/api/profile/${userId}`, {
@@ -506,9 +510,7 @@ function Profile({ userId, isEditable }) {
 		}
 	};
 
-	useEffect(() => {
-		fetchProfileData();
-	}, [userId]);
+
 
 	const handlePrivacyChange = (event) => {
 		const newPrivacySetting = JSON.parse(event.target.value);
@@ -542,100 +544,106 @@ function Profile({ userId, isEditable }) {
 		<div>
 			<Navbar />
 			<div id="profileData">
-				<h2>{profileUserData.username}'s Profile</h2>
-				<div id="myProfileData"></div>
-
-				{isEditable ? (
-					<div id="isPublicToggle">
-						<label>
-							<input
-								type="radio"
-								value={true}
-								checked={isPublicValue === true} // Check if isPublicValue is true
-								onChange={handlePrivacyChange}
-							/>
-							Public
-						</label>
-						<label>
-							<input
-								type="radio"
-								value={false}
-								checked={isPublicValue === false} // Check if isPublicValue is false
-								onChange={handlePrivacyChange}
-							/>
-							Private
-						</label>
-					</div>
-				) : (
-					<p>
-						<strong>Privacy:</strong> {isPublicValue ? "Public" : "Private"}
-					</p>
-				)}
-
-				<p>
-					<strong>User ID:</strong> {profileUserData.userId}
-				</p>
-				<p>
-					<strong>Username:</strong> {profileUserData.username}
-				</p>
-				<p>
-					<strong>Email:</strong> {profileUserData.email}
-				</p>
-				<p>
-					<strong>First Name:</strong> {profileUserData.firstName}
-				</p>
-				<p>
-					<strong>Last Name:</strong> {profileUserData.lastName}
-				</p>
-				<p>
-					<strong>Date of Birth:</strong>{" "}
-					{new Date(profileUserData.dob).toLocaleDateString()}
-				</p>
-				<p>
-					<strong>Bio:</strong> {profileUserData.bio}
-				</p>
-				<p>
-					<strong>Image URL:</strong> {profileUserData.imageURL}
-				</p>
-
-
-				<h2>{profileUserData.username}'s Posts</h2>
-				<div id="myPostsData">
-
-
-					{userPostData.map((post) => (
-						<div key={post.postId}>
+				{isPublicValue || isEditable ? (
+					<>
+						<h2>My Profile</h2>
+						{isEditable ? (
+							<div id="isPublicToggle">
+								<label>
+									<input
+										type="radio"
+										value={true}
+										checked={isPublicValue === true} // Check if isPublicValue is true
+										onChange={handlePrivacyChange}
+									/>
+									Public
+								</label>
+								<label>
+									<input
+										type="radio"
+										value={false}
+										checked={isPublicValue === false} // Check if isPublicValue is false
+										onChange={handlePrivacyChange}
+									/>
+									Private
+								</label>
+							</div>
+						) : (
 							<p>
-								<strong>Post ID:</strong> {post.postId}
+								<strong>Privacy:</strong> {isPublicValue ? "Public" : "Private"}
 							</p>
-							<p>
-								<strong>Created At:</strong> {post.createdAt}
-							</p>
-							<p>
-								<strong>Body:</strong> {post.body}
-							</p>
-							<p>
-								<strong>Image URL:</strong> {post.imageURL}
-							</p>
+						)}
+
+						<p>
+							<strong>User ID:</strong> {profileUserData.userId}
+						</p>
+						<p>
+							<strong>Username:</strong> {profileUserData.username}
+						</p>
+						<p>
+							<strong>Email:</strong> {profileUserData.email}
+						</p>
+						<p>
+							<strong>First Name:</strong> {profileUserData.firstName}
+						</p>
+						<p>
+							<strong>Last Name:</strong> {profileUserData.lastName}
+						</p>
+						<p>
+							<strong>Date of Birth:</strong>{" "}
+							{new Date(profileUserData.dob).toLocaleDateString()}
+						</p>
+						<p>
+							<strong>Bio:</strong> {profileUserData.bio}
+						</p>
+						<p>
+							<strong>Image URL:</strong> {profileUserData.imageURL}
+						</p>
+
+
+						<h2>{profileUserData.username}'s Posts</h2>
+						<div id="myPostsData">
+
+
+							{userPostData.map((post) => (
+								<div key={post.postId}>
+									<p>
+										<strong>Post ID:</strong> {post.postId}
+									</p>
+									<p>
+										<strong>Created At:</strong> {post.createdAt}
+									</p>
+									<p>
+										<strong>Body:</strong> {post.body}
+									</p>
+									<p>
+										<strong>Image URL:</strong> {post.imageURL}
+									</p>
+								</div>
+							))}
 						</div>
-					))}
-				</div>
 
-				<h2>{profileUserData.username}'s Followers</h2>
-				<div id="myFollowersData">
-					{userFollowerData &&
-						userFollowerData.map((follower) => (
-							<p key={follower.username}>{follower.username}</p>
-						))}
-				</div>
+						<h2>{profileUserData.username}'s Followers</h2>
+						<div id="myFollowersData">
+							{userFollowerData &&
+								userFollowerData.map((follower) => (
+									<p key={follower.username}>{follower.username}</p>
+								))}
+						</div>
 
-				<h2>{profileUserData.username}'s Followed</h2>
-				<div id="usersIFollowData">
-					{userFollowsData &&
-						userFollowsData.map((user) => (
-							<p key={user.username}>{user.username}</p>
-						))}
-				</div>
+						<h2>{profileUserData.username}'s Followed</h2>
+						<div id="usersIFollowData">
+							{userFollowsData &&
+								userFollowsData.map((user) => (
+									<p key={user.username}>{user.username}</p>
+								))}
+						</div>
+
+						{/* Display other profile information here */}
+					</>
+				) : (
+					<p>This profile is private.</p>
+				)}
 			</div>
 		</div>
 	)
