@@ -530,64 +530,113 @@ function Profile({
 function Chat() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"));
 }
+function GroupDetails({
+  group
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "group-details"
+  }, /*#__PURE__*/React.createElement("h2", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description), /*#__PURE__*/React.createElement(PostForm, {
+    groupId: group.id
+  }));
+}
 function Group() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [error, setError] = useState(null);
-  const handleSubmit = async e => {
-    e.preventDefault();
-    const groupData = new FormData();
-    groupData.append('group-title', title);
-    groupData.append('group-description', description);
+  const [groupData, setGroupData] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  //const [showGroupDetails, setShowGroupDetails] = useState(false);
+
+  const fetchGroupData = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/groups', {
-        method: 'POST',
-        credentials: 'include',
-        body: groupData
+      const response = await fetch("http://localhost:8080/api/groups", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        }
       });
       if (!response.ok) {
-        throw new Error('Failed to create group');
+        throw new Error("Failed to fetch group data");
       }
-
-      // Reset form fields on successful submission
-      setTitle('');
-      setDescription('');
-      setError(null);
+      const data = await response.json();
+      setGroupData(data); // Set the fetched group data to state
+      console.log("Fetched group data:", data);
     } catch (error) {
-      setError('Failed to create group. Please try again.');
-      console.error('Error creating group:', error);
+      console.error("Error fetching group data:", error);
     }
   };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("form", {
-    onSubmit: handleSubmit
+  useEffect(() => {
+    fetchGroupData();
+  }, []);
+  const create = async e => {
+    e.preventDefault(); // prevent reload.
+
+    const groupData = new FormData();
+
+    // Append form data
+    groupData.append('group-title', title);
+    groupData.append('group-description', description);
+    console.log("Group data being sent to backend:", title);
+    console.log("Group data being sent to backend:", description);
+
+    // Send user data to golang api/PostHandler.go.
+    await fetch("http://localhost:8080/api/groups", {
+      method: "POST",
+      credentials: "include",
+      body: groupData
+    });
+    setTitle("");
+    setDescription("");
+    document.getElementById("exampleTitle").value = "";
+    document.getElementById("exampleDescription").value = "";
+    fetchGroupData(); // Fetch updated group data after creating a new group
+  };
+  const handleGroupClick = group => {
+    setSelectedGroup(group);
+    //setShowGroupDetails(true);
+  };
+  const handleGoBack = () => {
+    setSelectedGroup(null);
+    setShowGroupDetails(false); // Update showGroupDetails to false when going back
+  };
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), selectedGroup ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setSelectedGroup(null)
+  }, "Go Back"), /*#__PURE__*/React.createElement(GroupDetails, {
+    group: selectedGroup
+  })) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("form", {
+    onSubmit: create
   }, /*#__PURE__*/React.createElement("div", {
     className: "mb-3"
   }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "titleInput",
+    htmlFor: "exampleTitle",
     className: "form-label"
   }, "Title"), /*#__PURE__*/React.createElement("input", {
     type: "text",
     className: "form-control",
-    id: "titleInput",
+    id: "exampleTitle",
+    "aria-describedby": "emailHelp",
     value: title,
     onChange: e => setTitle(e.target.value)
   })), /*#__PURE__*/React.createElement("div", {
     className: "mb-3"
   }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "descriptionInput",
+    htmlFor: "exampleInputPassword1",
     className: "form-label"
   }, "Description"), /*#__PURE__*/React.createElement("input", {
     type: "text",
     className: "form-control",
-    id: "descriptionInput",
+    id: "exampleDescription",
     value: description,
     onChange: e => setDescription(e.target.value)
-  })), error && /*#__PURE__*/React.createElement("div", {
-    className: "alert alert-danger"
-  }, error), /*#__PURE__*/React.createElement("button", {
+  })), /*#__PURE__*/React.createElement("button", {
     type: "submit",
     className: "btn btn-primary"
-  }, "Create")));
+  }, "Create")), /*#__PURE__*/React.createElement("div", {
+    id: "groupData"
+  }, groupData.map(group => /*#__PURE__*/React.createElement("div", {
+    key: group.title,
+    onClick: () => handleGroupClick(group)
+  }, /*#__PURE__*/React.createElement("h3", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description))))));
 }
 function Notifications() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Notifications"));
