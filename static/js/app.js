@@ -633,13 +633,70 @@ function Group() {
     className: "btn btn-primary"
   }, "Create")), /*#__PURE__*/React.createElement("div", {
     id: "groupData"
-  }, groupData.map(group => /*#__PURE__*/React.createElement("div", {
+  }, groupData !== null ? groupData.map(group => /*#__PURE__*/React.createElement("div", {
     key: group.title,
     onClick: () => handleGroupClick(group)
-  }, /*#__PURE__*/React.createElement("h3", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description))))));
+  }, /*#__PURE__*/React.createElement("h3", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description))) : /*#__PURE__*/React.createElement("div", {
+    id: "noGroupsError"
+  }, "There are no created groups yet"))));
 }
 function Notifications() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Notifications"));
+}
+function FollowButton({
+  userId,
+  isFollowed
+}) {
+  const [isFollowing, setIsFollowing] = useState(isFollowed);
+  const handleFollowToggle = async () => {
+    if (isFollowing) {
+      // If already following, unfollow the user
+      await handleUnfollow(userId);
+    } else {
+      // If not following, follow the user
+      await handleFollow(userId);
+    }
+    // Toggle the local follow state
+    setIsFollowing(!isFollowing);
+  };
+  const handleFollow = async subjectId => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
+        method: "POST",
+        credentials: "include"
+      });
+      if (response.ok) {
+        console.log("Successfully followed the user.");
+        return true; // Return true if the follow request is successful
+      } else {
+        console.error("Failed to follow the user.");
+      }
+    } catch (error) {
+      console.error("Error following the user:", error);
+    }
+    return false; // Return false if the follow request fails
+  };
+  const handleUnfollow = async subjectId => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
+        method: "DELETE",
+        credentials: "include"
+      });
+      if (response.ok) {
+        console.log("Successfully unfollowed the user.");
+        return true; // Return true if the follow request is successful
+      } else {
+        console.error("Failed to unfollow the user.");
+      }
+    } catch (error) {
+      console.error("Error following the user:", error);
+    }
+    return false; // Return false if the follow request fails
+  };
+  return /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary btn-sm",
+    onClick: handleFollowToggle
+  }, isFollowing ? 'Unfollow' : 'Follow');
 }
 
 // PostForm component
@@ -770,61 +827,6 @@ const postCardStyle = {
   margin: 'auto',
   marginBottom: '20px' // Adjust spacing between post cards
 };
-function FollowButton({
-  userId,
-  isFollowed
-}) {
-  const [isFollowing, setIsFollowing] = useState(isFollowed);
-  const handleFollowToggle = async () => {
-    if (isFollowing) {
-      // If already following, unfollow the user
-      await handleUnfollow(userId);
-    } else {
-      // If not following, follow the user
-      await handleFollow(userId);
-    }
-    // Toggle the local follow state
-    setIsFollowing(!isFollowing);
-  };
-  const handleFollow = async subjectId => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
-        method: "POST",
-        credentials: "include"
-      });
-      if (response.ok) {
-        console.log("Successfully followed the user.");
-        return true; // Return true if the follow request is successful
-      } else {
-        console.error("Failed to follow the user.");
-      }
-    } catch (error) {
-      console.error("Error following the user:", error);
-    }
-    return false; // Return false if the follow request fails
-  };
-  const handleUnfollow = async subjectId => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
-        method: "DELETE",
-        credentials: "include"
-      });
-      if (response.ok) {
-        console.log("Successfully unfollowed the user.");
-        return true; // Return true if the follow request is successful
-      } else {
-        console.error("Failed to unfollow the user.");
-      }
-    } catch (error) {
-      console.error("Error following the user:", error);
-    }
-    return false; // Return false if the follow request fails
-  };
-  return /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-primary btn-sm",
-    onClick: handleFollowToggle
-  }, isFollowing ? 'Unfollow' : 'Follow');
-}
 function PostCard({
   post
 }) {
