@@ -541,8 +541,11 @@ function Profile({ userId, isEditable }) {
 
 			if (response.ok) {
 				setIsFollowed(true);
+				console.log("checkIfFollowed.  isFollowed", isFollowed)
+				console.log("response", response)
 			} else if (response.status === 404) {
 				setIsFollowed(false);
+				console.log("checkIfFollowed.  isFollowed", isFollowed)
 			} else {
 				console.error("Error fetching user user data:", response.statusText);
 			}
@@ -576,16 +579,20 @@ function Profile({ userId, isEditable }) {
 				setIsPublicValue(!newPrivacySetting);
 			});
 	};
-console.log("isPublicValue", isPublicValue)
-console.log("isEditable", isEditable)
-console.log("isFollowed", isFollowed)
+
 	return (
 		<div>
 			<Navbar />
 			<div id="profileData">
 				<h2>{profileUserData.username}'s Profile</h2>
+				{!isEditable && (<FollowButton
+					followerId={currentUserId}
+					subjectId={userId}
+					isFollowed={isFollowed} />
+				)}
 				{(isPublicValue || isEditable || isFollowed) ? (
 					<>
+
 						{isEditable ? (
 							<div id="isPublicToggle">
 								<label>
@@ -845,7 +852,10 @@ function Notifications() {
 
 function FollowButton({ followerId, subjectId, isFollowed }) {
 	const [isFollowing, setIsFollowing] = useState(isFollowed);
-
+	useEffect(() => {
+		setIsFollowing(isFollowed);
+	  }, [isFollowed]);
+	  
 	const handleFollowToggle = async () => {
 		if (isFollowing) {
 			// If already following, unfollow the user
@@ -857,7 +867,6 @@ function FollowButton({ followerId, subjectId, isFollowed }) {
 		// Toggle the local follow state
 		setIsFollowing(!isFollowing);
 	};
-
 
 	const handleFollow = async (followerId, subjectId) => {
 

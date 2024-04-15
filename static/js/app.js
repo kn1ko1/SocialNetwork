@@ -512,8 +512,11 @@ function Profile({
       });
       if (response.ok) {
         setIsFollowed(true);
+        console.log("checkIfFollowed.  isFollowed", isFollowed);
+        console.log("response", response);
       } else if (response.status === 404) {
         setIsFollowed(false);
+        console.log("checkIfFollowed.  isFollowed", isFollowed);
       } else {
         console.error("Error fetching user user data:", response.statusText);
       }
@@ -542,12 +545,13 @@ function Profile({
       setIsPublicValue(!newPrivacySetting);
     });
   };
-  console.log("isPublicValue", isPublicValue);
-  console.log("isEditable", isEditable);
-  console.log("isFollowed", isFollowed);
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("div", {
     id: "profileData"
-  }, /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Profile"), isPublicValue || isEditable || isFollowed ? /*#__PURE__*/React.createElement(React.Fragment, null, isEditable ? /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Profile"), !isEditable && /*#__PURE__*/React.createElement(FollowButton, {
+    followerId: currentUserId,
+    subjectId: userId,
+    isFollowed: isFollowed
+  }), isPublicValue || isEditable || isFollowed ? /*#__PURE__*/React.createElement(React.Fragment, null, isEditable ? /*#__PURE__*/React.createElement("div", {
     id: "isPublicToggle"
   }, /*#__PURE__*/React.createElement("label", null, /*#__PURE__*/React.createElement("input", {
     type: "radio",
@@ -707,6 +711,9 @@ function FollowButton({
   isFollowed
 }) {
   const [isFollowing, setIsFollowing] = useState(isFollowed);
+  useEffect(() => {
+    setIsFollowing(isFollowed);
+  }, [isFollowed]);
   const handleFollowToggle = async () => {
     if (isFollowing) {
       // If already following, unfollow the user
