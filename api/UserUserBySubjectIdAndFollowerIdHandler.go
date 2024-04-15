@@ -60,7 +60,14 @@ func (h *UserUserBySubjectIdAndFollowerIdHandler) get(w http.ResponseWriter, r *
 
 	result, getErr := h.Repo.GetUserUserByFollowerIdAndSubjectId(followerId, subjectId)
 	if getErr != nil {
-
+		// If no follower is found in the database then returns a 404 error
+		w.WriteHeader(http.StatusNotFound)
+		err = json.NewEncoder(w).Encode(result)
+		if err != nil {
+			utils.HandleError("Failed to encode and write JSON response. ", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
 		return
 	}
 	log.Println("[api/UserUsersHandler] Found Follow.  FollowerId:", followerId, ". SubjectId:", subjectId)

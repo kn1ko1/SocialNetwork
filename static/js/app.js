@@ -8,10 +8,10 @@ const App = () => {
     className: "app-container"
   }, /*#__PURE__*/React.createElement(Login, null));
 };
-
-// // Const for getting userId in the frontend
-const CurrentUserId = () => {
-  const [userId, setUserId] = useState();
+const getCurrentUserId = () => {
+  const [currentUserId, setCurrentUserId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   useEffect(() => {
     const fetchUserId = async () => {
       try {
@@ -20,21 +20,60 @@ const CurrentUserId = () => {
         });
         if (response.ok) {
           const userId = await response.json();
-          setUserId(userId);
+          setCurrentUserId(userId);
         } else {
-          console.error('Failed to fetch userId');
+          setError('Failed to fetch userId');
         }
       } catch (error) {
-        console.error('Error fetching userId:', error);
+        setError('Error fetching userId');
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchUserId();
   }, []);
-  console.log("userId in CurrentUserId is: ", userId);
-  return userId; // Return only the userId state value
+  return {
+    currentUserId,
+    isLoading,
+    error
+  };
 };
+
+// // Const for getting userId in the frontend
+// const CurrentUserId = () => {
+// 	const [userId, setUserId] = useState();
+
+// 	useEffect(() => {
+// 		const fetchUserId = async () => {
+// 			try {
+// 				const response = await fetch('http://localhost:8080/api/userId', {
+// 					credentials: 'include',
+// 				});
+
+// 				if (response.ok) {
+// 					const userId = await response.json();
+// 					setUserId(userId);
+// 					console.log("userId in CurrentUserId is: ", userId); // Log the fetched userId
+// 				} else {
+// 					console.error('Failed to fetch userId');
+// 				}
+// 			} catch (error) {
+// 				console.error('Error fetching userId:', error);
+// 			}
+// 		};
+
+// 		fetchUserId();
+// 	}, []);
+
+// 	return userId; // Return the userId state value
+// };
+
 function Navbar() {
-  const navUserId = CurrentUserId();
+  const {
+    currentUserId,
+    isLoading,
+    error
+  } = getCurrentUserId();
   const logout = async () => {
     try {
       const response = await fetch("http://localhost:8080/auth/logout", {
@@ -79,7 +118,7 @@ function Navbar() {
   }, /*#__PURE__*/React.createElement("a", {
     className: "nav-link",
     href: "#",
-    onClick: () => renderProfile(navUserId, true)
+    onClick: () => renderProfile(currentUserId, true)
   }, "PROFILE")), /*#__PURE__*/React.createElement("li", {
     className: "nav-item"
   }, /*#__PURE__*/React.createElement("a", {
@@ -422,6 +461,11 @@ function Profile({
   userId,
   isEditable
 }) {
+  const {
+    currentUserId,
+    isLoading,
+    error
+  } = getCurrentUserId();
   const [profileUserData, setProfileUserData] = useState({});
   const [userPostData, setUserPostData] = useState([]);
   const [userFollowerData, setUserFollowerData] = useState([]);
@@ -432,10 +476,10 @@ function Profile({
     fetchProfileData();
   }, [userId]);
   useEffect(() => {
-    if (!isPublicValue && !isEditable) {
-      checkIfFollowed();
+    if (!isPublicValue && !isEditable && currentUserId) {
+      checkIfFollowed(currentUserId);
     }
-  }, [isPublicValue, isEditable]);
+  }, [isPublicValue, isEditable, currentUserId]);
   const fetchProfileData = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/profile/${userId}`, {
@@ -458,9 +502,8 @@ function Profile({
       console.error("Error fetching profile data:", error);
     }
   };
-  const checkIfFollowed = async () => {
+  const checkIfFollowed = async currentUserId => {
     try {
-      const currentUserId = await CurrentUserId();
       const response = await fetch(`http://localhost:8080/api/users/${currentUserId}/userUsers/${userId}`, {
         method: "GET",
         headers: {
@@ -499,6 +542,9 @@ function Profile({
       setIsPublicValue(!newPrivacySetting);
     });
   };
+  console.log("isPublicValue", isPublicValue);
+  console.log("isEditable", isEditable);
+  console.log("isFollowed", isFollowed);
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("div", {
     id: "profileData"
   }, /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Profile"), isPublicValue || isEditable || isFollowed ? /*#__PURE__*/React.createElement(React.Fragment, null, isEditable ? /*#__PURE__*/React.createElement("div", {
@@ -597,7 +643,7 @@ function Group() {
     setDescription("");
     document.getElementById("exampleTitle").value = "";
     document.getElementById("exampleDescription").value = "";
-    fetchGroupData(); // Fetch updated group data after creating a new group
+    fetchGroupData();
   };
   const handleGroupClick = group => {
     setSelectedGroup(group);
@@ -1014,12 +1060,16 @@ const renderHome = () => {
 
 // Display information relating to homepage
 function Home() {
+  const {
+    currentUserId,
+    isLoading,
+    error
+  } = getCurrentUserId();
   const [userList, setUserList] = useState([]);
   const [almostPrivatePosts, setAlmostPrivatePosts] = useState([]);
   const [privatePosts, setPrivatePosts] = useState([]);
   const [publicPostsWithComments, setPublicPostsWithComments] = useState([]);
   const [userGroups, setUserGroups] = useState([]);
-  const currentUserId = CurrentUserId();
   useEffect(() => {
     fetch("http://localhost:8080/api/home").then(response => response.json()).then(data => {
       setUserList(data.userList);
