@@ -13,16 +13,17 @@ func GetPublicPostsWithComments(database *sql.DB) ([]transport.PostWithComments,
 
 	// Query to fetch posts and their corresponding comments using foreign keys
 	query := `
-SELECT 
-	   p.PostId, p.Body, p.CreatedAt, p.GroupId, p.ImageURL, p.Privacy, p.UpdatedAt,
-	c.CommentId, c.Body, c.CreatedAt, c.ImageURL, c.UpdatedAt, c.UserId
+	SELECT 
+    p.PostId, p.Body, p.CreatedAt, p.GroupId, p.ImageURL, p.Privacy, p.UpdatedAt, p.UserId,
+    c.CommentId, c.Body, c.CreatedAt, c.ImageURL, c.UpdatedAt, c.UserId
 FROM 
-	   POSTS p
+    POSTS p
 LEFT JOIN 
-	COMMENTS c ON p.PostId = c.PostId
+    COMMENTS c ON p.PostId = c.PostId
 WHERE 
-	p.GroupId = 0
-
+    p.GroupId = 0
+ORDER BY 
+    p.CreatedAt DESC;
 `
 
 	rows, err := database.Query(query)
@@ -41,7 +42,7 @@ WHERE
 		var comment models.Comment
 
 		rows.Scan(
-			&post.PostId, &post.Body, &post.CreatedAt, &post.GroupId, &post.ImageURL, &post.Privacy, &post.UpdatedAt,
+			&post.PostId, &post.Body, &post.CreatedAt, &post.GroupId, &post.ImageURL, &post.Privacy, &post.UpdatedAt, &post.UserId,
 			&comment.CommentId, &comment.Body, &comment.CreatedAt, &comment.ImageURL, &comment.UpdatedAt, &comment.UserId,
 		)
 
@@ -50,8 +51,10 @@ WHERE
 			postWithComment.Comments = []models.Comment{}
 			postMap[post.PostId] = &postWithComment
 		}
+		if comment.CommentId != 0 {
+			postMap[post.PostId].Comments = append(postMap[post.PostId].Comments, comment)
+		}
 
-		postMap[post.PostId].Comments = append(postMap[post.PostId].Comments, comment)
 	}
 
 	if err := rows.Err(); err != nil {
@@ -62,6 +65,5 @@ WHERE
 	for _, postWithComment := range postMap {
 		result = append(result, *postWithComment)
 	}
-
 	return result, nil
 }

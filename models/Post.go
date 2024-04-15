@@ -6,14 +6,14 @@ import (
 )
 
 type Post struct {
-	PostId    int
-	Body      string
-	CreatedAt int64
-	GroupId   int
-	ImageURL  string
-	Privacy   string
-	UpdatedAt int64
-	UserId    int
+	PostId    int    `json:"postId"`
+	Body      string `json:"body"`
+	CreatedAt int64  `json:"createdAt"`
+	GroupId   int    `json:"groupId"`
+	ImageURL  string `json:"imageURL"`
+	Privacy   string `json:"privacy"`
+	UpdatedAt int64  `json:"updatedAt"`
+	UserId    int    `json:"userId"`
 }
 
 func (p *Post) Validate() error {
@@ -25,7 +25,7 @@ func (p *Post) Validate() error {
 		return errors.New("invalid 'CreatedAt' field")
 	}
 	// GroupID can be 0 - i.e. not posted to a Group - but cannot be negative
-	if p.GroupId < 0 {
+	if p.GroupId < -1 {
 		return errors.New("invalid 'GroupId' field")
 	}
 	if p.Privacy != "public" && p.Privacy != "private" && p.Privacy != "almost private" {

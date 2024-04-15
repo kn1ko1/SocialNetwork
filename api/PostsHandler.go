@@ -2,12 +2,13 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
+	"socialnetwork/auth"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
+	"strconv"
 	"time"
 )
 
@@ -41,57 +42,77 @@ func (h *PostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
-	var post models.Post
-
-	err := json.NewDecoder(r.Body).Decode(&post)
+	ctime := time.Now().UTC().UnixMilli()
+	cookie, err := r.Cookie(auth.CookieName)
 	if err != nil {
-		utils.HandleError("Failed to decode request body:", err)
-		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+
+		utils.HandleError("Error verifying cookie", err)
+		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
 		return
 	}
 
-	ctime := time.Now().UTC().UnixMilli()
-	post.CreatedAt = ctime
-	post.GroupId = 0
-	// fmt.Println(post.Privacy)
-	post.UpdatedAt = ctime
-	post.UserId = 1
+	user, exists := auth.SessionMap[cookie.Value]
+	if !exists {
+		utils.HandleError("Error finding User, need to log in again", err)
+		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
+		return
+	}
 
-	log.Println("ctime is:", ctime)
-	log.Println("post.CreatedAt is:", post.CreatedAt)
-	t := time.Unix(ctime/1000, 0)
-	log.Println("[api/PostHandler]date converted back ", t.Format("02-01-2006"))
+	// Parse form data
+	err = r.ParseMultipartForm(10 << 20)
+	if err != nil {
+		utils.HandleError("Failed to parse form data:", err)
+		http.Error(w, "Failed to parse form data", http.StatusBadRequest)
+		return
+	}
+
+	// Extract form fields
+	body := r.FormValue("body")
+	groupIDStr := r.FormValue("groupId")
+	groupID, _ := strconv.Atoi(groupIDStr)
+
+	imageURL := ""
+	privacy := r.FormValue("privacy")
+	userId := user.UserId
+
+	log.Println("[api/PostsHandler] Received Post:", body)
+	log.Println("[api/PostsHandler] GroupId:", groupID)
+	log.Println("[api/PostsHandler] Privacy:", privacy)
+	log.Println("[api/PostsHandler] UserId:", userId)
+
+	// Handle file upload
+	file, fileHeader, _ := r.FormFile("image")
+	if file != nil {
+
+		defer file.Close()
+		imageURL, err = ImageProcessing(w, r, file, *fileHeader)
+		if err != nil {
+			utils.HandleError("Error with ImageHandler", err)
+			// http.Error(w, "Failed to process image", http.StatusInternalServerError)
+			return
+		}
+		log.Println("[api/PostsHandler] Image Stored at:", imageURL)
+	}
+
+	// Create Post object
+	post := models.Post{
+		Body:      body,
+		CreatedAt: ctime,
+		GroupId:   groupID,
+		Privacy:   privacy,
+		UpdatedAt: ctime,
+		ImageURL:  imageURL,
+		UserId:    userId,
+	}
+
 	// Validate the post
 	if validationErr := post.Validate(); validationErr != nil {
 		utils.HandleError("Validation failed:", validationErr)
 		http.Error(w, "Validation failed", http.StatusBadRequest)
 		return
 	}
-	log.Println("Received post:", post.UserId, post.Body)
-	r.ParseMultipartForm(10 << 20)
-	// if parseMultipartFormErr != nil {
-	// 	utils.HandleError("Unable to Parse Multipart Form.", parseMultipartFormErr)
-	// }
 
-	file, fileHeader, _ := r.FormFile("image")
-	// file, fileHeader, formFileErr := r.FormFile("image")
-	// if formFileErr != nil {
-	// 	utils.HandleError("Error reading image.", formFileErr)
-	// }
-
-	//if file is given
-	if file != nil {
-		defer file.Close()
-		var ImageProcessingrErr error
-		post.ImageURL, ImageProcessingrErr = ImageProcessing(w, r, file, *fileHeader)
-		if ImageProcessingrErr != nil {
-			utils.HandleError("Error with ImageHandler", ImageProcessingrErr)
-		}
-		fmt.Println("POST INSERTED WITH FILE")
-	} else {
-		fmt.Println("POST INSERTED WITHOUT FILE")
-	}
-
+	// Create post in the repository
 	result, createErr := h.Repo.CreatePost(post)
 	if createErr != nil {
 		utils.HandleError("Failed to create post in the repository:", createErr)

@@ -9,15 +9,15 @@ import (
 
 const (
 	timeout    = 10 * time.Minute
-	cookieName = "SessionID"
+	CookieName = "SessionID"
 )
 
 var (
-	cookieValue  = GenerateNewUUID()
-	sessionMap   = make(map[string]*models.User)
-	followersMap = make(map[int][]int)
-	followingMap = make(map[int][]int)
-	groupsMap    = make(map[int][]int)
+	//CookieValue = GenerateNewUUID()
+	SessionMap = make(map[string]*models.User)
+	// followersMap = make(map[int][]int)
+	// followingMap = make(map[int][]int)
+	// groupsMap    = make(map[int][]int)
 )
 
 // generates a new UUID

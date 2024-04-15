@@ -7,25 +7,24 @@ import (
 	"socialnetwork/utils"
 )
 
-// Allowed methods: GET, POST
+// Allowed methods: POST
 
-type UsersByPublicHandler struct {
+type UserIdHandler struct {
 	Repo repo.IRepository
 }
 
 // Constructor with dependency injection of a repo implementation
-func NewUsersByPublicHandler(r repo.IRepository) *UsersByPublicHandler {
-	return &UsersByPublicHandler{Repo: r}
+func NewUserIdHandler(r repo.IRepository) *UserIdHandler {
+	return &UserIdHandler{Repo: r}
 }
 
-// A UsersByPublicHandler instance implements the ServeHTTP interface, and thus
+// A UserUsersHandler instance implements the ServeHTTP interface, and thus
 // itself becomes an HTTPHandler
-func (h *UsersByPublicHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *UserIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
-
 	case http.MethodGet:
-		h.get(w)
+		h.get(w, r)
 		return
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -33,16 +32,17 @@ func (h *UsersByPublicHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 	}
 }
 
-func (h *UsersByPublicHandler) get(w http.ResponseWriter) {
+func (h *UserIdHandler) get(w http.ResponseWriter, r *http.Request) {
 
-	userUsers, err := h.Repo.GetUsersByPublic()
+	user, err := getUser(r)
 	if err != nil {
-		utils.HandleError("Failed to get all Users. ", err)
+		utils.HandleError("Failed to get user for UserId. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
-	err = json.NewEncoder(w).Encode(userUsers)
+	// Encode and write the response
+	w.WriteHeader(http.StatusCreated)
+	err = json.NewEncoder(w).Encode(user.UserId)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

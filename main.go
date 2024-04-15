@@ -44,7 +44,7 @@ func addApiHandlers(rt *router.Router) {
 	// r := repo.NewDummyRepository()
 	r := repo.NewSQLiteRepository()
 	loginHandler := auth.NewLoginHandler(r)
-	// logoutHandler := auth.NewLogoutHandler(r)
+	logoutHandler := auth.NewLogoutHandler(r)
 	registrationHandler := auth.NewRegistrationHandler(r)
 	usersHandler := api.NewUsersHandler(r)
 	userByIdHandler := api.NewUserByIdHandler(r)
@@ -75,12 +75,17 @@ func addApiHandlers(rt *router.Router) {
 	// notificationsHandler := api.NewNotificationsHandler(r)
 	// notificationByIdHandler := api.NewNotificationByIdHandler(r)
 	// notificationByUserIdHandler := api.NewNotificationByUserIdHandler()
+	userUsersHandler := api.NewUserUsersHandler(r)
+	UserUserBySubjectIdAndFollowerIdHandler := api.NewUserUserBySubjectIdAndFollowerIdHandler(r)
 
+	userIdHandler := api.NewUserIdHandler(r)
 	homeHandler := api.NewHomeHandler(r)
+	profileHandler := api.NewProfileHandler(r)
+	privacyHandler := api.NewPrivacyHandler(r)
 
 	// Auth Handlers
 	rt.AddHandler(regexp.MustCompile(`^/auth/login$`), loginHandler)
-	// rt.AddHandler(regexp.MustCompile(`^/auth/logoutn$`), logoutHandler)
+	rt.AddHandler(regexp.MustCompile(`^/auth/logout$`), logoutHandler)
 	rt.AddHandler(regexp.MustCompile(`^/auth/registration$`), registrationHandler)
 
 	// // User Handlers
@@ -123,8 +128,14 @@ func addApiHandlers(rt *router.Router) {
 	// // Notification Handlers
 	// rt.AddHandler(regexp.MustCompile(`^/api/notifications$`), notificationsHandler)
 	// rt.AddHandler(regexp.MustCompile(`^/api/notifications/{notificationId}$`), notificationByIdHandler)
+	// UserUser Handlers
+	rt.AddHandler(regexp.MustCompile(`^/api/user/userUser/$`), userUsersHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/user/userUser/[0-9]+$`), UserUserBySubjectIdAndFollowerIdHandler)
 
+	rt.AddHandler(regexp.MustCompile(`^/api/userId$`), userIdHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/home$`), homeHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/profile/[0-9]+$`), profileHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/profile/privacy$`), privacyHandler)
 }
 
 func addWSHandler(rt *router.Router) {

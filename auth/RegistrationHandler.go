@@ -36,9 +36,9 @@ func (h *RegistrationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 
 	// Checks cookies
-	cookie, err := r.Cookie(cookieName)
+	cookie, err := r.Cookie(CookieName)
 	if err == nil {
-		_, exists := sessionMap[cookie.Value]
+		_, exists := SessionMap[cookie.Value]
 		if exists {
 			utils.HandleError("Login failed - user already logged in:", err)
 			http.Error(w, "user already logged in", http.StatusBadRequest)
@@ -57,10 +57,6 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	dateInMilliseconds := date.UTC().UnixMilli()
-	log.Println("[auth/RegistrationHandler] date", date)
-	log.Println("[auth/RegistrationHandler]registeringUser.DOB ", dateInMilliseconds)
-	t := time.Unix(dateInMilliseconds/1000, 0)
-	log.Println("[auth/RegistrationHandler]date converted back ", t.Format("02-01-2006"))
 
 	// Encrypt Password for Storage
 	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(registeringUser.EncryptedPassword), bcrypt.DefaultCost)
@@ -122,6 +118,19 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
+	// Sets up a new Cookie
+	cookieValue := GenerateNewUUID()
+	SessionMap[cookieValue] = &processedUser
+
+	cookie = &http.Cookie{
+		Name:     CookieName,
+		Value:    cookieValue,
+		Path:     "/",
+		Expires:  time.Now().Add(timeout),
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	}
+	http.SetCookie(w, cookie)
 	// Convert the response struct to JSON
 	jsonResponse, err := json.Marshal(response)
 	if err != nil {
@@ -139,19 +148,4 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
-
-	// Sets up a new Cookie
-	cookieValue = GenerateNewUUID()
-	//sessionMap[cookieValue] = &processedUser
-
-	cookie = &http.Cookie{
-		Name:     cookieName,
-		Value:    cookieValue,
-		Path:     "/",
-		Expires:  time.Now().Add(timeout),
-		HttpOnly: true,
-		SameSite: http.SameSiteLaxMode,
-	}
-	http.SetCookie(w, cookie)
-	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

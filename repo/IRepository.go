@@ -9,8 +9,13 @@ import (
 )
 
 type IRepository interface {
+
 	// Home (name tbc)
 	GetHomeDataForUser(userId int) (transport.HomeModel, error)
+
+	//Profile
+	GetProfileDataForUser(userId int) (transport.ProfileModel, error)
+	UpdateIsPublic(userId int, isPublic bool) error
 
 	// User
 	CreateUser(user models.User) (models.User, error)

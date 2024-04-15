@@ -34,7 +34,7 @@ func (h *UsersHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.post(w, r)
 		return
 	case http.MethodGet:
-		h.get(w, r)
+		h.get(w)
 		return
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -108,7 +108,7 @@ func (h *UsersHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *UsersHandler) get(w http.ResponseWriter, r *http.Request) {
+func (h *UsersHandler) get(w http.ResponseWriter) {
 
 	userUsers, err := h.Repo.GetAllUsers()
 	if err != nil {

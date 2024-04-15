@@ -6,11 +6,11 @@ import (
 )
 
 type GroupUser struct {
-	GroupUserId int
-	CreatedAt   int64
-	GroupId     int
-	UpdatedAt   int64
-	UserId      int
+	GroupUserId int   `json:"groupUserId"`
+	CreatedAt   int64 `json:"createdAt"`
+	GroupId     int   `json:"groupId"`
+	UpdatedAt   int64 `json:"updatedAt"`
+	UserId      int   `json:"userId"`
 }
 
 func (gu *GroupUser) Validate() error {
