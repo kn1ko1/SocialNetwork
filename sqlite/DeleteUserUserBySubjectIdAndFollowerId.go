@@ -2,12 +2,10 @@ package sqlite
 
 import (
 	"database/sql"
-	"log"
 	"socialnetwork/utils"
 )
 
 func DeleteUserUserBySubjectIdAndFollowerId(database *sql.DB, subjectId, followerId int) error {
-	log.Println("subjectId, followerId", subjectId, followerId)
 	queryStr := `DELETE FROM USER_USERS
         WHERE SubjectId = ? AND FollowerId = ?;`
 

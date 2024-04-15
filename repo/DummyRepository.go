@@ -200,6 +200,17 @@ func (r *DummyRepository) GetUserUsersByFollowerId(followerId int) ([]models.Use
 
 	return userUsers, nil
 }
+
+func (r *DummyRepository) GetUserUserByFollowerIdAndSubjectId(followerId, subjectId int) (models.UserUser, error) {
+	var userUser models.UserUser
+
+	user := validUserUser
+	user.FollowerId = followerId
+	user.SubjectId = subjectId
+
+	return userUser, nil
+}
+
 func (r *DummyRepository) DeleteUserUsersBySubjectId(subjectId int) error {
 	return nil
 }

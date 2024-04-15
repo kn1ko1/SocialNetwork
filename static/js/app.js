@@ -11,14 +11,13 @@ const App = () => {
 
 // // Const for getting userId in the frontend
 const CurrentUserId = () => {
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState();
   useEffect(() => {
     const fetchUserId = async () => {
       try {
         const response = await fetch('http://localhost:8080/api/userId', {
           credentials: 'include'
         });
-        console.log("response: ", response);
         if (response.ok) {
           const userId = await response.json();
           setUserId(userId);
@@ -31,26 +30,11 @@ const CurrentUserId = () => {
     };
     fetchUserId();
   }, []);
+  console.log("userId in CurrentUserId is: ", userId);
   return userId; // Return only the userId state value
 };
 function Navbar() {
   const navUserId = CurrentUserId();
-  const renderHome = () => {
-    const appContainer = document.querySelector(".app-container");
-    ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
-  };
-  const renderNotifications = () => {
-    const appContainer = document.querySelector(".app-container");
-    ReactDOM.render( /*#__PURE__*/React.createElement(Notifications, null), appContainer);
-  };
-  const renderChat = () => {
-    const appContainer = document.querySelector(".app-container");
-    ReactDOM.render( /*#__PURE__*/React.createElement(Chat, null), appContainer);
-  };
-  const renderGroup = () => {
-    const appContainer = document.querySelector(".app-container");
-    ReactDOM.render( /*#__PURE__*/React.createElement(Group, null), appContainer);
-  };
   const logout = async () => {
     try {
       const response = await fetch("http://localhost:8080/auth/logout", {
@@ -62,7 +46,6 @@ function Navbar() {
         socket.addEventListener("close", event => {
           console.log("The connection has been closed successfully.");
         });
-        const appContainer = document.querySelector(".app-container");
         ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
         console.log("Logout successful!");
       } else {
@@ -129,6 +112,10 @@ function Navbar() {
     onClick: logout
   }, "LOGOUT"))))));
 }
+const renderLogin = () => {
+  const appContainer = document.querySelector('.app-container');
+  ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
+};
 function Login() {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -171,13 +158,8 @@ function Login() {
       setErrorMessage('Invalid credentials');
     }
   };
-  const renderRegister = () => {
-    const appContainer = document.querySelector('.app-container');
-    ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), appContainer);
-  };
   if (isLoggedIn) {
-    const appContainer = document.querySelector('.app-container');
-    ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
+    renderHome();
     socket = new WebSocket("ws://localhost:8080/ws");
     socket.onopen = function (event) {
       console.log("WebSocket connection established.");
@@ -225,6 +207,10 @@ function Login() {
     onClick: renderRegister
   }, "Register")));
 }
+const renderRegister = () => {
+  const appContainer = document.querySelector('.app-container');
+  ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), appContainer);
+};
 function Register() {
   const [email, setEmail] = useState("");
   const [encryptedPassword, setEncryptedPassword] = useState("");
@@ -286,15 +272,11 @@ function Register() {
     socket.onopen = function (event) {
       console.log("WebSocket connection established.");
     };
-    const appContainer = document.querySelector(".app-container");
     ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
   }
 
   //this is the login button, when pressed will serve login form
-  const renderLogin = () => {
-    const appContainer = document.querySelector(".app-container");
-    ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
-  };
+
   return /*#__PURE__*/React.createElement("div", {
     className: "container login-container"
   }, /*#__PURE__*/React.createElement("h1", {
@@ -445,20 +427,25 @@ function Profile({
   const [userFollowerData, setUserFollowerData] = useState([]);
   const [userFollowsData, setUserFollowsData] = useState([]);
   const [isPublicValue, setIsPublicValue] = useState(null);
+  const [isFollowed, setIsFollowed] = useState(false);
   useEffect(() => {
     fetchProfileData();
   }, [userId]);
+  useEffect(() => {
+    if (!isPublicValue && !isEditable) {
+      checkIfFollowed();
+    }
+  }, [isPublicValue, isEditable]);
   const fetchProfileData = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/profile/${userId}`, {
         method: "GET",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json"
         }
       });
       if (!response.ok) {
-        throw new Error("Failed to fetch profile data");
+        throw new Error(`Failed to fetch profile data: ${response.status} ${response.statusText}`);
       }
       const data = await response.json();
       setProfileUserData(data.profileUserData);
@@ -471,10 +458,29 @@ function Profile({
       console.error("Error fetching profile data:", error);
     }
   };
+  const checkIfFollowed = async () => {
+    try {
+      const currentUserId = await CurrentUserId();
+      const response = await fetch(`http://localhost:8080/api/users/${currentUserId}/userUsers/${userId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      if (response.ok) {
+        setIsFollowed(true);
+      } else if (response.status === 404) {
+        setIsFollowed(false);
+      } else {
+        console.error("Error fetching user user data:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching user user data:", error);
+    }
+  };
   const handlePrivacyChange = event => {
     const newPrivacySetting = JSON.parse(event.target.value);
-
-    // Update the database with the new privacy status
+    setIsPublicValue(newPrivacySetting);
     fetch("http://localhost:8080/api/profile/privacy", {
       method: "PUT",
       headers: {
@@ -488,28 +494,24 @@ function Profile({
       if (!response.ok) {
         throw new Error("Failed to update privacy status");
       }
-
-      // Update the local state with the new privacy setting
-      setIsPublicValue(newPrivacySetting);
     }).catch(error => {
       console.error("Error updating privacy status:", error);
+      setIsPublicValue(!newPrivacySetting);
     });
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("div", {
     id: "profileData"
-  }, /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Profile"), isPublicValue || isEditable ? /*#__PURE__*/React.createElement(React.Fragment, null, isEditable ? /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Profile"), isPublicValue || isEditable || isFollowed ? /*#__PURE__*/React.createElement(React.Fragment, null, isEditable ? /*#__PURE__*/React.createElement("div", {
     id: "isPublicToggle"
   }, /*#__PURE__*/React.createElement("label", null, /*#__PURE__*/React.createElement("input", {
     type: "radio",
     value: true,
-    checked: isPublicValue === true // Check if isPublicValue is true
-    ,
+    checked: isPublicValue === true,
     onChange: handlePrivacyChange
   }), "Public"), /*#__PURE__*/React.createElement("label", null, /*#__PURE__*/React.createElement("input", {
     type: "radio",
     value: false,
-    checked: isPublicValue === false // Check if isPublicValue is false
-    ,
+    checked: isPublicValue === false,
     onChange: handlePrivacyChange
   }), "Private")) : /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Privacy:"), " ", isPublicValue ? "Public" : "Private"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "User ID:"), " ", profileUserData.userId), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Username:"), " ", profileUserData.username), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Email:"), " ", profileUserData.email), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "First Name:"), " ", profileUserData.firstName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Last Name:"), " ", profileUserData.lastName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Date of Birth:"), " ", new Date(profileUserData.dob).toLocaleDateString()), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Bio:"), " ", profileUserData.bio), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Image URL:"), " ", profileUserData.imageURL), /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Posts"), /*#__PURE__*/React.createElement("div", {
     id: "myPostsData"
@@ -525,6 +527,10 @@ function Profile({
     key: user.username
   }, user.username)))) : /*#__PURE__*/React.createElement("p", null, "This profile is private.")));
 }
+const renderChat = () => {
+  const appContainer = document.querySelector(".app-container");
+  ReactDOM.render( /*#__PURE__*/React.createElement(Chat, null), appContainer);
+};
 function Chat() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"));
 }
@@ -537,6 +543,10 @@ function GroupDetails({
     groupId: group.id
   }));
 }
+const renderGroup = () => {
+  const appContainer = document.querySelector(".app-container");
+  ReactDOM.render( /*#__PURE__*/React.createElement(Group, null), appContainer);
+};
 function Group() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -638,30 +648,38 @@ function Group() {
     id: "noGroupsError"
   }, "There are no created groups yet"))));
 }
+const renderNotifications = () => {
+  const appContainer = document.querySelector(".app-container");
+  ReactDOM.render( /*#__PURE__*/React.createElement(Notifications, null), appContainer);
+};
 function Notifications() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Notifications"));
 }
 function FollowButton({
-  userId,
+  followerId,
+  subjectId,
   isFollowed
 }) {
   const [isFollowing, setIsFollowing] = useState(isFollowed);
   const handleFollowToggle = async () => {
     if (isFollowing) {
       // If already following, unfollow the user
-      await handleUnfollow(userId);
+      await handleUnfollow(followerId, subjectId);
     } else {
       // If not following, follow the user
-      await handleFollow(userId);
+      await handleFollow(followerId, subjectId);
     }
     // Toggle the local follow state
     setIsFollowing(!isFollowing);
   };
-  const handleFollow = async subjectId => {
+  const handleFollow = async (followerId, subjectId) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
+      const response = await fetch(`http://localhost:8080/api/users/${followerId}/userUsers/`, {
         method: "POST",
-        credentials: "include"
+        credentials: "include",
+        body: JSON.stringify({
+          subjectId
+        })
       });
       if (response.ok) {
         console.log("Successfully followed the user.");
@@ -674,9 +692,9 @@ function FollowButton({
     }
     return false; // Return false if the follow request fails
   };
-  const handleUnfollow = async subjectId => {
+  const handleUnfollow = async (followerId, subjectId) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
+      const response = await fetch(`http://localhost:8080/api/users/${followerId}/userUsers/${subjectId}`, {
         method: "DELETE",
         credentials: "include"
       });
@@ -989,6 +1007,10 @@ function CommentCard({
     className: "card-text"
   }, comment.body)));
 }
+const renderHome = () => {
+  const appContainer = document.querySelector(".app-container");
+  ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
+};
 
 // Display information relating to homepage
 function Home() {
@@ -997,6 +1019,7 @@ function Home() {
   const [privatePosts, setPrivatePosts] = useState([]);
   const [publicPostsWithComments, setPublicPostsWithComments] = useState([]);
   const [userGroups, setUserGroups] = useState([]);
+  const currentUserId = CurrentUserId();
   useEffect(() => {
     fetch("http://localhost:8080/api/home").then(response => response.json()).then(data => {
       setUserList(data.userList);
@@ -1021,7 +1044,8 @@ function Home() {
     href: "#",
     onClick: () => renderProfile(user.userId)
   }, user.username), /*#__PURE__*/React.createElement(FollowButton, {
-    userId: user.userId,
+    followerId: currentUserId,
+    subjectId: user.userId,
     isFollowed: user.isFollowed
   }))) : /*#__PURE__*/React.createElement("p", null, "No Users?!")), /*#__PURE__*/React.createElement("div", {
     className: "almostPrivatePosts"

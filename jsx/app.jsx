@@ -12,7 +12,7 @@ const App = () => {
 
 // // Const for getting userId in the frontend
 const CurrentUserId = () => {
-	const [userId, setUserId] = useState(null);
+	const [userId, setUserId] = useState();
 
 	useEffect(() => {
 		const fetchUserId = async () => {
@@ -20,7 +20,6 @@ const CurrentUserId = () => {
 				const response = await fetch('http://localhost:8080/api/userId', {
 					credentials: 'include',
 				});
-				console.log("response: ", response)
 				if (response.ok) {
 					const userId = await response.json();
 					setUserId(userId);
@@ -34,7 +33,7 @@ const CurrentUserId = () => {
 
 		fetchUserId();
 	}, []);
-
+	console.log("userId in CurrentUserId is: ", userId)
 	return userId; // Return only the userId state value
 };
 
@@ -44,26 +43,6 @@ const CurrentUserId = () => {
 
 function Navbar() {
 	const navUserId = CurrentUserId();
-
-	const renderHome = () => {
-		const appContainer = document.querySelector(".app-container")
-		ReactDOM.render(<Home />, appContainer)
-	}
-
-	const renderNotifications = () => {
-		const appContainer = document.querySelector(".app-container")
-		ReactDOM.render(<Notifications />, appContainer)
-	}
-
-	const renderChat = () => {
-		const appContainer = document.querySelector(".app-container")
-		ReactDOM.render(<Chat />, appContainer)
-	}
-
-	const renderGroup = () => {
-		const appContainer = document.querySelector(".app-container")
-		ReactDOM.render(<Group />, appContainer)
-	}
 
 	const logout = async () => {
 		try {
@@ -77,7 +56,6 @@ function Navbar() {
 				socket.addEventListener("close", (event) => {
 					console.log("The connection has been closed successfully.")
 				})
-				const appContainer = document.querySelector(".app-container")
 				ReactDOM.render(<Login />, appContainer)
 				console.log("Logout successful!")
 			} else {
@@ -141,6 +119,11 @@ function Navbar() {
 	)
 }
 
+const renderLogin = () => {
+	const appContainer = document.querySelector('.app-container');
+	ReactDOM.render(<Login />, appContainer)
+}
+
 function Login() {
 	const [usernameOrEmail, setUsernameOrEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -189,14 +172,10 @@ function Login() {
 		}
 	}
 
-	const renderRegister = () => {
-		const appContainer = document.querySelector('.app-container');
-		ReactDOM.render(<Register />, appContainer);
-	};
+
 
 	if (isLoggedIn) {
-		const appContainer = document.querySelector('.app-container');
-		ReactDOM.render(<Home />, appContainer);
+		renderHome()
 		socket = new WebSocket("ws://localhost:8080/ws");
 		socket.onopen = function (event) {
 			console.log("WebSocket connection established.");
@@ -246,6 +225,10 @@ function Login() {
 	);
 }
 
+const renderRegister = () => {
+	const appContainer = document.querySelector('.app-container');
+	ReactDOM.render(<Register />, appContainer);
+};
 
 function Register() {
 	const [email, setEmail] = useState("");
@@ -310,15 +293,11 @@ function Register() {
 		socket.onopen = function (event) {
 			console.log("WebSocket connection established.");
 		}
-		const appContainer = document.querySelector(".app-container")
 		ReactDOM.render(<Home />, appContainer)
 	}
 
 	//this is the login button, when pressed will serve login form
-	const renderLogin = () => {
-		const appContainer = document.querySelector(".app-container")
-		ReactDOM.render(<Login />, appContainer)
-	}
+
 
 	return (
 		<div className="container login-container">
@@ -479,23 +458,29 @@ function Profile({ userId, isEditable }) {
 	const [userFollowerData, setUserFollowerData] = useState([]);
 	const [userFollowsData, setUserFollowsData] = useState([]);
 	const [isPublicValue, setIsPublicValue] = useState(null);
+	const [isFollowed, setIsFollowed] = useState(false);
 
 	useEffect(() => {
 		fetchProfileData();
 	}, [userId]);
 
+	useEffect(() => {
+		if (!isPublicValue && !isEditable) {
+			checkIfFollowed();
+		}
+	}, [isPublicValue, isEditable]);
+
 	const fetchProfileData = async () => {
 		try {
 			const response = await fetch(`http://localhost:8080/api/profile/${userId}`, {
 				method: "GET",
-				credentials: "include",
 				headers: {
 					"Content-Type": "application/json",
 				},
 			});
 
 			if (!response.ok) {
-				throw new Error("Failed to fetch profile data");
+				throw new Error(`Failed to fetch profile data: ${response.status} ${response.statusText}`);
 			}
 
 			const data = await response.json();
@@ -504,18 +489,39 @@ function Profile({ userId, isEditable }) {
 			setUserFollowerData(data.userFollowerData || []);
 			setUserFollowsData(data.userFollowsData || []);
 			setIsPublicValue(data.profileUserData.isPublic);
-			console.log("This is my data with followers", data)
+			console.log("This is my data with followers", data);
 		} catch (error) {
 			console.error("Error fetching profile data:", error);
 		}
 	};
 
+	const checkIfFollowed = async () => {
+		try {
+			const currentUserId = await CurrentUserId();
+			const response = await fetch(`http://localhost:8080/api/users/${currentUserId}/userUsers/${userId}`, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
 
+			if (response.ok) {
+				setIsFollowed(true);
+			} else if (response.status === 404) {
+				setIsFollowed(false);
+			} else {
+				console.error("Error fetching user user data:", response.statusText);
+			}
+		} catch (error) {
+			console.error("Error fetching user user data:", error);
+		}
+	};
 
 	const handlePrivacyChange = (event) => {
 		const newPrivacySetting = JSON.parse(event.target.value);
 
-		// Update the database with the new privacy status
+		setIsPublicValue(newPrivacySetting);
+
 		fetch("http://localhost:8080/api/profile/privacy", {
 			method: "PUT",
 			headers: {
@@ -530,13 +536,10 @@ function Profile({ userId, isEditable }) {
 				if (!response.ok) {
 					throw new Error("Failed to update privacy status");
 				}
-
-
-				// Update the local state with the new privacy setting
-				setIsPublicValue(newPrivacySetting);
 			})
 			.catch((error) => {
 				console.error("Error updating privacy status:", error);
+				setIsPublicValue(!newPrivacySetting);
 			});
 	};
 
@@ -544,8 +547,8 @@ function Profile({ userId, isEditable }) {
 		<div>
 			<Navbar />
 			<div id="profileData">
-			<h2>{profileUserData.username}'s Profile</h2>
-				{isPublicValue || isEditable ? (
+				<h2>{profileUserData.username}'s Profile</h2>
+				{(isPublicValue || isEditable || isFollowed) ? (
 					<>
 						{isEditable ? (
 							<div id="isPublicToggle">
@@ -553,7 +556,7 @@ function Profile({ userId, isEditable }) {
 									<input
 										type="radio"
 										value={true}
-										checked={isPublicValue === true} // Check if isPublicValue is true
+										checked={isPublicValue === true}
 										onChange={handlePrivacyChange}
 									/>
 									Public
@@ -562,7 +565,7 @@ function Profile({ userId, isEditable }) {
 									<input
 										type="radio"
 										value={false}
-										checked={isPublicValue === false} // Check if isPublicValue is false
+										checked={isPublicValue === false}
 										onChange={handlePrivacyChange}
 									/>
 									Private
@@ -590,8 +593,7 @@ function Profile({ userId, isEditable }) {
 							<strong>Last Name:</strong> {profileUserData.lastName}
 						</p>
 						<p>
-							<strong>Date of Birth:</strong>{" "}
-							{new Date(profileUserData.dob).toLocaleDateString()}
+							<strong>Date of Birth:</strong> {new Date(profileUserData.dob).toLocaleDateString()}
 						</p>
 						<p>
 							<strong>Bio:</strong> {profileUserData.bio}
@@ -600,11 +602,8 @@ function Profile({ userId, isEditable }) {
 							<strong>Image URL:</strong> {profileUserData.imageURL}
 						</p>
 
-
 						<h2>{profileUserData.username}'s Posts</h2>
 						<div id="myPostsData">
-
-
 							{userPostData.map((post) => (
 								<div key={post.postId}>
 									<p>
@@ -638,15 +637,18 @@ function Profile({ userId, isEditable }) {
 									<p key={user.username}>{user.username}</p>
 								))}
 						</div>
-
-						{/* Display other profile information here */}
 					</>
 				) : (
 					<p>This profile is private.</p>
 				)}
 			</div>
 		</div>
-	)
+	);
+}
+
+const renderChat = () => {
+	const appContainer = document.querySelector(".app-container")
+	ReactDOM.render(<Chat />, appContainer)
 }
 
 function Chat() {
@@ -672,6 +674,11 @@ function GroupDetails({ group }) {
 			<PostForm groupId={group.id} />
 		</div>
 	);
+}
+
+const renderGroup = () => {
+	const appContainer = document.querySelector(".app-container")
+	ReactDOM.render(<Group />, appContainer)
 }
 
 function Group() {
@@ -786,6 +793,10 @@ function Group() {
 	);
 }
 
+const renderNotifications = () => {
+	const appContainer = document.querySelector(".app-container")
+	ReactDOM.render(<Notifications />, appContainer)
+}
 
 function Notifications() {
 	return (
@@ -796,27 +807,29 @@ function Notifications() {
 	)
 }
 
-function FollowButton({ userId, isFollowed }) {
+function FollowButton({ followerId, subjectId, isFollowed }) {
 	const [isFollowing, setIsFollowing] = useState(isFollowed);
 
 	const handleFollowToggle = async () => {
 		if (isFollowing) {
 			// If already following, unfollow the user
-			await handleUnfollow(userId);
+			await handleUnfollow(followerId, subjectId);
 		} else {
 			// If not following, follow the user
-			await handleFollow(userId);
+			await handleFollow(followerId, subjectId);
 		}
 		// Toggle the local follow state
 		setIsFollowing(!isFollowing);
 	};
 
 
-	const handleFollow = async (subjectId) => {
+	const handleFollow = async (followerId, subjectId) => {
+
 		try {
-			const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
+			const response = await fetch(`http://localhost:8080/api/users/${followerId}/userUsers/`, {
 				method: "POST",
 				credentials: "include",
+				body: JSON.stringify({ subjectId })
 			});
 
 			if (response.ok) {
@@ -832,9 +845,9 @@ function FollowButton({ userId, isFollowed }) {
 		return false; // Return false if the follow request fails
 	};
 
-	const handleUnfollow = async (subjectId) => {
+	const handleUnfollow = async (followerId, subjectId) => {
 		try {
-			const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
+			const response = await fetch(`http://localhost:8080/api/users/${followerId}/userUsers/${subjectId}`, {
 				method: "DELETE",
 				credentials: "include",
 			});
@@ -1193,6 +1206,11 @@ function CommentCard({ comment }) {
 	)
 }
 
+const renderHome = () => {
+	const appContainer = document.querySelector(".app-container")
+	ReactDOM.render(<Home />, appContainer)
+}
+
 // Display information relating to homepage
 function Home() {
 	const [userList, setUserList] = useState([])
@@ -1200,6 +1218,8 @@ function Home() {
 	const [privatePosts, setPrivatePosts] = useState([])
 	const [publicPostsWithComments, setPublicPostsWithComments] = useState([])
 	const [userGroups, setUserGroups] = useState([])
+
+	const currentUserId = CurrentUserId();
 
 	useEffect(() => {
 		fetch("http://localhost:8080/api/home")
@@ -1229,7 +1249,7 @@ function Home() {
 							<a className="nav-link" href="#" onClick={() => renderProfile(user.userId)}>
 								{user.username}
 							</a>
-							<FollowButton userId={user.userId} isFollowed={user.isFollowed} />
+							<FollowButton followerId={currentUserId} subjectId={user.userId} isFollowed={user.isFollowed} />
 						</div>
 					))
 				) : (

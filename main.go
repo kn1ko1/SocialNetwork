@@ -129,8 +129,8 @@ func addApiHandlers(rt *router.Router) {
 	// rt.AddHandler(regexp.MustCompile(`^/api/notifications$`), notificationsHandler)
 	// rt.AddHandler(regexp.MustCompile(`^/api/notifications/{notificationId}$`), notificationByIdHandler)
 	// UserUser Handlers
-	rt.AddHandler(regexp.MustCompile(`^/api/user/userUser/$`), userUsersHandler)
-	rt.AddHandler(regexp.MustCompile(`^/api/user/userUser/[0-9]+$`), UserUserBySubjectIdAndFollowerIdHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/users/[0-9]+/userUsers/$`), userUsersHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/users/[0-9]+/userUsers/[0-9]+$`), UserUserBySubjectIdAndFollowerIdHandler)
 
 	rt.AddHandler(regexp.MustCompile(`^/api/userId$`), userIdHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/home$`), homeHandler)

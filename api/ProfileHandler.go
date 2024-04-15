@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
@@ -49,7 +48,7 @@ func (h *ProfileHandler) get(w http.ResponseWriter, r *http.Request) {
 		}
 		userId = user.UserId
 	}
-	log.Println("userId in profileHandler is ", userId)
+
 	profileData, err := h.Repo.GetProfileDataForUser(userId)
 	if err != nil {
 		utils.HandleError("Failed to get profileData in ProfileData. ", err)
