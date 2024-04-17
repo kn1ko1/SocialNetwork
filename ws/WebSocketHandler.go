@@ -47,8 +47,23 @@ func (h *WebSocketHandler) get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
-	client := NewClient(conn, user.UserId)
+	client := NewClient(conn, user)
 	client.SocketGroups[0] = socketGroupManager.SocketGroups[0]
 	socketGroupManager.SocketGroups[0].Enter <- client
+	// Get all groups and put client in those groups
+	groupUsers, err := h.Repo.GetGroupUsersByUserId(user.UserId)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+	for _, item := range groupUsers {
+		_, exists := socketGroupManager.SocketGroups[item.GroupId]
+		if !exists {
+			socketGroupManager.SocketGroups[item.GroupId] = NewSocketGroup(item.GroupId)
+		}
+		client.SocketGroups[item.GroupId] = socketGroupManager.SocketGroups[item.GroupId]
+		socketGroupManager.SocketGroups[item.GroupId].Enter <- client
+	}
 	go client.Receive()
 }

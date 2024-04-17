@@ -4,21 +4,29 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"socialnetwork/models"
 
 	"github.com/gorilla/websocket"
+)
+
+const (
+	GROUP_CHAT_MESSAGE = 1
+	PRIVATE_MESSAGE    = 2
 )
 
 type Client struct {
 	ClientID     int
 	Connection   *websocket.Conn
 	SocketGroups map[int]*SocketGroup
+	User         models.User
 }
 
-func NewClient(conn *websocket.Conn, userID int) *Client {
+func NewClient(conn *websocket.Conn, user models.User) *Client {
 	return &Client{
-		ClientID:     userID,
+		ClientID:     user.UserId,
 		Connection:   conn,
 		SocketGroups: make(map[int]*SocketGroup),
+		User:         user,
 	}
 }
 
@@ -50,22 +58,28 @@ func (c *Client) Send(v any) {
 func (c *Client) HandleMessage(msg WebSocketMessage) {
 	fmt.Println("message is:", msg)
 	switch msg.Code {
-	case 1:
-		var t TestBody
-		err := json.Unmarshal([]byte(msg.Body), &t)
+	case GROUP_CHAT_MESSAGE:
+		var body GroupChatBody
+		err := json.Unmarshal([]byte(msg.Body), &body)
 		if err != nil {
 			log.Println(err.Error())
 		}
-		fmt.Printf("%+v\n", t)
+		fmt.Printf("%+v\n", body)
 		fmt.Println("1 testBody")
-	case 2:
-		var p Person
-		err := json.Unmarshal([]byte(msg.Body), &p)
+		groupId := body.GroupID
+		c.SocketGroups[groupId].Broadcast <- msg
+		// store message in DB
+		// do stuff
+
+	case PRIVATE_MESSAGE:
+		var body PrivateMessageBody
+		err := json.Unmarshal([]byte(msg.Body), &body)
 		if err != nil {
 			log.Println(err.Error())
 		}
-		fmt.Printf("%+v\n", p)
+		fmt.Printf("%+v\n", body)
 		fmt.Println("2 person")
+		c.SocketGroups[0].Broadcast <- msg
 		// case 3:
 		// 	var event models.Event
 		// 	err := json.Unmarshal([]byte(msg.Body), &event)
@@ -76,5 +90,4 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		// 	fmt.Println("3 event")
 		// 	fmt.Println(msg.Body)
 	}
-	c.SocketGroups[0].Broadcast <- msg
 }

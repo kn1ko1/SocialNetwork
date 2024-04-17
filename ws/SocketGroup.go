@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 )
@@ -35,10 +36,27 @@ func (g *SocketGroup) Run() {
 			fmt.Printf("User %d exited.\n", c.ClientID)
 			// Add to broadcast
 		case msg := <-g.Broadcast:
-			for _, c := range g.Clients {
+			switch msg.Code {
+			case PRIVATE_MESSAGE:
+				var body PrivateMessageBody
+				err := json.Unmarshal([]byte(msg.Body), &body)
+				if err != nil {
+					log.Println(err.Error())
+				}
+				c := g.Clients[body.TargetUserID]
 				c.Send(msg)
-				log.Println("I'm in run in ws/SocketGroup.go")
+			case GROUP_CHAT_MESSAGE:
+				var body GroupChatBody
+				err := json.Unmarshal([]byte(msg.Body), &body)
+				if err != nil {
+					log.Println(err.Error())
+				}
+				for _, c := range g.Clients {
+					c.Send(msg)
+					log.Println("I'm in run in ws/SocketGroup.go")
+				}
 			}
+
 		}
 	}
 }
