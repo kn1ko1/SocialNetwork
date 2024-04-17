@@ -902,11 +902,27 @@ function PostForm({ groupId, followedUsers }) {
 	const [body, setBody] = useState("");
 	const [privacy, setPrivacy] = useState("");
 	const [selectedFile, setSelectedFile] = useState(null);
-	const [followedUsersForAP, setFollowedUsersForAP] = useState(followedUsers);
+	const [selectedUserIds, setSelectedUserIds] = useState([]);
 	const [showFollowedUsersList, setShowFollowedUsersList] = useState(false);
+	const [followedUsersForAP, setFollowedUsersForAP] = useState(followedUsers || []);
+
 	useEffect(() => {
 		setFollowedUsersForAP(followedUsers);
 	}, [followedUsers]);
+
+	const handleCheckboxChange = (e) => {
+		const userId = e.target.value;
+		const isChecked = e.target.checked;
+
+		if (isChecked) {
+			setSelectedUserIds((prevSelectedUserIds) => [...prevSelectedUserIds, userId]);
+		} else {
+			setSelectedUserIds((prevSelectedUserIds) =>
+				prevSelectedUserIds.filter((id) => id !== userId)
+			);
+		}
+	};
+
 	// Handler for form submission
 	const submit = async (e) => {
 		e.preventDefault(); // Prevent page reload
@@ -921,6 +937,7 @@ function PostForm({ groupId, followedUsers }) {
 		}
 		if (privacy === "almost private") {
 			groupId = -2; // Set groupId to -2 for almost private posts
+			formData.append("almostPrivatePostUsers", JSON.stringify(selectedUserIds));
 		}
 		formData.append("groupId", groupId);
 		if (selectedFile) {
@@ -939,9 +956,11 @@ function PostForm({ groupId, followedUsers }) {
 
 			// Reset form fields after successful submission
 			setBody("");
-			setPrivacy("");
+			setPrivacy("public");
 			setSelectedFile(null);
+			setSelectedUserIds([]);
 			document.getElementById("postFormBody").value = "";
+			setShowFollowedUsersList(false);
 		} catch (error) {
 			console.error("Error submitting post:", error);
 		}
@@ -974,7 +993,11 @@ function PostForm({ groupId, followedUsers }) {
 				{followedUsersForAP.map((followedUser) => (
 					<li key={followedUser.username}>
 						<label>
-							<input type="checkbox" value={followedUser.userId} />
+							<input
+								type="checkbox"
+								value={followedUser.userId}
+								onChange={handleCheckboxChange}
+							/>
 							{followedUser.username}
 						</label>
 					</li>
@@ -984,7 +1007,6 @@ function PostForm({ groupId, followedUsers }) {
 			<p className="text-muted">No followed users</p>
 		)
 	) : null;
-
 
 	return (
 		<div>

@@ -760,11 +760,22 @@ function PostForm({
   const [body, setBody] = useState("");
   const [privacy, setPrivacy] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-  const [followedUsersForAP, setFollowedUsersForAP] = useState(followedUsers);
+  const [selectedUserIds, setSelectedUserIds] = useState([]);
   const [showFollowedUsersList, setShowFollowedUsersList] = useState(false);
+  const [followedUsersForAP, setFollowedUsersForAP] = useState(followedUsers || []);
   useEffect(() => {
     setFollowedUsersForAP(followedUsers);
   }, [followedUsers]);
+  const handleCheckboxChange = e => {
+    const userId = e.target.value;
+    const isChecked = e.target.checked;
+    if (isChecked) {
+      setSelectedUserIds(prevSelectedUserIds => [...prevSelectedUserIds, userId]);
+    } else {
+      setSelectedUserIds(prevSelectedUserIds => prevSelectedUserIds.filter(id => id !== userId));
+    }
+  };
+
   // Handler for form submission
   const submit = async e => {
     e.preventDefault(); // Prevent page reload
@@ -779,6 +790,7 @@ function PostForm({
     }
     if (privacy === "almost private") {
       groupId = -2; // Set groupId to -2 for almost private posts
+      formData.append("almostPrivatePostUsers", JSON.stringify(selectedUserIds));
     }
     formData.append("groupId", groupId);
     if (selectedFile) {
@@ -795,9 +807,11 @@ function PostForm({
 
       // Reset form fields after successful submission
       setBody("");
-      setPrivacy("");
+      setPrivacy("public");
       setSelectedFile(null);
+      setSelectedUserIds([]);
       document.getElementById("postFormBody").value = "";
+      setShowFollowedUsersList(false);
     } catch (error) {
       console.error("Error submitting post:", error);
     }
@@ -824,7 +838,8 @@ function PostForm({
     key: followedUser.username
   }, /*#__PURE__*/React.createElement("label", null, /*#__PURE__*/React.createElement("input", {
     type: "checkbox",
-    value: followedUser.userId
+    value: followedUser.userId,
+    onChange: handleCheckboxChange
   }), followedUser.username)))) : /*#__PURE__*/React.createElement("p", {
     className: "text-muted"
   }, "No followed users") : null;

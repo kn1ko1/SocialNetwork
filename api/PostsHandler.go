@@ -113,13 +113,34 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 
 	// Creates postUser if post is set to "almost private"
 	if result.Privacy == "almost private" {
-		postUser := models.PostUser{
-			CreatedAt: ctime,
-			PostId:    result.PostId,
-			UpdatedAt: ctime,
-			UserId:    userId,
+		almostPrivatePostUsersString := r.FormValue("almostPrivatePostUsers")
+		// Parse the JSON string into a slice of strings
+		var userIdStrings []string
+		err := json.Unmarshal([]byte(almostPrivatePostUsersString), &userIdStrings)
+		if err != nil {
+			utils.HandleError("Failed to unmarshal almost private user Ids:", err)
+			http.Error(w, "Failed to unmarshal almost private user Ids", http.StatusInternalServerError)
 		}
-		h.Repo.CreatePostUser(postUser)
+		// Convert each string element to an integer
+		var userIds []int
+		for _, str := range userIdStrings {
+			userId, err := strconv.Atoi(str)
+			if err != nil {
+				utils.HandleError("Failed to covert almost private user Id string to int:", err)
+				http.Error(w, "Failed to covert almost private user Id string to int", http.StatusInternalServerError)
+			}
+			userIds = append(userIds, userId)
+		}
+		for i := 0; i < len(userIds); i++ {
+			postUser := models.PostUser{
+				CreatedAt: ctime,
+				PostId:    result.PostId,
+				UpdatedAt: ctime,
+				UserId:    userIds[i],
+			}
+			h.Repo.CreatePostUser(postUser)
+		}
+
 	}
 
 	// Encode and write the response
