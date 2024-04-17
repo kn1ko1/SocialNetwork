@@ -26,19 +26,12 @@ const getCurrentUserId = () => {
           const userId = await response.json();
           setCurrentUserId(userId);
         } else {
-<<<<<<< HEAD
-          console.error("Failed to fetch userId");
+          setError("Failed to fetch userId");
         }
       } catch (error) {
-        console.error("Error fetching userId:", error);
-=======
-          setError('Failed to fetch userId');
-        }
-      } catch (error) {
-        setError('Error fetching userId');
+        setError("Error fetching userId");
       } finally {
         setIsLoading(false);
->>>>>>> main
       }
     };
     fetchUserId();
@@ -139,7 +132,7 @@ function Navbar() {
   }, "LOGOUT"))))));
 }
 const renderLogin = () => {
-  const pageContainer = document.querySelector('.page-container');
+  const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), pageContainer);
 };
 function Login() {
@@ -184,24 +177,16 @@ function Login() {
       setErrorMessage("Invalid credentials");
     }
   };
-<<<<<<< HEAD
-  const renderRegister = () => {
-    const appContainer = document.querySelector(".app-container");
-    ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), appContainer);
-  };
-  if (isLoggedIn) {
-    const appContainer = document.querySelector(".app-container");
-    ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
-=======
-  if (isLoggedIn) {
-    renderNavbar();
-    renderHome();
->>>>>>> main
-    socket = new WebSocket("ws://localhost:8080/ws");
-    socket.onopen = function (event) {
-      console.log("WebSocket connection established.");
-    };
-  }
+  useEffect(() => {
+    if (isLoggedIn) {
+      renderNavbar();
+      renderHome();
+      socket = new WebSocket("ws://localhost:8080/ws");
+      socket.onopen = function (event) {
+        console.log("WebSocket connection established.");
+      };
+    }
+  }, [isLoggedIn]);
   return /*#__PURE__*/React.createElement("div", {
     className: "container login-container"
   }, /*#__PURE__*/React.createElement("h1", {
@@ -245,7 +230,7 @@ function Login() {
   }, "Register")));
 }
 const renderRegister = () => {
-  const pageContainer = document.querySelector('.page-container');
+  const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), pageContainer);
 };
 function Register() {
@@ -581,7 +566,6 @@ const renderChat = () => {
   ReactDOM.render( /*#__PURE__*/React.createElement(Chat, null), pageContainer);
 };
 function Chat() {
-<<<<<<< HEAD
   const [sendMessage, setSendMessage] = useState("");
   const [receiveMessage, setReceiveMessage] = useState("");
   let messages = document.getElementById("messages");
@@ -613,7 +597,7 @@ function Chat() {
   const messageStyle = {
     color: "orange"
   };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"), /*#__PURE__*/React.createElement("ul", {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Chat"), /*#__PURE__*/React.createElement("ul", {
     id: "messages",
     style: messageStyle
   }), /*#__PURE__*/React.createElement("form", {
@@ -625,9 +609,6 @@ function Chat() {
     type: "submit",
     className: "btn btn-primary"
   }, "send")));
-=======
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Chat"));
->>>>>>> main
 }
 function GroupDetails({
   group
@@ -810,7 +791,7 @@ function FollowButton({
   return /*#__PURE__*/React.createElement("button", {
     className: "btn btn-primary btn-sm",
     onClick: handleFollowToggle
-  }, isFollowing ? 'Unfollow' : 'Follow');
+  }, isFollowing ? "Unfollow" : "Follow");
 }
 
 // PostForm component
@@ -941,64 +922,6 @@ const postCardStyle = {
   margin: "auto",
   marginBottom: "20px" // Adjust spacing between post cards
 };
-<<<<<<< HEAD
-function FollowButton({
-  userId,
-  isFollowed
-}) {
-  const [isFollowing, setIsFollowing] = useState(isFollowed);
-  const handleFollowToggle = async () => {
-    if (isFollowing) {
-      // If already following, unfollow the user
-      await handleUnfollow(userId);
-    } else {
-      // If not following, follow the user
-      await handleFollow(userId);
-    }
-    // Toggle the local follow state
-    setIsFollowing(!isFollowing);
-  };
-  const handleFollow = async subjectId => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
-        method: "POST",
-        credentials: "include"
-      });
-      if (response.ok) {
-        console.log("Successfully followed the user.");
-        return true; // Return true if the follow request is successful
-      } else {
-        console.error("Failed to follow the user.");
-      }
-    } catch (error) {
-      console.error("Error following the user:", error);
-    }
-    return false; // Return false if the follow request fails
-  };
-  const handleUnfollow = async subjectId => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/user/userUser/${subjectId}`, {
-        method: "DELETE",
-        credentials: "include"
-      });
-      if (response.ok) {
-        console.log("Successfully unfollowed the user.");
-        return true; // Return true if the follow request is successful
-      } else {
-        console.error("Failed to unfollow the user.");
-      }
-    } catch (error) {
-      console.error("Error following the user:", error);
-    }
-    return false; // Return false if the follow request fails
-  };
-  return /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-primary btn-sm",
-    onClick: handleFollowToggle
-  }, isFollowing ? "Unfollow" : "Follow");
-}
-=======
->>>>>>> main
 function PostCard({
   post
 }) {

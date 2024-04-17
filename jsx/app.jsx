@@ -186,14 +186,17 @@ function Login() {
 		}
 	}
 
-	if (isLoggedIn) {
-		renderNavbar()
-		renderHome()
-		socket = new WebSocket("ws://localhost:8080/ws")
-		socket.onopen = function (event) {
-			console.log("WebSocket connection established.")
+	useEffect(() => {
+		if (isLoggedIn) {
+			renderNavbar()
+			renderHome()
+
+			socket = new WebSocket("ws://localhost:8080/ws")
+			socket.onopen = function (event) {
+				console.log("WebSocket connection established.")
+			}
 		}
-	}
+	}, [isLoggedIn])
 
 	return (
 		<div className="container login-container">
