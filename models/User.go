@@ -29,7 +29,7 @@ const (
 )
 
 var (
-	minDOB = int64((time.Date(1950, time.January, 1, 0, 0, 0, 0, time.UTC)).UnixMilli())
+	minDOB = int64((time.Date(1897, time.January, 1, 0, 0, 0, 0, time.UTC)).UnixMilli())
 	maxDOB = int64((time.Now()).UnixMilli())
 	re     = regexp.MustCompile(emailRegex)
 )
