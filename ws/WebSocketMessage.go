@@ -6,13 +6,13 @@ type WebSocketMessage struct {
 }
 
 // 1
-type TestBody struct {
-	ID      int    `json:"id"`
+type GroupChatBody struct {
 	Message string `json:"message"`
+	GroupID int    `json:"groupID"`
 }
 
-// 2
-type Person struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
+type PrivateMessageBody struct {
+	Message      string `json:"message"`
+	SenderUserID int    `json:"senderUserID"`
+	TargetUserID int    `json:"targetUserID"`
 }
