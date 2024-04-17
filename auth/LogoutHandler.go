@@ -1,65 +1,47 @@
 package auth
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 	"socialnetwork/repo"
-	"strings"
-	"time"
 )
 
-// Logout Handler
-
 type LogoutHandler struct {
-	Repo repo.IRepository
+	rp repo.IRepository
 }
 
 func NewLogoutHandler(r repo.IRepository) *LogoutHandler {
-	return &LogoutHandler{Repo: r}
+	ret := new(LogoutHandler)
+	ret.rp = r
+	return ret
 }
 
 func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
 	switch r.Method {
-	case http.MethodPost:
-		h.post(w, r)
-		return
-	// All unimplemented methods default to a "method not allowed" error
+	case http.MethodGet:
+		h.get(w, r)
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		return
 	}
 }
 
-func (h *LogoutHandler) post(w http.ResponseWriter, r *http.Request) {
-
-	cookie := http.Cookie{
-		Name:     CookieName,
+func (h *LogoutHandler) get(w http.ResponseWriter, r *http.Request) {
+	c, err := r.Cookie("Session")
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		return
+	}
+	DefaultManager.Delete(c.Value)
+	c = &http.Cookie{
+		Name:     "Session",
 		Value:    "",
 		Path:     "/",
-		Expires:  time.Unix(0, 0),
+		Secure:   true,
 		HttpOnly: true,
-		Secure:   strings.HasPrefix(r.Header.Get("X-Forwarded-Proto"), "https"),
-		Domain:   "localhost",
 		SameSite: http.SameSiteLaxMode,
+		MaxAge:   -1,
 	}
-
-	http.SetCookie(w, &cookie)
-
-	response := struct {
-		Success bool   `json:"success"`
-		Message string `json:"message"`
-	}{
-		Success: true,
-		Message: "Logout successful",
-	}
-
-	log.Println("[api/LogoutHandler] response from setCookie:", response)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-
-	// Encode and send the response
-	json.NewEncoder(w).Encode(response)
+	http.SetCookie(w, c)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
