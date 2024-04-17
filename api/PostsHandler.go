@@ -42,22 +42,13 @@ func (h *PostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
-	ctime := time.Now().UTC().UnixMilli()
-	cookie, err := r.Cookie(auth.CookieName)
+	user, err := auth.AuthenticateRequest(r)
 	if err != nil {
-
 		utils.HandleError("Error verifying cookie", err)
 		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
 		return
 	}
-
-	user, exists := auth.SessionMap[cookie.Value]
-	if !exists {
-		utils.HandleError("Error finding User, need to log in again", err)
-		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
-		return
-	}
-
+	ctime := time.Now().UTC().UnixMilli()
 	// Parse form data
 	err = r.ParseMultipartForm(10 << 20)
 	if err != nil {

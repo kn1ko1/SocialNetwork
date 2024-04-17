@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"net/http"
+	"socialnetwork/auth"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 )
@@ -34,12 +35,12 @@ func (h *HomeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *HomeHandler) get(w http.ResponseWriter, r *http.Request) {
-
-	user, userErr := getUser(r)
-	if userErr != nil {
-		utils.HandleError("Problem getting user.", userErr)
+	user, err := auth.AuthenticateRequest(r)
+	if err != nil {
+		utils.HandleError("User unauthorized", err)
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
 	}
-
 	homeData, err := h.Repo.GetHomeDataForUser(user.UserId)
 	if err != nil {
 		utils.HandleError("Failed to get homeData in HomeHandler. ", err)

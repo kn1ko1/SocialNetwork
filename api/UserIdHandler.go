@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"net/http"
+	"socialnetwork/auth"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 )
@@ -34,10 +35,10 @@ func (h *UserIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (h *UserIdHandler) get(w http.ResponseWriter, r *http.Request) {
 
-	user, err := getUser(r)
+	user, err := auth.AuthenticateRequest(r)
 	if err != nil {
-		utils.HandleError("Failed to get user for UserId. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		utils.HandleError("Error verifying cookie", err)
+		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
 		return
 	}
 	// Encode and write the response

@@ -1,56 +1,70 @@
 package auth
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"encoding/json"
+	"log"
+	"math/big"
 	"net/http"
 	"socialnetwork/repo"
 	"socialnetwork/transport"
 	"socialnetwork/utils"
-	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
 type LoginHandler struct {
-	Repo repo.IRepository
+	rp repo.IRepository
 }
 
 func NewLoginHandler(r repo.IRepository) *LoginHandler {
-	return &LoginHandler{Repo: r}
+	ret := new(LoginHandler)
+	ret.rp = r
+	return ret
 }
 
 func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
 	switch r.Method {
 	case http.MethodPost:
 		h.post(w, r)
-		return
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		return
 	}
 }
 
 func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 	var loginInfo transport.LoginInfo
-
-	json.NewDecoder(r.Body).Decode(&loginInfo)
-
-	user, err := h.Repo.GetUserByUsernameOrEmail(loginInfo.UsernameOrEmail)
+	err := json.NewDecoder(r.Body).Decode(&loginInfo)
 	if err != nil {
-		utils.HandleError("Failed to retrieve user", err)
-		http.Error(w, "user with specified username or email does not exist", http.StatusUnauthorized)
-		return
-	}
-
-	err = bcrypt.CompareHashAndPassword([]byte(user.EncryptedPassword), []byte(loginInfo.Password))
-	if err != nil {
-		utils.HandleError("Failed to retrieve user", err)
+		log.Println(err.Error())
 		http.Error(w, "invalid username or password", http.StatusUnauthorized)
 		return
 	}
-
-	// If login is successful, construct the response JSON
+	user, err := h.rp.GetUserByUsernameOrEmail(loginInfo.UsernameOrEmail)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "invalid username or password", http.StatusUnauthorized)
+		return
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(user.EncryptedPassword), []byte(loginInfo.Password))
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "invalid username or password", http.StatusUnauthorized)
+		return
+	}
+	cookieValue, err := generateCookieValue()
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "internal server error", http.StatusBadRequest)
+		return
+	}
+	err = DefaultManager.Add(cookieValue, user)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "bad request", http.StatusBadRequest)
+		return
+	}
 	response := struct {
 		Success bool        `json:"success"`
 		Message string      `json:"message"`
@@ -71,19 +85,17 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	cookieValue := GenerateNewUUID()
-	SessionMap[cookieValue] = &user
-
-	cookie := &http.Cookie{
-		Name:     CookieName,
+	c := http.Cookie{
+		Name:     "SessionID",
 		Value:    cookieValue,
 		Path:     "/",
-		Expires:  time.Now().Add(timeout),
+		Secure:   true,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
+		MaxAge:   DefaultManager.Lifetime(),
 	}
-
-	http.SetCookie(w, cookie)
+	// fmt.Println(c.Value)
+	http.SetCookie(w, &c)
 	// Convert the response struct to JSON
 	jsonResponse, err := json.Marshal(response)
 	if err != nil {
@@ -101,5 +113,16 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
+}
 
+func generateCookieValue() (string, error) {
+	var val [64]byte
+	for i := 0; i < 64; i++ {
+		random, err := rand.Int(rand.Reader, big.NewInt(256))
+		if err != nil {
+			return "", err
+		}
+		val[i] = byte(random.Int64())
+	}
+	return base64.URLEncoding.EncodeToString(val[:]), nil
 }

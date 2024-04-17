@@ -91,6 +91,10 @@ func (r *SQLiteRepository) GetUserUsersBySubjectId(subjectId int) ([]models.User
 func (r *SQLiteRepository) GetUserUsersByFollowerId(followerId int) ([]models.UserUser, error) {
 	return sqlite.GetUserUsersByFollowerId(r.businessDb, followerId)
 }
+func (r *SQLiteRepository) GetUserUserByFollowerIdAndSubjectId(followerId, subjectId int) (models.UserUser, error) {
+	return sqlite.GetUserUserByFollowerIdAndSubjectId(r.businessDb, followerId, subjectId)
+}
+
 func (r *SQLiteRepository) DeleteUserUsersByFollowerId(followerId int) error {
 	return sqlite.DeleteUserUsersByFollowerId(r.businessDb, followerId)
 }

@@ -2,8 +2,8 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
+	"socialnetwork/auth"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 	"strconv"
@@ -37,19 +37,22 @@ func (h *ProfileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *ProfileHandler) get(w http.ResponseWriter, r *http.Request) {
-
+	_, err := auth.AuthenticateRequest(r)
+	if err != nil {
+		utils.HandleError("Error verifying cookie", err)
+		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
+		return
+	}
 	fields := strings.Split(r.URL.Path, "/")
 	userIdStr := fields[len(fields)-1]
 
 	userId, err := strconv.Atoi(userIdStr)
 	if err != nil {
-		user, userErr := getUser(r)
-		if userErr != nil {
-			utils.HandleError("Problem getting user.", userErr)
-		}
-		userId = user.UserId
+		utils.HandleError("Invalid user ID: ", err)
+		http.Error(w, "Invalid User ID", http.StatusBadRequest)
+		return
 	}
-	log.Println("userId in profileHandler is ", userId)
+
 	profileData, err := h.Repo.GetProfileDataForUser(userId)
 	if err != nil {
 		utils.HandleError("Failed to get profileData in ProfileData. ", err)

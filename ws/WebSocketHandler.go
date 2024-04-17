@@ -3,7 +3,9 @@ package ws
 import (
 	"log"
 	"net/http"
+	"socialnetwork/auth"
 	"socialnetwork/repo"
+	"socialnetwork/utils"
 
 	"github.com/gorilla/websocket"
 )
@@ -32,6 +34,12 @@ func (h *WebSocketHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *WebSocketHandler) get(w http.ResponseWriter, r *http.Request) {
+	user, err := auth.AuthenticateRequest(r)
+	if err != nil {
+		utils.HandleError("Error verifying cookie in WebSocket Handler: ", err)
+		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		return
+	}
 	upgrader := websocket.Upgrader{ReadBufferSize: bufferSize, WriteBufferSize: bufferSize}
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -39,7 +47,7 @@ func (h *WebSocketHandler) get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
-	client := NewClient(conn)
+	client := NewClient(conn, user.UserId)
 	client.SocketGroups[0] = socketGroupManager.SocketGroups[0]
 	socketGroupManager.SocketGroups[0].Enter <- client
 	go client.Receive()

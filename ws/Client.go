@@ -14,8 +14,9 @@ type Client struct {
 	SocketGroups map[int]*SocketGroup
 }
 
-func NewClient(conn *websocket.Conn) *Client {
+func NewClient(conn *websocket.Conn, userID int) *Client {
 	return &Client{
+		ClientID:     userID,
 		Connection:   conn,
 		SocketGroups: make(map[int]*SocketGroup),
 	}
