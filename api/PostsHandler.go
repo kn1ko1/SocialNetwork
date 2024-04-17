@@ -120,6 +120,17 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Creates postUser if post is set to "almost private"
+	if result.Privacy == "almost private" {
+		postUser := models.PostUser{
+			CreatedAt: ctime,
+			PostId:    result.PostId,
+			UpdatedAt: ctime,
+			UserId:    userId,
+		}
+		h.Repo.CreatePostUser(postUser)
+	}
+
 	// Encode and write the response
 	w.WriteHeader(http.StatusCreated)
 	err = json.NewEncoder(w).Encode(result)

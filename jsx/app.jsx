@@ -691,7 +691,7 @@ function GroupDetails({ group }) {
 			{/* <p>Members: {group.members}</p> */}
 			{/* Add more details you want to display */}
 			{/* Display the PostForm component for creating new posts */}
-			<PostForm groupId={group.id} />
+			<PostFormGroup groupId={group.groupId} />
 		</div>
 	);
 }
@@ -898,11 +898,15 @@ function FollowButton({ followerId, subjectId, isFollowed }) {
 // PostForm component
 // This component renders a form for creating a new post.
 // It accepts a `groupId` prop to determine the group for the post.
-function PostForm({ groupId }) {
+function PostForm({ groupId, followedUsers }) {
 	const [body, setBody] = useState("");
 	const [privacy, setPrivacy] = useState("");
 	const [selectedFile, setSelectedFile] = useState(null);
-
+	const [followedUsersForAP, setFollowedUsersForAP] = useState(followedUsers);
+	const [showFollowedUsersList, setShowFollowedUsersList] = useState(false);
+	useEffect(() => {
+		setFollowedUsersForAP(followedUsers);
+	}, [followedUsers]);
 	// Handler for form submission
 	const submit = async (e) => {
 		e.preventDefault(); // Prevent page reload
@@ -914,6 +918,9 @@ function PostForm({ groupId }) {
 		formData.append("privacy", privacy);
 		if (privacy === "private") {
 			groupId = -1; // Set groupId to -1 for private posts
+		}
+		if (privacy === "almost private") {
+			groupId = -2; // Set groupId to -2 for almost private posts
 		}
 		formData.append("groupId", groupId);
 		if (selectedFile) {
@@ -933,6 +940,170 @@ function PostForm({ groupId }) {
 			// Reset form fields after successful submission
 			setBody("");
 			setPrivacy("");
+			setSelectedFile(null);
+			document.getElementById("postFormBody").value = "";
+		} catch (error) {
+			console.error("Error submitting post:", error);
+		}
+	};
+
+	const handlePrivacyChange = (e) => {
+		const newValue = e.target.value;
+		setPrivacy(newValue);
+		if (newValue === 'almost private') {
+			setShowFollowedUsersList(true);
+		} else {
+			setShowFollowedUsersList(false);
+		}
+	};
+
+
+	// Handler for file selection
+	const handleFileChange = (e) => {
+		setSelectedFile(e.target.files[0]);
+	};
+
+	const handleSelectFile = () => {
+		const fileInput = document.getElementById("fileInput");
+		fileInput.click();
+	};
+
+	const followedUsersList = showFollowedUsersList ? (
+		followedUsersForAP !== null && followedUsersForAP.length > 0 ? (
+			<ul>
+				{followedUsersForAP.map((followedUser) => (
+					<li key={followedUser.username}>
+						<label>
+							<input type="checkbox" value={followedUser.userId} />
+							{followedUser.username}
+						</label>
+					</li>
+				))}
+			</ul>
+		) : (
+			<p className="text-muted">No followed users</p>
+		)
+	) : null;
+
+
+	return (
+		<div>
+			<main className="postForm container" style={{ maxWidth: "400px" }}>
+				<h1 className="h3 mb-3 fw-normal">Post Message Here</h1>
+				<form onSubmit={submit}>
+					<div className="form-floating mb-3">
+						<input
+							type="text"
+							className="form-control"
+							id="postFormBody"
+							placeholder="Type your post here..."
+							onChange={(e) => setBody(e.target.value)}
+						/>
+					</div>
+					<div>
+						<button
+							type="button"
+							className="btn btn-primary"
+							onClick={handleSelectFile}
+						>
+							Select File
+						</button>
+						<span>{selectedFile ? selectedFile.name : "No file selected"}</span>
+						<input
+							type="file"
+							id="fileInput"
+							accept="image/*"
+							style={{ display: "none" }}
+							onChange={handleFileChange}
+						/>
+					</div>
+					<br /> {/* Line break */}
+					<div className="form-floating mb-3">
+						<div className="form-check">
+							<input
+								required
+								type="radio"
+								id="post-public-status"
+								value="public"
+								name="status"
+								checked={privacy === "public"}
+								onClick={handlePrivacyChange}
+								className="form-check-input"
+							/>
+							<label htmlFor="post-public-status" className="form-check-label">
+								Public
+							</label>
+						</div>
+						<div className="form-check">
+							<input
+								required
+								type="radio"
+								id="post-private-status"
+								value="private"
+								name="status"
+								checked={privacy === "private"}
+								onClick={handlePrivacyChange}
+								className="form-check-input"
+							/>
+							<label htmlFor="private-status" className="form-check-label">
+								Private
+							</label>
+						</div>
+						<div className="form-check">
+							<input
+								required
+								type="radio"
+								id="post-almostPrivate-status"
+								value="almost private"
+								name="status"
+								checked={privacy === "almost private"}
+								onClick={handlePrivacyChange}
+								className="form-check-input"
+							/>
+							<label htmlFor="private-status" className="form-check-label">
+								Almost Private
+							</label>
+						</div>
+					</div>
+					{followedUsersList}
+					<button className="w-100 btn btn-lg btn-primary" type="submit">
+						Submit
+					</button>
+				</form>
+			</main>
+		</div>
+	)
+}
+
+function PostFormGroup({ groupId }) {
+	const [body, setBody] = useState("");
+	const [selectedFile, setSelectedFile] = useState(null);
+
+	// Handler for form submission
+	const submit = async (e) => {
+		e.preventDefault(); // Prevent page reload
+
+		const formData = new FormData();
+
+		// Append form data
+		formData.append("body", body);
+		formData.append("groupId", groupId);
+		if (selectedFile) {
+			formData.append("image", selectedFile);
+		}
+
+		console.log("Form data being sent to backend: ", formData);
+
+		try {
+			// Send user data to the server
+			await fetch("http://localhost:8080/api/posts", {
+				method: "POST",
+				credentials: "include",
+				body: formData,
+			});
+
+			// Reset form fields after successful submission
+			setBody("");
 			setSelectedFile(null);
 			document.getElementById("postFormBody").value = "";
 		} catch (error) {
@@ -982,38 +1153,6 @@ function PostForm({ groupId }) {
 						/>
 					</div>
 					<br /> {/* Line break */}
-					<div className="form-floating mb-3">
-						<div className="form-check">
-							<input
-								required
-								type="radio"
-								id="post-public-status"
-								value="public"
-								name="status"
-								checked={privacy === "public"}
-								onClick={(e) => setPrivacy(e.target.value)}
-								className="form-check-input"
-							/>
-							<label htmlFor="post-public-status" className="form-check-label">
-								Public
-							</label>
-						</div>
-						<div className="form-check">
-							<input
-								required
-								type="radio"
-								id="private-status"
-								value="private"
-								name="status"
-								checked={privacy === "private"}
-								onClick={(e) => setPrivacy(e.target.value)}
-								className="form-check-input"
-							/>
-							<label htmlFor="private-status" className="form-check-label">
-								Private
-							</label>
-						</div>
-					</div>
 					<button className="w-100 btn btn-lg btn-primary" type="submit">
 						Submit
 					</button>
@@ -1235,6 +1374,7 @@ const renderHome = () => {
 function Home() {
 	const { currentUserId, isLoading, error } = getCurrentUserId();
 	const [userList, setUserList] = useState([])
+	const [followedUsers, setFollowedUsers] = useState([]);
 	const [almostPrivatePosts, setAlmostPrivatePosts] = useState([])
 	const [privatePosts, setPrivatePosts] = useState([])
 	const [publicPostsWithComments, setPublicPostsWithComments] = useState([])
@@ -1256,9 +1396,18 @@ function Home() {
 
 	}, [])
 
+	useEffect(() => {
+		// Filter userList to get only the followed users
+		const filteredFollowedUsers = userList.filter(user => user.isFollowed === true);
+
+		// Set the filtered list to followedUsers state
+		setFollowedUsers(filteredFollowedUsers);
+	}, [userList]);
+
+
 	return (
 		<main className="homePage">
-			<PostForm groupId={0} />
+			<PostForm groupId={0} followedUsers={followedUsers} />
 			<div className="userList">
 				<h2>UserList</h2>
 				{userList !== null && userList.length > 0 ? (
