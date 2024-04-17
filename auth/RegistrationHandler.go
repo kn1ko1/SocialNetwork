@@ -36,10 +36,19 @@ func (h *RegistrationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 
 	// Checks cookies
-	cookie, err := r.Cookie(CookieName)
+	// cookie, err := r.Cookie(CookieName)
+	// if err == nil {
+	// 	_, exists := SessionMap[cookie.Value]
+	// 	if exists {
+	// 		utils.HandleError("Login failed - user already logged in:", err)
+	// 		http.Error(w, "user already logged in", http.StatusBadRequest)
+	// 		return
+	// 	}
+	// }
+	cookie, err := r.Cookie("SessionID")
 	if err == nil {
-		_, exists := SessionMap[cookie.Value]
-		if exists {
+		_, err = DefaultManager.Get(cookie.Value)
+		if err == nil {
 			utils.HandleError("Login failed - user already logged in:", err)
 			http.Error(w, "user already logged in", http.StatusBadRequest)
 			return
@@ -119,18 +128,29 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Sets up a new Cookie
-	cookieValue := GenerateNewUUID()
-	SessionMap[cookieValue] = &processedUser
-
-	cookie = &http.Cookie{
-		Name:     CookieName,
+	cookieValue, err := generateCookieValue()
+	if err != nil {
+		utils.HandleError("Cookie Generation Error", err)
+		http.Error(w, "Problem generating cookie", http.StatusInternalServerError)
+		return
+	}
+	err = DefaultManager.Add(cookieValue, processedUser)
+	if err != nil {
+		utils.HandleError("Cookie Generation Error", err)
+		http.Error(w, "Problem generating cookie", http.StatusInternalServerError)
+		return
+	}
+	c := http.Cookie{
+		Name:     "SessionID",
 		Value:    cookieValue,
 		Path:     "/",
-		Expires:  time.Now().Add(timeout),
+		Secure:   true,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
+		MaxAge:   DefaultManager.Lifetime(),
 	}
-	http.SetCookie(w, cookie)
+	// fmt.Println(c.Value)
+	http.SetCookie(w, &c)
 	// Convert the response struct to JSON
 	jsonResponse, err := json.Marshal(response)
 	if err != nil {
@@ -138,7 +158,6 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
-
 	// Set response headers
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)

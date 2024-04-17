@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"socialnetwork/auth"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
@@ -40,16 +41,22 @@ func (h *GroupsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *GroupsHandler) post(w http.ResponseWriter, r *http.Request) {
+	user, err := auth.AuthenticateRequest(r)
+	if err != nil {
+		utils.HandleError("User unauthorized", err)
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
 	// contentType := r.Header.Get("Content-Type")
 	var group models.Group
 	// switch contentType {
 	// case "application/json":
-		// err := json.NewDecoder(r.Body).Decode(&group)
-		// if err != nil {
-		// 	utils.HandleError("Failed to decode request body:", err)
-		// 	http.Error(w, "Failed to decode request body", http.StatusBadRequest)
-		// 	return
-		// }
+	// err := json.NewDecoder(r.Body).Decode(&group)
+	// if err != nil {
+	// 	utils.HandleError("Failed to decode request body:", err)
+	// 	http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+	// 	return
+	// }
 	// case "application/x-www-form-urlencoded":
 	// 	err := r.ParseForm()
 	// 	if err != nil {
@@ -57,17 +64,15 @@ func (h *GroupsHandler) post(w http.ResponseWriter, r *http.Request) {
 	// 		http.Error(w, "internal server error", http.StatusInternalServerError)
 	// 		return
 	// 	}
-		ctime := time.Now().UTC().UnixMilli()
-		group.CreatedAt = ctime
-		user, err := getUser(r)
-		if err != nil{log.Println("Problem getting user ID.", err)}
-		log.Println("This createdat:", group.CreatedAt)
-		group.CreatorId = user.UserId
-		group.Description = r.PostFormValue("group-description")
-		log.Println("this group description:", group.Description)
-		group.Title = r.PostFormValue("group-title")
-		log.Println("this group title:", group.Title)
-		group.UpdatedAt = ctime
+	ctime := time.Now().UTC().UnixMilli()
+	group.CreatedAt = ctime
+	log.Println("This createdat:", group.CreatedAt)
+	group.CreatorId = user.UserId
+	group.Description = r.PostFormValue("group-description")
+	log.Println("this group description:", group.Description)
+	group.Title = r.PostFormValue("group-title")
+	log.Println("this group title:", group.Title)
+	group.UpdatedAt = ctime
 	//}
 	// Validate the group
 	if validationErr := group.Validate(); validationErr != nil {
