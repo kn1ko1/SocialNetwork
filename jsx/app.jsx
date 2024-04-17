@@ -5,7 +5,10 @@ let socket
 const App = () => {
 	return (
 		<div className="app-container">
-			<Login />
+			<div className="nav-container"></div>
+			<div className="page-container">
+				<Login />
+			</div>
 		</div>
 	)
 }
@@ -41,38 +44,10 @@ const getCurrentUserId = () => {
 	return { currentUserId, isLoading, error };
 };
 
-// // Const for getting userId in the frontend
-// const CurrentUserId = () => {
-// 	const [userId, setUserId] = useState();
-
-// 	useEffect(() => {
-// 		const fetchUserId = async () => {
-// 			try {
-// 				const response = await fetch('http://localhost:8080/api/userId', {
-// 					credentials: 'include',
-// 				});
-
-// 				if (response.ok) {
-// 					const userId = await response.json();
-// 					setUserId(userId);
-// 					console.log("userId in CurrentUserId is: ", userId); // Log the fetched userId
-// 				} else {
-// 					console.error('Failed to fetch userId');
-// 				}
-// 			} catch (error) {
-// 				console.error('Error fetching userId:', error);
-// 			}
-// 		};
-
-// 		fetchUserId();
-// 	}, []);
-
-// 	return userId; // Return the userId state value
-// };
-
-
-
-
+const renderNavbar = () => {
+	const navContainer = document.querySelector(".nav-container")
+	ReactDOM.render(<Navbar />, navContainer)
+}
 
 function Navbar() {
 	const { currentUserId, isLoading, error } = getCurrentUserId();
@@ -89,7 +64,9 @@ function Navbar() {
 				socket.addEventListener("close", (event) => {
 					console.log("The connection has been closed successfully.")
 				})
-				ReactDOM.render(<Login />, appContainer)
+				renderLogin()
+				const navContainer = document.querySelector(".nav-container")
+				ReactDOM.render(null, navContainer);
 				console.log("Logout successful!")
 			} else {
 				console.log("Failed to logout. Server response not OK.")
@@ -153,8 +130,8 @@ function Navbar() {
 }
 
 const renderLogin = () => {
-	const appContainer = document.querySelector('.app-container');
-	ReactDOM.render(<Login />, appContainer)
+	const pageContainer = document.querySelector('.page-container');
+	ReactDOM.render(<Login />, pageContainer)
 }
 
 function Login() {
@@ -208,6 +185,7 @@ function Login() {
 
 
 	if (isLoggedIn) {
+		renderNavbar()
 		renderHome()
 		socket = new WebSocket("ws://localhost:8080/ws");
 		socket.onopen = function (event) {
@@ -259,8 +237,8 @@ function Login() {
 }
 
 const renderRegister = () => {
-	const appContainer = document.querySelector('.app-container');
-	ReactDOM.render(<Register />, appContainer);
+	const pageContainer = document.querySelector('.page-container');
+	ReactDOM.render(<Register />, pageContainer);
 };
 
 function Register() {
@@ -326,7 +304,8 @@ function Register() {
 		socket.onopen = function (event) {
 			console.log("WebSocket connection established.");
 		}
-		ReactDOM.render(<Home />, appContainer)
+		renderNavbar()
+		renderHome()
 	}
 
 	//this is the login button, when pressed will serve login form
@@ -481,8 +460,8 @@ function Register() {
 
 
 const renderProfile = (userId, isEditable) => {
-	const appContainer = document.querySelector(".app-container");
-	ReactDOM.render(<Profile userId={userId} isEditable={isEditable} />, appContainer);
+	const pageContainer = document.querySelector(".page-container");
+	ReactDOM.render(<Profile userId={userId} isEditable={isEditable} />, pageContainer);
 };
 
 function Profile({ userId, isEditable }) {
@@ -582,7 +561,6 @@ function Profile({ userId, isEditable }) {
 
 	return (
 		<div>
-			<Navbar />
 			<div id="profileData">
 				<h2>{profileUserData.username}'s Profile</h2>
 				{!isEditable && (<FollowButton
@@ -690,14 +668,13 @@ function Profile({ userId, isEditable }) {
 }
 
 const renderChat = () => {
-	const appContainer = document.querySelector(".app-container")
-	ReactDOM.render(<Chat />, appContainer)
+	const pageContainer = document.querySelector(".page-container")
+	ReactDOM.render(<Chat />, pageContainer)
 }
 
 function Chat() {
 	return (
 		<div>
-			<Navbar />
 			<h1>Chat</h1>
 		</div>
 	)
@@ -720,8 +697,8 @@ function GroupDetails({ group }) {
 }
 
 const renderGroup = () => {
-	const appContainer = document.querySelector(".app-container")
-	ReactDOM.render(<Group />, appContainer)
+	const pageContainer = document.querySelector(".page-container")
+	ReactDOM.render(<Group />, pageContainer)
 }
 
 function Group() {
@@ -797,7 +774,6 @@ function Group() {
 	return (
 
 		<div>
-			<Navbar />
 			{selectedGroup ? (
 				<div>
 					<button onClick={() => setSelectedGroup(null)}>Go Back</button>
@@ -837,14 +813,13 @@ function Group() {
 }
 
 const renderNotifications = () => {
-	const appContainer = document.querySelector(".app-container")
-	ReactDOM.render(<Notifications />, appContainer)
+	const pageContainer = document.querySelector(".page-container")
+	ReactDOM.render(<Notifications />, pageContainer)
 }
 
 function Notifications() {
 	return (
 		<div>
-			<Navbar />
 			<h1>Notifications</h1>
 		</div>
 	)
@@ -854,8 +829,8 @@ function FollowButton({ followerId, subjectId, isFollowed }) {
 	const [isFollowing, setIsFollowing] = useState(isFollowed);
 	useEffect(() => {
 		setIsFollowing(isFollowed);
-	  }, [isFollowed]);
-	  
+	}, [isFollowed]);
+
 	const handleFollowToggle = async () => {
 		if (isFollowing) {
 			// If already following, unfollow the user
@@ -1252,8 +1227,8 @@ function CommentCard({ comment }) {
 }
 
 const renderHome = () => {
-	const appContainer = document.querySelector(".app-container")
-	ReactDOM.render(<Home />, appContainer)
+	const pageContainer = document.querySelector(".page-container")
+	ReactDOM.render(<Home />, pageContainer)
 }
 
 // Display information relating to homepage
@@ -1283,7 +1258,6 @@ function Home() {
 
 	return (
 		<main className="homePage">
-			<Navbar />
 			<PostForm groupId={0} />
 			<div className="userList">
 				<h2>UserList</h2>

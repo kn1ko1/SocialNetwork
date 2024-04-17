@@ -6,7 +6,11 @@ let socket;
 const App = () => {
   return /*#__PURE__*/React.createElement("div", {
     className: "app-container"
-  }, /*#__PURE__*/React.createElement(Login, null));
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-container"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "page-container"
+  }, /*#__PURE__*/React.createElement(Login, null)));
 };
 const getCurrentUserId = () => {
   const [currentUserId, setCurrentUserId] = useState(null);
@@ -38,36 +42,10 @@ const getCurrentUserId = () => {
     error
   };
 };
-
-// // Const for getting userId in the frontend
-// const CurrentUserId = () => {
-// 	const [userId, setUserId] = useState();
-
-// 	useEffect(() => {
-// 		const fetchUserId = async () => {
-// 			try {
-// 				const response = await fetch('http://localhost:8080/api/userId', {
-// 					credentials: 'include',
-// 				});
-
-// 				if (response.ok) {
-// 					const userId = await response.json();
-// 					setUserId(userId);
-// 					console.log("userId in CurrentUserId is: ", userId); // Log the fetched userId
-// 				} else {
-// 					console.error('Failed to fetch userId');
-// 				}
-// 			} catch (error) {
-// 				console.error('Error fetching userId:', error);
-// 			}
-// 		};
-
-// 		fetchUserId();
-// 	}, []);
-
-// 	return userId; // Return the userId state value
-// };
-
+const renderNavbar = () => {
+  const navContainer = document.querySelector(".nav-container");
+  ReactDOM.render( /*#__PURE__*/React.createElement(Navbar, null), navContainer);
+};
 function Navbar() {
   const {
     currentUserId,
@@ -85,7 +63,9 @@ function Navbar() {
         socket.addEventListener("close", event => {
           console.log("The connection has been closed successfully.");
         });
-        ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
+        renderLogin();
+        const navContainer = document.querySelector(".nav-container");
+        ReactDOM.render(null, navContainer);
         console.log("Logout successful!");
       } else {
         console.log("Failed to logout. Server response not OK.");
@@ -152,8 +132,8 @@ function Navbar() {
   }, "LOGOUT"))))));
 }
 const renderLogin = () => {
-  const appContainer = document.querySelector('.app-container');
-  ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), appContainer);
+  const pageContainer = document.querySelector('.page-container');
+  ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), pageContainer);
 };
 function Login() {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
@@ -198,6 +178,7 @@ function Login() {
     }
   };
   if (isLoggedIn) {
+    renderNavbar();
     renderHome();
     socket = new WebSocket("ws://localhost:8080/ws");
     socket.onopen = function (event) {
@@ -247,8 +228,8 @@ function Login() {
   }, "Register")));
 }
 const renderRegister = () => {
-  const appContainer = document.querySelector('.app-container');
-  ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), appContainer);
+  const pageContainer = document.querySelector('.page-container');
+  ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), pageContainer);
 };
 function Register() {
   const [email, setEmail] = useState("");
@@ -311,7 +292,8 @@ function Register() {
     socket.onopen = function (event) {
       console.log("WebSocket connection established.");
     };
-    ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
+    renderNavbar();
+    renderHome();
   }
 
   //this is the login button, when pressed will serve login form
@@ -451,11 +433,11 @@ function Register() {
   }, "Log in")));
 }
 const renderProfile = (userId, isEditable) => {
-  const appContainer = document.querySelector(".app-container");
+  const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Profile, {
     userId: userId,
     isEditable: isEditable
-  }), appContainer);
+  }), pageContainer);
 };
 function Profile({
   userId,
@@ -545,7 +527,7 @@ function Profile({
       setIsPublicValue(!newPrivacySetting);
     });
   };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     id: "profileData"
   }, /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Profile"), !isEditable && /*#__PURE__*/React.createElement(FollowButton, {
     followerId: currentUserId,
@@ -578,11 +560,11 @@ function Profile({
   }, user.username)))) : /*#__PURE__*/React.createElement("p", null, "This profile is private.")));
 }
 const renderChat = () => {
-  const appContainer = document.querySelector(".app-container");
-  ReactDOM.render( /*#__PURE__*/React.createElement(Chat, null), appContainer);
+  const pageContainer = document.querySelector(".page-container");
+  ReactDOM.render( /*#__PURE__*/React.createElement(Chat, null), pageContainer);
 };
 function Chat() {
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Chat"));
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Chat"));
 }
 function GroupDetails({
   group
@@ -594,8 +576,8 @@ function GroupDetails({
   }));
 }
 const renderGroup = () => {
-  const appContainer = document.querySelector(".app-container");
-  ReactDOM.render( /*#__PURE__*/React.createElement(Group, null), appContainer);
+  const pageContainer = document.querySelector(".page-container");
+  ReactDOM.render( /*#__PURE__*/React.createElement(Group, null), pageContainer);
 };
 function Group() {
   const [title, setTitle] = useState('');
@@ -657,7 +639,7 @@ function Group() {
     setSelectedGroup(null);
     setShowGroupDetails(false); // Update showGroupDetails to false when going back
   };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), selectedGroup ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
+  return /*#__PURE__*/React.createElement("div", null, selectedGroup ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     onClick: () => setSelectedGroup(null)
   }, "Go Back"), /*#__PURE__*/React.createElement(GroupDetails, {
     group: selectedGroup
@@ -699,11 +681,11 @@ function Group() {
   }, "There are no created groups yet"))));
 }
 const renderNotifications = () => {
-  const appContainer = document.querySelector(".app-container");
-  ReactDOM.render( /*#__PURE__*/React.createElement(Notifications, null), appContainer);
+  const pageContainer = document.querySelector(".page-container");
+  ReactDOM.render( /*#__PURE__*/React.createElement(Notifications, null), pageContainer);
 };
 function Notifications() {
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement("h1", null, "Notifications"));
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Notifications"));
 }
 function FollowButton({
   followerId,
@@ -1061,8 +1043,8 @@ function CommentCard({
   }, comment.body)));
 }
 const renderHome = () => {
-  const appContainer = document.querySelector(".app-container");
-  ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), appContainer);
+  const pageContainer = document.querySelector(".page-container");
+  ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), pageContainer);
 };
 
 // Display information relating to homepage
@@ -1090,7 +1072,7 @@ function Home() {
   }, []);
   return /*#__PURE__*/React.createElement("main", {
     className: "homePage"
-  }, /*#__PURE__*/React.createElement(Navbar, null), /*#__PURE__*/React.createElement(PostForm, {
+  }, /*#__PURE__*/React.createElement(PostForm, {
     groupId: 0
   }), /*#__PURE__*/React.createElement("div", {
     className: "userList"
