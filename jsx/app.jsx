@@ -59,6 +59,8 @@ function Navbar() {
 				credentials: "include",
 			})
 
+			console.log(response)
+
 			if (response.ok) {
 				socket.close()
 				socket.addEventListener("close", (event) => {
@@ -700,7 +702,7 @@ function Chat() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		let bodymessage = { id: 1, message: sendMessage }
+		let bodymessage = { message: sendMessage }
 		let obj = { code: 1, body: JSON.stringify(bodymessage) }
 		socket.send(JSON.stringify(obj))
 		setSendMessage("")
