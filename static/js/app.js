@@ -613,9 +613,28 @@ function Chat() {
 function GroupDetails({
   group
 }) {
+  const [groupPosts, setGroupPosts] = useState([]);
+  useEffect(() => {
+    const fetchGroupPosts = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/groups/${group.groupId}/posts`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch group posts');
+        }
+        const posts = await response.json();
+        setGroupPosts(posts);
+        console.log("posts in groupDetails:", posts);
+      } catch (error) {
+        console.error('Error fetching group posts:', error);
+      }
+    };
+    fetchGroupPosts();
+  }, [group.groupId]);
   return /*#__PURE__*/React.createElement("div", {
     className: "group-details"
-  }, /*#__PURE__*/React.createElement("h2", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description), /*#__PURE__*/React.createElement(PostFormGroup, {
+  }, /*#__PURE__*/React.createElement("h2", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description), /*#__PURE__*/React.createElement("ul", null, groupPosts.map(post => /*#__PURE__*/React.createElement("li", {
+    key: post.id
+  }, post.body))), /*#__PURE__*/React.createElement(PostFormGroup, {
     groupId: group.groupId
   }));
 }
@@ -1044,15 +1063,15 @@ function PostFormGroup({
   }, "Submit"))));
 }
 const postCardStyle = {
-  maxWidth: "600px",
-  background: "linear-gradient(to bottom, #c7ddef, #ffffff)",
+  maxWidth: '600px',
+  background: 'linear-gradient(to bottom, #c7ddef, #ffffff)',
   // Light blue/grey to white gradient
-  borderRadius: "10px",
-  boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+  borderRadius: '10px',
+  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
   // Optional: Add shadow for depth
-  padding: "20px",
-  margin: "auto",
-  marginBottom: "20px" // Adjust spacing between post cards
+  padding: '20px',
+  margin: 'auto',
+  marginBottom: '20px' // Adjust spacing between post cards
 };
 function PostCard({
   post

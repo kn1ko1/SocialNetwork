@@ -737,6 +737,27 @@ function Chat() {
 }
 
 function GroupDetails({ group }) {
+
+	const [groupPosts, setGroupPosts] = useState([]);
+
+    useEffect(() => {
+        const fetchGroupPosts = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/groups/${group.groupId}/posts`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch group posts');
+                }
+                const posts = await response.json();
+                setGroupPosts(posts);
+				console.log("posts in groupDetails:", posts)
+            } catch (error) {
+                console.error('Error fetching group posts:', error);
+            }
+        };
+
+        fetchGroupPosts();
+    }, [group.groupId]);
+
 	return (
 		<div className="group-details">
 			<h2>{group.title}</h2>
@@ -744,6 +765,14 @@ function GroupDetails({ group }) {
 			{/* <p>Members: {group.members}</p> */}
 			{/* Add more details you want to display */}
 			{/* Display the PostForm component for creating new posts */}
+
+			   {/* Render group posts here */}
+			   <ul>
+                {groupPosts.map((post) => (
+                    <li key={post.id}>{post.body}</li>
+                ))}
+            </ul>
+
 			<PostFormGroup groupId={group.groupId} />
 		</div>
 	)
