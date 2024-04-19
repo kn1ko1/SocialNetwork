@@ -10,6 +10,7 @@ import (
 	comments "socialnetwork/sqlite/COMMENTS"
 	events "socialnetwork/sqlite/EVENTS"
 	groups "socialnetwork/sqlite/GROUPS"
+	messages "socialnetwork/sqlite/MESSAGES"
 	"socialnetwork/transport"
 
 	"database/sql"
@@ -262,37 +263,37 @@ func (r *SQLiteRepository) DeleteAllEventUsers() error {
 
 // Message
 func (r *SQLiteRepository) CreateMessage(message models.Message) (models.Message, error) {
-	return sqlite.CreateMessage(r.businessDb, message)
+	return messages.CreateMessage(r.businessDb, message)
 }
 func (r *SQLiteRepository) GetAllMessages() ([]models.Message, error) {
-	return sqlite.GetAllMessages(r.businessDb)
+	return messages.GetAllMessages(r.businessDb)
 }
 func (r *SQLiteRepository) GetMessagesByType(messageType string) ([]models.Message, error) {
-	return sqlite.GetMessagesByType(r.businessDb, messageType)
+	return messages.GetMessagesByType(r.businessDb, messageType)
 }
 func (r *SQLiteRepository) GetMessageById(messageId int) (models.Message, error) {
-	return sqlite.GetMessageById(r.businessDb, messageId)
+	return messages.GetMessageById(r.businessDb, messageId)
 }
 func (r *SQLiteRepository) GetMessagesBySenderAndTargetIDs(senderId, targetId int) ([]models.Message, error) {
-	return sqlite.GetMessagesBySenderAndTargetIds(r.businessDb, senderId, targetId)
+	return messages.GetMessagesBySenderAndTargetIds(r.businessDb, senderId, targetId)
 }
 func (r *SQLiteRepository) UpdateMessage(message models.Message) (models.Message, error) {
-	return sqlite.UpdateMessage(r.businessDb, message)
+	return messages.UpdateMessage(r.businessDb, message)
 }
 func (r *SQLiteRepository) DeleteMessagesByType(messageType string) error {
-	return sqlite.DeleteMessagesByType(r.businessDb, messageType)
+	return messages.DeleteMessagesByType(r.businessDb, messageType)
 }
 func (r *SQLiteRepository) DeleteMessageById(messageId int) error {
-	return sqlite.DeleteMessageById(r.businessDb, messageId)
+	return messages.DeleteMessageById(r.businessDb, messageId)
 }
 func (r *SQLiteRepository) DeleteMessagesBySenderId(senderId int) error {
-	return sqlite.DeleteMessagesBySenderId(r.businessDb, senderId)
+	return messages.DeleteMessagesBySenderId(r.businessDb, senderId)
 }
 func (r *SQLiteRepository) DeleteMessagesByTargetId(targetId int) error {
-	return sqlite.DeleteMessagesByTargetId(r.businessDb, targetId)
+	return messages.DeleteMessagesByTargetId(r.businessDb, targetId)
 }
 func (r *SQLiteRepository) DeleteAllMessages() error {
-	return sqlite.DeleteAllMessages(r.businessDb)
+	return messages.DeleteAllMessages(r.businessDb)
 }
 
 // Group
