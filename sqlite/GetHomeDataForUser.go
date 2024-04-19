@@ -6,6 +6,7 @@ import (
 	"socialnetwork/utils"
 )
 
+// Needs to be split - not a SQLite function
 // Retrieves data for the user's homepage including posts and comments
 func GetHomeDataForUser(identityDB, businessDb *sql.DB, userId int) (transport.HomeModel, error) {
 
