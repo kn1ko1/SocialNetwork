@@ -874,6 +874,8 @@ function Group() {
 
 function GroupDetails({ group }) {
 
+	const [allUsers, setAllUsers] = useState([]);
+	const [groupMembers, setGroupMembers] = useState([]);
 	const [groupPosts, setGroupPosts] = useState([]);
 
 	useEffect(() => {

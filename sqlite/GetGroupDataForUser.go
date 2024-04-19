@@ -18,20 +18,29 @@ func GetGroupDataForUser(identityDB, businessDb *sql.DB, groupId int) (transport
 	}
 
 	// Gets a list of all users in the group
-	groupUsers, err := GetGroupUsersByGroupId(identityDB, groupId)
+	GroupData.GroupUsers, err = GetGroupUsersByGroupId(identityDB, groupId)
 	if err != nil {
 		utils.HandleError("Error in GetGroupUsersByGroupId in GetGroupDataForUser", err)
 
 	}
 
-	for _, groupUser := range groupUsers {
-		for _, user := range GroupData.AllUsers {
-			if user.UserId == groupUser.UserId {
-				GroupData.GroupUsersWithUsernames = append(GroupData.GroupUsersWithUsernames, user)
-				break
-			}
-		}
-	}
+	// for _, groupUser := range groupUsers {
+	// 	for _, user := range GroupData.AllUsers {
+	// 		if user.UserId == groupUser.UserId {
+	// 			GroupData.GroupUsersWithUsernames = append(GroupData.GroupUsersWithUsernames, user)
+	// 			break
+	// 		}
+	// 	}
+	// }
+
+	// for i, groupUser := range groupUsers {
+	// 	for _, user := range GroupData.AllUsers {
+	// 		if user.UserId == groupUser.UserId {
+	// 			GroupData.GroupUsersWithUsernames[i].IsMember = true
+	// 			break
+	// 		}
+	// 	}
+	// }
 
 	// Get posts with for this group
 	GroupData.GroupPosts, err = GetPostsByGroupId(businessDb, groupId)
