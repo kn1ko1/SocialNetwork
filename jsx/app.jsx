@@ -736,47 +736,7 @@ function Chat() {
 	)
 }
 
-function GroupDetails({ group }) {
 
-	const [groupPosts, setGroupPosts] = useState([]);
-
-    useEffect(() => {
-        const fetchGroupPosts = async () => {
-            try {
-                const response = await fetch(`http://localhost:8080/api/groups/${group.groupId}/posts`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch group posts');
-                }
-                const posts = await response.json();
-                setGroupPosts(posts);
-				console.log("posts in groupDetails:", posts)
-            } catch (error) {
-                console.error('Error fetching group posts:', error);
-            }
-        };
-
-        fetchGroupPosts();
-    }, [group.groupId]);
-
-	return (
-		<div className="group-details">
-			<h2>{group.title}</h2>
-			<p>{group.description}</p>
-			{/* <p>Members: {group.members}</p> */}
-			{/* Add more details you want to display */}
-			{/* Display the PostForm component for creating new posts */}
-
-			   {/* Render group posts here */}
-			   <ul>
-                {groupPosts.map((post) => (
-                    <li key={post.id}>{post.body}</li>
-                ))}
-            </ul>
-
-			<PostFormGroup groupId={group.groupId} />
-		</div>
-	)
-}
 
 const renderGroup = () => {
 	const pageContainer = document.querySelector(".page-container")
@@ -907,6 +867,51 @@ function Group() {
 					</div>
 				</div>
 			)}
+		</div>
+	)
+}
+
+
+function GroupDetails({ group }) {
+
+	const [groupPosts, setGroupPosts] = useState([]);
+
+	useEffect(() => {
+		const fetchGroupPosts = async () => {
+			try {
+				const response = await fetch(`http://localhost:8080/api/groups/${group.groupId}/posts`);
+				if (!response.ok) {
+					throw new Error('Failed to fetch group posts');
+				}
+				const posts = await response.json();
+				setGroupPosts(posts);
+				console.log("posts in groupDetails:", posts)
+			} catch (error) {
+				console.error('Error fetching group posts:', error);
+			}
+		};
+
+		fetchGroupPosts();
+	}, [group.groupId]);
+
+	return (
+		<div className="group-details">
+			<h2>{group.title}</h2>
+			<p>{group.description}</p>
+			{/* <p>Members: {group.members}</p> */}
+			<PostFormGroup groupId={group.groupId} />
+
+			{/* Render group posts here */}
+			<div id="groupPosts">
+				{groupPosts !== null ? (
+					groupPosts.map((post) => (
+						<li key={post.id}>{post.body}</li>
+					))
+				) : (
+					<div id="groupPosts">There are no posts in this groups yet</div>
+				)}
+			</div>
+
 		</div>
 	)
 }
@@ -1592,7 +1597,7 @@ function Home() {
 			<div className="publicPostsWithComments">
 				<h2>Public Posts With Comments</h2>
 				{publicPostsWithComments !== null &&
-				publicPostsWithComments.length > 0 ? (
+					publicPostsWithComments.length > 0 ? (
 					publicPostsWithComments.map((publicPostsWithComment, index) => (
 						<PostCard key={index} post={publicPostsWithComment} />
 					))

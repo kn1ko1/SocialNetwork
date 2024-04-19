@@ -610,34 +610,6 @@ function Chat() {
     className: "btn btn-primary"
   }, "send")));
 }
-function GroupDetails({
-  group
-}) {
-  const [groupPosts, setGroupPosts] = useState([]);
-  useEffect(() => {
-    const fetchGroupPosts = async () => {
-      try {
-        const response = await fetch(`http://localhost:8080/api/groups/${group.groupId}/posts`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch group posts');
-        }
-        const posts = await response.json();
-        setGroupPosts(posts);
-        console.log("posts in groupDetails:", posts);
-      } catch (error) {
-        console.error('Error fetching group posts:', error);
-      }
-    };
-    fetchGroupPosts();
-  }, [group.groupId]);
-  return /*#__PURE__*/React.createElement("div", {
-    className: "group-details"
-  }, /*#__PURE__*/React.createElement("h2", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description), /*#__PURE__*/React.createElement("ul", null, groupPosts.map(post => /*#__PURE__*/React.createElement("li", {
-    key: post.id
-  }, post.body))), /*#__PURE__*/React.createElement(PostFormGroup, {
-    groupId: group.groupId
-  }));
-}
 const renderGroup = () => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Group, null), pageContainer);
@@ -742,6 +714,38 @@ function Group() {
   }, /*#__PURE__*/React.createElement("h3", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description))) : /*#__PURE__*/React.createElement("div", {
     id: "noGroupsError"
   }, "There are no created groups yet"))));
+}
+function GroupDetails({
+  group
+}) {
+  const [groupPosts, setGroupPosts] = useState([]);
+  useEffect(() => {
+    const fetchGroupPosts = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/groups/${group.groupId}/posts`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch group posts');
+        }
+        const posts = await response.json();
+        setGroupPosts(posts);
+        console.log("posts in groupDetails:", posts);
+      } catch (error) {
+        console.error('Error fetching group posts:', error);
+      }
+    };
+    fetchGroupPosts();
+  }, [group.groupId]);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "group-details"
+  }, /*#__PURE__*/React.createElement("h2", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description), /*#__PURE__*/React.createElement(PostFormGroup, {
+    groupId: group.groupId
+  }), /*#__PURE__*/React.createElement("div", {
+    id: "groupPosts"
+  }, groupPosts !== null ? groupPosts.map(post => /*#__PURE__*/React.createElement("li", {
+    key: post.id
+  }, post.body)) : /*#__PURE__*/React.createElement("div", {
+    id: "groupPosts"
+  }, "There are no posts in this groups yet")));
 }
 const renderNotifications = () => {
   const pageContainer = document.querySelector(".page-container");
