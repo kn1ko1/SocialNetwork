@@ -1,4 +1,4 @@
-package sqlite
+package groups
 
 import (
 	"database/sql"
