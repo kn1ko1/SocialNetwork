@@ -1,4 +1,4 @@
-package sqlite
+package posts
 
 import (
 	"database/sql"
@@ -6,11 +6,11 @@ import (
 	"socialnetwork/utils"
 )
 
-// Retrieves posts with the relevant userId from the POSTS table
-func GetPostsByUserId(database *sql.DB, userId int) ([]models.Post, error) {
-	rows, err := database.Query("SELECT * FROM POSTS WHERE UserId = ?", userId)
+// Retrieves all posts from the POSTS table
+func GetAllPosts(database *sql.DB) ([]models.Post, error) {
+	rows, err := database.Query("SELECT * FROM POSTS")
 	if err != nil {
-		utils.HandleError("Error querying posts by UserId.", err)
+		utils.HandleError("Error executing SELECT * FROM POSTS statement.", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -30,7 +30,7 @@ func GetPostsByUserId(database *sql.DB, userId int) ([]models.Post, error) {
 			&post.UserId,
 		)
 		if err != nil {
-			utils.HandleError("Error scanning row in GetPostsByUserId.", err)
+			utils.HandleError("Error scanning rows in GetAllPosts.", err)
 			return nil, err
 		}
 
@@ -38,7 +38,7 @@ func GetPostsByUserId(database *sql.DB, userId int) ([]models.Post, error) {
 	}
 
 	if err := rows.Err(); err != nil {
-		utils.HandleError("Error iterating over rows in GetPostsByUserId.", err)
+		utils.HandleError("Error iterating over rows in GetAllPosts.", err)
 		return nil, err
 	}
 

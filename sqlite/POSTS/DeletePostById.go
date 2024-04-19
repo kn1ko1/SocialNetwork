@@ -1,4 +1,4 @@
-package sqlite
+package posts
 
 import (
 	"database/sql"

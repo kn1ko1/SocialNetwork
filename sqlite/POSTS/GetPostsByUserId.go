@@ -1,4 +1,4 @@
-package sqlite
+package posts
 
 import (
 	"database/sql"
@@ -6,11 +6,11 @@ import (
 	"socialnetwork/utils"
 )
 
-// Retrieves posts with the relevant groupId from the POSTS table
-func GetPostsByGroupId(database *sql.DB, groupId int) ([]models.Post, error) {
-	rows, err := database.Query("SELECT * FROM POSTS WHERE GroupId = ?", groupId)
+// Retrieves posts with the relevant userId from the POSTS table
+func GetPostsByUserId(database *sql.DB, userId int) ([]models.Post, error) {
+	rows, err := database.Query("SELECT * FROM POSTS WHERE UserId = ?", userId)
 	if err != nil {
-		utils.HandleError("Error querying posts by GroupId.", err)
+		utils.HandleError("Error querying posts by UserId.", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -30,7 +30,7 @@ func GetPostsByGroupId(database *sql.DB, groupId int) ([]models.Post, error) {
 			&post.UserId,
 		)
 		if err != nil {
-			utils.HandleError("Error scanning row in GetPostsByGroupId.", err)
+			utils.HandleError("Error scanning row in GetPostsByUserId.", err)
 			return nil, err
 		}
 
@@ -38,7 +38,7 @@ func GetPostsByGroupId(database *sql.DB, groupId int) ([]models.Post, error) {
 	}
 
 	if err := rows.Err(); err != nil {
-		utils.HandleError("Error iterating over rows in GetPostsByGroupId.", err)
+		utils.HandleError("Error iterating over rows in GetPostsByUserId.", err)
 		return nil, err
 	}
 

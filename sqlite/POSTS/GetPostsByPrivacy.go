@@ -1,4 +1,4 @@
-package sqlite
+package posts
 
 import (
 	"database/sql"
@@ -6,11 +6,12 @@ import (
 	"socialnetwork/utils"
 )
 
-// Retrieves all posts from the POSTS table
-func GetAllPosts(database *sql.DB) ([]models.Post, error) {
-	rows, err := database.Query("SELECT * FROM POSTS")
+// Retrieves posts with the relevant Privacy from the POSTS table
+// Should really only be used to retrieve Public
+func GetPostsByPrivacy(database *sql.DB, privacy string) ([]models.Post, error) {
+	rows, err := database.Query("SELECT * FROM POSTS WHERE Privacy = ?", privacy)
 	if err != nil {
-		utils.HandleError("Error executing SELECT * FROM POSTS statement.", err)
+		utils.HandleError("Error querying posts by Privacy.", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -30,7 +31,7 @@ func GetAllPosts(database *sql.DB) ([]models.Post, error) {
 			&post.UserId,
 		)
 		if err != nil {
-			utils.HandleError("Error scanning rows in GetAllPosts.", err)
+			utils.HandleError("Error scanning row in GetPostsByPrivacy.", err)
 			return nil, err
 		}
 
@@ -38,7 +39,7 @@ func GetAllPosts(database *sql.DB) ([]models.Post, error) {
 	}
 
 	if err := rows.Err(); err != nil {
-		utils.HandleError("Error iterating over rows in GetAllPosts.", err)
+		utils.HandleError("Error iterating over rows in GetPostsByPrivacy.", err)
 		return nil, err
 	}
 
