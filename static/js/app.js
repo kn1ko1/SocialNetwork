@@ -768,22 +768,33 @@ function GroupDetails({
     };
     fetchGroupData();
   }, [group.groupId]);
-  console.log("userList", userList);
-  console.log("groupMembers", groupMembers);
-  console.log("groupPosts", groupPosts);
-  console.log("groupMessages", groupMessages);
-  console.log("groupEvents", groupEvents);
   return /*#__PURE__*/React.createElement("div", {
     className: "group-details"
   }, /*#__PURE__*/React.createElement("h2", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description), /*#__PURE__*/React.createElement(PostFormGroup, {
     groupId: group.groupId
   }), /*#__PURE__*/React.createElement("div", {
+    className: "userList"
+  }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList !== null && userList.length > 0 ? userList.map((user, index) => /*#__PURE__*/React.createElement("div", {
+    key: index
+  }, user.username)) : /*#__PURE__*/React.createElement("p", null, "No Users?!")), /*#__PURE__*/React.createElement("div", {
+    className: "groupMembers"
+  }, /*#__PURE__*/React.createElement("h2", null, "Group Members"), groupMembers !== null && groupMembers.length > 1 ? groupMembers.map((member, index) => /*#__PURE__*/React.createElement("div", {
+    key: index
+  }, member.username)) : /*#__PURE__*/React.createElement("p", null, "It's just you... Maybe you should invite someone?")), /*#__PURE__*/React.createElement("div", {
     id: "groupPosts"
-  }, groupPosts !== null ? groupPosts.map(post => /*#__PURE__*/React.createElement("li", {
-    key: post.id
+  }, /*#__PURE__*/React.createElement("h2", null, "Posts"), groupPosts !== null ? groupPosts.map(post => /*#__PURE__*/React.createElement("li", {
+    key: post.createdAt
   }, post.body)) : /*#__PURE__*/React.createElement("div", {
     id: "groupPosts"
-  }, "There are no posts in this groups yet")));
+  }, "There are no posts in this groups yet")), /*#__PURE__*/React.createElement("div", {
+    className: "groupMessages"
+  }, /*#__PURE__*/React.createElement("h2", null, "Messages"), groupMessages !== null && groupMessages.length > 0 ? groupMessages.map((message, index) => /*#__PURE__*/React.createElement("div", {
+    key: index
+  }, message.body)) : /*#__PURE__*/React.createElement("p", null, "No Messages")), /*#__PURE__*/React.createElement("div", {
+    className: "groupEvents"
+  }, /*#__PURE__*/React.createElement("h2", null, "Events"), groupEvents !== null && groupEvents.length > 0 ? groupEvents.map((event, index) => /*#__PURE__*/React.createElement("div", {
+    key: index
+  }, event.title)) : /*#__PURE__*/React.createElement("p", null, "No Events")));
 }
 const renderNotifications = () => {
   const pageContainer = document.querySelector(".page-container");

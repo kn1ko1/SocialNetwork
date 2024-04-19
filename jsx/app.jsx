@@ -765,7 +765,7 @@ function Group() {
 			}
 
 			const data = await response.json()
-			setGroupData(data) 
+			setGroupData(data)
 		} catch (error) {
 			console.error("Error fetching group data:", error)
 		}
@@ -890,7 +890,7 @@ function GroupDetails({ group }) {
 				promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/messages`));
 				promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/events`));
 				const results = await Promise.all(promises);
-				
+
 				const userListResponse = results[0]
 				const groupMembersResponse = results[1]
 				const postsResponse = results[2]
@@ -929,12 +929,7 @@ function GroupDetails({ group }) {
 		fetchGroupData();
 	}, [group.groupId]);
 
-	
-	console.log("userList", userList)
-	console.log("groupMembers", groupMembers)
-	console.log("groupPosts", groupPosts)
-	console.log("groupMessages", groupMessages)
-	console.log("groupEvents", groupEvents)
+
 
 	return (
 		<div className="group-details">
@@ -942,18 +937,68 @@ function GroupDetails({ group }) {
 			<p>{group.description}</p>
 			{/* <p>Members: {group.members}</p> */}
 			<PostFormGroup groupId={group.groupId} />
-
+			{/* Render userList here */}
+			<div className="userList">
+				<h2>UserList</h2>
+				{userList !== null && userList.length > 0 ? (
+					userList.map((user, index) => (
+						<div key={index}>
+							{user.username}
+						</div>
+					))
+				) : (
+					<p>No Users?!</p>
+				)}
+			</div>
+			{/* Render group members here */}
+			<div className="groupMembers">
+				<h2>Group Members</h2>
+				{groupMembers !== null && groupMembers.length > 1 ? (
+					groupMembers.map((member, index) => (
+						<div key={index}>
+							{member.username}
+						</div>
+					))
+				) : (
+					<p>It's just you... Maybe you should invite someone?</p>
+				)}
+			</div>
 			{/* Render group posts here */}
 			<div id="groupPosts">
+				<h2>Posts</h2>
 				{groupPosts !== null ? (
 					groupPosts.map((post) => (
-						<li key={post.id}>{post.body}</li>
+						<li key={post.createdAt}>{post.body}</li>
 					))
 				) : (
 					<div id="groupPosts">There are no posts in this groups yet</div>
 				)}
 			</div>
-
+			{/* Render group Messages here */}
+			<div className="groupMessages">
+				<h2>Messages</h2>
+				{groupMessages !== null && groupMessages.length > 0 ? (
+					groupMessages.map((message, index) => (
+						<div key={index}>
+							{message.body}
+						</div>
+					))
+				) : (
+					<p>No Messages</p>
+				)}
+			</div>
+			<div className="groupEvents">
+				<h2>Events</h2>
+				{groupEvents !== null && groupEvents.length > 0 ? (
+					groupEvents.map((event, index) => (
+						<div key={index}>
+							{event.title}
+						</div>
+					))
+				) : (
+					<p>No Events</p>
+				)}
+			</div>
 		</div>
 	)
 }
