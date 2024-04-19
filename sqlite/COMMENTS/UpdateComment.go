@@ -1,4 +1,4 @@
-package sqlite
+package comments
 
 import (
 	"database/sql"

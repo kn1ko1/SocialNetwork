@@ -1,4 +1,4 @@
-package sqlite
+package comments
 
 import (
 	"database/sql"
@@ -6,11 +6,11 @@ import (
 	"socialnetwork/utils"
 )
 
-// Retrieves comment with the relevant groupId from the COMMENTS table
-func GetCommentsByGroupId(database *sql.DB, groupId int) ([]models.Comment, error) {
-	rows, err := database.Query("SELECT * FROM COMMENTS WHERE GroupId = ?", groupId)
+// Retrieves comment with the relevant userId from the COMMENTS table
+func GetCommentsByUserId(database *sql.DB, userId int) ([]models.Comment, error) {
+	rows, err := database.Query("SELECT * FROM COMMENTS WHERE UserId = ?", userId)
 	if err != nil {
-		utils.HandleError("Error executing SELECT * FROM COMMENTS WHERE GroupId = ? statement.", err)
+		utils.HandleError("Error executing SELECT * FROM COMMENTS WHERE UserId = ? statement.", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -29,7 +29,7 @@ func GetCommentsByGroupId(database *sql.DB, groupId int) ([]models.Comment, erro
 			&comment.UserId,
 		)
 		if err != nil {
-			utils.HandleError("Error scanning rows in GetCommentsByGroupId.", err)
+			utils.HandleError("Error scanning rows in GetCommentsByUserId.", err)
 			return nil, err
 		}
 
@@ -37,7 +37,7 @@ func GetCommentsByGroupId(database *sql.DB, groupId int) ([]models.Comment, erro
 	}
 
 	if err := rows.Err(); err != nil {
-		utils.HandleError("Error iterating over rows in GetCommentsByGroupId.", err)
+		utils.HandleError("Error iterating over rows in GetCommentsByUserId.", err)
 		return nil, err
 	}
 
