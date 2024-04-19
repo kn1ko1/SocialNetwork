@@ -13,6 +13,7 @@ import (
 	groups "socialnetwork/sqlite/GROUPS"
 	group_users "socialnetwork/sqlite/GROUP_USERS"
 	messages "socialnetwork/sqlite/MESSAGES"
+	notifications "socialnetwork/sqlite/NOTIFICATIONS"
 	"socialnetwork/transport"
 
 	"database/sql"
@@ -351,18 +352,18 @@ func (r *SQLiteRepository) DeleteAllGroupUsers() error {
 
 // Notification
 func (r *SQLiteRepository) CreateNotification(notification models.Notification) (models.Notification, error) {
-	return sqlite.CreateNotification(r.businessDb, notification)
+	return notifications.CreateNotification(r.businessDb, notification)
 }
 func (r *SQLiteRepository) GetNotificationById(notificationId int) (models.Notification, error) {
-	return sqlite.GetNotificationById(r.businessDb, notificationId)
+	return notifications.GetNotificationById(r.businessDb, notificationId)
 }
 
 func (r *SQLiteRepository) GetNotificationsByUserId(userId int) ([]models.Notification, error) {
-	return sqlite.GetNotificationsByUserId(r.businessDb, userId)
+	return notifications.GetNotificationsByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) UpdateNotification(notification models.Notification) (models.Notification, error) {
-	return sqlite.UpdateNotification(r.businessDb, notification)
+	return notifications.UpdateNotification(r.businessDb, notification)
 }
 func (r *SQLiteRepository) DeleteNotificationById(notificationId int) error {
-	return sqlite.DeleteNotificationById(r.businessDb, notificationId)
+	return notifications.DeleteNotificationById(r.businessDb, notificationId)
 }
