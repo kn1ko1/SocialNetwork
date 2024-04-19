@@ -9,6 +9,7 @@ import (
 	"socialnetwork/sqlite"
 	comments "socialnetwork/sqlite/COMMENTS"
 	events "socialnetwork/sqlite/EVENTS"
+	groups "socialnetwork/sqlite/GROUPS"
 	"socialnetwork/transport"
 
 	"database/sql"
@@ -296,23 +297,23 @@ func (r *SQLiteRepository) DeleteAllMessages() error {
 
 // Group
 func (r *SQLiteRepository) CreateGroup(group models.Group) (models.Group, error) {
-	return sqlite.CreateGroup(r.businessDb, group)
+	return groups.CreateGroup(r.businessDb, group)
 }
 
 func (r *SQLiteRepository) GetAllGroups() ([]models.Group, error) {
-	return sqlite.GetAllGroups(r.businessDb)
+	return groups.GetAllGroups(r.businessDb)
 }
 func (r *SQLiteRepository) GetGroupById(groupId int) (models.Group, error) {
-	return sqlite.GetGroupById(r.businessDb, groupId)
+	return groups.GetGroupById(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) UpdateGroup(group models.Group) (models.Group, error) {
-	return sqlite.UpdateGroup(r.businessDb, group)
+	return groups.UpdateGroup(r.businessDb, group)
 }
 func (r *SQLiteRepository) DeleteGroup(groupId int) error {
-	return sqlite.DeleteGroup(r.businessDb, groupId)
+	return groups.DeleteGroup(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) DeleteAllGroups() error {
-	return sqlite.DeleteAllGroups(r.businessDb)
+	return groups.DeleteAllGroups(r.businessDb)
 }
 
 // Group_User
