@@ -1,4 +1,4 @@
-package sqlite
+package events
 
 import (
 	"database/sql"
