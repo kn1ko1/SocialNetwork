@@ -6,6 +6,7 @@ import (
 	"socialnetwork/utils"
 )
 
+// This Should not be a SQLite package function
 // Retrieves data for the user's homepage including posts and comments
 func GetProfileDataForUser(identityDb *sql.DB, businessDb *sql.DB, userId int) (transport.ProfileModel, error) {
 
