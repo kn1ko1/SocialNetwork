@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	user_users "socialnetwork/sqlite/USER_USERS"
 	"socialnetwork/transport"
 	"socialnetwork/utils"
 )
@@ -20,7 +21,7 @@ func GetHomeDataForUser(identityDB, businessDb *sql.DB, userId int) (transport.H
 		// return userHomeData, err
 	}
 
-	followedUsers, err := GetUserUsersByFollowerId(businessDb, userId)
+	followedUsers, err := user_users.GetUserUsersByFollowerId(businessDb, userId)
 	if err != nil {
 		utils.HandleError("Error getting followedUsers in GetHomeDataForUser", err)
 		// return userHomeData, err
