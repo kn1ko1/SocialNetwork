@@ -1,4 +1,4 @@
-package sqlite
+package user_users
 
 import (
 	"database/sql"
@@ -7,10 +7,10 @@ import (
 )
 
 // Retrieves userUsers with the relevant subjectId from the USER_USERS table
-func GetUserUsersByFollowerId(database *sql.DB, followerId int) ([]models.UserUser, error) {
-	rows, err := database.Query("SELECT * FROM USER_USERS WHERE FollowerId = ?", followerId)
+func GetUserUsersBySubjectId(database *sql.DB, subjectId int) ([]models.UserUser, error) {
+	rows, err := database.Query("SELECT * FROM USER_USERS WHERE SubjectId = ?", subjectId)
 	if err != nil {
-		utils.HandleError("Error querying userUsers by FollowerId.", err)
+		utils.HandleError("Error querying userUsers by SubjectId.", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -27,7 +27,7 @@ func GetUserUsersByFollowerId(database *sql.DB, followerId int) ([]models.UserUs
 			&userUser.UpdatedAt,
 		)
 		if err != nil {
-			utils.HandleError("Error scanning row in GetUserUsersByFollowerId.", err)
+			utils.HandleError("Error scanning row in GetUserUsersBySubjectId.", err)
 			return nil, err
 		}
 
@@ -35,7 +35,7 @@ func GetUserUsersByFollowerId(database *sql.DB, followerId int) ([]models.UserUs
 	}
 
 	if err := rows.Err(); err != nil {
-		utils.HandleError("Error iterating over rows in GetUserUsersByFollowerId.", err)
+		utils.HandleError("Error iterating over rows in GetUserUsersBySubjectId.", err)
 		return nil, err
 	}
 
