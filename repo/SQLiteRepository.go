@@ -11,6 +11,7 @@ import (
 	events "socialnetwork/sqlite/EVENTS"
 	event_users "socialnetwork/sqlite/EVENT_USERS"
 	groups "socialnetwork/sqlite/GROUPS"
+	group_users "socialnetwork/sqlite/GROUP_USERS"
 	messages "socialnetwork/sqlite/MESSAGES"
 	"socialnetwork/transport"
 
@@ -320,32 +321,32 @@ func (r *SQLiteRepository) DeleteAllGroups() error {
 
 // Group_User
 func (r *SQLiteRepository) CreateGroupUser(groupUser models.GroupUser) (models.GroupUser, error) {
-	return sqlite.CreateGroupUser(r.businessDb, groupUser)
+	return group_users.CreateGroupUser(r.businessDb, groupUser)
 }
 func (r *SQLiteRepository) GetGroupUser(groupUserId int) (models.GroupUser, error) {
-	return sqlite.GetGroupUser(r.businessDb, groupUserId)
+	return group_users.GetGroupUser(r.businessDb, groupUserId)
 }
 func (r *SQLiteRepository) GetGroupUsersByUserId(userId int) ([]models.GroupUser, error) {
-	return sqlite.GetGroupUsersByUserId(r.businessDb, userId)
+	return group_users.GetGroupUsersByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) GetGroupUsersByGroupId(groupId int) ([]models.GroupUser, error) {
-	return sqlite.GetGroupUsersByGroupId(r.businessDb, groupId)
+	return group_users.GetGroupUsersByGroupId(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) DeleteGroupUsersByUserId(userId int) error {
-	return sqlite.DeleteGroupUsersByUserId(r.businessDb, userId)
+	return group_users.DeleteGroupUsersByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) DeleteGroupUserByGroupId(groupId int) error {
-	return sqlite.DeleteGroupUserByGroupId(r.businessDb, groupId)
+	return group_users.DeleteGroupUserByGroupId(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) DeleteGroupUserByGroupIdAndUserId(groupId, userId int) error {
-	return sqlite.DeleteGroupUserByGroupIdAndUserId(r.businessDb, groupId, userId)
+	return group_users.DeleteGroupUserByGroupIdAndUserId(r.businessDb, groupId, userId)
 }
 func (r *SQLiteRepository) DeleteGroupUser(groupUserId int) error {
-	return sqlite.DeleteGroupUser(r.businessDb, groupUserId)
+	return group_users.DeleteGroupUser(r.businessDb, groupUserId)
 }
 
 func (r *SQLiteRepository) DeleteAllGroupUsers() error {
-	return sqlite.DeleteAllGroupUsers(r.businessDb)
+	return group_users.DeleteAllGroupUsers(r.businessDb)
 }
 
 // Notification
