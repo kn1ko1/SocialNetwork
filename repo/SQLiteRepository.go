@@ -7,6 +7,7 @@ import (
 	"log"
 	"socialnetwork/models"
 	"socialnetwork/sqlite"
+	comments "socialnetwork/sqlite/COMMENTS"
 	"socialnetwork/transport"
 
 	"database/sql"
@@ -165,41 +166,41 @@ func (r *SQLiteRepository) DeleteAllPostUsers() error {
 
 // Comments
 func (r *SQLiteRepository) CreateComment(comment models.Comment) (models.Comment, error) {
-	return sqlite.CreateComment(r.businessDb, comment)
+	return comments.CreateComment(r.businessDb, comment)
 }
 func (r *SQLiteRepository) GetAllComments() ([]models.Comment, error) {
-	return sqlite.GetAllComments(r.businessDb)
+	return comments.GetAllComments(r.businessDb)
 }
 func (r *SQLiteRepository) GetCommentById(commentId int) (models.Comment, error) {
-	return sqlite.GetCommentById(r.businessDb, commentId)
+	return comments.GetCommentById(r.businessDb, commentId)
 }
 
 //	func (r *SQLiteRepository) GetCommentsByGroupId(groupId int) ([]models.Comment, error) {
-//		return sqlite.GetCommentsByGroupId(r.businessDb, groupId)
+//		return comments.GetCommentsByGroupId(r.businessDb, groupId)
 //	}
 func (r *SQLiteRepository) GetCommentsByUserId(userId int) ([]models.Comment, error) {
-	return sqlite.GetCommentsByUserId(r.businessDb, userId)
+	return comments.GetCommentsByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) GetCommentsByPostId(postId int) ([]models.Comment, error) {
-	return sqlite.GetCommentsByPostId(r.businessDb, postId)
+	return comments.GetCommentsByPostId(r.businessDb, postId)
 }
 func (r *SQLiteRepository) UpdateComment(comment models.Comment) (models.Comment, error) {
-	return sqlite.UpdateComment(r.businessDb, comment)
+	return comments.UpdateComment(r.businessDb, comment)
 }
 func (r *SQLiteRepository) DeleteCommentById(commentId int) error {
-	return sqlite.DeleteCommentById(r.businessDb, commentId)
+	return comments.DeleteCommentById(r.businessDb, commentId)
 }
 func (r *SQLiteRepository) DeleteCommentsByGroupId(groupId int) error {
-	return sqlite.DeleteCommentsByGroupId(r.businessDb, groupId)
+	return comments.DeleteCommentsByGroupId(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) DeleteCommentsByUserId(userId int) error {
-	return sqlite.DeleteCommentsByUserId(r.businessDb, userId)
+	return comments.DeleteCommentsByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) DeleteCommentsByPostId(postId int) error {
-	return sqlite.DeleteCommentsByPostId(r.businessDb, postId)
+	return comments.DeleteCommentsByPostId(r.businessDb, postId)
 }
 func (r *SQLiteRepository) DeleteAllComments() error {
-	return sqlite.DeleteAllComments(r.businessDb)
+	return comments.DeleteAllComments(r.businessDb)
 }
 
 // Event
