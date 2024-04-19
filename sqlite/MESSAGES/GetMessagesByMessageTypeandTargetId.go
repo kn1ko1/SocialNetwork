@@ -1,4 +1,4 @@
-package sqlite
+package messages
 
 import (
 	"database/sql"
@@ -8,6 +8,7 @@ import (
 
 // Retrieves messages with the relevant messageType and TargetId from the MESSAGES table
 func GetMessagesByMessageTypeandTargetId(database *sql.DB, messageType string, targetId int) ([]models.Message, error) {
+
 	rows, err := database.Query("SELECT * FROM MESSAGES WHERE MessageType = ? AND TargetId = ?", messageType, targetId)
 	if err != nil {
 		utils.HandleError("Error executing query in GetMessagesByType.", err)

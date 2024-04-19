@@ -2,6 +2,10 @@ package sqlite
 
 import (
 	"database/sql"
+	events "socialnetwork/sqlite/EVENTS"
+	group_users "socialnetwork/sqlite/GROUP_USERS"
+	messages "socialnetwork/sqlite/MESSAGES"
+	posts "socialnetwork/sqlite/POSTS"
 	"socialnetwork/transport"
 	"socialnetwork/utils"
 )
@@ -18,7 +22,7 @@ func GetGroupDataForUser(identityDB, businessDb *sql.DB, groupId int) (transport
 	}
 
 	// Gets a list of all users in the group
-	GroupData.GroupUsers, err = GetGroupUsersByGroupId(identityDB, groupId)
+	GroupData.GroupUsers, err = group_users.GetGroupUsersByGroupId(identityDB, groupId)
 	if err != nil {
 		utils.HandleError("Error in GetGroupUsersByGroupId in GetGroupDataForUser", err)
 
@@ -43,19 +47,19 @@ func GetGroupDataForUser(identityDB, businessDb *sql.DB, groupId int) (transport
 	// }
 
 	// Get posts with for this group
-	GroupData.GroupPosts, err = GetPostsByGroupId(businessDb, groupId)
+	GroupData.GroupPosts, err = posts.GetPostsByGroupId(businessDb, groupId)
 	if err != nil {
 		utils.HandleError("Error in GetPostsByGroupId in GetGroupDataForUser", err)
 	}
 
 	// Get groups chat log
-	GroupData.GroupMessages, err = GetMessagesByMessageTypeandTargetId(businessDb, "group", groupId)
+	GroupData.GroupMessages, err = messages.GetMessagesByMessageTypeandTargetId(businessDb, "group", groupId)
 	if err != nil {
 		utils.HandleError("Error in GetMessagesByMessageTypeandTargetId in GetGroupDataForUser", err)
 	}
 
 	// GetPostsPrivate retrieves private posts for the given followerId
-	GroupData.GroupEvents, err = GetEventsByGroupId(businessDb, groupId)
+	GroupData.GroupEvents, err = events.GetEventsByGroupId(businessDb, groupId)
 	if err != nil {
 		utils.HandleError("Error in GetEventsByGroupId in GetGroupDataForUser", err)
 	}
