@@ -9,6 +9,7 @@ import (
 	"socialnetwork/sqlite"
 	comments "socialnetwork/sqlite/COMMENTS"
 	events "socialnetwork/sqlite/EVENTS"
+	event_users "socialnetwork/sqlite/EVENT_USERS"
 	groups "socialnetwork/sqlite/GROUPS"
 	messages "socialnetwork/sqlite/MESSAGES"
 	"socialnetwork/transport"
@@ -240,25 +241,25 @@ func (r *SQLiteRepository) DeleteAllEvents() error {
 
 // EventUser
 func (r *SQLiteRepository) CreateEventUser(eventUser models.EventUser) (models.EventUser, error) {
-	return sqlite.CreateEventUser(r.businessDb, eventUser)
+	return event_users.CreateEventUser(r.businessDb, eventUser)
 }
 func (r *SQLiteRepository) GetEventUsersByUserId(userId int) ([]models.EventUser, error) {
-	return sqlite.GetEventUsersByUserId(r.businessDb, userId)
+	return event_users.GetEventUsersByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) GetEventUsersByEventId(eventId int) ([]models.EventUser, error) {
-	return sqlite.GetEventUsersByUserId(r.businessDb, eventId)
+	return event_users.GetEventUsersByUserId(r.businessDb, eventId)
 }
 func (r *SQLiteRepository) DeleteEventUsersByUserId(userId int) error {
-	return sqlite.DeleteEventUsersByUserId(r.businessDb, userId)
+	return event_users.DeleteEventUsersByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) DeleteEventUsersByEventId(eventId int) error {
-	return sqlite.DeleteEventUsersByEventId(r.businessDb, eventId)
+	return event_users.DeleteEventUsersByEventId(r.businessDb, eventId)
 }
 func (r *SQLiteRepository) DeleteEventUserByEventIdAndUserId(eventId, userId int) error {
-	return sqlite.DeleteEventUserByEventIdAndUserId(r.businessDb, userId, eventId)
+	return event_users.DeleteEventUserByEventIdAndUserId(r.businessDb, userId, eventId)
 }
 func (r *SQLiteRepository) DeleteAllEventUsers() error {
-	return sqlite.DeleteAllEventUsers(r.businessDb)
+	return event_users.DeleteAllEventUsers(r.businessDb)
 }
 
 // Message
