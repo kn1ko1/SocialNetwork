@@ -1,4 +1,4 @@
-package sqlite
+package event_users
 
 import (
 	"database/sql"
