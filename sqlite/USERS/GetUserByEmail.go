@@ -1,16 +1,18 @@
-package sqlite
+package users
 
 import (
 	"database/sql"
+	"errors"
 	"socialnetwork/models"
 	"socialnetwork/utils"
 )
 
-// Retrieves user with the relevant username from the USERS table
-func GetUserByUsername(database *sql.DB, username string) (models.User, error) {
+// Retrieves user with the relevant userId from the USERS table
+func GetUserByEmail(database *sql.DB, email string) (models.User, error) {
 	var user models.User
-	err := database.QueryRow("SELECT * FROM USERS WHERE Username = ?", username).
+	err := database.QueryRow("SELECT * FROM USERS WHERE Email = ?", email).
 		Scan(
+			&user.UserId,
 			&user.Bio,
 			&user.CreatedAt,
 			&user.DOB,
@@ -26,10 +28,10 @@ func GetUserByUsername(database *sql.DB, username string) (models.User, error) {
 
 	switch {
 	case err == sql.ErrNoRows:
-		utils.HandleError("user not found.", sql.ErrNoRows)
-		return user, sql.ErrNoRows
+		utils.HandleError("User not found.", err)
+		return user, errors.New("user not found")
 	case err != nil:
-		utils.HandleError("Error retrieving user by username.", err)
+		utils.HandleError("Error retrieving user by email", err)
 		return user, err
 	}
 

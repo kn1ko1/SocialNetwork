@@ -1,4 +1,4 @@
-package sqlite
+package users
 
 import (
 	"database/sql"
@@ -7,14 +7,10 @@ import (
 )
 
 // Retrieves user with the relevant username from the USERS table
-func GetUserByUsernameOrEmail(database *sql.DB, usernameOrEmail string) (models.User, error) {
+func GetUserByUsername(database *sql.DB, username string) (models.User, error) {
 	var user models.User
-	err := database.QueryRow(`
-	SELECT * FROM USERS 
-	WHERE Username = ? OR Email = ?
-`, usernameOrEmail, usernameOrEmail).
+	err := database.QueryRow("SELECT * FROM USERS WHERE Username = ?", username).
 		Scan(
-			&user.UserId,
 			&user.Bio,
 			&user.CreatedAt,
 			&user.DOB,
