@@ -2,16 +2,20 @@ package sqlite
 
 import (
 	"database/sql"
+	posts "socialnetwork/sqlite/POSTS"
+	users "socialnetwork/sqlite/USERS"
+	user_users "socialnetwork/sqlite/USER_USERS"
 	"socialnetwork/transport"
 	"socialnetwork/utils"
 )
 
+// This Should not be a SQLite package function
 // Retrieves data for the user's homepage including posts and comments
 func GetProfileDataForUser(identityDb *sql.DB, businessDb *sql.DB, userId int) (transport.ProfileModel, error) {
 
 	var userProfileData transport.ProfileModel
 	var err error
-	userData, err := GetUserById(identityDb, userId)
+	userData, err := users.GetUserById(identityDb, userId)
 	if err != nil {
 		utils.HandleError("Error in GetProfileDataForUser", err)
 		// return userProfileData, err
@@ -27,13 +31,13 @@ func GetProfileDataForUser(identityDb *sql.DB, businessDb *sql.DB, userId int) (
 		LastName:  userData.LastName,
 		Username:  userData.Username,
 	}
-	userProfileData.UserPostData, err = GetPostsByUserId(businessDb, userId)
+	userProfileData.UserPostData, err = posts.GetPostsByUserId(businessDb, userId)
 	if err != nil {
 		utils.HandleError("Error in GetProfileDataForUser", err)
 		// return userProfileData, err
 	}
 
-	followerUserUsers, err := GetUserUsersBySubjectId(businessDb, userId)
+	followerUserUsers, err := user_users.GetUserUsersBySubjectId(businessDb, userId)
 	if err != nil {
 		utils.HandleError("Error in GetProfileDataForUser", err)
 		// return userProfileData, err
@@ -48,7 +52,7 @@ func GetProfileDataForUser(identityDb *sql.DB, businessDb *sql.DB, userId int) (
 		userProfileData.UserFollowerData = append(userProfileData.UserFollowerData, userFollowerData)
 	}
 
-	followsUsersUsers, err := GetUserUsersByFollowerId(businessDb, userId)
+	followsUsersUsers, err := user_users.GetUserUsersByFollowerId(businessDb, userId)
 	if err != nil {
 		utils.HandleError("Error in GetProfileDataForUser", err)
 		// return userProfileData, err

@@ -5,6 +5,7 @@ import (
 	"socialnetwork/utils" // Assuming you have a utility package for error handling
 )
 
+// This needs to be more descriptive that it is operating on USERS table
 // UpdateIsPublic updates the IsPublic field for a user in the USERS table
 func UpdateIsPublic(database *sql.DB, userId int, isPublic bool) error {
 	query := `

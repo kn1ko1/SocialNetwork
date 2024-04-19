@@ -7,6 +7,17 @@ import (
 	"log"
 	"socialnetwork/models"
 	"socialnetwork/sqlite"
+	comments "socialnetwork/sqlite/COMMENTS"
+	events "socialnetwork/sqlite/EVENTS"
+	event_users "socialnetwork/sqlite/EVENT_USERS"
+	groups "socialnetwork/sqlite/GROUPS"
+	group_users "socialnetwork/sqlite/GROUP_USERS"
+	messages "socialnetwork/sqlite/MESSAGES"
+	notifications "socialnetwork/sqlite/NOTIFICATIONS"
+	posts "socialnetwork/sqlite/POSTS"
+	post_users "socialnetwork/sqlite/POST_USERS"
+	users "socialnetwork/sqlite/USERS"
+	user_users "socialnetwork/sqlite/USER_USERS"
 	"socialnetwork/transport"
 
 	"database/sql"
@@ -49,16 +60,16 @@ func (r *SQLiteRepository) UpdateIsPublic(userId int, isPublic bool) error {
 
 // Users
 func (r *SQLiteRepository) CreateUser(user models.User) (models.User, error) {
-	return sqlite.CreateUser(r.identityDb, user)
+	return users.CreateUser(r.identityDb, user)
 }
 func (r *SQLiteRepository) GetAllUsers() ([]models.User, error) {
-	return sqlite.GetAllUsers(r.identityDb)
+	return users.GetAllUsers(r.identityDb)
 }
 func (r *SQLiteRepository) GetUsersByPublic() ([]models.User, error) {
-	return sqlite.GetUsersByPublic(r.identityDb)
+	return users.GetUsersByPublic(r.identityDb)
 }
 func (r *SQLiteRepository) GetUserById(userId int) (models.User, error) {
-	return sqlite.GetUserById(r.identityDb, userId)
+	return users.GetUserById(r.identityDb, userId)
 }
 
 // func (r *SQLiteRepository) GetUserByEmail(email string) (models.User, error) {
@@ -69,294 +80,294 @@ func (r *SQLiteRepository) GetUserById(userId int) (models.User, error) {
 // }
 
 func (r *SQLiteRepository) GetUserByUsernameOrEmail(usernameOrEmail string) (models.User, error) {
-	return sqlite.GetUserByUsernameOrEmail(r.identityDb, usernameOrEmail)
+	return users.GetUserByUsernameOrEmail(r.identityDb, usernameOrEmail)
 }
 func (r *SQLiteRepository) UpdateUser(user models.User) (models.User, error) {
-	return sqlite.UpdateUser(r.identityDb, user)
+	return users.UpdateUser(r.identityDb, user)
 }
 func (r *SQLiteRepository) DeleteUserById(userId int) error {
-	return sqlite.DeleteUserById(r.identityDb, userId)
+	return users.DeleteUserById(r.identityDb, userId)
 }
 func (r *SQLiteRepository) DeleteAllUsers() error {
-	return sqlite.DeleteAllUsers(r.identityDb)
+	return users.DeleteAllUsers(r.identityDb)
 }
 
 // UserUser
 func (r *SQLiteRepository) CreateUserUser(userUser models.UserUser) (models.UserUser, error) {
-	return sqlite.CreateUserUser(r.businessDb, userUser)
+	return user_users.CreateUserUser(r.businessDb, userUser)
 }
 func (r *SQLiteRepository) GetUserUsersBySubjectId(subjectId int) ([]models.UserUser, error) {
-	return sqlite.GetUserUsersBySubjectId(r.businessDb, subjectId)
+	return user_users.GetUserUsersBySubjectId(r.businessDb, subjectId)
 }
 func (r *SQLiteRepository) GetUserUsersByFollowerId(followerId int) ([]models.UserUser, error) {
-	return sqlite.GetUserUsersByFollowerId(r.businessDb, followerId)
+	return user_users.GetUserUsersByFollowerId(r.businessDb, followerId)
 }
 func (r *SQLiteRepository) GetUserUserByFollowerIdAndSubjectId(followerId, subjectId int) (models.UserUser, error) {
-	return sqlite.GetUserUserByFollowerIdAndSubjectId(r.businessDb, followerId, subjectId)
+	return user_users.GetUserUserByFollowerIdAndSubjectId(r.businessDb, followerId, subjectId)
 }
 
 func (r *SQLiteRepository) DeleteUserUsersByFollowerId(followerId int) error {
-	return sqlite.DeleteUserUsersByFollowerId(r.businessDb, followerId)
+	return user_users.DeleteUserUsersByFollowerId(r.businessDb, followerId)
 }
 func (r *SQLiteRepository) DeleteUserUsersBySubjectId(subjectId int) error {
-	return sqlite.DeleteUserUsersByFollowerId(r.businessDb, subjectId)
+	return user_users.DeleteUserUsersByFollowerId(r.businessDb, subjectId)
 }
 func (r *SQLiteRepository) DeleteUserUserBySubjectIdAndFollowerId(subjectId, followerId int) error {
-	return sqlite.DeleteUserUserBySubjectIdAndFollowerId(r.businessDb, subjectId, followerId)
+	return user_users.DeleteUserUserBySubjectIdAndFollowerId(r.businessDb, subjectId, followerId)
 }
 
 // Post
 func (r *SQLiteRepository) CreatePost(post models.Post) (models.Post, error) {
-	return sqlite.CreatePost(r.businessDb, post)
+	return posts.CreatePost(r.businessDb, post)
 }
 func (r *SQLiteRepository) GetAllPosts() ([]models.Post, error) {
-	return sqlite.GetAllPosts(r.businessDb)
+	return posts.GetAllPosts(r.businessDb)
 }
 func (r *SQLiteRepository) GetPostById(postId int) (models.Post, error) {
-	return sqlite.GetPostById(r.businessDb, postId)
+	return posts.GetPostById(r.businessDb, postId)
 }
 func (r *SQLiteRepository) GetPostsByGroupId(groupId int) ([]models.Post, error) {
-	return sqlite.GetPostsByGroupId(r.businessDb, groupId)
+	return posts.GetPostsByGroupId(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) GetPostsByUserId(userId int) ([]models.Post, error) {
-	return sqlite.GetPostsByUserId(r.businessDb, userId)
+	return posts.GetPostsByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) GetPostsByPrivacy(privacy string) ([]models.Post, error) {
-	return sqlite.GetPostsByPrivacy(r.businessDb, privacy)
+	return posts.GetPostsByPrivacy(r.businessDb, privacy)
 }
 func (r *SQLiteRepository) DeletePostById(postId int) error {
-	return sqlite.DeletePostById(r.businessDb, postId)
+	return posts.DeletePostById(r.businessDb, postId)
 }
 func (r *SQLiteRepository) UpdatePost(post models.Post) (models.Post, error) {
-	return sqlite.UpdatePost(r.businessDb, post)
+	return posts.UpdatePost(r.businessDb, post)
 }
 func (r *SQLiteRepository) DeletePostByGroupId(groupId int) error {
-	return sqlite.DeletePostByGroupId(r.businessDb, groupId)
+	return posts.DeletePostByGroupId(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) DeletePostsByUserId(userId int) error {
-	return sqlite.DeletePostsByUserId(r.businessDb, userId)
+	return posts.DeletePostsByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) DeleteAllPosts() error {
-	return sqlite.DeleteAllPosts(r.businessDb)
+	return posts.DeleteAllPosts(r.businessDb)
 }
 
 // Post_Users
 func (r *SQLiteRepository) CreatePostUser(postUser models.PostUser) (models.PostUser, error) {
-	return sqlite.CreatePostUser(r.businessDb, postUser)
+	return post_users.CreatePostUser(r.businessDb, postUser)
 }
 func (r *SQLiteRepository) GetPostUsersByUserId(userId int) ([]models.PostUser, error) {
-	return sqlite.GetPostUsersByUserId(r.businessDb, userId)
+	return post_users.GetPostUsersByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) GetPostUsersByPostId(postId int) ([]models.PostUser, error) {
-	return sqlite.GetPostUsersByPostId(r.businessDb, postId)
+	return post_users.GetPostUsersByPostId(r.businessDb, postId)
 }
 func (r *SQLiteRepository) DeletePostUsersByUserId(userId int) error {
-	return sqlite.DeletePostUsersByUserId(r.businessDb, userId)
+	return post_users.DeletePostUsersByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) DeletePostUsersByPostId(postId int) error {
-	return sqlite.DeletePostUsersByPostId(r.businessDb, postId)
+	return post_users.DeletePostUsersByPostId(r.businessDb, postId)
 }
 func (r *SQLiteRepository) DeletePostUserByPostIdAndUserId(postId, userId int) error {
-	return sqlite.DeletePostUserByPostIdAndUserId(r.businessDb, postId, userId)
+	return post_users.DeletePostUserByPostIdAndUserId(r.businessDb, postId, userId)
 }
 func (r *SQLiteRepository) DeleteAllPostUsers() error {
-	return sqlite.DeleteAllPostUsers(r.businessDb)
+	return post_users.DeleteAllPostUsers(r.businessDb)
 }
 
 // Comments
 func (r *SQLiteRepository) CreateComment(comment models.Comment) (models.Comment, error) {
-	return sqlite.CreateComment(r.businessDb, comment)
+	return comments.CreateComment(r.businessDb, comment)
 }
 func (r *SQLiteRepository) GetAllComments() ([]models.Comment, error) {
-	return sqlite.GetAllComments(r.businessDb)
+	return comments.GetAllComments(r.businessDb)
 }
 func (r *SQLiteRepository) GetCommentById(commentId int) (models.Comment, error) {
-	return sqlite.GetCommentById(r.businessDb, commentId)
+	return comments.GetCommentById(r.businessDb, commentId)
 }
 
 //	func (r *SQLiteRepository) GetCommentsByGroupId(groupId int) ([]models.Comment, error) {
-//		return sqlite.GetCommentsByGroupId(r.businessDb, groupId)
+//		return comments.GetCommentsByGroupId(r.businessDb, groupId)
 //	}
 func (r *SQLiteRepository) GetCommentsByUserId(userId int) ([]models.Comment, error) {
-	return sqlite.GetCommentsByUserId(r.businessDb, userId)
+	return comments.GetCommentsByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) GetCommentsByPostId(postId int) ([]models.Comment, error) {
-	return sqlite.GetCommentsByPostId(r.businessDb, postId)
+	return comments.GetCommentsByPostId(r.businessDb, postId)
 }
 func (r *SQLiteRepository) UpdateComment(comment models.Comment) (models.Comment, error) {
-	return sqlite.UpdateComment(r.businessDb, comment)
+	return comments.UpdateComment(r.businessDb, comment)
 }
 func (r *SQLiteRepository) DeleteCommentById(commentId int) error {
-	return sqlite.DeleteCommentById(r.businessDb, commentId)
+	return comments.DeleteCommentById(r.businessDb, commentId)
 }
 func (r *SQLiteRepository) DeleteCommentsByGroupId(groupId int) error {
-	return sqlite.DeleteCommentsByGroupId(r.businessDb, groupId)
+	return comments.DeleteCommentsByGroupId(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) DeleteCommentsByUserId(userId int) error {
-	return sqlite.DeleteCommentsByUserId(r.businessDb, userId)
+	return comments.DeleteCommentsByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) DeleteCommentsByPostId(postId int) error {
-	return sqlite.DeleteCommentsByPostId(r.businessDb, postId)
+	return comments.DeleteCommentsByPostId(r.businessDb, postId)
 }
 func (r *SQLiteRepository) DeleteAllComments() error {
-	return sqlite.DeleteAllComments(r.businessDb)
+	return comments.DeleteAllComments(r.businessDb)
 }
 
 // Event
 func (r *SQLiteRepository) CreateEvent(event models.Event) (models.Event, error) {
-	return sqlite.CreateEvent(r.businessDb, event)
+	return events.CreateEvent(r.businessDb, event)
 }
 func (r *SQLiteRepository) GetAllEvents() ([]models.Event, error) {
-	return sqlite.GetAllEvents(r.businessDb)
+	return events.GetAllEvents(r.businessDb)
 }
 func (r *SQLiteRepository) GetEventById(eventId int) (models.Event, error) {
-	return sqlite.GetEventById(r.businessDb, eventId)
+	return events.GetEventById(r.businessDb, eventId)
 }
 func (r *SQLiteRepository) GetEventsByGroupId(groupId int) ([]models.Event, error) {
-	return sqlite.GetEventsByGroupId(r.businessDb, groupId)
+	return events.GetEventsByGroupId(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) GetEventsByUserId(userId int) ([]models.Event, error) {
-	return sqlite.GetEventsByUserId(r.businessDb, userId)
+	return events.GetEventsByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) UpdateEvent(event models.Event) (models.Event, error) {
-	return sqlite.UpdateEvent(r.businessDb, event)
+	return events.UpdateEvent(r.businessDb, event)
 }
 func (r *SQLiteRepository) DeleteEventById(eventId int) error {
-	return sqlite.DeleteEventById(r.businessDb, eventId)
+	return events.DeleteEventById(r.businessDb, eventId)
 }
 func (r *SQLiteRepository) DeleteEventsByGroupId(groupId int) error {
-	return sqlite.DeleteEventsByGroupId(r.businessDb, groupId)
+	return events.DeleteEventsByGroupId(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) DeleteEventsByUserId(userId int) error {
-	return sqlite.DeleteEventsByUserId(r.businessDb, userId)
+	return events.DeleteEventsByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) DeleteAllEvents() error {
-	return sqlite.DeleteAllEvents(r.businessDb)
+	return events.DeleteAllEvents(r.businessDb)
 }
 
 // EventUser
 func (r *SQLiteRepository) CreateEventUser(eventUser models.EventUser) (models.EventUser, error) {
-	return sqlite.CreateEventUser(r.businessDb, eventUser)
+	return event_users.CreateEventUser(r.businessDb, eventUser)
 }
 func (r *SQLiteRepository) GetEventUsersByUserId(userId int) ([]models.EventUser, error) {
-	return sqlite.GetEventUsersByUserId(r.businessDb, userId)
+	return event_users.GetEventUsersByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) GetEventUsersByEventId(eventId int) ([]models.EventUser, error) {
-	return sqlite.GetEventUsersByUserId(r.businessDb, eventId)
+	return event_users.GetEventUsersByUserId(r.businessDb, eventId)
 }
 func (r *SQLiteRepository) DeleteEventUsersByUserId(userId int) error {
-	return sqlite.DeleteEventUsersByUserId(r.businessDb, userId)
+	return event_users.DeleteEventUsersByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) DeleteEventUsersByEventId(eventId int) error {
-	return sqlite.DeleteEventUsersByEventId(r.businessDb, eventId)
+	return event_users.DeleteEventUsersByEventId(r.businessDb, eventId)
 }
 func (r *SQLiteRepository) DeleteEventUserByEventIdAndUserId(eventId, userId int) error {
-	return sqlite.DeleteEventUserByEventIdAndUserId(r.businessDb, userId, eventId)
+	return event_users.DeleteEventUserByEventIdAndUserId(r.businessDb, userId, eventId)
 }
 func (r *SQLiteRepository) DeleteAllEventUsers() error {
-	return sqlite.DeleteAllEventUsers(r.businessDb)
+	return event_users.DeleteAllEventUsers(r.businessDb)
 }
 
 // Message
 func (r *SQLiteRepository) CreateMessage(message models.Message) (models.Message, error) {
-	return sqlite.CreateMessage(r.businessDb, message)
+	return messages.CreateMessage(r.businessDb, message)
 }
 func (r *SQLiteRepository) GetAllMessages() ([]models.Message, error) {
-	return sqlite.GetAllMessages(r.businessDb)
+	return messages.GetAllMessages(r.businessDb)
 }
 func (r *SQLiteRepository) GetMessagesByType(messageType string) ([]models.Message, error) {
-	return sqlite.GetMessagesByType(r.businessDb, messageType)
+	return messages.GetMessagesByType(r.businessDb, messageType)
 }
 func (r *SQLiteRepository) GetMessageById(messageId int) (models.Message, error) {
-	return sqlite.GetMessageById(r.businessDb, messageId)
+	return messages.GetMessageById(r.businessDb, messageId)
 }
 func (r *SQLiteRepository) GetMessagesBySenderAndTargetIDs(senderId, targetId int) ([]models.Message, error) {
-	return sqlite.GetMessagesBySenderAndTargetIds(r.businessDb, senderId, targetId)
+	return messages.GetMessagesBySenderAndTargetIds(r.businessDb, senderId, targetId)
 }
 func (r *SQLiteRepository) UpdateMessage(message models.Message) (models.Message, error) {
-	return sqlite.UpdateMessage(r.businessDb, message)
+	return messages.UpdateMessage(r.businessDb, message)
 }
 func (r *SQLiteRepository) DeleteMessagesByType(messageType string) error {
-	return sqlite.DeleteMessagesByType(r.businessDb, messageType)
+	return messages.DeleteMessagesByType(r.businessDb, messageType)
 }
 func (r *SQLiteRepository) DeleteMessageById(messageId int) error {
-	return sqlite.DeleteMessageById(r.businessDb, messageId)
+	return messages.DeleteMessageById(r.businessDb, messageId)
 }
 func (r *SQLiteRepository) DeleteMessagesBySenderId(senderId int) error {
-	return sqlite.DeleteMessagesBySenderId(r.businessDb, senderId)
+	return messages.DeleteMessagesBySenderId(r.businessDb, senderId)
 }
 func (r *SQLiteRepository) DeleteMessagesByTargetId(targetId int) error {
-	return sqlite.DeleteMessagesByTargetId(r.businessDb, targetId)
+	return messages.DeleteMessagesByTargetId(r.businessDb, targetId)
 }
 func (r *SQLiteRepository) DeleteAllMessages() error {
-	return sqlite.DeleteAllMessages(r.businessDb)
+	return messages.DeleteAllMessages(r.businessDb)
 }
 
 // Group
 func (r *SQLiteRepository) CreateGroup(group models.Group) (models.Group, error) {
-	return sqlite.CreateGroup(r.businessDb, group)
+	return groups.CreateGroup(r.businessDb, group)
 }
 
 func (r *SQLiteRepository) GetAllGroups() ([]models.Group, error) {
-	return sqlite.GetAllGroups(r.businessDb)
+	return groups.GetAllGroups(r.businessDb)
 }
 func (r *SQLiteRepository) GetGroupById(groupId int) (models.Group, error) {
-	return sqlite.GetGroupById(r.businessDb, groupId)
+	return groups.GetGroupById(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) UpdateGroup(group models.Group) (models.Group, error) {
-	return sqlite.UpdateGroup(r.businessDb, group)
+	return groups.UpdateGroup(r.businessDb, group)
 }
 func (r *SQLiteRepository) DeleteGroup(groupId int) error {
-	return sqlite.DeleteGroup(r.businessDb, groupId)
+	return groups.DeleteGroup(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) DeleteAllGroups() error {
-	return sqlite.DeleteAllGroups(r.businessDb)
+	return groups.DeleteAllGroups(r.businessDb)
 }
 
 // Group_User
 func (r *SQLiteRepository) CreateGroupUser(groupUser models.GroupUser) (models.GroupUser, error) {
-	return sqlite.CreateGroupUser(r.businessDb, groupUser)
+	return group_users.CreateGroupUser(r.businessDb, groupUser)
 }
 func (r *SQLiteRepository) GetGroupUser(groupUserId int) (models.GroupUser, error) {
-	return sqlite.GetGroupUser(r.businessDb, groupUserId)
+	return group_users.GetGroupUser(r.businessDb, groupUserId)
 }
 func (r *SQLiteRepository) GetGroupUsersByUserId(userId int) ([]models.GroupUser, error) {
-	return sqlite.GetGroupUsersByUserId(r.businessDb, userId)
+	return group_users.GetGroupUsersByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) GetGroupUsersByGroupId(groupId int) ([]models.GroupUser, error) {
-	return sqlite.GetGroupUsersByGroupId(r.businessDb, groupId)
+	return group_users.GetGroupUsersByGroupId(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) DeleteGroupUsersByUserId(userId int) error {
-	return sqlite.DeleteGroupUsersByUserId(r.businessDb, userId)
+	return group_users.DeleteGroupUsersByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) DeleteGroupUserByGroupId(groupId int) error {
-	return sqlite.DeleteGroupUserByGroupId(r.businessDb, groupId)
+	return group_users.DeleteGroupUserByGroupId(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) DeleteGroupUserByGroupIdAndUserId(groupId, userId int) error {
-	return sqlite.DeleteGroupUserByGroupIdAndUserId(r.businessDb, groupId, userId)
+	return group_users.DeleteGroupUserByGroupIdAndUserId(r.businessDb, groupId, userId)
 }
 func (r *SQLiteRepository) DeleteGroupUser(groupUserId int) error {
-	return sqlite.DeleteGroupUser(r.businessDb, groupUserId)
+	return group_users.DeleteGroupUser(r.businessDb, groupUserId)
 }
 
 func (r *SQLiteRepository) DeleteAllGroupUsers() error {
-	return sqlite.DeleteAllGroupUsers(r.businessDb)
+	return group_users.DeleteAllGroupUsers(r.businessDb)
 }
 
 // Notification
 func (r *SQLiteRepository) CreateNotification(notification models.Notification) (models.Notification, error) {
-	return sqlite.CreateNotification(r.businessDb, notification)
+	return notifications.CreateNotification(r.businessDb, notification)
 }
 func (r *SQLiteRepository) GetNotificationById(notificationId int) (models.Notification, error) {
-	return sqlite.GetNotificationById(r.businessDb, notificationId)
+	return notifications.GetNotificationById(r.businessDb, notificationId)
 }
 
 func (r *SQLiteRepository) GetNotificationsByUserId(userId int) ([]models.Notification, error) {
-	return sqlite.GetNotificationsByUserId(r.businessDb, userId)
+	return notifications.GetNotificationsByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) UpdateNotification(notification models.Notification) (models.Notification, error) {
-	return sqlite.UpdateNotification(r.businessDb, notification)
+	return notifications.UpdateNotification(r.businessDb, notification)
 }
 func (r *SQLiteRepository) DeleteNotificationById(notificationId int) error {
-	return sqlite.DeleteNotificationById(r.businessDb, notificationId)
+	return notifications.DeleteNotificationById(r.businessDb, notificationId)
 }

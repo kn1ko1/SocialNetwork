@@ -3,6 +3,7 @@ package sqlite
 import (
 	"database/sql"
 	"socialnetwork/models"
+	comments "socialnetwork/sqlite/COMMENTS"
 	"socialnetwork/transport"
 	"socialnetwork/utils"
 )
@@ -45,7 +46,7 @@ func GetPostsPrivateWithComments(database *sql.DB, userId int) ([]transport.Post
 		}
 
 		// Get comments associated with the current post
-		comments, err := GetCommentsByPostId(database, post.PostId)
+		comments, err := comments.GetCommentsByPostId(database, post.PostId)
 		if err != nil {
 			utils.HandleError("Error getting comments for post.", err)
 			return nil, err
