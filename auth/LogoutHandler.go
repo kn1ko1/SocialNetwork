@@ -18,15 +18,15 @@ func NewLogoutHandler(r repo.IRepository) *LogoutHandler {
 
 func (h *LogoutHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
-	case http.MethodGet:
-		h.get(w, r)
+	case http.MethodPost:
+		h.post(w, r)
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 	}
 }
 
-func (h *LogoutHandler) get(w http.ResponseWriter, r *http.Request) {
-	c, err := r.Cookie("Session")
+func (h *LogoutHandler) post(w http.ResponseWriter, r *http.Request) {
+	c, err := r.Cookie(CookieName)
 	if err != nil {
 		log.Println(err.Error())
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
@@ -34,7 +34,7 @@ func (h *LogoutHandler) get(w http.ResponseWriter, r *http.Request) {
 	}
 	DefaultManager.Delete(c.Value)
 	c = &http.Cookie{
-		Name:     "Session",
+		Name:     CookieName,
 		Value:    "",
 		Path:     "/",
 		Secure:   true,

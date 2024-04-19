@@ -86,7 +86,7 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	c := http.Cookie{
-		Name:     "SessionID",
+		Name:     CookieName,
 		Value:    cookieValue,
 		Path:     "/",
 		Secure:   true,

@@ -25,10 +25,10 @@ func (p *Post) Validate() error {
 		return errors.New("invalid 'CreatedAt' field")
 	}
 	// GroupID can be 0 - i.e. not posted to a Group - but cannot be negative
-	if p.GroupId < -1 {
+	if p.GroupId < -2 {
 		return errors.New("invalid 'GroupId' field")
 	}
-	if p.Privacy != "public" && p.Privacy != "private" && p.Privacy != "almost private" {
+	if p.Privacy != "public" && p.Privacy != "private" && p.Privacy != "almost private" && p.Privacy != "" {
 		return errors.New("invalid 'Privacy' field")
 	}
 	if p.UpdatedAt < p.CreatedAt {
