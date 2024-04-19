@@ -12,6 +12,7 @@ import (
 const (
 	GROUP_CHAT_MESSAGE = 1
 	PRIVATE_MESSAGE    = 2
+	CREATE_EVENT       = 3
 )
 
 type Client struct {
@@ -70,7 +71,6 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		c.SocketGroups[groupId].Broadcast <- msg
 		// store message in DB
 		// do stuff
-
 	case PRIVATE_MESSAGE:
 		var body PrivateMessageBody
 		err := json.Unmarshal([]byte(msg.Body), &body)
@@ -80,6 +80,25 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		fmt.Printf("%+v\n", body)
 		fmt.Println("2 person")
 		c.SocketGroups[0].Broadcast <- msg
+		// case CREATE_EVENT:
+		// 	// User action on front-end triggers this
+		// 	var body models.Event
+		// 	err := json.Unmarshal([]byte(msg.Body), &body)
+		// 	if err != nil {
+		// 		log.Println(err.Error())
+		// 	}
+		// 	body.Validate()
+		// 	// Create Event in DB
+		// 	event, err = c.Repo.CreateEvent(body)
+		// 	if err != nil {
+		// 		log.Println(err.Error())
+		// 	}
+		// 	n := models.Notification{
+		// 		NotificationType: "Create Event",
+		// 		ObjectId:         body.GroupID,
+		// 		SenderId:         body.SenderID,
+		// 		TargetId:         body.GroupID,
+		// 	}
 		// case 3:
 		// 	var event models.Event
 		// 	err := json.Unmarshal([]byte(msg.Body), &event)
