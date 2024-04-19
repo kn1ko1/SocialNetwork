@@ -61,6 +61,7 @@ func (h *WebSocketHandler) get(w http.ResponseWriter, r *http.Request) {
 		_, exists := socketGroupManager.SocketGroups[item.GroupId]
 		if !exists {
 			socketGroupManager.SocketGroups[item.GroupId] = NewSocketGroup(item.GroupId)
+			go socketGroupManager.SocketGroups[item.GroupId].Run()
 		}
 		client.SocketGroups[item.GroupId] = socketGroupManager.SocketGroups[item.GroupId]
 		socketGroupManager.SocketGroups[item.GroupId].Enter <- client
