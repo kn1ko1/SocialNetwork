@@ -1,16 +1,17 @@
-package sqlite
+package messages
 
 import (
 	"database/sql"
+
 	"socialnetwork/models"
 	"socialnetwork/utils"
 )
 
-// Retrieves messages with the relevant senderId from the MESSAGES table
-func GetMessagesBySenderId(database *sql.DB, senderId int) ([]models.Message, error) {
-	rows, err := database.Query("SELECT * FROM MESSAGES WHERE SenderId = ?", senderId)
+// Retrieves all messages from the MESSAGES table
+func GetAllMessages(database *sql.DB) ([]models.Message, error) {
+	rows, err := database.Query("SELECT * FROM MESSAGES")
 	if err != nil {
-		utils.HandleError("Error executing query in GetMessagesBySenderId.", err)
+		utils.HandleError("Error executing SELECT * FROM MESSAGES statement.", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -29,7 +30,7 @@ func GetMessagesBySenderId(database *sql.DB, senderId int) ([]models.Message, er
 			&message.UpdatedAt,
 		)
 		if err != nil {
-			utils.HandleError("Error scanning rows in GetMessagesBySenderId.", err)
+			utils.HandleError("Error scanning rows in GetAllMessages.", err)
 			return nil, err
 		}
 
@@ -37,7 +38,7 @@ func GetMessagesBySenderId(database *sql.DB, senderId int) ([]models.Message, er
 	}
 
 	if err := rows.Err(); err != nil {
-		utils.HandleError("Error iterating over rows in GetMessagesBySenderId.", err)
+		utils.HandleError("Error iterating over rows in GetAllMessages.", err)
 		return nil, err
 	}
 

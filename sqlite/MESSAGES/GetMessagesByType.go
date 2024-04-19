@@ -1,4 +1,4 @@
-package sqlite
+package messages
 
 import (
 	"database/sql"
@@ -6,11 +6,11 @@ import (
 	"socialnetwork/utils"
 )
 
-// Retrieves messages with the relevant targetId from the MESSAGES table
-func GetMessagesByTargetId(database *sql.DB, targetId int) ([]models.Message, error) {
-	rows, err := database.Query("SELECT * FROM MESSAGES WHERE TargetId = ?", targetId)
+// Retrieves messages with the relevant messageType from the MESSAGES table
+func GetMessagesByType(database *sql.DB, messageType string) ([]models.Message, error) {
+	rows, err := database.Query("SELECT * FROM MESSAGES WHERE MessageType = ?", messageType)
 	if err != nil {
-		utils.HandleError("Error executing query in GetMessagesByTargetId.", err)
+		utils.HandleError("Error executing query in GetMessagesByType.", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -29,7 +29,7 @@ func GetMessagesByTargetId(database *sql.DB, targetId int) ([]models.Message, er
 			&message.UpdatedAt,
 		)
 		if err != nil {
-			utils.HandleError("Error scanning rows in GetMessagesByTargetId.", err)
+			utils.HandleError("Error scanning rows in GetMessagesByType.", err)
 			return nil, err
 		}
 
@@ -37,7 +37,7 @@ func GetMessagesByTargetId(database *sql.DB, targetId int) ([]models.Message, er
 	}
 
 	if err := rows.Err(); err != nil {
-		utils.HandleError("Error iterating over rows in GetMessagesByTargetId.", err)
+		utils.HandleError("Error iterating over rows in GetMessagesByType.", err)
 		return nil, err
 	}
 
