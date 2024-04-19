@@ -8,6 +8,7 @@ import (
 	"socialnetwork/models"
 	"socialnetwork/sqlite"
 	comments "socialnetwork/sqlite/COMMENTS"
+	events "socialnetwork/sqlite/EVENTS"
 	"socialnetwork/transport"
 
 	"database/sql"
@@ -205,34 +206,34 @@ func (r *SQLiteRepository) DeleteAllComments() error {
 
 // Event
 func (r *SQLiteRepository) CreateEvent(event models.Event) (models.Event, error) {
-	return sqlite.CreateEvent(r.businessDb, event)
+	return events.CreateEvent(r.businessDb, event)
 }
 func (r *SQLiteRepository) GetAllEvents() ([]models.Event, error) {
-	return sqlite.GetAllEvents(r.businessDb)
+	return events.GetAllEvents(r.businessDb)
 }
 func (r *SQLiteRepository) GetEventById(eventId int) (models.Event, error) {
-	return sqlite.GetEventById(r.businessDb, eventId)
+	return events.GetEventById(r.businessDb, eventId)
 }
 func (r *SQLiteRepository) GetEventsByGroupId(groupId int) ([]models.Event, error) {
-	return sqlite.GetEventsByGroupId(r.businessDb, groupId)
+	return events.GetEventsByGroupId(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) GetEventsByUserId(userId int) ([]models.Event, error) {
-	return sqlite.GetEventsByUserId(r.businessDb, userId)
+	return events.GetEventsByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) UpdateEvent(event models.Event) (models.Event, error) {
-	return sqlite.UpdateEvent(r.businessDb, event)
+	return events.UpdateEvent(r.businessDb, event)
 }
 func (r *SQLiteRepository) DeleteEventById(eventId int) error {
-	return sqlite.DeleteEventById(r.businessDb, eventId)
+	return events.DeleteEventById(r.businessDb, eventId)
 }
 func (r *SQLiteRepository) DeleteEventsByGroupId(groupId int) error {
-	return sqlite.DeleteEventsByGroupId(r.businessDb, groupId)
+	return events.DeleteEventsByGroupId(r.businessDb, groupId)
 }
 func (r *SQLiteRepository) DeleteEventsByUserId(userId int) error {
-	return sqlite.DeleteEventsByUserId(r.businessDb, userId)
+	return events.DeleteEventsByUserId(r.businessDb, userId)
 }
 func (r *SQLiteRepository) DeleteAllEvents() error {
-	return sqlite.DeleteAllEvents(r.businessDb)
+	return events.DeleteAllEvents(r.businessDb)
 }
 
 // EventUser
