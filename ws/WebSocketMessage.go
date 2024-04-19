@@ -16,3 +16,9 @@ type PrivateMessageBody struct {
 	SenderUserID int    `json:"senderUserID"`
 	TargetUserID int    `json:"targetUserID"`
 }
+
+type CreateEventBody struct {
+	// EventID  int
+	GroupID  int
+	SenderID int
+}
