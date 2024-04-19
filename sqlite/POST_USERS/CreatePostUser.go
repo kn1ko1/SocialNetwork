@@ -1,4 +1,4 @@
-package sqlite
+package post_users
 
 import (
 	"database/sql"
@@ -39,7 +39,7 @@ func CreatePostUser(database *sql.DB, postUser models.PostUser) (models.PostUser
 		utils.HandleError("Error getting last insert from table.", err)
 		return postUser, err
 	}
-	log.Println("[sqlite/CreatePostUser] User", postUser.UserId, "can see post", postUser.PostId)
+	log.Println("[post_users/CreatePostUser] User", postUser.UserId, "can see post", postUser.PostId)
 	postUser.PostUserId = int(id)
 	return postUser, nil
 }

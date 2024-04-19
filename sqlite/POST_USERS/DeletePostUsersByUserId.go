@@ -1,4 +1,4 @@
-package sqlite
+package post_users
 
 import (
 	"database/sql"
