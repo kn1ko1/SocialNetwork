@@ -1,4 +1,4 @@
-package sqlite
+package notifications
 
 import (
 	"database/sql"
