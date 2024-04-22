@@ -291,7 +291,11 @@ function Group() {
   }, "Go Back"), /*#__PURE__*/React.createElement(GroupDetails, {
     group: selectedGroup
   })) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("form", {
-    onSubmit: create
+    onSubmit: create,
+    className: "container",
+    style: {
+      maxWidth: "400px"
+    }
   }, /*#__PURE__*/React.createElement("div", {
     className: "mb-3"
   }, /*#__PURE__*/React.createElement("label", {

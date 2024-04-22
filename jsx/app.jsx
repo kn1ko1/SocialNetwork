@@ -324,7 +324,7 @@ function Group() {
 				</div>
 			) : (
 				<div>
-					<form onSubmit={create}>
+					<form onSubmit={create} className="container" style={{ maxWidth: "400px" }}>
 						<div className="mb-3">
 							<label htmlFor="exampleTitle" className="form-label">
 								Title
