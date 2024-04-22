@@ -1,3 +1,4 @@
+import { Chat } from "./Chat.js"
 import { Profile } from "./Profile.js"
 import { Register } from "./Register.js"
 import { FollowButton } from "./components/FollowButton.js"
@@ -236,7 +237,7 @@ const renderProfile = (userId, isEditable) => {
 
 const renderChat = () => {
 	const pageContainer = document.querySelector(".page-container")
-	ReactDOM.render(<Chat />, pageContainer)
+	ReactDOM.render(<Chat socket={socket} />, pageContainer)
 }
 
 const renderGroup = () => {

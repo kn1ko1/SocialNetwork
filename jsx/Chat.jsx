@@ -1,6 +1,6 @@
 const { useState, useEffect } = React
 
-export function Chat() {
+export function Chat({socket}) {
 	const [sendMessage, setSendMessage] = useState("")
 	const [receiveMessage, setReceiveMessage] = useState("")
 
