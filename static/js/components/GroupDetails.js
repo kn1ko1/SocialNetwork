@@ -108,7 +108,7 @@ export function GroupDetails({
     group: group
   }), /*#__PURE__*/React.createElement("div", {
     className: "userList"
-  }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList !== null && userList.length > 0 ? userList.map((user, index) => /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList !== null && userList.length > 0 ? userList.filter(user => !groupMembers.some(member => member.userId === user.userId)).map((user, index) => /*#__PURE__*/React.createElement("div", {
     key: index
   }, /*#__PURE__*/React.createElement("span", null, user.username), /*#__PURE__*/React.createElement("button", {
     onClick: () => handleAddToGroup(user.userId)

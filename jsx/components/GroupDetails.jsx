@@ -112,17 +112,19 @@ export function GroupDetails({ group }) {
 			{/* <p>Members: {group.members}</p> */}
 			<PostFormGroup group={group} />
 
-			<EventForm group={group}/>
+			<EventForm group={group} />
 			{/* Render userList here */}
 			<div className="userList">
 				<h2>UserList</h2>
 				{userList !== null && userList.length > 0 ? (
-					userList.map((user, index) => (
-						<div key={index}>
-							<span>{user.username}</span>
-							<button onClick={() => handleAddToGroup(user.userId)}>Add to Group</button>
-						</div>
-					))
+					userList
+						.filter(user => !groupMembers.some(member => member.userId === user.userId))
+						.map((user, index) => (
+							<div key={index}>
+								<span>{user.username}</span>
+								<button onClick={() => handleAddToGroup(user.userId)}>Add to Group</button>
+							</div>
+						))
 				) : (
 					<p>No Users?!</p>
 				)}
@@ -187,35 +189,35 @@ export function GroupDetails({ group }) {
 
 // Function to add a new group user
 async function AddGroupUser({ groupId, userId }) {
-    const requestData = {
-        groupId: groupId,
-        userId: userId
-    };
+	const requestData = {
+		groupId: groupId,
+		userId: userId
+	};
 
-    console.log('Request data:', requestData);
+	console.log('Request data:', requestData);
 
-    try {
-        const response = await fetch('http://localhost:8080/api/groupUsers', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestData)
-        });
+	try {
+		const response = await fetch('http://localhost:8080/api/groupUsers', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(requestData)
+		});
 
-        console.log('Response:', response);
-    
+		console.log('Response:', response);
 
-        if (response.ok) {
-            // Handle success response
-            console.log('Group user added successfully!');
-        } else {
-            // Handle error response
-            console.error('Failed to add group user:', response.statusText);
-        }
-    } catch (error) {
-        console.error('Error adding group user:', error);
-    }
+
+		if (response.ok) {
+			// Handle success response
+			console.log('Group user added successfully!');
+		} else {
+			// Handle error response
+			console.error('Failed to add group user:', response.statusText);
+		}
+	} catch (error) {
+		console.error('Error adding group user:', error);
+	}
 }
 
 
