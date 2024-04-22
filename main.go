@@ -154,7 +154,7 @@ func addWSHandler(rt *router.Router) {
 }
 
 func addUIHandlers(rt *router.Router) {
-	rt.AddHandler(regexp.MustCompile(`^/$`), ui.NewDummyPageHandler())
+	rt.AddHandler(regexp.MustCompile(`^/$`), ui.NewPageHandler())
 }
 
 func serveStaticFiles(mux *http.ServeMux) {
