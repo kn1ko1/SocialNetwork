@@ -6,14 +6,14 @@ import (
 	"net/http"
 )
 
-type DummyPageHandler struct {
+type PageHandler struct {
 }
 
-func NewDummyPageHandler() *DummyPageHandler {
-	return &DummyPageHandler{}
+func NewPageHandler() *PageHandler {
+	return &PageHandler{}
 }
 
-func (h *DummyPageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *PageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		cookie, err := r.Cookie("SessionID")
@@ -29,7 +29,7 @@ func (h *DummyPageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *DummyPageHandler) get(w http.ResponseWriter, r *http.Request) {
+func (h *PageHandler) get(w http.ResponseWriter, r *http.Request) {
 	err := Template.ExecuteTemplate(w, "Index", nil)
 	if err != nil {
 		http.Error(w, "internal server error", http.StatusInternalServerError)
