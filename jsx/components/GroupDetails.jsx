@@ -1,4 +1,5 @@
 import { PostFormGroup } from "./PostFormGroup.js";
+import { EventForm } from "./EventForm.js";
 
 const { useState, useEffect } = React
 
@@ -63,12 +64,46 @@ export function GroupDetails({ group }) {
 		fetchGroupData();
 	}, [group.groupId]);
 
-	// const UserList = ({ userList }) => {
-		const handleAddToGroup = (userId) => {
-			console.log('Adding user to group with groupId:', group.groupId);
-    console.log('User ID:', userId);
-			AddGroupUser({ groupId: group.groupId, userId: userId }); // Call AddGroupUser function with groupId and userId
+
+	// Function to add a new group user
+	async function AddGroupUser({ groupId, userId }) {
+		const requestData = {
+			groupId: groupId,
+			userId: userId
 		};
+
+		console.log('Request data:', requestData);
+
+		try {
+			const response = await fetch('http://localhost:8080/api/groupUsers', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(requestData)
+			});
+
+			console.log('Response:', response);
+
+
+			if (response.ok) {
+				// Handle success response
+				console.log('Group user added successfully!');
+			} else {
+				// Handle error response
+				console.error('Failed to add group user:', response.statusText);
+			}
+		} catch (error) {
+			console.error('Error adding group user:', error);
+		}
+	}
+
+	// const UserList = ({ userList }) => {
+	const handleAddToGroup = (userId) => {
+		console.log('Adding user to group with groupId:', group.groupId);
+		console.log('User ID:', userId);
+		AddGroupUser({ groupId: group.groupId, userId: userId }); // Call AddGroupUser function with groupId and userId
+	};
 
 	return (
 		<div className="group-details">
@@ -76,37 +111,41 @@ export function GroupDetails({ group }) {
 			<p>{group.description}</p>
 			{/* <p>Members: {group.members}</p> */}
 			<PostFormGroup group={group} />
+
+			<EventForm group={group} />
 			{/* Render userList here */}
 			<div className="userList">
 				<h2>UserList</h2>
 				{userList !== null && userList.length > 0 ? (
-					userList.map((user, index) => (
-						<div key={index}>
-						  <span>{user.username}</span>
-                <button onClick={() => handleAddToGroup(user.userId)}>Add to Group</button>
-            </div>
-					))
+					userList
+						.filter(user => !groupMembers.some(member => member.userId === user.userId))
+						.map((user, index) => (
+							<div key={index}>
+								<span>{user.username}</span>
+								<button onClick={() => handleAddToGroup(user.userId)}>Add to Group</button>
+							</div>
+						))
 				) : (
 					<p>No Users?!</p>
 				)}
 			</div>
 			{/* Render group members here */}
 			<div className="groupMembers">
-                <h2>Group Members</h2>
-                {groupMembers !== null && groupMembers.length > 0 ? (
-                    groupMembers.map((member, index) => {
-                        // Find the user object corresponding to the member's userId
-                        const user = userList.find((user) => user.userId === member.userId);
-                        return (
-                            <div key={index}>
-                                {user ? user.username : 'Unknown User'}
-                            </div>
-                        );
-                    })
-                ) : (
-                    <p>It's just you... Maybe you should invite someone?</p>
-                )}
-            </div>
+				<h2>Group Members</h2>
+				{groupMembers !== null && groupMembers.length > 0 ? (
+					groupMembers.map((member, index) => {
+						// Find the user object corresponding to the member's userId
+						const user = userList.find((user) => user.userId === member.userId);
+						return (
+							<div key={index}>
+								{user ? user.username : 'Unknown User'}
+							</div>
+						);
+					})
+				) : (
+					<p>It's just you... Maybe you should invite someone?</p>
+				)}
+			</div>
 			{/* Render group posts here */}
 			<div id="groupPosts">
 				<h2>Posts</h2>
@@ -148,14 +187,37 @@ export function GroupDetails({ group }) {
 }
 
 
+// Function to add a new group user
+async function AddGroupUser({ groupId, userId }) {
+	const requestData = {
+		groupId: groupId,
+		userId: userId
+	};
+
+	console.log('Request data:', requestData);
+
+	try {
+		const response = await fetch('http://localhost:8080/api/groupUsers', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(requestData)
+		});
+
+		console.log('Response:', response);
 
 
-
-
-
-
-
-
-
+		if (response.ok) {
+			// Handle success response
+			console.log('Group user added successfully!');
+		} else {
+			// Handle error response
+			console.error('Failed to add group user:', response.statusText);
+		}
+	} catch (error) {
+		console.error('Error adding group user:', error);
+	}
+}
 
 

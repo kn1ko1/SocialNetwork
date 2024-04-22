@@ -1,4 +1,5 @@
 import { PostFormGroup } from "./PostFormGroup.js";
+import { EventForm } from "./EventForm.js";
 const {
   useState,
   useEffect
@@ -59,6 +60,37 @@ export function GroupDetails({
     fetchGroupData();
   }, [group.groupId]);
 
+  // Function to add a new group user
+  async function AddGroupUser({
+    groupId,
+    userId
+  }) {
+    const requestData = {
+      groupId: groupId,
+      userId: userId
+    };
+    console.log('Request data:', requestData);
+    try {
+      const response = await fetch('http://localhost:8080/api/groupUsers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+      });
+      console.log('Response:', response);
+      if (response.ok) {
+        // Handle success response
+        console.log('Group user added successfully!');
+      } else {
+        // Handle error response
+        console.error('Failed to add group user:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error adding group user:', error);
+    }
+  }
+
   // const UserList = ({ userList }) => {
   const handleAddToGroup = userId => {
     console.log('Adding user to group with groupId:', group.groupId);
@@ -72,9 +104,11 @@ export function GroupDetails({
     className: "group-details"
   }, /*#__PURE__*/React.createElement("h2", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description), /*#__PURE__*/React.createElement(PostFormGroup, {
     group: group
+  }), /*#__PURE__*/React.createElement(EventForm, {
+    group: group
   }), /*#__PURE__*/React.createElement("div", {
     className: "userList"
-  }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList !== null && userList.length > 0 ? userList.map((user, index) => /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList !== null && userList.length > 0 ? userList.filter(user => !groupMembers.some(member => member.userId === user.userId)).map((user, index) => /*#__PURE__*/React.createElement("div", {
     key: index
   }, /*#__PURE__*/React.createElement("span", null, user.username), /*#__PURE__*/React.createElement("button", {
     onClick: () => handleAddToGroup(user.userId)
@@ -101,4 +135,35 @@ export function GroupDetails({
   }, /*#__PURE__*/React.createElement("h2", null, "Events"), groupEvents !== null && groupEvents.length > 0 ? groupEvents.map((event, index) => /*#__PURE__*/React.createElement("div", {
     key: index
   }, event.title)) : /*#__PURE__*/React.createElement("p", null, "No Events")));
+}
+
+// Function to add a new group user
+async function AddGroupUser({
+  groupId,
+  userId
+}) {
+  const requestData = {
+    groupId: groupId,
+    userId: userId
+  };
+  console.log('Request data:', requestData);
+  try {
+    const response = await fetch('http://localhost:8080/api/groupUsers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestData)
+    });
+    console.log('Response:', response);
+    if (response.ok) {
+      // Handle success response
+      console.log('Group user added successfully!');
+    } else {
+      // Handle error response
+      console.error('Failed to add group user:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error adding group user:', error);
+  }
 }
