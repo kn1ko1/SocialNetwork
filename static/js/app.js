@@ -208,6 +208,13 @@ const renderRegister = () => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), pageContainer);
 };
+const renderProfile = (userId, isEditable) => {
+  const pageContainer = document.querySelector(".page-container");
+  ReactDOM.render( /*#__PURE__*/React.createElement(Profile, {
+    userId: userId,
+    isEditable: isEditable
+  }), pageContainer);
+};
 const renderChat = () => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Chat, null), pageContainer);

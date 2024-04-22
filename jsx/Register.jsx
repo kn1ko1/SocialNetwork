@@ -212,11 +212,3 @@ export function Register() {
 		</div>
 	)
 }
-
-const renderProfile = (userId, isEditable) => {
-	const pageContainer = document.querySelector(".page-container")
-	ReactDOM.render(
-		<Profile userId={userId} isEditable={isEditable} />,
-		pageContainer
-	)
-}

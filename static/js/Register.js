@@ -203,10 +203,3 @@ export function Register() {
     onClick: renderLogin
   }, "Log in")));
 }
-const renderProfile = (userId, isEditable) => {
-  const pageContainer = document.querySelector(".page-container");
-  ReactDOM.render( /*#__PURE__*/React.createElement(Profile, {
-    userId: userId,
-    isEditable: isEditable
-  }), pageContainer);
-};

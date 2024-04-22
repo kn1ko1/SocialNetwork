@@ -226,6 +226,14 @@ const renderRegister = () => {
 	ReactDOM.render(<Register />, pageContainer)
 }
 
+const renderProfile = (userId, isEditable) => {
+	const pageContainer = document.querySelector(".page-container")
+	ReactDOM.render(
+		<Profile userId={userId} isEditable={isEditable} />,
+		pageContainer
+	)
+}
+
 const renderChat = () => {
 	const pageContainer = document.querySelector(".page-container")
 	ReactDOM.render(<Chat />, pageContainer)
@@ -276,8 +284,6 @@ function Chat() {
 		</div>
 	)
 }
-
-
 
 const renderGroup = () => {
 	const pageContainer = document.querySelector(".page-container")
