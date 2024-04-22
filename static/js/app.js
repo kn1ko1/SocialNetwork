@@ -762,25 +762,42 @@ function GroupDetails({
         setGroupPosts(postsData);
         setGroupMessages(messagesData);
         setGroupEvents(eventsData);
+        console.log("This is GroupMembersData:", groupMembersData);
       } catch (error) {
         console.error('Error fetching group posts:', error);
       }
     };
     fetchGroupData();
   }, [group.groupId]);
+
+  // const UserList = ({ userList }) => {
+  const handleAddToGroup = userId => {
+    console.log('Adding user to group with groupId:', group.groupId);
+    console.log('User ID:', userId);
+    AddGroupUser({
+      groupId: group.groupId,
+      userId: userId
+    }); // Call AddGroupUser function with groupId and userId
+  };
   return /*#__PURE__*/React.createElement("div", {
     className: "group-details"
   }, /*#__PURE__*/React.createElement("h2", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description), /*#__PURE__*/React.createElement(PostFormGroup, {
-    groupId: group.groupId
+    group: group
   }), /*#__PURE__*/React.createElement("div", {
     className: "userList"
   }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList !== null && userList.length > 0 ? userList.map((user, index) => /*#__PURE__*/React.createElement("div", {
     key: index
-  }, user.username)) : /*#__PURE__*/React.createElement("p", null, "No Users?!")), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", null, user.username), /*#__PURE__*/React.createElement("button", {
+    onClick: () => handleAddToGroup(user.userId)
+  }, "Add to Group"))) : /*#__PURE__*/React.createElement("p", null, "No Users?!")), /*#__PURE__*/React.createElement("div", {
     className: "groupMembers"
-  }, /*#__PURE__*/React.createElement("h2", null, "Group Members"), groupMembers !== null && groupMembers.length > 1 ? groupMembers.map((member, index) => /*#__PURE__*/React.createElement("div", {
-    key: index
-  }, member.username)) : /*#__PURE__*/React.createElement("p", null, "It's just you... Maybe you should invite someone?")), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h2", null, "Group Members"), groupMembers !== null && groupMembers.length > 0 ? groupMembers.map((member, index) => {
+    // Find the user object corresponding to the member's userId
+    const user = userList.find(user => user.userId === member.userId);
+    return /*#__PURE__*/React.createElement("div", {
+      key: index
+    }, user ? user.username : 'Unknown User');
+  }) : /*#__PURE__*/React.createElement("p", null, "It's just you... Maybe you should invite someone?")), /*#__PURE__*/React.createElement("div", {
     id: "groupPosts"
   }, /*#__PURE__*/React.createElement("h2", null, "Posts"), groupPosts !== null ? groupPosts.map(post => /*#__PURE__*/React.createElement("li", {
     key: post.createdAt
@@ -795,6 +812,37 @@ function GroupDetails({
   }, /*#__PURE__*/React.createElement("h2", null, "Events"), groupEvents !== null && groupEvents.length > 0 ? groupEvents.map((event, index) => /*#__PURE__*/React.createElement("div", {
     key: index
   }, event.title)) : /*#__PURE__*/React.createElement("p", null, "No Events")));
+}
+
+// Function to add a new group user
+async function AddGroupUser({
+  groupId,
+  userId
+}) {
+  const requestData = {
+    groupId: groupId,
+    userId: userId
+  };
+  console.log('Request data:', requestData);
+  try {
+    const response = await fetch('http://localhost:8080/api/groupUsers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestData)
+    });
+    console.log('Response:', response);
+    if (response.ok) {
+      // Handle success response
+      console.log('Group user added successfully!');
+    } else {
+      // Handle error response
+      console.error('Failed to add group user:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error adding group user:', error);
+  }
 }
 const renderNotifications = () => {
   const pageContainer = document.querySelector(".page-container");
@@ -1038,7 +1086,7 @@ function PostForm({
   }, "Submit"))));
 }
 function PostFormGroup({
-  groupId
+  group
 }) {
   const [body, setBody] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -1051,7 +1099,7 @@ function PostFormGroup({
 
     // Append form data
     formData.append("body", body);
-    formData.append("groupId", groupId);
+    formData.append("groupId", group.groupId);
     if (selectedFile) {
       formData.append("image", selectedFile);
     }
@@ -1068,6 +1116,10 @@ function PostFormGroup({
       setBody("");
       setSelectedFile(null);
       document.getElementById("postFormBody").value = "";
+      const pageContainer = document.querySelector(".page-container");
+      ReactDOM.render( /*#__PURE__*/React.createElement(GroupDetails, {
+        group: group
+      }), pageContainer);
     } catch (error) {
       console.error("Error submitting post:", error);
     }

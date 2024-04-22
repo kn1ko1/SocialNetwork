@@ -921,6 +921,9 @@ function GroupDetails({ group }) {
 				setGroupPosts(postsData);
 				setGroupMessages(messagesData);
 				setGroupEvents(eventsData);
+
+				console.log("This is GroupMembersData:", groupMembersData);
+
 			} catch (error) {
 				console.error('Error fetching group posts:', error);
 			}
@@ -929,22 +932,28 @@ function GroupDetails({ group }) {
 		fetchGroupData();
 	}, [group.groupId]);
 
-
+	// const UserList = ({ userList }) => {
+		const handleAddToGroup = (userId) => {
+			console.log('Adding user to group with groupId:', group.groupId);
+    console.log('User ID:', userId);
+			AddGroupUser({ groupId: group.groupId, userId: userId }); // Call AddGroupUser function with groupId and userId
+		};
 
 	return (
 		<div className="group-details">
 			<h2>{group.title}</h2>
 			<p>{group.description}</p>
 			{/* <p>Members: {group.members}</p> */}
-			<PostFormGroup groupId={group.groupId} />
+			<PostFormGroup group={group} />
 			{/* Render userList here */}
 			<div className="userList">
 				<h2>UserList</h2>
 				{userList !== null && userList.length > 0 ? (
 					userList.map((user, index) => (
 						<div key={index}>
-							{user.username}
-						</div>
+						  <span>{user.username}</span>
+                <button onClick={() => handleAddToGroup(user.userId)}>Add to Group</button>
+            </div>
 					))
 				) : (
 					<p>No Users?!</p>
@@ -952,17 +961,21 @@ function GroupDetails({ group }) {
 			</div>
 			{/* Render group members here */}
 			<div className="groupMembers">
-				<h2>Group Members</h2>
-				{groupMembers !== null && groupMembers.length > 1 ? (
-					groupMembers.map((member, index) => (
-						<div key={index}>
-							{member.username}
-						</div>
-					))
-				) : (
-					<p>It's just you... Maybe you should invite someone?</p>
-				)}
-			</div>
+                <h2>Group Members</h2>
+                {groupMembers !== null && groupMembers.length > 0 ? (
+                    groupMembers.map((member, index) => {
+                        // Find the user object corresponding to the member's userId
+                        const user = userList.find((user) => user.userId === member.userId);
+                        return (
+                            <div key={index}>
+                                {user ? user.username : 'Unknown User'}
+                            </div>
+                        );
+                    })
+                ) : (
+                    <p>It's just you... Maybe you should invite someone?</p>
+                )}
+            </div>
 			{/* Render group posts here */}
 			<div id="groupPosts">
 				<h2>Posts</h2>
@@ -1001,6 +1014,40 @@ function GroupDetails({ group }) {
 			</div>
 		</div>
 	)
+}
+
+
+// Function to add a new group user
+async function AddGroupUser({ groupId, userId }) {
+    const requestData = {
+        groupId: groupId,
+        userId: userId
+    };
+
+	console.log('Request data:', requestData);
+
+    try {
+        const response = await fetch('http://localhost:8080/api/groupUsers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+
+		console.log('Response:', response);
+	
+
+        if (response.ok) {
+            // Handle success response
+            console.log('Group user added successfully!');
+        } else {
+            // Handle error response
+            console.error('Failed to add group user:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error adding group user:', error);
+    }
 }
 
 const renderNotifications = () => {
@@ -1290,7 +1337,7 @@ function PostForm({ groupId, followedUsers }) {
 	)
 }
 
-function PostFormGroup({ groupId }) {
+function PostFormGroup({ group }) {
 	const [body, setBody] = useState("");
 	const [selectedFile, setSelectedFile] = useState(null);
 
@@ -1302,7 +1349,7 @@ function PostFormGroup({ groupId }) {
 
 		// Append form data
 		formData.append("body", body);
-		formData.append("groupId", groupId);
+		formData.append("groupId", group.groupId);
 		if (selectedFile) {
 			formData.append("image", selectedFile);
 		}
@@ -1321,9 +1368,16 @@ function PostFormGroup({ groupId }) {
 			setBody("");
 			setSelectedFile(null);
 			document.getElementById("postFormBody").value = "";
+
+			const pageContainer = document.querySelector(".page-container");
+			ReactDOM.render(<GroupDetails group={group} />, pageContainer)
+
+
 		} catch (error) {
 			console.error("Error submitting post:", error);
 		}
+
+	
 	};
 
 	// Handler for file selection
