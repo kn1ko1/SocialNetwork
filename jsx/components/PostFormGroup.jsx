@@ -1,4 +1,4 @@
-const { useState, useEffect } = React
+const { useState } = React
 
 export function PostFormGroup({ group }) {
 	const [body, setBody] = useState("");
