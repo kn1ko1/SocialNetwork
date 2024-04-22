@@ -1,3 +1,5 @@
+import { PostFormGroup } from "./PostFormGroup.js";
+
 const { useState, useEffect } = React
 
 export function GroupDetails({ group }) {
