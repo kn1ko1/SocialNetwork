@@ -65,6 +65,9 @@ func (r *SQLiteRepository) CreateUser(user models.User) (models.User, error) {
 func (r *SQLiteRepository) GetAllUsers() ([]models.User, error) {
 	return users.GetAllUsers(r.identityDb)
 }
+func (r *SQLiteRepository) GetAllUsersTransport() ([]transport.UserTransport, error) {
+	return sqlite.GetAllUsersTransport(r.identityDb)
+}
 func (r *SQLiteRepository) GetUsersByPublic() ([]models.User, error) {
 	return users.GetUsersByPublic(r.identityDb)
 }
@@ -275,9 +278,10 @@ func (r *SQLiteRepository) CreateMessage(message models.Message) (models.Message
 func (r *SQLiteRepository) GetAllMessages() ([]models.Message, error) {
 	return messages.GetAllMessages(r.businessDb)
 }
-func (r *SQLiteRepository) GetMessagesByType(messageType string) ([]models.Message, error) {
-	return messages.GetMessagesByType(r.businessDb, messageType)
+func (r *SQLiteRepository) GetMessagesByMessageTypeandTargetId(messageType string, targetId int) ([]models.Message, error) {
+	return messages.GetMessagesByMessageTypeandTargetId(r.businessDb, messageType, targetId)
 }
+
 func (r *SQLiteRepository) GetMessageById(messageId int) (models.Message, error) {
 	return messages.GetMessageById(r.businessDb, messageId)
 }

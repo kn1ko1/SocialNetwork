@@ -6,7 +6,7 @@ type IMessages interface {
 	// Message
 	CreateMessage(message models.Message) (models.Message, error)
 	// GetAllMessages() ([]models.Message, error)
-	// GetMessagesByType(messageType string) ([]models.Message, error)
+	GetMessagesByMessageTypeandTargetId(messageType string, targetId int) ([]models.Message, error)
 	GetMessageById(messageId int) (models.Message, error)
 	GetMessagesBySenderAndTargetIDs(senderId, targetId int) ([]models.Message, error)
 	UpdateMessage(message models.Message) (models.Message, error)

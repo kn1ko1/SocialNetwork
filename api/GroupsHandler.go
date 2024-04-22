@@ -12,7 +12,7 @@ import (
 )
 
 // Endpoint: /api/groups
-// Allowed methods: GET, POST, PUT, DELETE
+// Allowed methods: GET, POST
 
 type GroupsHandler struct {
 	Repo repo.IRepository
@@ -47,23 +47,8 @@ func (h *GroupsHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
-	// contentType := r.Header.Get("Content-Type")
+
 	var group models.Group
-	// switch contentType {
-	// case "application/json":
-	// err := json.NewDecoder(r.Body).Decode(&group)
-	// if err != nil {
-	// 	utils.HandleError("Failed to decode request body:", err)
-	// 	http.Error(w, "Failed to decode request body", http.StatusBadRequest)
-	// 	return
-	// }
-	// case "application/x-www-form-urlencoded":
-	// 	err := r.ParseForm()
-	// 	if err != nil {
-	// 		utils.HandleError("Failed to parse form:", err)
-	// 		http.Error(w, "internal server error", http.StatusInternalServerError)
-	// 		return
-	// 	}
 	ctime := time.Now().UTC().UnixMilli()
 	group.CreatedAt = ctime
 	log.Println("This createdat:", group.CreatedAt)
@@ -88,6 +73,21 @@ func (h *GroupsHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to create group", http.StatusInternalServerError)
 		return
 	}
+
+	// Add current user to list of users in group
+	groupUser := models.GroupUser{
+		CreatedAt: ctime,
+		GroupId:   result.GroupId,
+		UpdatedAt: ctime,
+		UserId:    user.UserId,
+	}
+	_, createGroupUserErr := h.Repo.CreateGroupUser(groupUser)
+	if createGroupUserErr != nil {
+		utils.HandleError("Failed to add user to groupUser table. ", createGroupUserErr)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
 	w.WriteHeader(http.StatusCreated)
 	// Encode and write the response
 	err = json.NewEncoder(w).Encode(result)
