@@ -21,9 +21,9 @@ func GetGroupUsersByGroupId(database *sql.DB, groupId int) ([]models.GroupUser, 
 		err := rows.Scan(
 			&groupUser.GroupUserId,
 			&groupUser.CreatedAt,
+			&groupUser.GroupId,
 			&groupUser.UpdatedAt,
 			&groupUser.UserId,
-			&groupUser.GroupId,
 		)
 		if err != nil {
 			utils.HandleError("Error scanning rows in GetGroupUsersByGroupId.", err)

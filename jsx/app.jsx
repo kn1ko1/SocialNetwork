@@ -716,11 +716,15 @@ function GroupDetails({ group }) {
 			<div className="groupMembers">
 				<h2>Group Members</h2>
 				{groupMembers !== null && groupMembers.length > 1 ? (
-					groupMembers.map((member, index) => (
-						<div key={index}>
-							{member.username}
-						</div>
-					))
+					groupMembers.map((member, index) => {
+						// Find the user object corresponding to the member's userId
+						const user = userList.find((user) => user.userId === member.userId);
+						return (
+							<div key={index}>
+								{user ? user.username : 'Unknown User'}
+							</div>
+						);
+					})
 				) : (
 					<p>It's just you... Maybe you should invite someone?</p>
 				)}
@@ -774,9 +778,9 @@ function EventForm({ group }) {
 		e.preventDefault(); // Prevent page reload
 
 		const formData = new FormData();
-		setDescription(11111111111)
+
 		// Append form data
-		formData.append("dateTime", dateTime);
+		formData.append("dateTime", "2022-01-02");
 		formData.append("description", description);
 		formData.append("groupId", group.groupId);
 		formData.append("title", title);

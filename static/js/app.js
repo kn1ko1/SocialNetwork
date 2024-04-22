@@ -633,9 +633,13 @@ function GroupDetails({
     key: index
   }, user.username)) : /*#__PURE__*/React.createElement("p", null, "No Users?!")), /*#__PURE__*/React.createElement("div", {
     className: "groupMembers"
-  }, /*#__PURE__*/React.createElement("h2", null, "Group Members"), groupMembers !== null && groupMembers.length > 1 ? groupMembers.map((member, index) => /*#__PURE__*/React.createElement("div", {
-    key: index
-  }, member.username)) : /*#__PURE__*/React.createElement("p", null, "It's just you... Maybe you should invite someone?")), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h2", null, "Group Members"), groupMembers !== null && groupMembers.length > 1 ? groupMembers.map((member, index) => {
+    // Find the user object corresponding to the member's userId
+    const user = userList.find(user => user.userId === member.userId);
+    return /*#__PURE__*/React.createElement("div", {
+      key: index
+    }, user ? user.username : 'Unknown User');
+  }) : /*#__PURE__*/React.createElement("p", null, "It's just you... Maybe you should invite someone?")), /*#__PURE__*/React.createElement("div", {
     id: "groupPosts"
   }, /*#__PURE__*/React.createElement("h2", null, "Posts"), groupPosts !== null ? groupPosts.map(post => /*#__PURE__*/React.createElement("li", {
     key: post.createdAt
@@ -662,9 +666,9 @@ function EventForm({
     e.preventDefault(); // Prevent page reload
 
     const formData = new FormData();
-    setDescription(1111);
+
     // Append form data
-    formData.append("dateTime", dateTime);
+    formData.append("dateTime", "2022-01-02");
     formData.append("description", description);
     formData.append("groupId", group.groupId);
     formData.append("title", title);
