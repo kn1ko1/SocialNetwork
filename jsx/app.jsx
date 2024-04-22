@@ -1,5 +1,8 @@
+import { Chat } from "./Chat.js"
 import { Profile } from "./Profile.js"
+import { Register } from "./Register.js"
 import { FollowButton } from "./components/FollowButton.js"
+import { GroupDetails } from "./components/GroupDetails.js"
 import { getCurrentUserId } from "./shared/getCurrentUserId.js"
 const { useState, useEffect } = React
 
@@ -225,219 +228,6 @@ const renderRegister = () => {
 	ReactDOM.render(<Register />, pageContainer)
 }
 
-function Register() {
-	const [email, setEmail] = useState("")
-	const [encryptedPassword, setEncryptedPassword] = useState("")
-	const [firstName, setFirstName] = useState("")
-	const [lastName, setLastName] = useState("")
-	const [dob, setDob] = useState("")
-	const [imageURL, setImageURL] = useState("")
-	const [username, setUsername] = useState("")
-	const [bio, setBio] = useState("")
-	const [isPublic, setIsPublic] = useState(true)
-	const [isRegistered, setIsRegistered] = useState(false)
-
-	const handleChange = (e) => {
-		setIsPublic(e.target.value === "true")
-	}
-	//this is register button
-	const submit = async (e) => {
-		e.preventDefault() // prevent reload.
-
-		// Create new user as JS object.
-		const newUser = {
-			email,
-			encryptedPassword,
-			firstName,
-			lastName,
-			dob,
-			imageURL,
-			username,
-			bio,
-			isPublic,
-		}
-
-		try {
-			// Send user data to backend
-			const response = await fetch("http://localhost:8080/auth/registration", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(newUser),
-			})
-
-			if (!response.ok) {
-				throw new Error("Invalid credentials")
-			}
-
-			//takes response from backend and processes
-			const data = await response.json()
-			if (data.success) {
-				setIsRegistered(true)
-			} else {
-				throw new Error("Invalid credentials")
-			}
-		} catch (error) {
-			throw new Error("Invalid credentials")
-		}
-	}
-
-	//if credentials frontend succesfully create a new user then we render home
-	if (isRegistered) {
-		socket = new WebSocket("ws://localhost:8080/ws")
-		socket.onopen = function (event) {
-			console.log("WebSocket connection established.")
-		}
-		renderNavbar()
-		renderHome()
-	}
-
-	//this is the login button, when pressed will serve login form
-
-	return (
-		<div className="container login-container">
-			<h1 className="h3 mb-3 fw-normal login-text">register</h1>
-			<form onSubmit={submit}>
-				<div className="mb-3">
-					<label htmlFor="floatingInput">Email address</label>
-					<input
-						required
-						type="email"
-						className="form-control"
-						id="floatingInput"
-						placeholder="name@example.com"
-						onChange={(e) => setEmail(e.target.value)}
-					/>
-				</div>
-
-				<div className="mb-3">
-					<label htmlFor="regpassword">Password</label>
-					<input
-						required
-						type="password"
-						className="form-control reginput"
-						id="regpassword"
-						placeholder="Password"
-						onChange={(e) => setEncryptedPassword(e.target.value)}
-					/>
-				</div>
-
-				<div className="mb-3">
-					<label htmlFor="firstName">First Name</label>
-					<input
-						required
-						type="text"
-						className="form-control reginput"
-						id="firstName"
-						placeholder="John"
-						onChange={(e) => setFirstName(e.target.value)}
-					/>
-				</div>
-
-				<div className="mb-3">
-					<label htmlFor="lastName">Last Name</label>
-					<input
-						required
-						type="text"
-						className="form-control reginput"
-						id="lastName"
-						placeholder="Doe"
-						onChange={(e) => setLastName(e.target.value)}
-					/>
-				</div>
-
-				<div className="mb-3">
-					<label htmlFor="dob">Date of Birth</label>
-					<input
-						required
-						type="date"
-						className="form-control reginput"
-						id="dob"
-						placeholder="16/01/1998"
-						onChange={(e) => setDob(e.target.value)}
-					/>
-				</div>
-
-				<div className="mb-3">
-					<label htmlFor="imageURL">ImageURL</label>
-					<input
-						type="text"
-						className="form-control reginput"
-						id="imageURL"
-						placeholder="https://..."
-						onChange={(e) => setImageURL(e.target.value)}
-					/>
-				</div>
-
-				<div className="mb-3">
-					<label htmlFor="username">Username</label>
-					<input
-						type="text"
-						className="form-control reginput"
-						id="username"
-						placeholder="Johnny"
-						onChange={(e) => setUsername(e.target.value)}
-					/>
-				</div>
-
-				<div className="form-check">
-					<input
-						className="form-check-input"
-						type="radio"
-						id="public-status"
-						value={true}
-						name="status"
-						checked={isPublic === true}
-						onChange={handleChange}
-					/>
-					<label className="form-check-label" htmlFor="public-status">
-						Public
-					</label>
-				</div>
-
-				<div className="form-check">
-					<input
-						className="form-check-input"
-						type="radio"
-						id="private-status"
-						value={false}
-						name="status"
-						checked={isPublic === false}
-						onChange={handleChange}
-					/>
-					<label className="form-check-label" htmlFor="private-status">
-						Private
-					</label>
-				</div>
-
-				<div className="mb-3">
-					<label htmlFor="about">About me</label>
-					<input
-						type="text"
-						className="form-control reginput"
-						id="bio"
-						placeholder="About Me"
-						cols="30"
-						rows="10"
-						onChange={(e) => setBio(e.target.value)}
-					/>
-				</div>
-
-				<button className="btn btn-primary" type="submit">
-					Register
-				</button>
-			</form>
-			<div className="error-message"></div>
-			<br /> {/* Add a line break for spacing */}
-			<div className="mb3">
-				<span className="login-text">Already have an account? &nbsp;</span>
-				<button type="submit" className="btn btn-primary" onClick={renderLogin}>
-					Log in
-				</button>
-			</div>
-		</div>
-	)
-}
-
 const renderProfile = (userId, isEditable) => {
 	const pageContainer = document.querySelector(".page-container")
 	ReactDOM.render(
@@ -448,56 +238,8 @@ const renderProfile = (userId, isEditable) => {
 
 const renderChat = () => {
 	const pageContainer = document.querySelector(".page-container")
-	ReactDOM.render(<Chat />, pageContainer)
+	ReactDOM.render(<Chat socket={socket} />, pageContainer)
 }
-
-function Chat() {
-	const [sendMessage, setSendMessage] = useState("")
-	const [receiveMessage, setReceiveMessage] = useState("")
-
-	let messages = document.getElementById("messages")
-
-	const handleMessages = (e) => {
-		setSendMessage(e.target.value)
-	}
-
-	const handleSubmit = (e) => {
-		e.preventDefault()
-		let bodymessage = { message: sendMessage }
-		let obj = { code: 1, body: JSON.stringify(bodymessage) }
-		socket.send(JSON.stringify(obj))
-		setSendMessage("")
-	}
-
-	socket.onmessage = function (e) {
-		let data = JSON.parse(e.data)
-		let msg = JSON.parse(data.body).message
-		// setReceiveMessage(msg)
-		// console.log("receiveMessage:", receiveMessage)
-		let entry = document.createElement("li")
-		entry.appendChild(document.createTextNode(msg))
-		messages.appendChild(entry)
-	}
-
-	const messageStyle = {
-		color: "orange",
-	}
-
-	return (
-		<div>
-			<h1>Chat</h1>
-			<ul id="messages" style={messageStyle}></ul>
-			<form id="chatbox" onSubmit={handleSubmit}>
-				<textarea onChange={handleMessages}></textarea>
-				<button type="submit" className="btn btn-primary">
-					send
-				</button>
-			</form>
-		</div>
-	)
-}
-
-
 
 const renderGroup = () => {
 	const pageContainer = document.querySelector(".page-container")
@@ -631,139 +373,6 @@ function Group() {
 	)
 }
 
-
-function GroupDetails({ group }) {
-
-	const [userList, setUserList] = useState([]);
-	const [groupMembers, setGroupMembers] = useState([]);
-	const [groupPosts, setGroupPosts] = useState([]);
-	const [groupMessages, setGroupMessages] = useState([]);
-	const [groupEvents, setGroupEvents] = useState([]);
-
-
-	useEffect(() => {
-		const fetchGroupData = async () => {
-			try {
-				const promises = [];
-				promises.push(fetch(`http://localhost:8080/api/users/transport`));
-				promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/groupUsers`));
-				promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/posts`));
-				promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/messages`));
-				promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/events`));
-				const results = await Promise.all(promises);
-
-				const userListResponse = results[0]
-				const groupMembersResponse = results[1]
-				const postsResponse = results[2]
-				const messagesResponse = results[3]
-				const eventsResponse = results[4]
-				if (!userListResponse.ok) {
-					throw new Error('Failed to fetch user list');
-				}
-				if (!groupMembersResponse.ok) {
-					throw new Error('Failed to fetch group members');
-				}
-				if (!postsResponse.ok) {
-					throw new Error('Failed to fetch group posts');
-				}
-				if (!messagesResponse.ok) {
-					throw new Error('Failed to fetch group messages');
-				}
-				if (!eventsResponse.ok) {
-					throw new Error('Failed to fetch group eventsResponse');
-				}
-				const userListData = await userListResponse.json();
-				const groupMembersData = await groupMembersResponse.json();
-				const postsData = await postsResponse.json();
-				const messagesData = await messagesResponse.json();
-				const eventsData = await eventsResponse.json();
-				setUserList(userListData);
-				setGroupMembers(groupMembersData);
-				setGroupPosts(postsData);
-				setGroupMessages(messagesData);
-				setGroupEvents(eventsData);
-			} catch (error) {
-				console.error('Error fetching group posts:', error);
-			}
-		};
-
-		fetchGroupData();
-	}, [group.groupId]);
-
-
-
-	return (
-		<div className="group-details">
-			<h2>{group.title}</h2>
-			<p>{group.description}</p>
-			{/* <p>Members: {group.members}</p> */}
-			<PostFormGroup groupId={group.groupId} />
-			{/* Render userList here */}
-			<div className="userList">
-				<h2>UserList</h2>
-				{userList !== null && userList.length > 0 ? (
-					userList.map((user, index) => (
-						<div key={index}>
-							{user.username}
-						</div>
-					))
-				) : (
-					<p>No Users?!</p>
-				)}
-			</div>
-			{/* Render group members here */}
-			<div className="groupMembers">
-				<h2>Group Members</h2>
-				{groupMembers !== null && groupMembers.length > 1 ? (
-					groupMembers.map((member, index) => (
-						<div key={index}>
-							{member.username}
-						</div>
-					))
-				) : (
-					<p>It's just you... Maybe you should invite someone?</p>
-				)}
-			</div>
-			{/* Render group posts here */}
-			<div id="groupPosts">
-				<h2>Posts</h2>
-				{groupPosts !== null ? (
-					groupPosts.map((post) => (
-						<li key={post.createdAt}>{post.body}</li>
-					))
-				) : (
-					<div id="groupPosts">There are no posts in this groups yet</div>
-				)}
-			</div>
-			{/* Render group Messages here */}
-			<div className="groupMessages">
-				<h2>Messages</h2>
-				{groupMessages !== null && groupMessages.length > 0 ? (
-					groupMessages.map((message, index) => (
-						<div key={index}>
-							{message.body}
-						</div>
-					))
-				) : (
-					<p>No Messages</p>
-				)}
-			</div>
-			<div className="groupEvents">
-				<h2>Events</h2>
-				{groupEvents !== null && groupEvents.length > 0 ? (
-					groupEvents.map((event, index) => (
-						<div key={index}>
-							{event.title}
-						</div>
-					))
-				) : (
-					<p>No Events</p>
-				)}
-			</div>
-		</div>
-	)
-}
-
 const renderNotifications = () => {
 	const pageContainer = document.querySelector(".page-container")
 	ReactDOM.render(<Notifications />, pageContainer)
@@ -775,6 +384,39 @@ function Notifications() {
 			<h1>Notifications</h1>
 		</div>
 	)
+}
+
+// Function to add a new group user
+async function AddGroupUser({ groupId, userId }) {
+    const requestData = {
+        groupId: groupId,
+        userId: userId
+    };
+
+    console.log('Request data:', requestData);
+
+    try {
+        const response = await fetch('http://localhost:8080/api/groupUsers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        console.log('Response:', response);
+    
+
+        if (response.ok) {
+            // Handle success response
+            console.log('Group user added successfully!');
+        } else {
+            // Handle error response
+            console.error('Failed to add group user:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error adding group user:', error);
+    }
 }
 
 
@@ -972,93 +614,6 @@ function PostForm({ groupId, followedUsers }) {
 						</div>
 					</div>
 					{followedUsersList}
-					<button className="w-100 btn btn-lg btn-primary" type="submit">
-						Submit
-					</button>
-				</form>
-			</main>
-		</div>
-	)
-}
-
-function PostFormGroup({ groupId }) {
-	const [body, setBody] = useState("");
-	const [selectedFile, setSelectedFile] = useState(null);
-
-	// Handler for form submission
-	const submit = async (e) => {
-		e.preventDefault(); // Prevent page reload
-
-		const formData = new FormData();
-
-		// Append form data
-		formData.append("body", body);
-		formData.append("groupId", groupId);
-		if (selectedFile) {
-			formData.append("image", selectedFile);
-		}
-
-		console.log("Form data being sent to backend: ", formData);
-
-		try {
-			// Send user data to the server
-			await fetch("http://localhost:8080/api/posts", {
-				method: "POST",
-				credentials: "include",
-				body: formData,
-			});
-
-			// Reset form fields after successful submission
-			setBody("");
-			setSelectedFile(null);
-			document.getElementById("postFormBody").value = "";
-		} catch (error) {
-			console.error("Error submitting post:", error);
-		}
-	};
-
-	// Handler for file selection
-	const handleFileChange = (e) => {
-		setSelectedFile(e.target.files[0]);
-	};
-
-	const handleSelectFile = () => {
-		const fileInput = document.getElementById("fileInput");
-		fileInput.click();
-	};
-
-	return (
-		<div>
-			<main className="postForm container" style={{ maxWidth: "400px" }}>
-				<h1 className="h3 mb-3 fw-normal">Post Message Here</h1>
-				<form onSubmit={submit}>
-					<div className="form-floating mb-3">
-						<input
-							type="text"
-							className="form-control"
-							id="postFormBody"
-							placeholder="Type your post here..."
-							onChange={(e) => setBody(e.target.value)}
-						/>
-					</div>
-					<div>
-						<button
-							type="button"
-							className="btn btn-primary"
-							onClick={handleSelectFile}
-						>
-							Select File
-						</button>
-						<span>{selectedFile ? selectedFile.name : "No file selected"}</span>
-						<input
-							type="file"
-							id="fileInput"
-							accept="image/*"
-							style={{ display: "none" }}
-							onChange={handleFileChange}
-						/>
-					</div>
-					<br /> {/* Line break */}
 					<button className="w-100 btn btn-lg btn-primary" type="submit">
 						Submit
 					</button>

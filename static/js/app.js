@@ -1,5 +1,8 @@
+import { Chat } from "./Chat.js";
 import { Profile } from "./Profile.js";
+import { Register } from "./Register.js";
 import { FollowButton } from "./components/FollowButton.js";
+import { GroupDetails } from "./components/GroupDetails.js";
 import { getCurrentUserId } from "./shared/getCurrentUserId.js";
 const {
   useState,
@@ -207,207 +210,6 @@ const renderRegister = () => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), pageContainer);
 };
-function Register() {
-  const [email, setEmail] = useState("");
-  const [encryptedPassword, setEncryptedPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [dob, setDob] = useState("");
-  const [imageURL, setImageURL] = useState("");
-  const [username, setUsername] = useState("");
-  const [bio, setBio] = useState("");
-  const [isPublic, setIsPublic] = useState(true);
-  const [isRegistered, setIsRegistered] = useState(false);
-  const handleChange = e => {
-    setIsPublic(e.target.value === "true");
-  };
-  //this is register button
-  const submit = async e => {
-    e.preventDefault(); // prevent reload.
-
-    // Create new user as JS object.
-    const newUser = {
-      email,
-      encryptedPassword,
-      firstName,
-      lastName,
-      dob,
-      imageURL,
-      username,
-      bio,
-      isPublic
-    };
-    try {
-      // Send user data to backend
-      const response = await fetch("http://localhost:8080/auth/registration", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(newUser)
-      });
-      if (!response.ok) {
-        throw new Error("Invalid credentials");
-      }
-
-      //takes response from backend and processes
-      const data = await response.json();
-      if (data.success) {
-        setIsRegistered(true);
-      } else {
-        throw new Error("Invalid credentials");
-      }
-    } catch (error) {
-      throw new Error("Invalid credentials");
-    }
-  };
-
-  //if credentials frontend succesfully create a new user then we render home
-  if (isRegistered) {
-    socket = new WebSocket("ws://localhost:8080/ws");
-    socket.onopen = function (event) {
-      console.log("WebSocket connection established.");
-    };
-    renderNavbar();
-    renderHome();
-  }
-
-  //this is the login button, when pressed will serve login form
-
-  return /*#__PURE__*/React.createElement("div", {
-    className: "container login-container"
-  }, /*#__PURE__*/React.createElement("h1", {
-    className: "h3 mb-3 fw-normal login-text"
-  }, "register"), /*#__PURE__*/React.createElement("form", {
-    onSubmit: submit
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "mb-3"
-  }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "floatingInput"
-  }, "Email address"), /*#__PURE__*/React.createElement("input", {
-    required: true,
-    type: "email",
-    className: "form-control",
-    id: "floatingInput",
-    placeholder: "name@example.com",
-    onChange: e => setEmail(e.target.value)
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "mb-3"
-  }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "regpassword"
-  }, "Password"), /*#__PURE__*/React.createElement("input", {
-    required: true,
-    type: "password",
-    className: "form-control reginput",
-    id: "regpassword",
-    placeholder: "Password",
-    onChange: e => setEncryptedPassword(e.target.value)
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "mb-3"
-  }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "firstName"
-  }, "First Name"), /*#__PURE__*/React.createElement("input", {
-    required: true,
-    type: "text",
-    className: "form-control reginput",
-    id: "firstName",
-    placeholder: "John",
-    onChange: e => setFirstName(e.target.value)
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "mb-3"
-  }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "lastName"
-  }, "Last Name"), /*#__PURE__*/React.createElement("input", {
-    required: true,
-    type: "text",
-    className: "form-control reginput",
-    id: "lastName",
-    placeholder: "Doe",
-    onChange: e => setLastName(e.target.value)
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "mb-3"
-  }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "dob"
-  }, "Date of Birth"), /*#__PURE__*/React.createElement("input", {
-    required: true,
-    type: "date",
-    className: "form-control reginput",
-    id: "dob",
-    placeholder: "16/01/1998",
-    onChange: e => setDob(e.target.value)
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "mb-3"
-  }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "imageURL"
-  }, "ImageURL"), /*#__PURE__*/React.createElement("input", {
-    type: "text",
-    className: "form-control reginput",
-    id: "imageURL",
-    placeholder: "https://...",
-    onChange: e => setImageURL(e.target.value)
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "mb-3"
-  }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "username"
-  }, "Username"), /*#__PURE__*/React.createElement("input", {
-    type: "text",
-    className: "form-control reginput",
-    id: "username",
-    placeholder: "Johnny",
-    onChange: e => setUsername(e.target.value)
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "form-check"
-  }, /*#__PURE__*/React.createElement("input", {
-    className: "form-check-input",
-    type: "radio",
-    id: "public-status",
-    value: true,
-    name: "status",
-    checked: isPublic === true,
-    onChange: handleChange
-  }), /*#__PURE__*/React.createElement("label", {
-    className: "form-check-label",
-    htmlFor: "public-status"
-  }, "Public")), /*#__PURE__*/React.createElement("div", {
-    className: "form-check"
-  }, /*#__PURE__*/React.createElement("input", {
-    className: "form-check-input",
-    type: "radio",
-    id: "private-status",
-    value: false,
-    name: "status",
-    checked: isPublic === false,
-    onChange: handleChange
-  }), /*#__PURE__*/React.createElement("label", {
-    className: "form-check-label",
-    htmlFor: "private-status"
-  }, "Private")), /*#__PURE__*/React.createElement("div", {
-    className: "mb-3"
-  }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "about"
-  }, "About me"), /*#__PURE__*/React.createElement("input", {
-    type: "text",
-    className: "form-control reginput",
-    id: "bio",
-    placeholder: "About Me",
-    cols: "30",
-    rows: "10",
-    onChange: e => setBio(e.target.value)
-  })), /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-primary",
-    type: "submit"
-  }, "Register")), /*#__PURE__*/React.createElement("div", {
-    className: "error-message"
-  }), /*#__PURE__*/React.createElement("br", null), " ", /*#__PURE__*/React.createElement("div", {
-    className: "mb3"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "login-text"
-  }, "Already have an account? \xA0"), /*#__PURE__*/React.createElement("button", {
-    type: "submit",
-    className: "btn btn-primary",
-    onClick: renderLogin
-  }, "Log in")));
-}
 const renderProfile = (userId, isEditable) => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Profile, {
@@ -417,52 +219,10 @@ const renderProfile = (userId, isEditable) => {
 };
 const renderChat = () => {
   const pageContainer = document.querySelector(".page-container");
-  ReactDOM.render( /*#__PURE__*/React.createElement(Chat, null), pageContainer);
+  ReactDOM.render( /*#__PURE__*/React.createElement(Chat, {
+    socket: socket
+  }), pageContainer);
 };
-function Chat() {
-  const [sendMessage, setSendMessage] = useState("");
-  const [receiveMessage, setReceiveMessage] = useState("");
-  let messages = document.getElementById("messages");
-  const handleMessages = e => {
-    setSendMessage(e.target.value);
-  };
-  const handleSubmit = e => {
-    e.preventDefault();
-    let bodymessage = {
-      message: sendMessage
-    };
-    let obj = {
-      code: 1,
-      body: JSON.stringify(bodymessage)
-    };
-    socket.send(JSON.stringify(obj));
-    setSendMessage("");
-  };
-  socket.onmessage = function (e) {
-    let data = JSON.parse(e.data);
-    let msg = JSON.parse(data.body).message;
-    // setReceiveMessage(msg)
-    // console.log("receiveMessage:", receiveMessage)
-    let entry = document.createElement("li");
-    entry.appendChild(document.createTextNode(msg));
-    messages.appendChild(entry);
-  };
-  const messageStyle = {
-    color: "orange"
-  };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Chat"), /*#__PURE__*/React.createElement("ul", {
-    id: "messages",
-    style: messageStyle
-  }), /*#__PURE__*/React.createElement("form", {
-    id: "chatbox",
-    onSubmit: handleSubmit
-  }, /*#__PURE__*/React.createElement("textarea", {
-    onChange: handleMessages
-  }), /*#__PURE__*/React.createElement("button", {
-    type: "submit",
-    className: "btn btn-primary"
-  }, "send")));
-}
 const renderGroup = () => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Group, null), pageContainer);
@@ -567,94 +327,43 @@ function Group() {
     id: "noGroupsError"
   }, "There are no created groups yet"))));
 }
-function GroupDetails({
-  group
-}) {
-  const [userList, setUserList] = useState([]);
-  const [groupMembers, setGroupMembers] = useState([]);
-  const [groupPosts, setGroupPosts] = useState([]);
-  const [groupMessages, setGroupMessages] = useState([]);
-  const [groupEvents, setGroupEvents] = useState([]);
-  useEffect(() => {
-    const fetchGroupData = async () => {
-      try {
-        const promises = [];
-        promises.push(fetch(`http://localhost:8080/api/users/transport`));
-        promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/groupUsers`));
-        promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/posts`));
-        promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/messages`));
-        promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/events`));
-        const results = await Promise.all(promises);
-        const userListResponse = results[0];
-        const groupMembersResponse = results[1];
-        const postsResponse = results[2];
-        const messagesResponse = results[3];
-        const eventsResponse = results[4];
-        if (!userListResponse.ok) {
-          throw new Error('Failed to fetch user list');
-        }
-        if (!groupMembersResponse.ok) {
-          throw new Error('Failed to fetch group members');
-        }
-        if (!postsResponse.ok) {
-          throw new Error('Failed to fetch group posts');
-        }
-        if (!messagesResponse.ok) {
-          throw new Error('Failed to fetch group messages');
-        }
-        if (!eventsResponse.ok) {
-          throw new Error('Failed to fetch group eventsResponse');
-        }
-        const userListData = await userListResponse.json();
-        const groupMembersData = await groupMembersResponse.json();
-        const postsData = await postsResponse.json();
-        const messagesData = await messagesResponse.json();
-        const eventsData = await eventsResponse.json();
-        setUserList(userListData);
-        setGroupMembers(groupMembersData);
-        setGroupPosts(postsData);
-        setGroupMessages(messagesData);
-        setGroupEvents(eventsData);
-      } catch (error) {
-        console.error('Error fetching group posts:', error);
-      }
-    };
-    fetchGroupData();
-  }, [group.groupId]);
-  return /*#__PURE__*/React.createElement("div", {
-    className: "group-details"
-  }, /*#__PURE__*/React.createElement("h2", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description), /*#__PURE__*/React.createElement(PostFormGroup, {
-    groupId: group.groupId
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "userList"
-  }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList !== null && userList.length > 0 ? userList.map((user, index) => /*#__PURE__*/React.createElement("div", {
-    key: index
-  }, user.username)) : /*#__PURE__*/React.createElement("p", null, "No Users?!")), /*#__PURE__*/React.createElement("div", {
-    className: "groupMembers"
-  }, /*#__PURE__*/React.createElement("h2", null, "Group Members"), groupMembers !== null && groupMembers.length > 1 ? groupMembers.map((member, index) => /*#__PURE__*/React.createElement("div", {
-    key: index
-  }, member.username)) : /*#__PURE__*/React.createElement("p", null, "It's just you... Maybe you should invite someone?")), /*#__PURE__*/React.createElement("div", {
-    id: "groupPosts"
-  }, /*#__PURE__*/React.createElement("h2", null, "Posts"), groupPosts !== null ? groupPosts.map(post => /*#__PURE__*/React.createElement("li", {
-    key: post.createdAt
-  }, post.body)) : /*#__PURE__*/React.createElement("div", {
-    id: "groupPosts"
-  }, "There are no posts in this groups yet")), /*#__PURE__*/React.createElement("div", {
-    className: "groupMessages"
-  }, /*#__PURE__*/React.createElement("h2", null, "Messages"), groupMessages !== null && groupMessages.length > 0 ? groupMessages.map((message, index) => /*#__PURE__*/React.createElement("div", {
-    key: index
-  }, message.body)) : /*#__PURE__*/React.createElement("p", null, "No Messages")), /*#__PURE__*/React.createElement("div", {
-    className: "groupEvents"
-  }, /*#__PURE__*/React.createElement("h2", null, "Events"), groupEvents !== null && groupEvents.length > 0 ? groupEvents.map((event, index) => /*#__PURE__*/React.createElement("div", {
-    key: index
-  }, event.title)) : /*#__PURE__*/React.createElement("p", null, "No Events")));
-}
 const renderNotifications = () => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Notifications, null), pageContainer);
 };
 function Notifications() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Notifications"));
+}
+
+// Function to add a new group user
+async function AddGroupUser({
+  groupId,
+  userId
+}) {
+  const requestData = {
+    groupId: groupId,
+    userId: userId
+  };
+  console.log('Request data:', requestData);
+  try {
+    const response = await fetch('http://localhost:8080/api/groupUsers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestData)
+    });
+    console.log('Response:', response);
+    if (response.ok) {
+      // Handle success response
+      console.log('Group user added successfully!');
+    } else {
+      // Handle error response
+      console.error('Failed to add group user:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error adding group user:', error);
+  }
 }
 
 // PostForm component
@@ -824,84 +533,6 @@ function PostForm({
     htmlFor: "private-status",
     className: "form-check-label"
   }, "Almost Private"))), followedUsersList, /*#__PURE__*/React.createElement("button", {
-    className: "w-100 btn btn-lg btn-primary",
-    type: "submit"
-  }, "Submit"))));
-}
-function PostFormGroup({
-  groupId
-}) {
-  const [body, setBody] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
-
-  // Handler for form submission
-  const submit = async e => {
-    e.preventDefault(); // Prevent page reload
-
-    const formData = new FormData();
-
-    // Append form data
-    formData.append("body", body);
-    formData.append("groupId", groupId);
-    if (selectedFile) {
-      formData.append("image", selectedFile);
-    }
-    console.log("Form data being sent to backend: ", formData);
-    try {
-      // Send user data to the server
-      await fetch("http://localhost:8080/api/posts", {
-        method: "POST",
-        credentials: "include",
-        body: formData
-      });
-
-      // Reset form fields after successful submission
-      setBody("");
-      setSelectedFile(null);
-      document.getElementById("postFormBody").value = "";
-    } catch (error) {
-      console.error("Error submitting post:", error);
-    }
-  };
-
-  // Handler for file selection
-  const handleFileChange = e => {
-    setSelectedFile(e.target.files[0]);
-  };
-  const handleSelectFile = () => {
-    const fileInput = document.getElementById("fileInput");
-    fileInput.click();
-  };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
-    className: "postForm container",
-    style: {
-      maxWidth: "400px"
-    }
-  }, /*#__PURE__*/React.createElement("h1", {
-    className: "h3 mb-3 fw-normal"
-  }, "Post Message Here"), /*#__PURE__*/React.createElement("form", {
-    onSubmit: submit
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "form-floating mb-3"
-  }, /*#__PURE__*/React.createElement("input", {
-    type: "text",
-    className: "form-control",
-    id: "postFormBody",
-    placeholder: "Type your post here...",
-    onChange: e => setBody(e.target.value)
-  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
-    type: "button",
-    className: "btn btn-primary",
-    onClick: handleSelectFile
-  }, "Select File"), /*#__PURE__*/React.createElement("span", null, selectedFile ? selectedFile.name : "No file selected"), /*#__PURE__*/React.createElement("input", {
-    type: "file",
-    id: "fileInput",
-    accept: "image/*",
-    style: {
-      display: "none"
-    },
-    onChange: handleFileChange
-  })), /*#__PURE__*/React.createElement("br", null), " ", /*#__PURE__*/React.createElement("button", {
     className: "w-100 btn btn-lg btn-primary",
     type: "submit"
   }, "Submit"))));
