@@ -6,6 +6,7 @@ import (
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
+	"time"
 )
 
 // Endpoint: /api/GroupUser/
@@ -42,6 +43,10 @@ func (h *GroupUsersHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
+
+	ctime := time.Now().UTC().UnixMilli()
+	groupUser.CreatedAt = ctime
+	groupUser.UpdatedAt = ctime
 
 	// Validate the groupUser
 	if validationErr := groupUser.Validate(); validationErr != nil {
