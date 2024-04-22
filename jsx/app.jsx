@@ -386,6 +386,39 @@ function Notifications() {
 	)
 }
 
+// Function to add a new group user
+async function AddGroupUser({ groupId, userId }) {
+    const requestData = {
+        groupId: groupId,
+        userId: userId
+    };
+
+    console.log('Request data:', requestData);
+
+    try {
+        const response = await fetch('http://localhost:8080/api/groupUsers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        console.log('Response:', response);
+    
+
+        if (response.ok) {
+            // Handle success response
+            console.log('Group user added successfully!');
+        } else {
+            // Handle error response
+            console.error('Failed to add group user:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error adding group user:', error);
+    }
+}
+
 
 
 // PostForm component
@@ -590,7 +623,7 @@ function PostForm({ groupId, followedUsers }) {
 	)
 }
 
-function PostFormGroup({ groupId }) {
+function PostFormGroup({ group }) {
 	const [body, setBody] = useState("");
 	const [selectedFile, setSelectedFile] = useState(null);
 
@@ -602,7 +635,7 @@ function PostFormGroup({ groupId }) {
 
 		// Append form data
 		formData.append("body", body);
-		formData.append("groupId", groupId);
+		formData.append("groupId", group.groupId);
 		if (selectedFile) {
 			formData.append("image", selectedFile);
 		}
@@ -621,9 +654,16 @@ function PostFormGroup({ groupId }) {
 			setBody("");
 			setSelectedFile(null);
 			document.getElementById("postFormBody").value = "";
+
+			const pageContainer = document.querySelector(".page-container");
+			ReactDOM.render(<GroupDetails group={group} />, pageContainer)
+
+
 		} catch (error) {
 			console.error("Error submitting post:", error);
 		}
+
+	
 	};
 
 	// Handler for file selection

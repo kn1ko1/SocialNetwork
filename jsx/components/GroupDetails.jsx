@@ -1,3 +1,5 @@
+const { useState, useEffect } = React
+
 export function GroupDetails({ group }) {
 
 	const [userList, setUserList] = useState([]);
@@ -48,6 +50,9 @@ export function GroupDetails({ group }) {
 				setGroupPosts(postsData);
 				setGroupMessages(messagesData);
 				setGroupEvents(eventsData);
+
+				console.log("This is GroupMembersData:", groupMembersData);
+
 			} catch (error) {
 				console.error('Error fetching group posts:', error);
 			}
@@ -56,22 +61,28 @@ export function GroupDetails({ group }) {
 		fetchGroupData();
 	}, [group.groupId]);
 
-
+	// const UserList = ({ userList }) => {
+		const handleAddToGroup = (userId) => {
+			console.log('Adding user to group with groupId:', group.groupId);
+    console.log('User ID:', userId);
+			AddGroupUser({ groupId: group.groupId, userId: userId }); // Call AddGroupUser function with groupId and userId
+		};
 
 	return (
 		<div className="group-details">
 			<h2>{group.title}</h2>
 			<p>{group.description}</p>
 			{/* <p>Members: {group.members}</p> */}
-			<PostFormGroup groupId={group.groupId} />
+			<PostFormGroup group={group} />
 			{/* Render userList here */}
 			<div className="userList">
 				<h2>UserList</h2>
 				{userList !== null && userList.length > 0 ? (
 					userList.map((user, index) => (
 						<div key={index}>
-							{user.username}
-						</div>
+						  <span>{user.username}</span>
+                <button onClick={() => handleAddToGroup(user.userId)}>Add to Group</button>
+            </div>
 					))
 				) : (
 					<p>No Users?!</p>
@@ -79,17 +90,21 @@ export function GroupDetails({ group }) {
 			</div>
 			{/* Render group members here */}
 			<div className="groupMembers">
-				<h2>Group Members</h2>
-				{groupMembers !== null && groupMembers.length > 1 ? (
-					groupMembers.map((member, index) => (
-						<div key={index}>
-							{member.username}
-						</div>
-					))
-				) : (
-					<p>It's just you... Maybe you should invite someone?</p>
-				)}
-			</div>
+                <h2>Group Members</h2>
+                {groupMembers !== null && groupMembers.length > 0 ? (
+                    groupMembers.map((member, index) => {
+                        // Find the user object corresponding to the member's userId
+                        const user = userList.find((user) => user.userId === member.userId);
+                        return (
+                            <div key={index}>
+                                {user ? user.username : 'Unknown User'}
+                            </div>
+                        );
+                    })
+                ) : (
+                    <p>It's just you... Maybe you should invite someone?</p>
+                )}
+            </div>
 			{/* Render group posts here */}
 			<div id="groupPosts">
 				<h2>Posts</h2>
@@ -129,3 +144,16 @@ export function GroupDetails({ group }) {
 		</div>
 	)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
