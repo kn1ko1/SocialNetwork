@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"socialnetwork/auth"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
@@ -11,7 +12,7 @@ import (
 )
 
 // Endpoint: /api/groups
-// Allowed methods: GET, POST, PUT, DELETE
+// Allowed methods: GET, POST
 
 type GroupsHandler struct {
 	Repo repo.IRepository
@@ -40,34 +41,23 @@ func (h *GroupsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *GroupsHandler) post(w http.ResponseWriter, r *http.Request) {
-	// contentType := r.Header.Get("Content-Type")
+	user, err := auth.AuthenticateRequest(r)
+	if err != nil {
+		utils.HandleError("User unauthorized", err)
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
 	var group models.Group
-	// switch contentType {
-	// case "application/json":
-		// err := json.NewDecoder(r.Body).Decode(&group)
-		// if err != nil {
-		// 	utils.HandleError("Failed to decode request body:", err)
-		// 	http.Error(w, "Failed to decode request body", http.StatusBadRequest)
-		// 	return
-		// }
-	// case "application/x-www-form-urlencoded":
-	// 	err := r.ParseForm()
-	// 	if err != nil {
-	// 		utils.HandleError("Failed to parse form:", err)
-	// 		http.Error(w, "internal server error", http.StatusInternalServerError)
-	// 		return
-	// 	}
-		ctime := time.Now().UTC().UnixMilli()
-		group.CreatedAt = ctime
-		user, err := getUser(r)
-		if err != nil{log.Println("Problem getting user ID.", err)}
-		log.Println("This createdat:", group.CreatedAt)
-		group.CreatorId = user.UserId
-		group.Description = r.PostFormValue("group-description")
-		log.Println("this group description:", group.Description)
-		group.Title = r.PostFormValue("group-title")
-		log.Println("this group title:", group.Title)
-		group.UpdatedAt = ctime
+	ctime := time.Now().UTC().UnixMilli()
+	group.CreatedAt = ctime
+	log.Println("This createdat:", group.CreatedAt)
+	group.CreatorId = user.UserId
+	group.Description = r.PostFormValue("group-description")
+	log.Println("this group description:", group.Description)
+	group.Title = r.PostFormValue("group-title")
+	log.Println("this group title:", group.Title)
+	group.UpdatedAt = ctime
 	//}
 	// Validate the group
 	if validationErr := group.Validate(); validationErr != nil {
@@ -83,6 +73,21 @@ func (h *GroupsHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to create group", http.StatusInternalServerError)
 		return
 	}
+
+	// Add current user to list of users in group
+	groupUser := models.GroupUser{
+		CreatedAt: ctime,
+		GroupId:   result.GroupId,
+		UpdatedAt: ctime,
+		UserId:    user.UserId,
+	}
+	_, createGroupUserErr := h.Repo.CreateGroupUser(groupUser)
+	if createGroupUserErr != nil {
+		utils.HandleError("Failed to add user to groupUser table. ", createGroupUserErr)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
 	w.WriteHeader(http.StatusCreated)
 	// Encode and write the response
 	err = json.NewEncoder(w).Encode(result)

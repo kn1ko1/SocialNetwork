@@ -123,6 +123,8 @@ func (r *DummyRepository) UpdateIsPublic(userId int, isPublic bool) error {
 	return errors.New("not implimented yet")
 }
 
+// Users
+
 func (r *DummyRepository) CreateUser(user models.User) (models.User, error) {
 	user.UserId = 1
 	return user, nil
@@ -135,6 +137,11 @@ func (r *DummyRepository) GetAllUsers() ([]models.User, error) {
 		users[i] = u
 	}
 	return users, nil
+}
+
+func (r *DummyRepository) GetAllUsersTransport() ([]transport.UserTransport, error) {
+	var userTransports []transport.UserTransport
+	return userTransports, errors.New("not yet implimented")
 }
 func (r *DummyRepository) GetUserById(userId int) (models.User, error) {
 	user := validUser
@@ -200,6 +207,17 @@ func (r *DummyRepository) GetUserUsersByFollowerId(followerId int) ([]models.Use
 
 	return userUsers, nil
 }
+
+func (r *DummyRepository) GetUserUserByFollowerIdAndSubjectId(followerId, subjectId int) (models.UserUser, error) {
+	var userUser models.UserUser
+
+	user := validUserUser
+	user.FollowerId = followerId
+	user.SubjectId = subjectId
+
+	return userUser, nil
+}
+
 func (r *DummyRepository) DeleteUserUsersBySubjectId(subjectId int) error {
 	return nil
 }
@@ -507,16 +525,18 @@ func (r *DummyRepository) GetAllMessages() ([]models.Message, error) {
 	}
 	return messages, nil
 }
-func (r *DummyRepository) GetMessagesByType(messageType string) ([]models.Message, error) {
+func (r *DummyRepository) GetMessagesByMessageTypeandTargetId(messageType string, targetId int) ([]models.Message, error) {
 	messages := make([]models.Message, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
 		m := validMessage
 		m.MessageId = i + 1
 		m.MessageType = messageType
+		m.TargetId = targetId
 		messages[i] = m
 	}
 	return messages, nil
 }
+
 func (r *DummyRepository) GetMessageById(messageId int) (models.Message, error) {
 	message := validMessage
 	message.MessageId = messageId

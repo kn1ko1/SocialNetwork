@@ -3,7 +3,6 @@ module socialnetwork
 go 1.21
 
 require (
-	github.com/google/uuid v1.6.0
 	github.com/gorilla/websocket v1.5.1
 	github.com/mattn/go-sqlite3 v1.14.19
 	golang.org/x/crypto v0.18.0
@@ -11,6 +10,7 @@ require (
 
 require (
 	github.com/google/go-cmp v0.6.0 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect

@@ -42,22 +42,13 @@ func (h *PostsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
-	ctime := time.Now().UTC().UnixMilli()
-	cookie, err := r.Cookie(auth.CookieName)
+	user, err := auth.AuthenticateRequest(r)
 	if err != nil {
-
 		utils.HandleError("Error verifying cookie", err)
 		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
 		return
 	}
-
-	user, exists := auth.SessionMap[cookie.Value]
-	if !exists {
-		utils.HandleError("Error finding User, need to log in again", err)
-		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
-		return
-	}
-
+	ctime := time.Now().UTC().UnixMilli()
 	// Parse form data
 	err = r.ParseMultipartForm(10 << 20)
 	if err != nil {
@@ -118,6 +109,38 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 		utils.HandleError("Failed to create post in the repository:", createErr)
 		http.Error(w, "Failed to create post", http.StatusInternalServerError)
 		return
+	}
+
+	// Creates postUser if post is set to "almost private"
+	if result.Privacy == "almost private" {
+		almostPrivatePostUsersString := r.FormValue("almostPrivatePostUsers")
+		// Parse the JSON string into a slice of strings
+		var userIdStrings []string
+		err := json.Unmarshal([]byte(almostPrivatePostUsersString), &userIdStrings)
+		if err != nil {
+			utils.HandleError("Failed to unmarshal almost private user Ids:", err)
+			http.Error(w, "Failed to unmarshal almost private user Ids", http.StatusInternalServerError)
+		}
+		// Convert each string element to an integer
+		var userIds []int
+		for _, str := range userIdStrings {
+			userId, err := strconv.Atoi(str)
+			if err != nil {
+				utils.HandleError("Failed to covert almost private user Id string to int:", err)
+				http.Error(w, "Failed to covert almost private user Id string to int", http.StatusInternalServerError)
+			}
+			userIds = append(userIds, userId)
+		}
+		for i := 0; i < len(userIds); i++ {
+			postUser := models.PostUser{
+				CreatedAt: ctime,
+				PostId:    result.PostId,
+				UpdatedAt: ctime,
+				UserId:    userIds[i],
+			}
+			h.Repo.CreatePostUser(postUser)
+		}
+
 	}
 
 	// Encode and write the response

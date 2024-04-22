@@ -3,8 +3,11 @@ package api
 import (
 	"encoding/json"
 	"net/http"
+	"socialnetwork/auth"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
+	"strconv"
+	"strings"
 )
 
 // Endpoint: /api/profile  ?
@@ -34,13 +37,23 @@ func (h *ProfileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *ProfileHandler) get(w http.ResponseWriter, r *http.Request) {
+	_, err := auth.AuthenticateRequest(r)
+	if err != nil {
+		utils.HandleError("Error verifying cookie", err)
+		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
+		return
+	}
+	fields := strings.Split(r.URL.Path, "/")
+	userIdStr := fields[len(fields)-1]
 
-	user, userErr := getUser(r)
-	if userErr != nil {
-		utils.HandleError("Problem getting user.", userErr)
+	userId, err := strconv.Atoi(userIdStr)
+	if err != nil {
+		utils.HandleError("Invalid user ID: ", err)
+		http.Error(w, "Invalid User ID", http.StatusBadRequest)
+		return
 	}
 
-	profileData, err := h.Repo.GetProfileDataForUser(user.UserId)
+	profileData, err := h.Repo.GetProfileDataForUser(userId)
 	if err != nil {
 		utils.HandleError("Failed to get profileData in ProfileData. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

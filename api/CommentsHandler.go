@@ -52,9 +52,9 @@ func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, exists := auth.SessionMap[cookie.Value]
-	if !exists {
-		utils.HandleError("Error finding User, need to log in again", err)
+	user, err := auth.DefaultManager.Get(cookie.Value)
+	if err != nil {
+		utils.HandleError("Error verifying cookie", err)
 		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
 		return
 	}

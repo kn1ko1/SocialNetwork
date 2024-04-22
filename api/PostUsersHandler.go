@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"net/http"
+	"socialnetwork/auth"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
 )
@@ -33,10 +34,10 @@ func (h *PostUsersHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *PostUsersHandler) post(w http.ResponseWriter, r *http.Request) {
-
-	user, err := getUser(r)
+	user, err := auth.AuthenticateRequest(r)
 	if err != nil {
-		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		utils.HandleError("Error verifying cookie", err)
+		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
 		return
 	}
 	userPosts, err := h.Repo.GetPostsByUserId(user.UserId)

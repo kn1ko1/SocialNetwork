@@ -2,16 +2,20 @@ package sqlite
 
 import (
 	"database/sql"
+	posts "socialnetwork/sqlite/POSTS"
+	users "socialnetwork/sqlite/USERS"
+	user_users "socialnetwork/sqlite/USER_USERS"
 	"socialnetwork/transport"
 	"socialnetwork/utils"
 )
 
+// This Should not be a SQLite package function
 // Retrieves data for the user's homepage including posts and comments
 func GetProfileDataForUser(identityDb *sql.DB, businessDb *sql.DB, userId int) (transport.ProfileModel, error) {
 
 	var userProfileData transport.ProfileModel
 	var err error
-	userData, err := GetUserById(identityDb, userId)
+	userData, err := users.GetUserById(identityDb, userId)
 	if err != nil {
 		utils.HandleError("Error in GetProfileDataForUser", err)
 		// return userProfileData, err
@@ -27,22 +31,39 @@ func GetProfileDataForUser(identityDb *sql.DB, businessDb *sql.DB, userId int) (
 		LastName:  userData.LastName,
 		Username:  userData.Username,
 	}
-	userProfileData.UserPostData, err = GetPostsByUserId(businessDb, userId)
+	userProfileData.UserPostData, err = posts.GetPostsByUserId(businessDb, userId)
 	if err != nil {
 		utils.HandleError("Error in GetProfileDataForUser", err)
 		// return userProfileData, err
 	}
 
-	userProfileData.UserFollowerData, err = GetUserUsersBySubjectId(businessDb, userId)
+	followerUserUsers, err := user_users.GetUserUsersBySubjectId(businessDb, userId)
 	if err != nil {
 		utils.HandleError("Error in GetProfileDataForUser", err)
 		// return userProfileData, err
 	}
 
-	userProfileData.UserFollowsData, err = GetUserUsersByFollowerId(businessDb, userId)
+	// var userFollowersData []transport.UserTransport
+	for i := 0; i < len(followerUserUsers); i++ {
+		userFollowerData, err := GetUsernameByUserId(identityDb, followerUserUsers[i].FollowerId)
+		if err != nil {
+			utils.HandleError("Error in GetProfileDataForUser", err)
+		}
+		userProfileData.UserFollowerData = append(userProfileData.UserFollowerData, userFollowerData)
+	}
+
+	followsUsersUsers, err := user_users.GetUserUsersByFollowerId(businessDb, userId)
 	if err != nil {
 		utils.HandleError("Error in GetProfileDataForUser", err)
 		// return userProfileData, err
+	}
+	//var userFollowsData []transport.UserTransport
+	for i := 0; i < len(followsUsersUsers); i++ {
+		userFollowData, err := GetUsernameByUserId(identityDb, followsUsersUsers[i].SubjectId)
+		if err != nil {
+			utils.HandleError("Error in GetProfileDataForUser", err)
+		}
+		userProfileData.UserFollowsData = append(userProfileData.UserFollowsData, userFollowData)
 	}
 
 	return userProfileData, nil
