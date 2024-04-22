@@ -771,7 +771,9 @@ function GroupDetails({
   return /*#__PURE__*/React.createElement("div", {
     className: "group-details"
   }, /*#__PURE__*/React.createElement("h2", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description), /*#__PURE__*/React.createElement(PostFormGroup, {
-    groupId: group.groupId
+    group: group
+  }), /*#__PURE__*/React.createElement(EventForm, {
+    group: group
   }), /*#__PURE__*/React.createElement("div", {
     className: "userList"
   }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList !== null && userList.length > 0 ? userList.map((user, index) => /*#__PURE__*/React.createElement("div", {
@@ -795,6 +797,76 @@ function GroupDetails({
   }, /*#__PURE__*/React.createElement("h2", null, "Events"), groupEvents !== null && groupEvents.length > 0 ? groupEvents.map((event, index) => /*#__PURE__*/React.createElement("div", {
     key: index
   }, event.title)) : /*#__PURE__*/React.createElement("p", null, "No Events")));
+}
+function EventForm({
+  group
+}) {
+  const [dateTime, setDateTime] = useState("");
+  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState("");
+  // Handler for form submission
+  const submit = async e => {
+    e.preventDefault(); // Prevent page reload
+
+    const formData = new FormData();
+    setDescription(1111);
+    // Append form data
+    formData.append("dateTime", dateTime);
+    formData.append("description", description);
+    formData.append("groupId", group.groupId);
+    formData.append("title", title);
+    console.log("Form data being sent to backend: ", formData);
+    try {
+      // Send user data to the server
+      await fetch("http://localhost:8080/api/events", {
+        method: "POST",
+        credentials: "include",
+        body: formData
+      });
+
+      // Reset form fields after successful submission
+      setDateTime("");
+      setDescription("");
+      setTitle("");
+      document.getElementById("eventFormDescription").value = "";
+      document.getElementById("eventFormTitle").value = "";
+    } catch (error) {
+      console.error("Error submitting event:", error);
+    }
+    const pageContainer = document.querySelector(".page-container");
+    ReactDOM.render( /*#__PURE__*/React.createElement(GroupDetails, {
+      group: group
+    }), pageContainer);
+  };
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
+    className: "eventForm container",
+    style: {
+      maxWidth: "400px"
+    }
+  }, /*#__PURE__*/React.createElement("h1", {
+    className: "h3 mb-3 fw-normal"
+  }, "Post Event Here"), /*#__PURE__*/React.createElement("form", {
+    onSubmit: submit
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-floating mb-3"
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    className: "form-control",
+    id: "eventFormTitle",
+    placeholder: "Type your event title here...",
+    onChange: e => setTitle(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "form-floating mb-3"
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    className: "form-control",
+    id: "eventFormDescription",
+    placeholder: "Type your event Description here...",
+    onChange: e => setDescription(e.target.value)
+  })), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("button", {
+    className: "w-100 btn btn-lg btn-primary",
+    type: "submit"
+  }, "Submit"))));
 }
 const renderNotifications = () => {
   const pageContainer = document.querySelector(".page-container");
@@ -1038,7 +1110,7 @@ function PostForm({
   }, "Submit"))));
 }
 function PostFormGroup({
-  groupId
+  group
 }) {
   const [body, setBody] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -1051,7 +1123,7 @@ function PostFormGroup({
 
     // Append form data
     formData.append("body", body);
-    formData.append("groupId", groupId);
+    formData.append("groupId", group.groupId);
     if (selectedFile) {
       formData.append("image", selectedFile);
     }
@@ -1071,6 +1143,10 @@ function PostFormGroup({
     } catch (error) {
       console.error("Error submitting post:", error);
     }
+    const pageContainer = document.querySelector(".page-container");
+    ReactDOM.render( /*#__PURE__*/React.createElement(GroupDetails, {
+      group: group
+    }), pageContainer);
   };
 
   // Handler for file selection
