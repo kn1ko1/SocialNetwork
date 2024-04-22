@@ -1,6 +1,5 @@
 const {
-  useState,
-  useEffect
+  useState
 } = React;
 export function PostFormGroup({
   group

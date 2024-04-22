@@ -335,37 +335,6 @@ function Notifications() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Notifications"));
 }
 
-// Function to add a new group user
-async function AddGroupUser({
-  groupId,
-  userId
-}) {
-  const requestData = {
-    groupId: groupId,
-    userId: userId
-  };
-  console.log('Request data:', requestData);
-  try {
-    const response = await fetch('http://localhost:8080/api/groupUsers', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestData)
-    });
-    console.log('Response:', response);
-    if (response.ok) {
-      // Handle success response
-      console.log('Group user added successfully!');
-    } else {
-      // Handle error response
-      console.error('Failed to add group user:', response.statusText);
-    }
-  } catch (error) {
-    console.error('Error adding group user:', error);
-  }
-}
-
 // PostForm component
 // This component renders a form for creating a new post.
 // It accepts a `groupId` prop to determine the group for the post.
