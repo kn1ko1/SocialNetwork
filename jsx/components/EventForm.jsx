@@ -14,13 +14,13 @@ export function EventForm({ group }) {
  
  
         // Append form data
-        formData.append("dateTime", "2022-01-02");
+        formData.append("dateTime", dateTime);
         formData.append("description", description);
         formData.append("groupId", group.groupId);
         formData.append("title", title);
  
  
-        console.log("Form data being sent to backend: ", formData);
+        console.log("Event Form data being sent to backend: ", formData);
  
  
         try {
@@ -69,6 +69,17 @@ export function EventForm({ group }) {
                             onChange={(e) => setDescription(e.target.value)}
                         />
                     </div>
+                    <div className="mb-3">
+					<label htmlFor="dateTime">Date of Event</label>
+					<input
+						required
+						type="date"
+						className="form-control reginput"
+						id="dob"
+						placeholder="16/01/1998"
+						onChange={(e) => setDateTime(e.target.value)}
+					/>
+				</div>
                     <br />
                     <button className="w-100 btn btn-lg btn-primary" type="submit">
                         Submit

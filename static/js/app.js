@@ -2,7 +2,7 @@ import { Chat } from "./Chat.js";
 import { Profile } from "./Profile.js";
 import { Register } from "./Register.js";
 import { FollowButton } from "./components/FollowButton.js";
-import { GroupDetails } from "./components/GroupDetails.js";
+import { GroupDetails } from "./GroupDetails.js";
 import { getCurrentUserId } from "./shared/getCurrentUserId.js";
 const {
   useState,
@@ -291,7 +291,11 @@ function Group() {
   }, "Go Back"), /*#__PURE__*/React.createElement(GroupDetails, {
     group: selectedGroup
   })) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("form", {
-    onSubmit: create
+    onSubmit: create,
+    className: "container",
+    style: {
+      maxWidth: "400px"
+    }
   }, /*#__PURE__*/React.createElement("div", {
     className: "mb-3"
   }, /*#__PURE__*/React.createElement("label", {
@@ -518,18 +522,14 @@ const postCardStyle = {
   marginBottom: '20px' // Adjust spacing between post cards
 };
 function PostCard({
-  post
+  post,
+  comments
 }) {
-  const [isFollowing, setIsFollowing] = useState(false);
   const [body, setBody] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-  const milliseconds = post.post.createdAt;
+  const milliseconds = post.createdAt;
   const date = new Date(milliseconds);
   const formattedDate = date.toLocaleString();
-  const handleFollowClick = async () => {
-    const followSuccess = await handleFollow(post.post.userId);
-    setIsFollowing(followSuccess);
-  };
   const submit = async e => {
     e.preventDefault(); // prevent reload.
 
@@ -537,7 +537,7 @@ function PostCard({
 
     // Append form data
     formData.append("body", body);
-    formData.append("postId", post.post.postId);
+    formData.append("postId", post.postId);
     if (selectedFile) {
       formData.append("image", selectedFile);
     }
@@ -562,7 +562,7 @@ function PostCard({
     // const file = e.target.files[0];
   };
   const handleSelectFile = () => {
-    const commentFileInput = document.getElementById(`commentFileInput${post.post.postId}`);
+    const commentFileInput = document.getElementById(`commentFileInput${post.postId}`);
     commentFileInput.click();
   };
   return /*#__PURE__*/React.createElement("div", {
@@ -574,7 +574,7 @@ function PostCard({
     className: "d-flex flex-start align-items-center"
   }, /*#__PURE__*/React.createElement("img", {
     className: "rounded-circle shadow-1-strong me-3",
-    src: post.post.imageURL,
+    src: post.imageURL,
     alt: "avatar",
     width: "60",
     height: "60"
@@ -583,21 +583,17 @@ function PostCard({
   }, /*#__PURE__*/React.createElement("a", {
     className: "fw-bold text-primary mb-0 me-2",
     href: "#",
-    onClick: () => renderProfile(post.post.userId)
-  }, post.post.userId), /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-primary btn-sm",
-    onClick: handleFollowClick,
-    disabled: isFollowing
-  }, isFollowing ? "Following" : "Follow")), /*#__PURE__*/React.createElement("p", {
+    onClick: () => renderProfile(post.userId)
+  }, post.userId)), /*#__PURE__*/React.createElement("p", {
     className: "text-muted small mb-0"
-  }, formattedDate))), !post.post.imageURL ? null : /*#__PURE__*/React.createElement("p", {
+  }, formattedDate))), !post.imageURL ? null : /*#__PURE__*/React.createElement("p", {
     className: "mt-3 mb-2 pb-1"
   }, /*#__PURE__*/React.createElement("img", {
-    src: post.post.imageURL,
+    src: post.imageURL,
     className: "img-fluid"
   })), /*#__PURE__*/React.createElement("p", {
     className: "mt-3 mb-2 pb-1"
-  }, post.post.body)), /*#__PURE__*/React.createElement("div", {
+  }, post.body)), /*#__PURE__*/React.createElement("div", {
     className: "card-footer py-3 border-0",
     style: {
       backgroundColor: "#f8f9fa"
@@ -631,7 +627,7 @@ function PostCard({
     onClick: handleSelectFile
   }, "Select File"), /*#__PURE__*/React.createElement("span", null, selectedFile ? selectedFile.name : "No file selected"), /*#__PURE__*/React.createElement("input", {
     type: "file",
-    id: `commentFileInput${post.post.postId}`,
+    id: `commentFileInput${post.postId}`,
     accept: "image/*",
     style: {
       display: "none"
@@ -641,14 +637,12 @@ function PostCard({
     type: "submit",
     className: "btn btn-primary btn-sm",
     onClick: submit
-  }, "Post comment")), /*#__PURE__*/React.createElement("div", {
+  }, "Post comment")), comments && comments.length > 0 && /*#__PURE__*/React.createElement("div", {
     className: "comments"
-  }, /*#__PURE__*/React.createElement("h2", null, "Comments"), post.comments !== null && post.comments.length > 0 ? post.comments.map(comment => /*#__PURE__*/React.createElement(CommentCard, {
+  }, /*#__PURE__*/React.createElement("h2", null, "Comments"), comments.map(comment => /*#__PURE__*/React.createElement(CommentCard, {
     key: comment.createdAt,
     comment: comment
-  })) : /*#__PURE__*/React.createElement("p", {
-    className: "text-muted"
-  }, "No comments"))));
+  })))));
 }
 function CommentCard({
   comment
@@ -738,17 +732,20 @@ function Home() {
     className: "almostPrivatePosts"
   }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? almostPrivatePosts.map(almostPrivatePost => /*#__PURE__*/React.createElement(PostCard, {
     key: almostPrivatePost.createdAt,
-    post: almostPrivatePost
+    post: almostPrivatePost.post,
+    comments: almostPrivatePost.comments
   })) : /*#__PURE__*/React.createElement("p", null, "No almost private posts")), /*#__PURE__*/React.createElement("div", {
     className: "privatePosts"
   }, /*#__PURE__*/React.createElement("h2", null, "Private Posts"), privatePosts !== null && privatePosts.length > 0 ? privatePosts.map(privatePost => /*#__PURE__*/React.createElement(PostCard, {
     key: privatePost.createdAt,
-    post: privatePost
+    post: privatePost.post,
+    comments: privatePost.comments
   })) : /*#__PURE__*/React.createElement("p", null, "No private posts")), /*#__PURE__*/React.createElement("div", {
     className: "publicPostsWithComments"
   }, /*#__PURE__*/React.createElement("h2", null, "Public Posts With Comments"), publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? publicPostsWithComments.map((publicPostsWithComment, index) => /*#__PURE__*/React.createElement(PostCard, {
     key: index,
-    post: publicPostsWithComment
+    post: publicPostsWithComment.post,
+    comments: publicPostsWithComment.comments
   })) : /*#__PURE__*/React.createElement("p", null, "public posts")), /*#__PURE__*/React.createElement("div", {
     className: "userGroups"
   }, /*#__PURE__*/React.createElement("h2", null, "Groups"), /*#__PURE__*/React.createElement("ul", null, userGroups !== null && userGroups.map(userGroup => /*#__PURE__*/React.createElement("li", {

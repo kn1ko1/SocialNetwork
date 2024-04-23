@@ -2,7 +2,7 @@ import { Chat } from "./Chat.js"
 import { Profile } from "./Profile.js"
 import { Register } from "./Register.js"
 import { FollowButton } from "./components/FollowButton.js"
-import { GroupDetails } from "./components/GroupDetails.js"
+import { GroupDetails } from "./GroupDetails.js"
 import { getCurrentUserId } from "./shared/getCurrentUserId.js"
 const { useState, useEffect } = React
 
@@ -324,7 +324,7 @@ function Group() {
 				</div>
 			) : (
 				<div>
-					<form onSubmit={create}>
+					<form onSubmit={create} className="container" style={{ maxWidth: "400px" }}>
 						<div className="mb-3">
 							<label htmlFor="exampleTitle" className="form-label">
 								Title
@@ -602,19 +602,14 @@ const postCardStyle = {
 	marginBottom: '20px', // Adjust spacing between post cards
 };
 
-function PostCard({ post }) {
-	const [isFollowing, setIsFollowing] = useState(false)
+function PostCard({ post, comments }) {
 	const [body, setBody] = useState("")
 	const [selectedFile, setSelectedFile] = useState(null)
 
-	const milliseconds = post.post.createdAt
+	const milliseconds = post.createdAt
 	const date = new Date(milliseconds)
 	const formattedDate = date.toLocaleString()
 
-	const handleFollowClick = async () => {
-		const followSuccess = await handleFollow(post.post.userId)
-		setIsFollowing(followSuccess)
-	}
 
 	const submit = async (e) => {
 		e.preventDefault() // prevent reload.
@@ -623,7 +618,7 @@ function PostCard({ post }) {
 
 		// Append form data
 		formData.append("body", body)
-		formData.append("postId", post.post.postId)
+		formData.append("postId", post.postId)
 		if (selectedFile) {
 			formData.append("image", selectedFile)
 		}
@@ -652,7 +647,7 @@ function PostCard({ post }) {
 
 	const handleSelectFile = () => {
 		const commentFileInput = document.getElementById(
-			`commentFileInput${post.post.postId}`
+			`commentFileInput${post.postId}`
 		)
 		commentFileInput.click()
 	}
@@ -663,7 +658,7 @@ function PostCard({ post }) {
 				<div className="d-flex flex-start align-items-center">
 					<img
 						className="rounded-circle shadow-1-strong me-3"
-						src={post.post.imageURL}
+						src={post.imageURL}
 						alt="avatar"
 						width="60"
 						height="60"
@@ -673,30 +668,22 @@ function PostCard({ post }) {
 							<a
 								className="fw-bold text-primary mb-0 me-2"
 								href="#"
-								onClick={() => renderProfile(post.post.userId)}
+								onClick={() => renderProfile(post.userId)}
 							>
-								{post.post.userId}
+								{post.userId}
 							</a>
-
-							<button
-								className="btn btn-primary btn-sm"
-								onClick={handleFollowClick}
-								disabled={isFollowing}
-							>
-								{isFollowing ? "Following" : "Follow"}
-							</button>
 						</div>
 						<p className="text-muted small mb-0">{formattedDate}</p>
 					</div>
 				</div>
 				{/* Image, if there is one */}
-				{!post.post.imageURL ? null : (
+				{!post.imageURL ? null : (
 					<p className="mt-3 mb-2 pb-1">
-						<img src={post.post.imageURL} className="img-fluid" />
+						<img src={post.imageURL} className="img-fluid" />
 					</p>
 				)}
 				{/* Post Body */}
-				<p className="mt-3 mb-2 pb-1">{post.post.body}</p>
+				<p className="mt-3 mb-2 pb-1">{post.body}</p>
 			</div>
 			<div
 				className="card-footer py-3 border-0"
@@ -735,7 +722,7 @@ function PostCard({ post }) {
 					<span>{selectedFile ? selectedFile.name : "No file selected"}</span>
 					<input
 						type="file"
-						id={`commentFileInput${post.post.postId}`}
+						id={`commentFileInput${post.postId}`}
 						accept="image/*"
 						style={{ display: "none" }}
 						onChange={handleFileChange}
@@ -748,18 +735,18 @@ function PostCard({ post }) {
 						Post comment
 					</button>
 				</div>
-				<div className="comments">
-					<h2>Comments</h2>
-					{post.comments !== null && post.comments.length > 0 ? (
-						post.comments.map((comment) => (
+					{/* If there are comments then render them, otherwise... don't */}
+				{comments && comments.length > 0 && (
+					<div className="comments">
+						<h2>Comments</h2>
+						{comments.map((comment) => (
 							<CommentCard key={comment.createdAt} comment={comment} />
-						))
-					) : (
-						<p className="text-muted">No comments</p>
-					)}
-				</div>
+						))}
+					</div>
+				)}
 			</div>
-		</div>
+
+		</div >
 	)
 }
 
@@ -871,7 +858,8 @@ function Home() {
 					almostPrivatePosts.map((almostPrivatePost) => (
 						<PostCard
 							key={almostPrivatePost.createdAt}
-							post={almostPrivatePost}
+							post={almostPrivatePost.post}
+							comments={almostPrivatePost.comments}
 						/>
 					))
 				) : (
@@ -884,7 +872,10 @@ function Home() {
 				<h2>Private Posts</h2>
 				{privatePosts !== null && privatePosts.length > 0 ? (
 					privatePosts.map((privatePost) => (
-						<PostCard key={privatePost.createdAt} post={privatePost} />
+						<PostCard
+						key={privatePost.createdAt}
+						post={privatePost.post}
+						comments={privatePost.comments} />
 					))
 				) : (
 					<p>No private posts</p>
@@ -897,7 +888,7 @@ function Home() {
 				{publicPostsWithComments !== null &&
 					publicPostsWithComments.length > 0 ? (
 					publicPostsWithComments.map((publicPostsWithComment, index) => (
-						<PostCard key={index} post={publicPostsWithComment} />
+						<PostCard key={index} post={publicPostsWithComment.post} comments={publicPostsWithComment.comments} />
 					))
 				) : (
 					<p>public posts</p>
