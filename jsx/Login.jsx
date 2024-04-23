@@ -1,5 +1,5 @@
 const { useState, useEffect } = React
-import { initializeSocket } from "../shared/socket.js";
+import { initializeSocket } from "./app.js"
 import { renderNavbar } from "./components/Navbar.js"
 import { renderRegister } from "./Register.js"
 import { renderHome } from "./Home.js"
@@ -10,6 +10,7 @@ export const renderLogin = () => {
 }
 
 export function Login() {
+	let socket = null
 	const [usernameOrEmail, setUsernameOrEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [isLoggedIn, setIsLoggedIn] = useState(false)

@@ -1,5 +1,5 @@
 import { getCurrentUserId } from "../shared/getCurrentUserId.js"
-import { getSocket } from "../shared/socket.js";
+import { getSocket } from "../app.js"
 import { renderProfile } from "../Profile.js"
 import { renderHome } from "../Home.js"
 import { renderNotifications } from "../Notifications.js"

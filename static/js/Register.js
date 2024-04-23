@@ -1,12 +1,13 @@
 const {
   useState
 } = React;
-import { initializeSocket } from "../shared/socket.js";
+import { initializeSocket } from "./app.js";
 export const renderRegister = () => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), pageContainer);
 };
 export function Register() {
+  let socket = null;
   const [email, setEmail] = useState("");
   const [encryptedPassword, setEncryptedPassword] = useState("");
   const [firstName, setFirstName] = useState("");
