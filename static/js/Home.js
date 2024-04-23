@@ -6,6 +6,7 @@ import { getCurrentUserId } from "./shared/getCurrentUserId.js";
 import { PostForm } from "./components/PostForm.js";
 import { PostCard } from "./components/PostCard.js";
 import { FollowButton } from "./components/FollowButton.js";
+import { renderProfile } from "./Profile.js";
 export const renderHome = () => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), pageContainer);

@@ -60,9 +60,10 @@ export function Login() {
 
 	useEffect(() => {
 		if (isLoggedIn) {
-			renderNavbar()
-			renderHome()
 			socket = initializeSocket()
+			renderNavbar({socket})
+			renderHome()
+			
 		}
 	}, [isLoggedIn])
 

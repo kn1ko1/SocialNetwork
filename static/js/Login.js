@@ -55,9 +55,11 @@ export function Login() {
   };
   useEffect(() => {
     if (isLoggedIn) {
-      renderNavbar();
-      renderHome();
       socket = initializeSocket();
+      renderNavbar({
+        socket
+      });
+      renderHome();
     }
   }, [isLoggedIn]);
   return /*#__PURE__*/React.createElement("div", {

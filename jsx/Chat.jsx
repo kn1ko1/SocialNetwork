@@ -1,8 +1,7 @@
 const { useState } = React
-import { getSocket } from "./app.js"
 
-export const renderChat = () => {
-	let socket = getSocket()
+export const renderChat = ({ socket }) => {
+	
 	const pageContainer = document.querySelector(".page-container")
 	ReactDOM.render(<Chat socket={socket} />, pageContainer)
 }
