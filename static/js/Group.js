@@ -3,6 +3,7 @@ const {
   useEffect
 } = React;
 import { GroupDetails } from "./GroupDetails.js";
+import { getCurrentUserId } from "./shared/getCurrentUserId.js";
 export const renderGroup = () => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Group, null), pageContainer);
@@ -13,28 +14,69 @@ export function Group() {
   const [groupData, setGroupData] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   //const [showGroupDetails, setShowGroupDetails] = useState(false);
-
+  const {
+    currentUserId
+  } = getCurrentUserId();
   const fetchGroupData = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/groups", {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-      if (!response.ok) {
-        throw new Error("Failed to fetch group data");
+      const promises = [];
+      promises.push(fetch("http://localhost:8080/api/groups"));
+      promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/groupUsers`));
+      const results = await Promise.all(promises);
+      const groupListResponse = results[0];
+      const joinedGroupsResponse = results[1];
+      if (!groupListResponse.ok) {
+        throw new Error('Failed to fetch group list');
       }
-      const data = await response.json();
-      setGroupData(data);
+      if (!joinedGroupsResponse.ok) {
+        throw new Error('Failed to fetch joined group list');
+      }
+      const groupListData = await groupListResponse.json();
+      const joinedGroupsData = await joinedGroupsResponse.json();
+      for (let i = 0; i < groupListData.length; i++) {
+        const joinedGroup = joinedGroupsData.find(group => group.groupId === groupListData[i].groupId);
+        // If a corresponding group is found in joinedGroupsData
+        if (joinedGroup) {
+          // Add a new field 'isMember' to groupListData and set its value to true
+          groupListData[i].isMember = true;
+        } else {
+          // If no corresponding group is found, set 'isMember' to false or undefined
+          groupListData[i].isMember = false;
+        }
+      }
+      setGroupData(groupListData);
     } catch (error) {
-      console.error("Error fetching group data:", error);
+      console.error('Error fetching group data:', error);
     }
   };
+
+  // const fetchGroupData = async () => {
+  // 	try {
+
+  // 		const response = await fetch("http://localhost:8080/api/groups", {
+  // 			method: "GET",
+  // 			credentials: "include",
+  // 			headers: {
+  // 				"Content-Type": "application/json",
+  // 			},
+  // 		})
+
+  // 		if (!response.ok) {
+  // 			throw new Error("Failed to fetch group data")
+  // 		}
+
+  // 		const data = await response.json()
+  // 		setGroupData(data)
+  // 	} catch (error) {
+  // 		console.error("Error fetching group data:", error)
+  // 	}
+  // }
+
   useEffect(() => {
-    fetchGroupData();
-  }, []);
+    if (currentUserId) {
+      fetchGroupData();
+    }
+  }, [currentUserId]);
   const create = async e => {
     e.preventDefault(); // prevent reload.
 

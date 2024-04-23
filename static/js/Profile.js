@@ -50,7 +50,6 @@ export function Profile({
       setUserFollowerData(data.userFollowerData || []);
       setUserFollowsData(data.userFollowsData || []);
       setIsPublicValue(data.profileUserData.isPublic);
-      console.log("This is my data with followers", data);
     } catch (error) {
       console.error("Error fetching profile data:", error);
     }
