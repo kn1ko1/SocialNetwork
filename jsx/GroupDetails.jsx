@@ -81,24 +81,25 @@ export function GroupDetails({ group }) {
 
 	}
 
-
-
 	// Function to add a new group user
 	async function AddGroupUser(userId, groupId) {
-		const requestData = {
-			groupId: groupId,
-			userId: userId
+		const notificationtData = {
+			notificationType: "group",
+			objectId: groupId,
+			senderId: currentUserId,
+			status: "pending",
+			targetId: userId,
 		};
 
-		console.log('Request data:', requestData);
+		console.log('notificationtData:', notificationtData);
 
 		try {
-			const response = await fetch('http://localhost:8080/api/groupUsers', {
+			const response = await fetch('http://localhost:8080/api/notifications', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify(requestData)
+				body: JSON.stringify(notificationtData)
 			});
 
 			console.log('Response:', response);
