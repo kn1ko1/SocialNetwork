@@ -1,17 +1,17 @@
 import { getCurrentUserId } from "../shared/getCurrentUserId.js"
-import { getSocket } from "../app.js"
 import { renderProfile } from "../Profile.js"
 import { renderHome } from "../Home.js"
 import { renderNotifications } from "../Notifications.js"
 import { renderChat } from "../Chat.js"
 import { renderGroup } from "../Group.js"
+import { renderLogin } from "../Login.js"
 
-export const renderNavbar = () => {
+export const renderNavbar = ({ socket }) => {
 	const navContainer = document.querySelector(".nav-container")
-	ReactDOM.render(<Navbar />, navContainer)
+	ReactDOM.render(<Navbar socket={ socket } />, navContainer)
 }
 
-export function Navbar() {
+export function Navbar({ socket }) {
 	const { currentUserId } = getCurrentUserId()
 
 	const logout = async () => {
@@ -24,7 +24,6 @@ export function Navbar() {
 			console.log(response)
 
 			if (response.ok) {
-				socket = getSocket()
 				socket.close()
 				socket.addEventListener("close", (event) => {
 					console.log("The connection has been closed successfully.")
@@ -87,7 +86,7 @@ export function Navbar() {
 							</a>
 						</li>
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={logout}>
+							<a className="nav-link" href="#" onClick={() => logout({ socket })}>
 								LOGOUT
 							</a>
 						</li>

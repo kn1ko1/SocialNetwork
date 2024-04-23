@@ -64,8 +64,10 @@ export function Register() {
 
   //if credentials frontend succesfully create a new user then we render home
   if (isRegistered) {
-    socket = initializeSocket();
-    renderNavbar();
+    const socket = initializeSocket();
+    renderNavbar({
+      socket
+    });
     renderHome();
   }
 
