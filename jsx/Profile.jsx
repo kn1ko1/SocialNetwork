@@ -1,4 +1,5 @@
 import { getCurrentUserId } from "./shared/getCurrentUserId.js"
+import { PostCard } from "./components/PostCard.js"
 import { FollowButton } from "./components/FollowButton.js"
 const { useState, useEffect } = React
 
@@ -174,18 +175,8 @@ export function Profile({ userId, isEditable }) {
 						<div id="myPostsData">
 							{userPostData.map((post) => (
 								<div key={post.postId}>
-									<p>
-										<strong>Post ID:</strong> {post.postId}
-									</p>
-									<p>
-										<strong>Created At:</strong> {post.createdAt}
-									</p>
-									<p>
-										<strong>Body:</strong> {post.body}
-									</p>
-									<p>
-										<strong>Image URL:</strong> {post.imageURL}
-									</p>
+									<PostCard post={post}
+									showCommentForm={false}/>
 								</div>
 							))}
 						</div>
