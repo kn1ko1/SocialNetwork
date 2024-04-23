@@ -10,7 +10,7 @@ import (
 func CreateNotification(database *sql.DB, notification models.Notification) (models.Notification, error) {
 
 	query := `
-	INSERT INTO MESSAGES (
+	INSERT INTO NOTIFICATIONS (
 		CreatedAt,
 		NotificationType,
 		ObjectId,
@@ -18,7 +18,7 @@ func CreateNotification(database *sql.DB, notification models.Notification) (mod
 		Status,
 		TargetId,
 		UpdatedAt
-	) VALUES (?, ?, ?, ?, ?, ?)
+	) VALUES (?, ?, ?, ?, ?, ?, ?)
 `
 
 	statement, err := database.Prepare(query)

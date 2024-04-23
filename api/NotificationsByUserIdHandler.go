@@ -11,16 +11,16 @@ import (
 
 // Allowed methods: GET
 
-type NotificationByUserIdHandler struct {
+type NotificationsByUserIdHandler struct {
 	Repo repo.IRepository
 }
 
 // Constructor with dependency injection of a repo implementation
-func NewNotificationByUserIdHandler(r repo.IRepository) *NotificationByUserIdHandler {
-	return &NotificationByUserIdHandler{Repo: r}
+func NewNotificationsByUserIdHandler(r repo.IRepository) *NotificationsByUserIdHandler {
+	return &NotificationsByUserIdHandler{Repo: r}
 }
 
-func (h *NotificationByUserIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *NotificationsByUserIdHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
@@ -33,18 +33,18 @@ func (h *NotificationByUserIdHandler) ServeHTTP(w http.ResponseWriter, r *http.R
 	}
 }
 
-func (h *NotificationByUserIdHandler) get(w http.ResponseWriter, r *http.Request) {
+func (h *NotificationsByUserIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	fields := strings.Split(r.URL.Path, "/")
-	userId, userIdrr := strconv.Atoi(fields[len(fields)-1])
+	userId, userIdrr := strconv.Atoi(fields[len(fields)-2])
 	if userIdrr != nil {
 		utils.HandleError("Problem with AtoI userId. ", userIdrr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	notification, err := h.Repo.GetNotificationsByUserId(userId)
+	notification, err := h.Repo.GetNotificationsByTargetId(userId)
 	if err != nil {
-		utils.HandleError("Failed to get notification in GetNotificationByUserIdHandler. ", err)
+		utils.HandleError("Failed to get notification in GetNotificationsByUserIdHandler. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

@@ -7,10 +7,10 @@ import (
 )
 
 // Retrieves notifications with the relevant userId from the NOTIFICATIONS table
-func GetNotificationsByUserId(database *sql.DB, userId int) ([]models.Notification, error) {
+func GetNotificationsByTargetId(database *sql.DB, targetId int) ([]models.Notification, error) {
 	var notifications []models.Notification
 
-	rows, err := database.Query("SELECT * FROM NOTIFICATIONS WHERE UserId = ?", userId)
+	rows, err := database.Query("SELECT * FROM NOTIFICATIONS WHERE TargetId = ?", targetId)
 	if err != nil {
 		return notifications, nil
 	}
@@ -19,6 +19,7 @@ func GetNotificationsByUserId(database *sql.DB, userId int) ([]models.Notificati
 	for rows.Next() {
 		var notification models.Notification
 		err := rows.Scan(
+			&notification.NotificationId,
 			&notification.CreatedAt,
 			&notification.NotificationType,
 			&notification.ObjectId,

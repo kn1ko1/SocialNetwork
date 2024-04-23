@@ -7,6 +7,7 @@ import (
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
+	"time"
 )
 
 // Endpoint: /api/notifications
@@ -38,14 +39,16 @@ func (h *NotificationsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 func (h *NotificationsHandler) post(w http.ResponseWriter, r *http.Request) {
 
 	var notification models.Notification
+	ctime := time.Now().UTC().UnixMilli()
 	err := json.NewDecoder(r.Body).Decode(&notification)
 	if err != nil {
 		utils.HandleError("Failed to decode request body:", err)
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
-	log.Println("Received notification:", notification.NotificationType)
-
+	log.Println("Received notification type:", notification.NotificationType, "for user: ", notification.TargetId)
+	notification.CreatedAt = ctime
+	notification.UpdatedAt = ctime
 	// // Validate the event
 	if validationErr := notification.Validate(); validationErr != nil {
 		utils.HandleError("Validation failed:", validationErr)
@@ -60,6 +63,7 @@ func (h *NotificationsHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to create notification", http.StatusInternalServerError)
 		return
 	}
+	w.WriteHeader(http.StatusCreated)
 
 	// Encode and write the response
 	err = json.NewEncoder(w).Encode(result)
@@ -69,6 +73,4 @@ func (h *NotificationsHandler) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Correct HTTP header for a newly created resource:
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Notification created successfully!"))
 }

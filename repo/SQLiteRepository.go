@@ -366,8 +366,8 @@ func (r *SQLiteRepository) GetNotificationById(notificationId int) (models.Notif
 	return notifications.GetNotificationById(r.businessDb, notificationId)
 }
 
-func (r *SQLiteRepository) GetNotificationsByUserId(userId int) ([]models.Notification, error) {
-	return notifications.GetNotificationsByUserId(r.businessDb, userId)
+func (r *SQLiteRepository) GetNotificationsByTargetId(targetId int) ([]models.Notification, error) {
+	return notifications.GetNotificationsByTargetId(r.businessDb, targetId)
 }
 func (r *SQLiteRepository) UpdateNotification(notification models.Notification) (models.Notification, error) {
 	return notifications.UpdateNotification(r.businessDb, notification)
