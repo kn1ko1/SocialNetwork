@@ -1,5 +1,3 @@
-
-
 export function CommentCard({ comment }) {
 	const formattedDate = new Date(comment.createdAt).toLocaleString()
 
