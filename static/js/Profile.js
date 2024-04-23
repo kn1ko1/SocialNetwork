@@ -5,14 +5,19 @@ const {
   useState,
   useEffect
 } = React;
+export const renderProfile = (userId, isEditable) => {
+  const pageContainer = document.querySelector(".page-container");
+  ReactDOM.render( /*#__PURE__*/React.createElement(Profile, {
+    userId: userId,
+    isEditable: isEditable
+  }), pageContainer);
+};
 export function Profile({
   userId,
   isEditable
 }) {
   const {
-    currentUserId,
-    isLoading,
-    error
+    currentUserId
   } = getCurrentUserId();
   const [profileUserData, setProfileUserData] = useState({});
   const [userPostData, setUserPostData] = useState([]);

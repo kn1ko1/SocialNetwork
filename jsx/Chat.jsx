@@ -1,4 +1,10 @@
-const { useState, useEffect } = React
+const { useState } = React
+
+
+export const renderChat = () => {
+	const pageContainer = document.querySelector(".page-container")
+	ReactDOM.render(<Chat socket={socket} />, pageContainer)
+}
 
 export function Chat({socket}) {
 	const [sendMessage, setSendMessage] = useState("")

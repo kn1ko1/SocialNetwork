@@ -1,7 +1,12 @@
 const {
-  useState,
-  useEffect
+  useState
 } = React;
+export const renderChat = () => {
+  const pageContainer = document.querySelector(".page-container");
+  ReactDOM.render( /*#__PURE__*/React.createElement(Chat, {
+    socket: socket
+  }), pageContainer);
+};
 export function Chat({
   socket
 }) {

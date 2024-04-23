@@ -1,7 +1,11 @@
 const {
-  useState,
-  useEffect
+  useState
 } = React;
+import { initializeSocket } from "../shared/socket.js";
+export const renderRegister = () => {
+  const pageContainer = document.querySelector(".page-container");
+  ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), pageContainer);
+};
 export function Register() {
   const [email, setEmail] = useState("");
   const [encryptedPassword, setEncryptedPassword] = useState("");
@@ -59,10 +63,7 @@ export function Register() {
 
   //if credentials frontend succesfully create a new user then we render home
   if (isRegistered) {
-    socket = new WebSocket("ws://localhost:8080/ws");
-    socket.onopen = function (event) {
-      console.log("WebSocket connection established.");
-    };
+    socket = initializeSocket();
     renderNavbar();
     renderHome();
   }

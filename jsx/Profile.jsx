@@ -3,8 +3,16 @@ import { PostCard } from "./components/PostCard.js"
 import { FollowButton } from "./components/FollowButton.js"
 const { useState, useEffect } = React
 
+export const renderProfile = (userId, isEditable) => {
+	const pageContainer = document.querySelector(".page-container")
+	ReactDOM.render(
+		<Profile userId={userId} isEditable={isEditable} />,
+		pageContainer
+	)
+}
+
 export function Profile({ userId, isEditable }) {
-	const { currentUserId, isLoading, error } = getCurrentUserId()
+	const { currentUserId } = getCurrentUserId()
 	const [profileUserData, setProfileUserData] = useState({})
 	const [userPostData, setUserPostData] = useState([])
 	const [userFollowerData, setUserFollowerData] = useState([])
