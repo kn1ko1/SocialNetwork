@@ -16,11 +16,11 @@ export function EventForm({
     const formData = new FormData();
 
     // Append form data
-    formData.append("dateTime", "2022-01-02");
+    formData.append("dateTime", dateTime);
     formData.append("description", description);
     formData.append("groupId", group.groupId);
     formData.append("title", title);
-    console.log("Form data being sent to backend: ", formData);
+    console.log("Event Form data being sent to backend: ", formData);
     try {
       // Send user data to the server
       await fetch("http://localhost:8080/api/events", {
@@ -66,6 +66,17 @@ export function EventForm({
     id: "eventFormDescription",
     placeholder: "Type your event Description here...",
     onChange: e => setDescription(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "dateTime"
+  }, "Date of Event"), /*#__PURE__*/React.createElement("input", {
+    required: true,
+    type: "date",
+    className: "form-control reginput",
+    id: "dob",
+    placeholder: "16/01/1998",
+    onChange: e => setDateTime(e.target.value)
   })), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("button", {
     className: "w-100 btn btn-lg btn-primary",
     type: "submit"

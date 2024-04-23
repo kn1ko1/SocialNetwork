@@ -1,4 +1,5 @@
 import { getCurrentUserId } from "./shared/getCurrentUserId.js";
+import { PostCard } from "./components/PostCard.js";
 import { FollowButton } from "./components/FollowButton.js";
 const {
   useState,
@@ -114,7 +115,10 @@ export function Profile({
     id: "myPostsData"
   }, userPostData.map(post => /*#__PURE__*/React.createElement("div", {
     key: post.postId
-  }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Post ID:"), " ", post.postId), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Created At:"), " ", post.createdAt), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Body:"), " ", post.body), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Image URL:"), " ", post.imageURL)))), /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Followers"), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(PostCard, {
+    post: post,
+    showCommentForm: false
+  })))), /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Followers"), /*#__PURE__*/React.createElement("div", {
     id: "myFollowersData"
   }, userFollowerData && userFollowerData.map(follower => /*#__PURE__*/React.createElement("p", {
     key: follower.username

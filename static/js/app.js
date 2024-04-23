@@ -2,8 +2,10 @@ import { Chat } from "./Chat.js";
 import { Profile } from "./Profile.js";
 import { Register } from "./Register.js";
 import { FollowButton } from "./components/FollowButton.js";
-import { GroupDetails } from "./components/GroupDetails.js";
+import { GroupDetails } from "./GroupDetails.js";
 import { getCurrentUserId } from "./shared/getCurrentUserId.js";
+import { PostForm } from "./components/PostForm.js";
+import { PostCard } from "./components/PostCard.js";
 const {
   useState,
   useEffect
@@ -24,9 +26,7 @@ const renderNavbar = () => {
 };
 function Navbar() {
   const {
-    currentUserId,
-    isLoading,
-    error
+    currentUserId
   } = getCurrentUserId();
   const logout = async () => {
     try {
@@ -338,353 +338,6 @@ const renderNotifications = () => {
 function Notifications() {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Notifications"));
 }
-
-// PostForm component
-// This component renders a form for creating a new post.
-// It accepts a `groupId` prop to determine the group for the post.
-function PostForm({
-  groupId,
-  followedUsers
-}) {
-  const [body, setBody] = useState("");
-  const [privacy, setPrivacy] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [selectedUserIds, setSelectedUserIds] = useState([]);
-  const [showFollowedUsersList, setShowFollowedUsersList] = useState(false);
-  const [followedUsersForAP, setFollowedUsersForAP] = useState(followedUsers || []);
-  useEffect(() => {
-    setFollowedUsersForAP(followedUsers);
-  }, [followedUsers]);
-  const handleCheckboxChange = e => {
-    const userId = e.target.value;
-    const isChecked = e.target.checked;
-    if (isChecked) {
-      setSelectedUserIds(prevSelectedUserIds => [...prevSelectedUserIds, userId]);
-    } else {
-      setSelectedUserIds(prevSelectedUserIds => prevSelectedUserIds.filter(id => id !== userId));
-    }
-  };
-
-  // Handler for form submission
-  const submit = async e => {
-    e.preventDefault(); // Prevent page reload
-
-    const formData = new FormData();
-
-    // Append form data
-    formData.append("body", body);
-    formData.append("privacy", privacy);
-    if (privacy === "private") {
-      groupId = -1; // Set groupId to -1 for private posts
-    }
-    if (privacy === "almost private") {
-      groupId = -2; // Set groupId to -2 for almost private posts
-      formData.append("almostPrivatePostUsers", JSON.stringify(selectedUserIds));
-    }
-    formData.append("groupId", groupId);
-    if (selectedFile) {
-      formData.append("image", selectedFile);
-    }
-    console.log("Form data being sent to backend: ", formData);
-    try {
-      // Send user data to the server
-      await fetch("http://localhost:8080/api/posts", {
-        method: "POST",
-        credentials: "include",
-        body: formData
-      });
-
-      // Reset form fields after successful submission
-      setBody("");
-      setPrivacy("public");
-      setSelectedFile(null);
-      setSelectedUserIds([]);
-      document.getElementById("postFormBody").value = "";
-      setShowFollowedUsersList(false);
-    } catch (error) {
-      console.error("Error submitting post:", error);
-    }
-  };
-  const handlePrivacyChange = e => {
-    const newValue = e.target.value;
-    setPrivacy(newValue);
-    if (newValue === 'almost private') {
-      setShowFollowedUsersList(true);
-    } else {
-      setShowFollowedUsersList(false);
-    }
-  };
-
-  // Handler for file selection
-  const handleFileChange = e => {
-    setSelectedFile(e.target.files[0]);
-  };
-  const handleSelectFile = () => {
-    const fileInput = document.getElementById("fileInput");
-    fileInput.click();
-  };
-  const followedUsersList = showFollowedUsersList ? followedUsersForAP !== null && followedUsersForAP.length > 0 ? /*#__PURE__*/React.createElement("ul", null, followedUsersForAP.map(followedUser => /*#__PURE__*/React.createElement("li", {
-    key: followedUser.username
-  }, /*#__PURE__*/React.createElement("label", null, /*#__PURE__*/React.createElement("input", {
-    type: "checkbox",
-    value: followedUser.userId,
-    onChange: handleCheckboxChange
-  }), followedUser.username)))) : /*#__PURE__*/React.createElement("p", {
-    className: "text-muted"
-  }, "No followed users") : null;
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
-    className: "postForm container",
-    style: {
-      maxWidth: "400px"
-    }
-  }, /*#__PURE__*/React.createElement("h1", {
-    className: "h3 mb-3 fw-normal"
-  }, "Post Message Here"), /*#__PURE__*/React.createElement("form", {
-    onSubmit: submit
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "form-floating mb-3"
-  }, /*#__PURE__*/React.createElement("input", {
-    type: "text",
-    className: "form-control",
-    id: "postFormBody",
-    placeholder: "Type your post here...",
-    onChange: e => setBody(e.target.value)
-  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
-    type: "button",
-    className: "btn btn-primary",
-    onClick: handleSelectFile
-  }, "Select File"), /*#__PURE__*/React.createElement("span", null, selectedFile ? selectedFile.name : "No file selected"), /*#__PURE__*/React.createElement("input", {
-    type: "file",
-    id: "fileInput",
-    accept: "image/*",
-    style: {
-      display: "none"
-    },
-    onChange: handleFileChange
-  })), /*#__PURE__*/React.createElement("br", null), " ", /*#__PURE__*/React.createElement("div", {
-    className: "form-floating mb-3"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "form-check"
-  }, /*#__PURE__*/React.createElement("input", {
-    required: true,
-    type: "radio",
-    id: "post-public-status",
-    value: "public",
-    name: "status",
-    checked: privacy === "public",
-    onClick: handlePrivacyChange,
-    className: "form-check-input"
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "post-public-status",
-    className: "form-check-label"
-  }, "Public")), /*#__PURE__*/React.createElement("div", {
-    className: "form-check"
-  }, /*#__PURE__*/React.createElement("input", {
-    required: true,
-    type: "radio",
-    id: "post-private-status",
-    value: "private",
-    name: "status",
-    checked: privacy === "private",
-    onClick: handlePrivacyChange,
-    className: "form-check-input"
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "private-status",
-    className: "form-check-label"
-  }, "Private")), /*#__PURE__*/React.createElement("div", {
-    className: "form-check"
-  }, /*#__PURE__*/React.createElement("input", {
-    required: true,
-    type: "radio",
-    id: "post-almostPrivate-status",
-    value: "almost private",
-    name: "status",
-    checked: privacy === "almost private",
-    onClick: handlePrivacyChange,
-    className: "form-check-input"
-  }), /*#__PURE__*/React.createElement("label", {
-    htmlFor: "private-status",
-    className: "form-check-label"
-  }, "Almost Private"))), followedUsersList, /*#__PURE__*/React.createElement("button", {
-    className: "w-100 btn btn-lg btn-primary",
-    type: "submit"
-  }, "Submit"))));
-}
-const postCardStyle = {
-  maxWidth: '600px',
-  background: 'linear-gradient(to bottom, #c7ddef, #ffffff)',
-  // Light blue/grey to white gradient
-  borderRadius: '10px',
-  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-  // Optional: Add shadow for depth
-  padding: '20px',
-  margin: 'auto',
-  marginBottom: '20px' // Adjust spacing between post cards
-};
-function PostCard({
-  post
-}) {
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [body, setBody] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
-  const milliseconds = post.post.createdAt;
-  const date = new Date(milliseconds);
-  const formattedDate = date.toLocaleString();
-  const handleFollowClick = async () => {
-    const followSuccess = await handleFollow(post.post.userId);
-    setIsFollowing(followSuccess);
-  };
-  const submit = async e => {
-    e.preventDefault(); // prevent reload.
-
-    const formData = new FormData();
-
-    // Append form data
-    formData.append("body", body);
-    formData.append("postId", post.post.postId);
-    if (selectedFile) {
-      formData.append("image", selectedFile);
-    }
-    console.log("Form data being sent to backend: ", formData);
-
-    // Send user data to golang api/PostHandler.go.
-    await fetch("http://localhost:8080/api/comments", {
-      method: "POST",
-      credentials: "include",
-      body: formData
-    });
-
-    // Reset the form fields to their default state
-    setBody("");
-    setSelectedFile(null);
-    document.getElementById("commentTextArea").value = "";
-  };
-
-  // Function to handle file selection
-  const handleFileChange = e => {
-    setSelectedFile(e.target.files[0]);
-    // const file = e.target.files[0];
-  };
-  const handleSelectFile = () => {
-    const commentFileInput = document.getElementById(`commentFileInput${post.post.postId}`);
-    commentFileInput.click();
-  };
-  return /*#__PURE__*/React.createElement("div", {
-    className: "card",
-    style: postCardStyle
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "card-body"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "d-flex flex-start align-items-center"
-  }, /*#__PURE__*/React.createElement("img", {
-    className: "rounded-circle shadow-1-strong me-3",
-    src: post.post.imageURL,
-    alt: "avatar",
-    width: "60",
-    height: "60"
-  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "d-flex align-items-center mb-1"
-  }, /*#__PURE__*/React.createElement("a", {
-    className: "fw-bold text-primary mb-0 me-2",
-    href: "#",
-    onClick: () => renderProfile(post.post.userId)
-  }, post.post.userId), /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-primary btn-sm",
-    onClick: handleFollowClick,
-    disabled: isFollowing
-  }, isFollowing ? "Following" : "Follow")), /*#__PURE__*/React.createElement("p", {
-    className: "text-muted small mb-0"
-  }, formattedDate))), !post.post.imageURL ? null : /*#__PURE__*/React.createElement("p", {
-    className: "mt-3 mb-2 pb-1"
-  }, /*#__PURE__*/React.createElement("img", {
-    src: post.post.imageURL,
-    className: "img-fluid"
-  })), /*#__PURE__*/React.createElement("p", {
-    className: "mt-3 mb-2 pb-1"
-  }, post.post.body)), /*#__PURE__*/React.createElement("div", {
-    className: "card-footer py-3 border-0",
-    style: {
-      backgroundColor: "#f8f9fa"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "d-flex flex-start w-100"
-  }, /*#__PURE__*/React.createElement("img", {
-    className: "rounded-circle shadow-1-strong me-3",
-    src: post.avatar,
-    alt: "avatar",
-    width: "40",
-    height: "40"
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "form-outline w-100"
-  }, /*#__PURE__*/React.createElement("textarea", {
-    className: "form-control",
-    id: "commentTextArea",
-    rows: "4",
-    style: {
-      background: "#fff"
-    },
-    onChange: e => setBody(e.target.value)
-  }), /*#__PURE__*/React.createElement("label", {
-    className: "form-label",
-    htmlFor: "textAreaExample"
-  }, "Message"))), /*#__PURE__*/React.createElement("div", {
-    className: "float-end mt-2 pt-1"
-  }, /*#__PURE__*/React.createElement("button", {
-    type: "button",
-    className: "btn btn-primary",
-    onClick: handleSelectFile
-  }, "Select File"), /*#__PURE__*/React.createElement("span", null, selectedFile ? selectedFile.name : "No file selected"), /*#__PURE__*/React.createElement("input", {
-    type: "file",
-    id: `commentFileInput${post.post.postId}`,
-    accept: "image/*",
-    style: {
-      display: "none"
-    },
-    onChange: handleFileChange
-  }), /*#__PURE__*/React.createElement("button", {
-    type: "submit",
-    className: "btn btn-primary btn-sm",
-    onClick: submit
-  }, "Post comment")), /*#__PURE__*/React.createElement("div", {
-    className: "comments"
-  }, /*#__PURE__*/React.createElement("h2", null, "Comments"), post.comments !== null && post.comments.length > 0 ? post.comments.map(comment => /*#__PURE__*/React.createElement(CommentCard, {
-    key: comment.createdAt,
-    comment: comment
-  })) : /*#__PURE__*/React.createElement("p", {
-    className: "text-muted"
-  }, "No comments"))));
-}
-function CommentCard({
-  comment
-}) {
-  const formattedDate = new Date(comment.createdAt).toLocaleString();
-  return /*#__PURE__*/React.createElement("div", {
-    className: "card mt-3"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "d-flex flex-start align-items-center"
-  }, /*#__PURE__*/React.createElement("img", {
-    className: "rounded-circle shadow-1-strong me-3",
-    src: comment.imageURL,
-    alt: "avatar",
-    width: "60",
-    height: "60"
-  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h6", {
-    className: "fw-bold text-primary mb-1",
-    onClick: () => renderProfile(comment.userId)
-  }, comment.userId), /*#__PURE__*/React.createElement("p", {
-    className: "text-muted small mb-0"
-  }, formattedDate))), comment.imageURL && /*#__PURE__*/React.createElement("div", {
-    className: "mt-3 mb-2 pb-1"
-  }, /*#__PURE__*/React.createElement("img", {
-    src: comment.imageURL,
-    className: "img-fluid",
-    alt: "comment"
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "card-body"
-  }, /*#__PURE__*/React.createElement("p", {
-    className: "card-text"
-  }, comment.body)));
-}
 const renderHome = () => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), pageContainer);
@@ -693,9 +346,7 @@ const renderHome = () => {
 // Display information relating to homepage
 function Home() {
   const {
-    currentUserId,
-    isLoading,
-    error
+    currentUserId
   } = getCurrentUserId();
   const [userList, setUserList] = useState([]);
   const [followedUsers, setFollowedUsers] = useState([]);
@@ -728,7 +379,9 @@ function Home() {
     followedUsers: followedUsers
   }), /*#__PURE__*/React.createElement("div", {
     className: "userList"
-  }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList !== null && userList.length > 0 ? userList.map((user, index) => /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList !== null && userList.length > 0 ? userList
+  // Filter out the current user
+  .filter(user => user.userId !== currentUserId).map((user, index) => /*#__PURE__*/React.createElement("div", {
     key: index
   }, /*#__PURE__*/React.createElement("a", {
     className: "nav-link",
@@ -742,17 +395,23 @@ function Home() {
     className: "almostPrivatePosts"
   }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? almostPrivatePosts.map(almostPrivatePost => /*#__PURE__*/React.createElement(PostCard, {
     key: almostPrivatePost.createdAt,
-    post: almostPrivatePost
+    post: almostPrivatePost.post,
+    comments: almostPrivatePost.comments,
+    showCommentForm: true
   })) : /*#__PURE__*/React.createElement("p", null, "No almost private posts")), /*#__PURE__*/React.createElement("div", {
     className: "privatePosts"
   }, /*#__PURE__*/React.createElement("h2", null, "Private Posts"), privatePosts !== null && privatePosts.length > 0 ? privatePosts.map(privatePost => /*#__PURE__*/React.createElement(PostCard, {
     key: privatePost.createdAt,
-    post: privatePost
+    post: privatePost.post,
+    comments: privatePost.comments,
+    showCommentForm: true
   })) : /*#__PURE__*/React.createElement("p", null, "No private posts")), /*#__PURE__*/React.createElement("div", {
     className: "publicPostsWithComments"
   }, /*#__PURE__*/React.createElement("h2", null, "Public Posts With Comments"), publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? publicPostsWithComments.map((publicPostsWithComment, index) => /*#__PURE__*/React.createElement(PostCard, {
     key: index,
-    post: publicPostsWithComment
+    post: publicPostsWithComment.post,
+    comments: publicPostsWithComment.comments,
+    showCommentForm: true
   })) : /*#__PURE__*/React.createElement("p", null, "public posts")), /*#__PURE__*/React.createElement("div", {
     className: "userGroups"
   }, /*#__PURE__*/React.createElement("h2", null, "Groups"), /*#__PURE__*/React.createElement("ul", null, userGroups !== null && userGroups.map(userGroup => /*#__PURE__*/React.createElement("li", {

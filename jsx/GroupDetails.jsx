@@ -1,5 +1,5 @@
-import { PostFormGroup } from "./PostFormGroup.js";
-import { EventForm } from "./EventForm.js";
+import { PostFormGroup } from "./components/PostFormGroup.js";
+import { EventForm } from "./components/EventForm.js";
 
 const { useState, useEffect } = React
 
@@ -48,13 +48,18 @@ export function GroupDetails({ group }) {
 				const postsData = await postsResponse.json();
 				const messagesData = await messagesResponse.json();
 				const eventsData = await eventsResponse.json();
+				for (let i = 0; i < eventsData.length; i++) {
+					const milliseconds = eventsData[i].dateTime;
+					const date = new Date(milliseconds);
+					const formattedDate = date.toLocaleDateString();
+					eventsData[i].dateTime = formattedDate;
+				}
 				setUserList(userListData);
 				setGroupMembers(groupMembersData);
 				setGroupPosts(postsData);
 				setGroupMessages(messagesData);
 				setGroupEvents(eventsData);
 
-				console.log("This is GroupMembersData:", groupMembersData);
 
 			} catch (error) {
 				console.error('Error fetching group posts:', error);
@@ -174,50 +179,36 @@ export function GroupDetails({ group }) {
 				<h2>Events</h2>
 				{groupEvents !== null && groupEvents.length > 0 ? (
 					groupEvents.map((event, index) => (
-						<div key={index}>
-							{event.title}
+						<div key={index} className="row">
+							<div className="col-3">
+								<p className="d-inline-flex gap-1">
+									<button
+										className="btn btn-primary"
+										type="button"
+										data-bs-toggle="collapse"
+										// Use unique ID for data-bs-target
+										data-bs-target={`#collapseExample${index}`}
+										aria-expanded="false"
+										aria-controls={`collapseExample${index}`}
+									>
+										{event.title}
+									</button>
+								</p>
+							</div>
+							<div className="col-9">
+								<div className="collapse" id={`collapseExample${index}`}>
+									<div className="card card-body">
+										{event.description} - {event.dateTime}
+									</div>
+								</div>
+							</div>
 						</div>
 					))
 				) : (
 					<p>No Events</p>
 				)}
 			</div>
+
 		</div>
 	)
 }
-
-
-// Function to add a new group user
-async function AddGroupUser({ groupId, userId }) {
-	const requestData = {
-		groupId: groupId,
-		userId: userId
-	};
-
-	console.log('Request data:', requestData);
-
-	try {
-		const response = await fetch('http://localhost:8080/api/groupUsers', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(requestData)
-		});
-
-		console.log('Response:', response);
-
-
-		if (response.ok) {
-			// Handle success response
-			console.log('Group user added successfully!');
-		} else {
-			// Handle error response
-			console.error('Failed to add group user:', response.statusText);
-		}
-	} catch (error) {
-		console.error('Error adding group user:', error);
-	}
-}
-
-
