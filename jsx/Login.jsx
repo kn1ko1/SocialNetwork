@@ -62,7 +62,7 @@ export function Login() {
 		if (isLoggedIn) {
 			socket = initializeSocket()
 			renderNavbar({socket})
-			renderHome()
+			renderHome({socket})
 			
 		}
 	}, [isLoggedIn])

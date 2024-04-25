@@ -68,7 +68,9 @@ export function Register() {
     renderNavbar({
       socket
     });
-    renderHome();
+    renderHome({
+      socket
+    });
   }
 
   //this is the login button, when pressed will serve login form
