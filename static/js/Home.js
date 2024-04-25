@@ -47,6 +47,12 @@ export function Home() {
     groupId: 0,
     followedUsers: followedUsers
   }), /*#__PURE__*/React.createElement("div", {
+    class: "container text-center"
+  }, /*#__PURE__*/React.createElement("div", {
+    class: "row align-items-start"
+  }, /*#__PURE__*/React.createElement("div", {
+    class: "col-3"
+  }, /*#__PURE__*/React.createElement("div", {
     className: "userList"
   }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList !== null && userList.length > 0 ? userList
   // Filter out the current user
@@ -60,7 +66,9 @@ export function Home() {
     followerId: currentUserId,
     subjectId: user.userId,
     isFollowed: user.isFollowed
-  }))) : /*#__PURE__*/React.createElement("p", null, "No Users?!")), /*#__PURE__*/React.createElement("div", {
+  }))) : /*#__PURE__*/React.createElement("p", null, "No Users?!"))), /*#__PURE__*/React.createElement("div", {
+    class: "col-6"
+  }, /*#__PURE__*/React.createElement("div", {
     className: "almostPrivatePosts"
   }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? almostPrivatePosts.map(almostPrivatePost => /*#__PURE__*/React.createElement(PostCard, {
     key: almostPrivatePost.createdAt,
@@ -85,5 +93,7 @@ export function Home() {
     className: "userGroups"
   }, /*#__PURE__*/React.createElement("h2", null, "Groups"), /*#__PURE__*/React.createElement("ul", null, userGroups !== null && userGroups.map(userGroup => /*#__PURE__*/React.createElement("li", {
     key: userGroup.createdAt
-  }, userGroup.Title, " ")))));
+  }, userGroup.Title, " "))))), /*#__PURE__*/React.createElement("div", {
+    class: "col-3"
+  }, "One of three columns"))));
 }

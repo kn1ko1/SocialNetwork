@@ -84,7 +84,7 @@ export function Navbar({
   }, /*#__PURE__*/React.createElement("a", {
     className: "nav-link",
     href: "#",
-    onClick: renderChat({
+    onClick: () => renderChat({
       socket
     })
   }, "CHAT")), /*#__PURE__*/React.createElement("li", {
