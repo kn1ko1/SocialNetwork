@@ -16,7 +16,7 @@ export function Notifications() {
 			fetchNotifications();
 		}
 	}, [currentUserId]);
-	
+
 	const fetchNotifications = () => {
 		fetch(`http://localhost:8080/api/users/${currentUserId}/notifications`)
 			.then((response) => response.json())
@@ -35,7 +35,10 @@ export function Notifications() {
 			{notifications !== null && Object.keys(notifications).length > 0 ? (
 				<ul>
 					{Object.values(notifications).map((notification, index) => (
-						<li key={index}>{notification.notificationType}</li>
+						
+							<li key={index}><GroupInvite notification={notification}/></li>
+					
+
 					))}
 				</ul>
 			) : (
@@ -43,4 +46,20 @@ export function Notifications() {
 			)}
 		</div>
 	);
+}
+
+function GroupInvite({ notification }) {
+	return (
+		<div id="GroupInvite" className="card" style={{ maxWidth: "400px" }}>
+			User {notification.senderId} invited you to join Group {notification.objectId}
+		</div>
+	)
+}
+
+function GroupRequest({ notification }) {
+	return (
+		<div id="GroupRequest" className="card" style={{ maxWidth: "400px" }}>
+			User {notification.senderId} has requested to join Group {notification.objectId}
+		</div>
+	)
 }

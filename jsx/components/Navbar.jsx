@@ -76,7 +76,7 @@ export function Navbar({ socket }) {
 							</a>
 						</li>
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={renderChat}>
+							<a className="nav-link" href="#" onClick={renderChat({ socket })}>
 								CHAT
 							</a>
 						</li>
