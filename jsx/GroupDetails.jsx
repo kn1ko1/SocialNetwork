@@ -84,7 +84,7 @@ export function GroupDetails({ group }) {
 	// Function to add a new group user
 	async function AddGroupUser(userId, groupId) {
 		const notificationtData = {
-			notificationType: "group",
+			notificationType: "groupInvite",
 			objectId: groupId,
 			senderId: currentUserId,
 			status: "pending",
