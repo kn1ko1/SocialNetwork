@@ -2,7 +2,7 @@ const {
   useState,
   useEffect
 } = React;
-import { getCurrentUserId } from "./shared/getCurrentUserId.js";
+import { useSocket } from "./shared/UserProvider.js";
 export const renderNotifications = () => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Notifications, null), pageContainer);
@@ -10,7 +10,7 @@ export const renderNotifications = () => {
 export function Notifications() {
   const {
     currentUserId
-  } = getCurrentUserId();
+  } = useSocket();
   const [notifications, setNotifications] = useState({});
   useEffect(() => {
     if (currentUserId !== null) {

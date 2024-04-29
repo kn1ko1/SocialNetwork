@@ -1,13 +1,12 @@
 const { useState, useEffect } = React
-import { getCurrentUserId } from "./shared/getCurrentUserId.js"
-
+import { useSocket } from "./shared/UserProvider.js"
 export const renderNotifications = () => {
 	const pageContainer = document.querySelector(".page-container")
 	ReactDOM.render(<Notifications />, pageContainer)
 }
 
 export function Notifications() {
-	const { currentUserId } = getCurrentUserId()
+	const { currentUserId } = useSocket();
 	const [notifications, setNotifications] = useState({})
 
 

@@ -1,9 +1,10 @@
-import { getCurrentUserId } from "./shared/getCurrentUserId.js";
+import { useSocket } from "./shared/UserProvider.js";
 import { PostFormGroup } from "./components/PostFormGroup.js";
 import { EventForm } from "./components/EventForm.js";
 import { GroupDetailsUserList } from "./components/GroupDetailsUserList.js";
 import { PostCard } from "./components/PostCard.js";
 import { GroupDetailsEvents } from "./components/GroupDetailsEvent.js";
+import { Chat } from "./Chat.js";
 const {
   useState,
   useEffect
@@ -13,7 +14,7 @@ export function GroupDetails({
 }) {
   const {
     currentUserId
-  } = getCurrentUserId();
+  } = useSocket();
   const [userList, setUserList] = useState([]);
   const [groupMembers, setGroupMembers] = useState([]);
   const [groupPosts, setGroupPosts] = useState([]);
@@ -122,7 +123,13 @@ export function GroupDetails({
     group: group
   }), /*#__PURE__*/React.createElement(EventForm, {
     group: group
-  }), /*#__PURE__*/React.createElement(GroupDetailsUserList, {
+  }), /*#__PURE__*/React.createElement("div", {
+    class: "container text-center"
+  }, /*#__PURE__*/React.createElement("div", {
+    class: "row align-items-start"
+  }, /*#__PURE__*/React.createElement("div", {
+    class: "col-3"
+  }, /*#__PURE__*/React.createElement(GroupDetailsUserList, {
     userList: userList,
     groupId: group.groupId,
     groupMembers: groupMembers,
@@ -135,21 +142,29 @@ export function GroupDetails({
     return /*#__PURE__*/React.createElement("div", {
       key: index
     }, user ? user.username : 'Unknown User');
-  }) : /*#__PURE__*/React.createElement("p", null, "It's just you... Maybe you should invite someone?")), /*#__PURE__*/React.createElement("div", {
+  }) : /*#__PURE__*/React.createElement("p", null, "It's just you... Maybe you should invite someone?")), /*#__PURE__*/React.createElement(GroupDetailsEvents, {
+    groupEvents: groupEvents
+  })), /*#__PURE__*/React.createElement("div", {
+    class: "col-6"
+  }, /*#__PURE__*/React.createElement("div", {
     id: "groupPosts"
-  }, /*#__PURE__*/React.createElement("h2", null, "Posts"), groupPosts !== null ? groupPosts.map(post => /*#__PURE__*/React.createElement("li", {
+  }, /*#__PURE__*/React.createElement("h2", null, "Posts"), groupPosts !== null ? groupPosts.map(post => /*#__PURE__*/React.createElement("div", {
     key: post.createdAt
   }, /*#__PURE__*/React.createElement(PostCard, {
     post: post
   }))) : /*#__PURE__*/React.createElement("div", {
     id: "groupPosts"
-  }, "There are no posts in this groups yet")), /*#__PURE__*/React.createElement("div", {
+  }, "There are no posts in this groups yet"))), /*#__PURE__*/React.createElement("div", {
+    class: "col-3"
+  }, /*#__PURE__*/React.createElement("div", {
     className: "groupMessages"
   }, /*#__PURE__*/React.createElement("h2", null, "Messages"), groupMessages !== null && groupMessages.length > 0 ? groupMessages.map((message, index) => /*#__PURE__*/React.createElement("div", {
     key: index
-  }, message.body)) : /*#__PURE__*/React.createElement("p", null, "No Messages")), /*#__PURE__*/React.createElement(GroupDetailsEvents, {
-    groupEvents: groupEvents
-  })) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", null, "You are not a member yet"), /*#__PURE__*/React.createElement("button", {
+  }, message.body)) : /*#__PURE__*/React.createElement("p", null, "No Messages")), /*#__PURE__*/React.createElement(Chat, {
+    socket: socket,
+    messageType: "group",
+    targetId: group.groupId
+  }))))) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", null, "You are not a member yet"), /*#__PURE__*/React.createElement("button", {
     onClick: () => handleAddToGroup(currentUserId)
   }, "Request to join group")));
 }

@@ -1,6 +1,6 @@
 const { useState, useEffect } = React
+import { useSocket } from "./shared/UserProvider.js"
 import { GroupDetails } from "./GroupDetails.js"
-import { getCurrentUserId } from "./shared/getCurrentUserId.js"
 
 
 export const renderGroup = () => {
@@ -9,12 +9,11 @@ export const renderGroup = () => {
 }
 
 export function Group() {
+	const { currentUserId } = useSocket();
 	const [title, setTitle] = useState("")
 	const [description, setDescription] = useState("")
 	const [groupData, setGroupData] = useState([])
 	const [selectedGroup, setSelectedGroup] = useState(null)
-	//const [showGroupDetails, setShowGroupDetails] = useState(false);
-	const { currentUserId } = getCurrentUserId();
 
 	const fetchGroupData = async () => {
 		

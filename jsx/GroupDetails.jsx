@@ -1,15 +1,16 @@
-import { getCurrentUserId } from "./shared/getCurrentUserId.js";
+import { useSocket } from "./shared/UserProvider.js";
 import { PostFormGroup } from "./components/PostFormGroup.js";
 import { EventForm } from "./components/EventForm.js";
 import { GroupDetailsUserList } from "./components/GroupDetailsUserList.js";
 import { PostCard } from "./components/PostCard.js";
 import { GroupDetailsEvents } from "./components/GroupDetailsEvent.js";
+import { Chat } from "./Chat.js";
 
 const { useState, useEffect } = React
 
 export function GroupDetails({ group }) {
 
-	const { currentUserId } = getCurrentUserId()
+	const {currentUserId} = useSocket()
 	const [userList, setUserList] = useState([]);
 	const [groupMembers, setGroupMembers] = useState([]);
 	const [groupPosts, setGroupPosts] = useState([]);
@@ -133,57 +134,73 @@ export function GroupDetails({ group }) {
 					<PostFormGroup group={group} />
 
 					<EventForm group={group} />
-					{/* Render user List here */}
-					<GroupDetailsUserList
-						userList={userList}
-						groupId={group.groupId}
-						groupMembers={groupMembers}
-						AddGroupUser={AddGroupUser} />
+					<div class="container text-center">
+						<div class="row align-items-start">
+							<div class="col-3">
+								{/* Render user List here */}
+								<GroupDetailsUserList
+									userList={userList}
+									groupId={group.groupId}
+									groupMembers={groupMembers}
+									AddGroupUser={AddGroupUser} />
 
-					{/* Render group members here */}
-					<div className="groupMembers">
-						<h2>Group Members</h2>
-						{groupMembers !== null && groupMembers.length > 0 ? (
-							groupMembers.map((member, index) => {
-								// Find the user object corresponding to the member's userId
-								const user = userList.find((user) => user.userId === member.userId);
-								return (
-									<div key={index}>
-										{user ? user.username : 'Unknown User'}
-									</div>
-								);
-							})
-						) : (
-							<p>It's just you... Maybe you should invite someone?</p>
-						)}
-					</div>
-					{/* Render group posts here */}
-					<div id="groupPosts">
-						<h2>Posts</h2>
-						{groupPosts !== null ? (
-							groupPosts.map((post) => (
-								<li key={post.createdAt}>
-									<PostCard post={post} />
-								</li>
-							))
-						) : (
-							<div id="groupPosts">There are no posts in this groups yet</div>
-						)}
-					</div>
-					{/* Render group Messages here */}
-					<div className="groupMessages">
-						<h2>Messages</h2>
-						{groupMessages !== null && groupMessages.length > 0 ? (
-							groupMessages.map((message, index) => (
-								<div key={index}>
-									{message.body}
+								{/* Render group members here */}
+								<div className="groupMembers">
+									<h2>Group Members</h2>
+									{groupMembers !== null && groupMembers.length > 0 ? (
+										groupMembers.map((member, index) => {
+											// Find the user object corresponding to the member's userId
+											const user = userList.find((user) => user.userId === member.userId);
+											return (
+												<div key={index}>
+													{user ? user.username : 'Unknown User'}
+												</div>
+											);
+										})
+									) : (
+										<p>It's just you... Maybe you should invite someone?</p>
+									)}
 								</div>
-							))
-						) : (
-							<p>No Messages</p>
-						)}
+								<GroupDetailsEvents groupEvents={groupEvents} />
+
+							</div>
+							<div class="col-6">
+								{/* Render group posts here */}
+								<div id="groupPosts">
+									<h2>Posts</h2>
+									{groupPosts !== null ? (
+										groupPosts.map((post) => (
+											<div key={post.createdAt}>
+												<PostCard post={post} />
+											</div>
+										))
+									) : (
+										<div id="groupPosts">There are no posts in this groups yet</div>
+									)}
+								</div>
+							</div>
+							<div class="col-3">
+								{/* Render group Messages here */}
+								<div className="groupMessages">
+									<h2>Messages</h2>
+									{groupMessages !== null && groupMessages.length > 0 ? (
+										groupMessages.map((message, index) => (
+											<div key={index}>
+												{message.body}
+											</div>
+										))
+									) : (
+										<p>No Messages</p>
+									)}
+								</div>
+								<Chat socket={socket} messageType={"group"} targetId={group.groupId}/>
+							</div>
+						</div>
 					</div>
-					<GroupDetailsEvents groupEvents={groupEvents}/>
+
+
+
+
 
 				</div>
 			) : (

@@ -1,19 +1,19 @@
 const { useState, useEffect } = React
-import { getCurrentUserId } from "./shared/getCurrentUserId.js"
+import { useSocket } from "./shared/UserProvider.js"
 import { PostForm } from "./components/PostForm.js"
 import { PostCard } from "./components/PostCard.js"
 import { FollowButton } from "./components/FollowButton.js"
 import { renderProfile } from "./Profile.js"
 import { Chat } from "./Chat.js"
 
-export const renderHome  = ({ socket }) => {
+export const renderHome = () => {
 	const pageContainer = document.querySelector(".page-container")
-	ReactDOM.render(<Home socket={socket} />, pageContainer)
+	ReactDOM.render(<Home />, pageContainer)
 }
 
 // Display information relating to homepage
-export function Home({socket}) {
-	const { currentUserId } = getCurrentUserId()
+export function Home() {
+	const { currentUserId } = useSocket();
 	const [userList, setUserList] = useState([])
 	const [followedUsers, setFollowedUsers] = useState([]);
 	const [almostPrivatePosts, setAlmostPrivatePosts] = useState([])
@@ -146,7 +146,7 @@ export function Home({socket}) {
 					</div>
 					<div class="col-3">
 						<div className="card">
-							<Chat socket={socket} />
+							<Chat />
 						</div>
 					</div>
 				</div>

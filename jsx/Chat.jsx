@@ -1,18 +1,18 @@
-import { getCurrentUserId } from "./shared/getCurrentUserId.js"
+import { useSocket } from "./shared/UserProvider.js"
 const { useState } = React
 
 const GROUP_CHAT_MESSAGE = 1
 const PRIVATE_MESSAGE = 2
 const CREATE_EVENT = 3
 
-export const renderChat = ({ socket }) => {
+export const renderChat = (messageType, targetId) => {
 
 	const pageContainer = document.querySelector(".page-container")
-	ReactDOM.render(<Chat socket={socket} />, pageContainer)
+	ReactDOM.render(<Chat messageType={messageType} targetId={targetId}/>, pageContainer)
 }
 
-export function Chat({ socket }) {
-	const { currentUserId } = getCurrentUserId()
+export function Chat(messageType, targetId) {
+	const { socket, currentUserId } = useSocket();
 
 	const [sendMessage, setSendMessage] = useState("")
 	const [receiveMessage, setReceiveMessage] = useState("")
@@ -27,9 +27,9 @@ export function Chat({ socket }) {
 		e.preventDefault()
 		let bodymessage = {
 			body: sendMessage,
-			messageType: "group",
+			messageType: messageType,
 			senderId: currentUserId,
-			targetId: 100,
+			targetId: targetId,
 		}
 		let obj = { code: GROUP_CHAT_MESSAGE, body: JSON.stringify(bodymessage) }
 		socket.send(JSON.stringify(obj))

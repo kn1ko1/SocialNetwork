@@ -2,7 +2,7 @@ const {
   useState,
   useEffect
 } = React;
-import { initializeSocket } from "./app.js";
+import { useSocket } from "./shared/UserProvider.js";
 import { renderNavbar } from "./components/Navbar.js";
 import { renderRegister } from "./Register.js";
 import { renderHome } from "./Home.js";
@@ -11,7 +11,9 @@ export const renderLogin = () => {
   ReactDOM.render( /*#__PURE__*/React.createElement(Login, null), pageContainer);
 };
 export function Login() {
-  let socket = null;
+  const {
+    updateContext
+  } = useSocket();
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -55,13 +57,30 @@ export function Login() {
   };
   useEffect(() => {
     if (isLoggedIn) {
-      socket = initializeSocket();
-      renderNavbar({
-        socket
-      });
-      renderHome({
-        socket
-      });
+      const newSocket = new WebSocket("ws://localhost:8080/ws");
+      newSocket.onopen = function (event) {
+        console.log("WebSocket connection established.");
+      };
+      const fetchUserId = async () => {
+        try {
+          const response = await fetch("http://localhost:8080/api/userId", {
+            credentials: "include"
+          });
+          if (response.ok) {
+            const userId = await response.json();
+            updateContext(newSocket, userId);
+            renderNavbar();
+            renderHome();
+          } else {
+            setErrorMessage("Failed to fetch userId");
+            console.error("Response not okay:", response.status);
+          }
+        } catch (error) {
+          setErrorMessage("Error fetching userId");
+          console.error("Fetch error:", error);
+        }
+      };
+      fetchUserId();
     }
   }, [isLoggedIn]);
   return /*#__PURE__*/React.createElement("div", {

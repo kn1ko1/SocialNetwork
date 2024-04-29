@@ -1,14 +1,21 @@
-const { useState } = React
-import { initializeSocket } from "./app.js"
+const { useState, useContext } = React
+import { useSocket } from "./shared/UserProvider.js";
+
 
 export const renderRegister = () => {
 	const pageContainer = document.querySelector(".page-container")
-	ReactDOM.render(<Register />, pageContainer)
+	ReactDOM.render(
+		<UserProvider>
+			<Register />
+		</UserProvider>,
+		pageContainer
+	)
 }
 
 
 export function Register() {
-	let socket = null
+
+	const { updateContext } = useSocket();
 	const [email, setEmail] = useState("")
 	const [encryptedPassword, setEncryptedPassword] = useState("")
 	const [firstName, setFirstName] = useState("")
@@ -65,11 +72,47 @@ export function Register() {
 	}
 
 	//if credentials frontend succesfully create a new user then we render home
-	if (isRegistered) {
-		const socket = initializeSocket()
-		renderNavbar({socket})
-		renderHome({socket})
-	}
+	// if (isRegistered) {
+	// 	const newSocket = new WebSocket("ws://localhost:8080/ws");
+	// 	newSocket.onopen = function (event) {
+	// 		console.log("WebSocket connection established.");
+	// 	};
+	// 	renderNavbar()
+	// 	renderHome()
+	// }
+
+
+	useEffect(() => {
+		if (isRegistered) {
+			const newSocket = new WebSocket("ws://localhost:8080/ws");
+			newSocket.onopen = function (event) {
+				console.log("WebSocket connection established.");
+			};
+
+			const fetchUserId = async () => {
+				try {
+					const response = await fetch("http://localhost:8080/api/userId", {
+						credentials: "include",
+					});
+					if (response.ok) {
+						const userId = await response.json();
+						updateContext(newSocket, userId);
+						renderNavbar();
+						renderHome();
+					} else {
+						setErrorMessage("Failed to fetch userId");
+						console.error("Response not okay:", response.status);
+					}
+				} catch (error) {
+					setErrorMessage("Error fetching userId");
+					console.error("Fetch error:", error);
+				}
+
+			}
+
+			fetchUserId();
+		}
+	}, [isRegistered]);
 
 	//this is the login button, when pressed will serve login form
 

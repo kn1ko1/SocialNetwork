@@ -1,4 +1,4 @@
-import { getCurrentUserId } from "./shared/getCurrentUserId.js";
+import { useSocket } from "./shared/UserProvider.js";
 import { PostCard } from "./components/PostCard.js";
 import { FollowButton } from "./components/FollowButton.js";
 const {
@@ -18,7 +18,7 @@ export function Profile({
 }) {
   const {
     currentUserId
-  } = getCurrentUserId();
+  } = useSocket();
   const [profileUserData, setProfileUserData] = useState({});
   const [userPostData, setUserPostData] = useState([]);
   const [userFollowerData, setUserFollowerData] = useState([]);

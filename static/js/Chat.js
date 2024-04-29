@@ -1,24 +1,22 @@
-import { getCurrentUserId } from "./shared/getCurrentUserId.js";
+import { useSocket } from "./shared/UserProvider.js";
 const {
   useState
 } = React;
 const GROUP_CHAT_MESSAGE = 1;
 const PRIVATE_MESSAGE = 2;
 const CREATE_EVENT = 3;
-export const renderChat = ({
-  socket
-}) => {
+export const renderChat = (messageType, targetId) => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Chat, {
-    socket: socket
+    messageType: messageType,
+    targetId: targetId
   }), pageContainer);
 };
-export function Chat({
-  socket
-}) {
+export function Chat(messageType, targetId) {
   const {
+    socket,
     currentUserId
-  } = getCurrentUserId();
+  } = useSocket();
   const [sendMessage, setSendMessage] = useState("");
   const [receiveMessage, setReceiveMessage] = useState("");
   let messages = document.getElementById("messages");
@@ -29,9 +27,9 @@ export function Chat({
     e.preventDefault();
     let bodymessage = {
       body: sendMessage,
-      messageType: "group",
+      messageType: messageType,
       senderId: currentUserId,
-      targetId: 100
+      targetId: targetId
     };
     let obj = {
       code: GROUP_CHAT_MESSAGE,

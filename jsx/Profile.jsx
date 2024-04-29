@@ -1,4 +1,4 @@
-import { getCurrentUserId } from "./shared/getCurrentUserId.js"
+import { useSocket } from "./shared/UserProvider.js"
 import { PostCard } from "./components/PostCard.js"
 import { FollowButton } from "./components/FollowButton.js"
 const { useState, useEffect } = React
@@ -12,7 +12,7 @@ export const renderProfile = (userId, isEditable) => {
 }
 
 export function Profile({ userId, isEditable }) {
-	const { currentUserId } = getCurrentUserId()
+	const { currentUserId } = useSocket();
 	const [profileUserData, setProfileUserData] = useState({})
 	const [userPostData, setUserPostData] = useState([])
 	const [userFollowerData, setUserFollowerData] = useState([])
@@ -183,7 +183,7 @@ export function Profile({ userId, isEditable }) {
 							{userPostData.map((post) => (
 								<div key={post.postId}>
 									<PostCard post={post}
-									showCommentForm={false}/>
+										showCommentForm={false} />
 								</div>
 							))}
 						</div>

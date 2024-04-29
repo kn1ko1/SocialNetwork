@@ -11,7 +11,7 @@ export const getCurrentUserId = () => {
 				const response = await fetch("http://localhost:8080/api/userId", {
 					credentials: "include",
 				})
-
+				
 				if (response.ok) {
 					const userId = await response.json()
 					setCurrentUserId(userId)

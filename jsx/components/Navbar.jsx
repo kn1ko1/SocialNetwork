@@ -1,4 +1,4 @@
-import { getCurrentUserId } from "../shared/getCurrentUserId.js"
+import { useSocket } from "../shared/UserProvider.js"
 import { renderProfile } from "../Profile.js"
 import { renderHome } from "../Home.js"
 import { renderNotifications } from "../Notifications.js"
@@ -6,14 +6,14 @@ import { renderChat } from "../Chat.js"
 import { renderGroup } from "../Group.js"
 import { renderLogin } from "../Login.js"
 
-export const renderNavbar = ({ socket }) => {
+export const renderNavbar = () => {
 	const navContainer = document.querySelector(".nav-container")
-	ReactDOM.render(<Navbar socket={ socket } />, navContainer)
+	ReactDOM.render(<Navbar />, navContainer)
 }
 
-export function Navbar({ socket }) {
-	const { currentUserId } = getCurrentUserId()
-
+export function Navbar() {
+	const { socket, currentUserId } = useSocket()
+	console.log("currentUserId in Navbar", currentUserId)
 	const logout = async () => {
 		try {
 			const response = await fetch("http://localhost:8080/auth/logout", {
@@ -76,7 +76,7 @@ export function Navbar({ socket }) {
 							</a>
 						</li>
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={() => renderChat({ socket })}>
+							<a className="nav-link" href="#" onClick={() => renderChat()}>
 								CHAT
 							</a>
 						</li>
@@ -86,7 +86,7 @@ export function Navbar({ socket }) {
 							</a>
 						</li>
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={() => logout({ socket })}>
+							<a className="nav-link" href="#" onClick={() => logout()}>
 								LOGOUT
 							</a>
 						</li>

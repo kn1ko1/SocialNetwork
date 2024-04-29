@@ -2,28 +2,22 @@ const {
   useState,
   useEffect
 } = React;
-import { getCurrentUserId } from "./shared/getCurrentUserId.js";
+import { useSocket } from "./shared/UserProvider.js";
 import { PostForm } from "./components/PostForm.js";
 import { PostCard } from "./components/PostCard.js";
 import { FollowButton } from "./components/FollowButton.js";
 import { renderProfile } from "./Profile.js";
 import { Chat } from "./Chat.js";
-export const renderHome = ({
-  socket
-}) => {
+export const renderHome = () => {
   const pageContainer = document.querySelector(".page-container");
-  ReactDOM.render( /*#__PURE__*/React.createElement(Home, {
-    socket: socket
-  }), pageContainer);
+  ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), pageContainer);
 };
 
 // Display information relating to homepage
-export function Home({
-  socket
-}) {
+export function Home() {
   const {
     currentUserId
-  } = getCurrentUserId();
+  } = useSocket();
   const [userList, setUserList] = useState([]);
   const [followedUsers, setFollowedUsers] = useState([]);
   const [almostPrivatePosts, setAlmostPrivatePosts] = useState([]);
@@ -104,7 +98,5 @@ export function Home({
     class: "col-3"
   }, /*#__PURE__*/React.createElement("div", {
     className: "card"
-  }, /*#__PURE__*/React.createElement(Chat, {
-    socket: socket
-  }))))));
+  }, /*#__PURE__*/React.createElement(Chat, null))))));
 }
