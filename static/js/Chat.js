@@ -1,6 +1,10 @@
+import { getCurrentUserId } from "./shared/getCurrentUserId.js";
 const {
   useState
 } = React;
+const GROUP_CHAT_MESSAGE = 1;
+const PRIVATE_MESSAGE = 2;
+const CREATE_EVENT = 3;
 export const renderChat = ({
   socket
 }) => {
@@ -12,6 +16,9 @@ export const renderChat = ({
 export function Chat({
   socket
 }) {
+  const {
+    currentUserId
+  } = getCurrentUserId();
   const [sendMessage, setSendMessage] = useState("");
   const [receiveMessage, setReceiveMessage] = useState("");
   let messages = document.getElementById("messages");
@@ -21,10 +28,13 @@ export function Chat({
   const handleSubmit = e => {
     e.preventDefault();
     let bodymessage = {
-      message: sendMessage
+      body: sendMessage,
+      messageType: "group",
+      senderId: currentUserId,
+      targetId: 100
     };
     let obj = {
-      code: 1,
+      code: GROUP_CHAT_MESSAGE,
       body: JSON.stringify(bodymessage)
     };
     socket.send(JSON.stringify(obj));
@@ -32,7 +42,7 @@ export function Chat({
   };
   socket.onmessage = function (e) {
     let data = JSON.parse(e.data);
-    let msg = JSON.parse(data.body).message;
+    let msg = JSON.parse(data.body).body;
     // setReceiveMessage(msg)
     // console.log("receiveMessage:", receiveMessage)
     let entry = document.createElement("li");

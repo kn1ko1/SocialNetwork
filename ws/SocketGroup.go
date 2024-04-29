@@ -43,6 +43,7 @@ func (g *SocketGroup) Run() {
 				if err != nil {
 					log.Println(err.Error())
 				}
+				log.Println("Private Message Body in socketGroup is:", msg.Body)
 				c := g.Clients[body.TargetUserID]
 				c.Send(msg)
 			case GROUP_CHAT_MESSAGE:
@@ -51,9 +52,10 @@ func (g *SocketGroup) Run() {
 				if err != nil {
 					log.Println(err.Error())
 				}
+				log.Println("Group Message Body in socketGroup is:", msg.Body)
+
 				for _, c := range g.Clients {
 					c.Send(msg)
-					log.Println("I'm in run in ws/SocketGroup.go")
 				}
 			}
 
