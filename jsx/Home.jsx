@@ -4,14 +4,15 @@ import { PostForm } from "./components/PostForm.js"
 import { PostCard } from "./components/PostCard.js"
 import { FollowButton } from "./components/FollowButton.js"
 import { renderProfile } from "./Profile.js"
+import { Chat } from "./Chat.js"
 
-export const renderHome = () => {
+export const renderHome  = ({ socket }) => {
 	const pageContainer = document.querySelector(".page-container")
-	ReactDOM.render(<Home />, pageContainer)
+	ReactDOM.render(<Home socket={socket} />, pageContainer)
 }
 
 // Display information relating to homepage
-export function Home() {
+export function Home({socket}) {
 	const { currentUserId } = getCurrentUserId()
 	const [userList, setUserList] = useState([])
 	const [followedUsers, setFollowedUsers] = useState([]);
@@ -144,7 +145,9 @@ export function Home() {
 						</div>
 					</div>
 					<div class="col-3">
-						One of three columns
+						<div className="card">
+							<Chat socket={socket} />
+						</div>
 					</div>
 				</div>
 			</div>

@@ -7,13 +7,20 @@ import { PostForm } from "./components/PostForm.js";
 import { PostCard } from "./components/PostCard.js";
 import { FollowButton } from "./components/FollowButton.js";
 import { renderProfile } from "./Profile.js";
-export const renderHome = () => {
+import { Chat } from "./Chat.js";
+export const renderHome = ({
+  socket
+}) => {
   const pageContainer = document.querySelector(".page-container");
-  ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), pageContainer);
+  ReactDOM.render( /*#__PURE__*/React.createElement(Home, {
+    socket: socket
+  }), pageContainer);
 };
 
 // Display information relating to homepage
-export function Home() {
+export function Home({
+  socket
+}) {
   const {
     currentUserId
   } = getCurrentUserId();
@@ -95,5 +102,9 @@ export function Home() {
     key: userGroup.createdAt
   }, userGroup.Title, " "))))), /*#__PURE__*/React.createElement("div", {
     class: "col-3"
-  }, "One of three columns"))));
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement(Chat, {
+    socket: socket
+  }))))));
 }

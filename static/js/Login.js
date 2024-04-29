@@ -59,7 +59,9 @@ export function Login() {
       renderNavbar({
         socket
       });
-      renderHome();
+      renderHome({
+        socket
+      });
     }
   }, [isLoggedIn]);
   return /*#__PURE__*/React.createElement("div", {

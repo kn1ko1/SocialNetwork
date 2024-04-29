@@ -68,7 +68,7 @@ export function Register() {
 	if (isRegistered) {
 		const socket = initializeSocket()
 		renderNavbar({socket})
-		renderHome()
+		renderHome({socket})
 	}
 
 	//this is the login button, when pressed will serve login form
