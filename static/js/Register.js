@@ -1,11 +1,10 @@
 const {
-  useState,
-  useContext
+  useState
 } = React;
-import { useSocket } from "./shared/UserProvider.js";
+import { useSocket } from "./app.js";
 export const renderRegister = () => {
   const pageContainer = document.querySelector(".page-container");
-  ReactDOM.render( /*#__PURE__*/React.createElement(UserProvider, null, /*#__PURE__*/React.createElement(Register, null)), pageContainer);
+  ReactDOM.render( /*#__PURE__*/React.createElement(Register, null), pageContainer);
 };
 export function Register() {
   const {

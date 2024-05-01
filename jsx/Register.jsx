@@ -1,13 +1,13 @@
-const { useState, useContext } = React
-import { useSocket } from "./shared/UserProvider.js";
+const { useState } = React
+import { useSocket } from "./app.js";
 
 
 export const renderRegister = () => {
 	const pageContainer = document.querySelector(".page-container")
 	ReactDOM.render(
-		<UserProvider>
+		
 			<Register />
-		</UserProvider>,
+	,
 		pageContainer
 	)
 }

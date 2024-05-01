@@ -2,22 +2,25 @@ const {
   useState,
   useEffect
 } = React;
-import { useSocket } from "./shared/UserProvider.js";
+import { useSocket } from "./app.js";
 import { PostForm } from "./components/PostForm.js";
 import { PostCard } from "./components/PostCard.js";
 import { FollowButton } from "./components/FollowButton.js";
 import { renderProfile } from "./Profile.js";
 import { Chat } from "./Chat.js";
 export const renderHome = () => {
+  console.log("Rendering Home");
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), pageContainer);
 };
 
 // Display information relating to homepage
 export function Home() {
+  console.log("Home 1");
   const {
     currentUserId
   } = useSocket();
+  console.log("Home 2");
   const [userList, setUserList] = useState([]);
   const [followedUsers, setFollowedUsers] = useState([]);
   const [almostPrivatePosts, setAlmostPrivatePosts] = useState([]);
@@ -48,11 +51,11 @@ export function Home() {
     groupId: 0,
     followedUsers: followedUsers
   }), /*#__PURE__*/React.createElement("div", {
-    class: "container text-center"
+    className: "container text-center"
   }, /*#__PURE__*/React.createElement("div", {
-    class: "row align-items-start"
+    className: "row align-items-start"
   }, /*#__PURE__*/React.createElement("div", {
-    class: "col-3"
+    className: "col-3"
   }, /*#__PURE__*/React.createElement("div", {
     className: "userList"
   }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList !== null && userList.length > 0 ? userList
@@ -68,7 +71,7 @@ export function Home() {
     subjectId: user.userId,
     isFollowed: user.isFollowed
   }))) : /*#__PURE__*/React.createElement("p", null, "No Users?!"))), /*#__PURE__*/React.createElement("div", {
-    class: "col-6"
+    className: "col-6"
   }, /*#__PURE__*/React.createElement("div", {
     className: "almostPrivatePosts"
   }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? almostPrivatePosts.map(almostPrivatePost => /*#__PURE__*/React.createElement(PostCard, {
@@ -95,7 +98,7 @@ export function Home() {
   }, /*#__PURE__*/React.createElement("h2", null, "Groups"), /*#__PURE__*/React.createElement("ul", null, userGroups !== null && userGroups.map(userGroup => /*#__PURE__*/React.createElement("li", {
     key: userGroup.createdAt
   }, userGroup.Title, " "))))), /*#__PURE__*/React.createElement("div", {
-    class: "col-3"
+    className: "col-3"
   }, /*#__PURE__*/React.createElement("div", {
     className: "card"
   }, /*#__PURE__*/React.createElement(Chat, null))))));

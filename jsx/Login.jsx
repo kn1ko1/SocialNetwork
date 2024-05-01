@@ -1,5 +1,5 @@
 const { useState, useEffect } = React
-import { useSocket } from "./shared/UserProvider.js"
+import { useSocket } from "./app.js"
 import { renderNavbar } from "./components/Navbar.js"
 import { renderRegister } from "./Register.js"
 import { renderHome } from "./Home.js"
@@ -73,8 +73,9 @@ export function Login() {
 					if (response.ok) {
 						const userId = await response.json();
 						updateContext(newSocket, userId);
-						renderNavbar();
 						renderHome();
+						// Render the Navbar after successful login
+						renderNavbar();
 					} else {
 						setErrorMessage("Failed to fetch userId");
 						console.error("Response not okay:", response.status);
@@ -83,8 +84,7 @@ export function Login() {
 					setErrorMessage("Error fetching userId");
 					console.error("Fetch error:", error);
 				}
-
-			}
+			};
 
 			fetchUserId();
 		}

@@ -2,7 +2,7 @@ const {
   useState,
   useEffect
 } = React;
-import { useSocket } from "./shared/UserProvider.js";
+import { useSocket } from "./app.js";
 export const renderNotifications = () => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Notifications, null), pageContainer);

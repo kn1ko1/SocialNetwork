@@ -1,4 +1,4 @@
-import { useSocket } from "../shared/UserProvider.js";
+import { useSocket } from "../app.js";
 import { renderProfile } from "../Profile.js";
 import { renderHome } from "../Home.js";
 import { renderNotifications } from "../Notifications.js";

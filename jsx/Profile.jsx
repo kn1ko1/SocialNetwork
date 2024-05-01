@@ -1,4 +1,4 @@
-import { useSocket } from "./shared/UserProvider.js"
+import { useSocket } from "./app.js"
 import { PostCard } from "./components/PostCard.js"
 import { FollowButton } from "./components/FollowButton.js"
 const { useState, useEffect } = React

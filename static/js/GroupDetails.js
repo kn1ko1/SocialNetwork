@@ -1,4 +1,4 @@
-import { useSocket } from "./shared/UserProvider.js";
+import { useSocket } from "./app.js";
 import { PostFormGroup } from "./components/PostFormGroup.js";
 import { EventForm } from "./components/EventForm.js";
 import { GroupDetailsUserList } from "./components/GroupDetailsUserList.js";

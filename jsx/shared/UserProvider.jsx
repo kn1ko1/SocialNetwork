@@ -1,30 +1,30 @@
-const { createContext, useContext, useState } = React
+// const { createContext, useContext, useState } = React
 
-const SocketContext = createContext();
+// const SocketContext = createContext();
 
-export const useSocket = () => {
-  const context = useContext(SocketContext);
-  if (!context) {
-    throw new Error('useSocket must be used within a UserProvider');
-  }
-  const { socket, currentUserId, updateContext } = context;
-  return { socket, currentUserId, updateContext };
-};
+// export const useSocket = () => {
+//   const context = useContext(SocketContext);
+//   if (!context) {
+//     throw new Error('useSocket must be used within a UserProvider');
+//   }
+//   const { socket, currentUserId, updateContext } = context;
+//   return { socket, currentUserId, updateContext };
+// };
 
 
-export const UserProvider = ({ children }) => {
-    const [socket, setSocket] = useState(null);
-    const [currentUserId, setCurrentUserId] = useState(null);
+// export const UserProvider = ({ children }) => {
+//     const [socket, setSocket] = useState(null);
+//     const [currentUserId, setCurrentUserId] = useState(null);
     
-    const updateContext = (newSocket, userId) => {
-      setSocket(newSocket);
-      setCurrentUserId(userId);
-      console.log("userId in UserProvider", userId)
-    };
+//     const updateContext = (newSocket, userId) => {
+//       setSocket(newSocket);
+//       setCurrentUserId(userId);
+//       console.log("userId in UserProvider", userId)
+//     };
   
-    return (
-      <SocketContext.Provider value={{ socket, currentUserId, updateContext }}>
-        {children}
-      </SocketContext.Provider>
-    );
-  };
+//     return (
+//       <SocketContext.Provider value={{ socket, currentUserId, updateContext }}>
+//         {children}
+//       </SocketContext.Provider>
+//     );
+//   };

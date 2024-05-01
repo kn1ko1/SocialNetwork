@@ -2,7 +2,7 @@ const {
   useState,
   useEffect
 } = React;
-import { useSocket } from "./shared/UserProvider.js";
+import { useSocket } from "./app.js";
 import { GroupDetails } from "./GroupDetails.js";
 export const renderGroup = () => {
   const pageContainer = document.querySelector(".page-container");

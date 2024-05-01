@@ -1,5 +1,6 @@
-import { useSocket } from "./shared/UserProvider.js"
 const { useState } = React
+import { useSocket } from "./app.js"
+
 
 const GROUP_CHAT_MESSAGE = 1
 const PRIVATE_MESSAGE = 2

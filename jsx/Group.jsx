@@ -1,5 +1,5 @@
 const { useState, useEffect } = React
-import { useSocket } from "./shared/UserProvider.js"
+import { useSocket } from "./app.js"
 import { GroupDetails } from "./GroupDetails.js"
 
 

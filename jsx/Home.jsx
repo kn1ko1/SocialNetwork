@@ -1,5 +1,5 @@
 const { useState, useEffect } = React
-import { useSocket } from "./shared/UserProvider.js"
+import { useSocket } from "./app.js"
 import { PostForm } from "./components/PostForm.js"
 import { PostCard } from "./components/PostCard.js"
 import { FollowButton } from "./components/FollowButton.js"
@@ -7,13 +7,17 @@ import { renderProfile } from "./Profile.js"
 import { Chat } from "./Chat.js"
 
 export const renderHome = () => {
+	console.log("Rendering Home");
 	const pageContainer = document.querySelector(".page-container")
 	ReactDOM.render(<Home />, pageContainer)
 }
 
 // Display information relating to homepage
 export function Home() {
+	console.log("Home 1")
 	const { currentUserId } = useSocket();
+	console.log("Home 2")
+
 	const [userList, setUserList] = useState([])
 	const [followedUsers, setFollowedUsers] = useState([]);
 	const [almostPrivatePosts, setAlmostPrivatePosts] = useState([])
@@ -49,9 +53,9 @@ export function Home() {
 		<main className="homePage">
 			<PostForm groupId={0} followedUsers={followedUsers} />
 
-			<div class="container text-center">
-				<div class="row align-items-start">
-					<div class="col-3">
+			<div className="container text-center">
+				<div className="row align-items-start">
+					<div className="col-3">
 						<div className="userList">
 							<h2>UserList</h2>
 							{userList !== null && userList.length > 0 ? (
@@ -79,7 +83,7 @@ export function Home() {
 							)}
 						</div>
 					</div>
-					<div class="col-6">
+					<div className="col-6">
 						{/* Rendering Almost Private Posts */}
 						<div className="almostPrivatePosts">
 							<h2>Almost Private Posts</h2>
@@ -144,7 +148,7 @@ export function Home() {
 							</ul>
 						</div>
 					</div>
-					<div class="col-3">
+					<div className="col-3">
 						<div className="card">
 							<Chat />
 						</div>
