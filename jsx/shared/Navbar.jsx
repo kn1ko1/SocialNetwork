@@ -1,4 +1,4 @@
-import { getCurrentUserId } from "../shared/getCurrentUserId.js"
+import { getCurrentUserId } from "./getCurrentUserId.js"
 import { renderProfile } from "../Profile.js"
 import { renderHome } from "../Home.js"
 import { renderNotifications } from "../Notifications.js"

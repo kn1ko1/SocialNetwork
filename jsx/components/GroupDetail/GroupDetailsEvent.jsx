@@ -1,3 +1,5 @@
+import { formattedDate } from "../../shared/FormattedDate.js"
+
 export function GroupDetailsEvents({groupEvents}) {
     return (
         <div className="groupEvents">
@@ -23,7 +25,7 @@ export function GroupDetailsEvents({groupEvents}) {
                         <div className="col-9">
                             <div className="collapse" id={`collapseExample${index}`}>
                                 <div className="card card-body">
-                                    {event.description} - {event.dateTime}
+                                    {event.description} - {formattedDate(event.dateTime)}
                                 </div>
                             </div>
                         </div>

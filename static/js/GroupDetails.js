@@ -1,9 +1,9 @@
 import { getCurrentUserId } from "./shared/getCurrentUserId.js";
-import { PostFormGroup } from "./components/PostFormGroup.js";
-import { EventForm } from "./components/EventForm.js";
-import { GroupDetailsUserList } from "./components/GroupDetailsUserList.js";
+import { PostFormGroup } from "./components/GroupDetail/PostFormGroup.js";
+import { EventForm } from "./components/GroupDetail/EventForm.js";
+import { GroupDetailsUserList } from "./components/GroupDetail/GroupDetailsUserList.js";
 import { PostCard } from "./components/PostCard.js";
-import { GroupDetailsEvents } from "./components/GroupDetailsEvent.js";
+import { GroupDetailsEvents } from "./components/GroupDetail/GroupDetailsEvent.js";
 const {
   useState,
   useEffect
@@ -55,14 +55,6 @@ export function GroupDetails({
           const postsData = await postsResponse.json();
           const messagesData = await messagesResponse.json();
           const eventsData = await eventsResponse.json();
-          if (eventsData != null) {
-            for (let i = 0; i < eventsData.length; i++) {
-              const milliseconds = eventsData[i].dateTime;
-              const date = new Date(milliseconds);
-              const formattedDate = date.toLocaleDateString();
-              eventsData[i].dateTime = formattedDate;
-            }
-          }
           setUserList(userListData);
           setGroupMembers(groupMembersData);
           setGroupPosts(postsData);

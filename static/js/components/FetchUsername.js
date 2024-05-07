@@ -1,6 +1,6 @@
-export const fetchUsername = async senderId => {
+export const fetchUsername = async userId => {
   try {
-    const response = await fetch(`http://localhost:8080/api/users/${senderId}`);
+    const response = await fetch(`http://localhost:8080/api/users/${userId}`);
     const data = await response.json();
     return data.username;
   } catch (error) {

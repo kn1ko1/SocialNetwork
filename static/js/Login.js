@@ -3,7 +3,7 @@ const {
   useEffect
 } = React;
 import { initializeSocket } from "./app.js";
-import { renderNavbar } from "./components/Navbar.js";
+import { renderNavbar } from "./shared/Navbar.js";
 import { renderRegister } from "./Register.js";
 import { renderHome } from "./Home.js";
 export const renderLogin = () => {

@@ -45,7 +45,7 @@ func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
 	ctime := time.Now().UTC().UnixMilli()
 	event.CreatedAt = ctime
 
-	date, err := time.Parse("2006-01-02", r.PostFormValue("dateTime"))
+	date, err := time.Parse(time.RFC3339, r.PostFormValue("dateTime"))
 	if err != nil {
 		utils.HandleError("Failed to parse dateTime", err)
 		http.Error(w, "Failed to parse dateTime", http.StatusInternalServerError)

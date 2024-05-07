@@ -1,15 +1,21 @@
 import { getCurrentUserId } from "./getCurrentUserId.js";
-import { getSocket } from "../app.js";
 import { renderProfile } from "../Profile.js";
 import { renderHome } from "../Home.js";
 import { renderNotifications } from "../Notifications.js";
 import { renderChat } from "../Chat.js";
 import { renderGroup } from "../Group.js";
-export const renderNavbar = () => {
+import { renderLogin } from "../Login.js";
+export const renderNavbar = ({
+  socket
+}) => {
   const navContainer = document.querySelector(".nav-container");
-  ReactDOM.render( /*#__PURE__*/React.createElement(Navbar, null), navContainer);
+  ReactDOM.render( /*#__PURE__*/React.createElement(Navbar, {
+    socket: socket
+  }), navContainer);
 };
-export function Navbar() {
+export function Navbar({
+  socket
+}) {
   const {
     currentUserId
   } = getCurrentUserId();
@@ -21,7 +27,6 @@ export function Navbar() {
       });
       console.log(response);
       if (response.ok) {
-        socket = getSocket();
         socket.close();
         socket.addEventListener("close", event => {
           console.log("The connection has been closed successfully.");
@@ -79,7 +84,9 @@ export function Navbar() {
   }, /*#__PURE__*/React.createElement("a", {
     className: "nav-link",
     href: "#",
-    onClick: renderChat
+    onClick: () => renderChat({
+      socket
+    })
   }, "CHAT")), /*#__PURE__*/React.createElement("li", {
     className: "nav-item"
   }, /*#__PURE__*/React.createElement("a", {
@@ -91,6 +98,8 @@ export function Navbar() {
   }, /*#__PURE__*/React.createElement("a", {
     className: "nav-link",
     href: "#",
-    onClick: logout
+    onClick: () => logout({
+      socket
+    })
   }, "LOGOUT"))))));
 }

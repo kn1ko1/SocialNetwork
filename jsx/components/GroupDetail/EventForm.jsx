@@ -5,24 +5,24 @@ export function EventForm({ group }) {
     const [dateTime, setDateTime] = useState("");
     const [description, setDescription] = useState("");
     const [title, setTitle] = useState("");
+
     // Handler for form submission
     const submit = async (e) => {
         e.preventDefault(); // Prevent page reload
- 
- 
+
+        // Create a combined date-time string
+        const dateTimeString = new Date(dateTime).toISOString();
+
         const formData = new FormData();
- 
- 
+
         // Append form data
-        formData.append("dateTime", dateTime);
+        formData.append("dateTime", dateTimeString);
         formData.append("description", description);
         formData.append("groupId", group.groupId);
         formData.append("title", title);
- 
- 
+
         console.log("Event Form data being sent to backend: ", formData);
- 
- 
+
         try {
             // Send user data to the server
             await fetch("http://localhost:8080/api/events", {
@@ -30,8 +30,7 @@ export function EventForm({ group }) {
                 credentials: "include",
                 body: formData,
             });
- 
- 
+
             // Reset form fields after successful submission
             setDateTime("");
             setDescription("");
@@ -41,11 +40,8 @@ export function EventForm({ group }) {
         } catch (error) {
             console.error("Error submitting event:", error);
         }
-        // const pageContainer = document.querySelector(".page-container")
-        // ReactDOM.render(<GroupDetails group={group} />, pageContainer)
     };
- 
- 
+
     return (
         <div>
             <main className="eventForm container" style={{ maxWidth: "400px" }}>
@@ -70,16 +66,15 @@ export function EventForm({ group }) {
                         />
                     </div>
                     <div className="mb-3">
-					<label htmlFor="dateTime">Date of Event</label>
-					<input
-						required
-						type="date"
-						className="form-control reginput"
-						id="dob"
-						placeholder="16/01/1998"
-						onChange={(e) => setDateTime(e.target.value)}
-					/>
-				</div>
+                        <label htmlFor="dateTime">Date and Time of Event</label>
+                        <input
+                            required
+                            type="datetime-local"
+                            className="form-control reginput"
+                            id="dateTime"
+                            onChange={(e) => setDateTime(e.target.value)}
+                        />
+                    </div>
                     <br />
                     <button className="w-100 btn btn-lg btn-primary" type="submit">
                         Submit
@@ -87,6 +82,5 @@ export function EventForm({ group }) {
                 </form>
             </main>
         </div>
-    )
- }
- 
+    );
+}

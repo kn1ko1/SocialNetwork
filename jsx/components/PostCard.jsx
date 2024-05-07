@@ -1,4 +1,5 @@
 import { CommentCard } from "./CommentCard.js"
+import { formattedDate } from "../shared/FormattedDate.js";
 const { useState } = React
 
 const postCardStyle = {
@@ -15,10 +16,7 @@ export function PostCard({ post, comments, showCommentForm }) {
 	const [body, setBody] = useState("")
 	const [selectedFile, setSelectedFile] = useState(null)
 
-	const milliseconds = post.createdAt
-	const date = new Date(milliseconds)
-	const formattedDate = date.toLocaleString()
-
+	const postDate = formattedDate(post.createdAt)
 
 	const submit = async (e) => {
 		e.preventDefault() // prevent reload.
@@ -90,7 +88,7 @@ export function PostCard({ post, comments, showCommentForm }) {
 								{post.userId}
 							</a>
 						</div>
-						<p className="text-muted small mb-0">{formattedDate}</p>
+						<p className="text-muted small mb-0">{postDate}</p>
 					</div>
 				</div>
 				{/* Image, if there is one */}
