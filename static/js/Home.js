@@ -105,6 +105,8 @@ export function Home({
   }, /*#__PURE__*/React.createElement("div", {
     className: "card"
   }, /*#__PURE__*/React.createElement(Chat, {
-    socket: socket
+    socket: {
+      socket
+    }
   }))))));
 }

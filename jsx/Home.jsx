@@ -146,7 +146,7 @@ export function Home({socket}) {
 					</div>
 					<div class="col-3">
 						<div className="card">
-							<Chat socket={socket} />
+							<Chat socket={{socket}} />
 						</div>
 					</div>
 				</div>
