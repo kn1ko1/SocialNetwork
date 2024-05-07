@@ -11,7 +11,7 @@ export function Notifications() {
   const {
     currentUserId
   } = getCurrentUserId();
-  const [notifications, setNotifications] = useState({});
+  const [notifications, setNotifications] = useState(null);
   useEffect(() => {
     if (currentUserId !== null) {
       fetchNotifications();
@@ -33,13 +33,55 @@ export function Notifications() {
 function GroupInvite({
   notification
 }) {
+  const [username, setUsername] = useState("");
+  const [groupName, setGroupName] = useState("");
+  useEffect(() => {
+    fetchUsername();
+    fetchGroupName();
+  }, []);
+  const fetchUsername = () => {
+    fetch(`http://localhost:8080/api/users/${notification.senderId}`).then(response => response.json()).then(data => {
+      setUsername(data.username);
+    }).catch(error => {
+      console.error("Error fetching notifications data:", error);
+    });
+  };
+  const fetchGroupName = () => {
+    fetch(`http://localhost:8080/api/groups/${notification.objectId}`).then(response => response.json()).then(data => {
+      setGroupName(data.title);
+    }).catch(error => {
+      console.error("Error fetching notifications data:", error);
+    });
+  };
+  const respondToNotification = (reply, notification) => {
+    const data = {
+      reply: reply,
+      notification: notification
+    };
+    fetch(`http://localhost:8080/api/notifications/${notification.notificationId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    }).then(response => response.json()).then(data => {
+      // Handle success response
+      console.log("Response sent successfully:", data);
+    }).catch(error => {
+      console.error("Error sending response:", error);
+    });
+  };
   return /*#__PURE__*/React.createElement("div", {
     id: "GroupInvite",
     className: "card",
     style: {
       maxWidth: "400px"
     }
-  }, "User ", notification.senderId, " invited you to join Group ", notification.objectId);
+  }, username, " invited you to join ", groupName, /*#__PURE__*/React.createElement("button", {
+    onClick: () => respondToNotification("confirm", notification)
+  }, "\u2713"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => respondToNotification("deny", notification)
+  }, "\u2717"));
 }
 function GroupRequest({
   notification
@@ -50,5 +92,5 @@ function GroupRequest({
     style: {
       maxWidth: "400px"
     }
-  }, "User ", notification.senderId, " has requested to join Group ", notification.objectId);
+  }, "User ", notification.senderId, " has requested to join ", notification.objectId);
 }

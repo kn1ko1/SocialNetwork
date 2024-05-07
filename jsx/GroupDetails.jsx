@@ -81,10 +81,11 @@ export function GroupDetails({ group }) {
 
 	}
 
-	// Function to add a new group user
-	async function AddGroupUser(userId, groupId) {
+
+
+	async function AddGroupUser(userId, groupId, notificationType) {
 		const notificationtData = {
-			notificationType: "groupInvite",
+			notificationType: notificationType,
 			objectId: groupId,
 			senderId: currentUserId,
 			status: "pending",
@@ -116,12 +117,6 @@ export function GroupDetails({ group }) {
 			console.error('Error adding group user:', error);
 		}
 	}
-
-	const handleAddToGroup = (userId) => {
-		console.log('Adding user to group with groupId:', group.groupId);
-		console.log('User ID:', userId);
-		AddGroupUser({ groupId: group.groupId, userId: userId }); // Call AddGroupUser function with groupId and userId
-	};
 
 	return (
 		<div className="group-details">
@@ -183,13 +178,13 @@ export function GroupDetails({ group }) {
 							<p>No Messages</p>
 						)}
 					</div>
-					<GroupDetailsEvents groupEvents={groupEvents}/>
+					<GroupDetailsEvents groupEvents={groupEvents} />
 
 				</div>
 			) : (
 				<div>
 					<div>You are not a member yet</div>
-					<button onClick={() => handleAddToGroup(currentUserId)}>Request to join group</button>
+					<button onClick={() => AddGroupUser(group.creatorId, group.groupId, "groupRequest")}>Request to join group</button>
 				</div>
 			)}
 

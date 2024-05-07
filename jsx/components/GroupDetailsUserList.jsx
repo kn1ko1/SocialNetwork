@@ -8,7 +8,7 @@ export function GroupDetailsUserList({ userList, groupId, groupMembers, AddGroup
                     .map((user, index) => (
                         <div key={index}>
                             <span>{user.username}</span>
-                            <button onClick={() => AddGroupUser(user.userId, groupId)}>Add to Group</button>
+                            <button onClick={() => AddGroupUser(user.userId, groupId, "groupInvite")}>Add to Group</button>
                         </div>
                     ))
             ) : (

@@ -51,22 +51,22 @@ func (h *UserByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	userUsers, err := h.Repo.GetUserById(userId)
+	user, err := h.Repo.GetUserById(userId)
 	if err != nil {
 		utils.HandleError("Failed to get Users in GetUserById. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(userUsers)
+	w.WriteHeader(http.StatusOK)
+
+	err = json.NewEncoder(w).Encode(user)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Here is the User"))
 }
 
 func (h *UserByIdHandler) put(w http.ResponseWriter, r *http.Request) {
