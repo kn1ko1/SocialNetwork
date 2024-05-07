@@ -153,6 +153,24 @@ func (h *NotificationByIdHandler) delete(w http.ResponseWriter, r *http.Request)
 				UserId:    notificationResponse.Notification.SenderId,
 			}
 			h.Repo.CreateGroupUser(groupUser)
+		case "eventInvite":
+			log.Println("eventInvite")
+			eventUser := models.EventUser{
+				CreatedAt: ctime,
+				EventId:   notificationResponse.Notification.ObjectId,
+				UpdatedAt: ctime,
+				UserId:    notificationResponse.Notification.TargetId,
+			}
+			h.Repo.CreateEventUser(eventUser)
+		case "followRequest":
+			log.Println("followRequest")
+			userUser := models.UserUser{
+				CreatedAt:  ctime,
+				FollowerId: notificationResponse.Notification.SenderId,
+				UpdatedAt:  ctime,
+				SubjectId:  notificationResponse.Notification.TargetId,
+			}
+			h.Repo.CreateUserUser(userUser)
 		}
 	}
 
@@ -162,5 +180,7 @@ func (h *NotificationByIdHandler) delete(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
+	// Send a success response
 	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Notification deleted successfully"))
 }
