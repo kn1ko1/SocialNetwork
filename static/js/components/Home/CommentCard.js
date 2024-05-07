@@ -1,7 +1,7 @@
+import { formattedDate } from "../shared/FormattedDate.js";
 export function CommentCard({
   comment
 }) {
-  const formattedDate = new Date(comment.createdAt).toLocaleString();
   return /*#__PURE__*/React.createElement("div", {
     className: "card mt-3"
   }, /*#__PURE__*/React.createElement("div", {
@@ -21,7 +21,7 @@ export function CommentCard({
     onClick: () => renderProfile(comment.userId)
   }, comment.userId), /*#__PURE__*/React.createElement("p", {
     className: "text-muted small mb-0"
-  }, formattedDate))), comment.imageURL && /*#__PURE__*/React.createElement("div", {
+  }, formattedDate(comment.createdAt)))), comment.imageURL && /*#__PURE__*/React.createElement("div", {
     className: "mt-3 mb-2 pb-1"
   }, /*#__PURE__*/React.createElement("img", {
     src: comment.imageURL,

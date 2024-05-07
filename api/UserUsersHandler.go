@@ -7,8 +7,6 @@ import (
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
-	"strconv"
-	"strings"
 	"time"
 )
 
@@ -55,15 +53,6 @@ func (h *UserUsersHandler) post(w http.ResponseWriter, r *http.Request) {
 	// 	http.Redirect(w, r, "auth/login", http.StatusSeeOther)
 	// 	return
 	// }
-	fields := strings.Split(r.URL.Path, "/")
-	followerIdStr := fields[len(fields)-3]
-
-	followerId, err := strconv.Atoi(followerIdStr)
-	if err != nil {
-		utils.HandleError("Invalid follower ID. ", err)
-		http.Error(w, "internal server errror", http.StatusInternalServerError)
-		return
-	}
 
 	// decodes subjectId directly into userUser struct
 	if err := json.NewDecoder(r.Body).Decode(&userUser); err != nil {
@@ -73,7 +62,6 @@ func (h *UserUsersHandler) post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	userUser.CreatedAt = ctime
-	userUser.FollowerId = followerId
 	userUser.UpdatedAt = ctime
 
 	log.Println("[api/UserUsersHandler] Following.  FollowerId:", userUser.FollowerId, ". SubjectId:", userUser.SubjectId)
@@ -94,7 +82,7 @@ func (h *UserUsersHandler) post(w http.ResponseWriter, r *http.Request) {
 
 	// Encode and write the response
 	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode(result)
+	err := json.NewEncoder(w).Encode(result)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

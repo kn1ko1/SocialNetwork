@@ -17,12 +17,34 @@ export function FollowButton({
       await handleUnfollow(followerId, subjectId);
     } else {
       // If not following, follow the user
-      await handleFollow(followerId, subjectId);
+      await handleFollowPublic(followerId, subjectId);
     }
     // Toggle the local follow state
     setIsFollowing(!isFollowing);
   };
-  const handleFollow = async (followerId, subjectId) => {
+  const handleFollowPublic = async (followerId, subjectId) => {
+    try {
+      const bodyData = {
+        followerId,
+        subjectId
+      };
+      const response = await fetch(`http://localhost:8080/api/userUsers`, {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify(bodyData)
+      });
+      if (response.ok) {
+        console.log("Successfully followed the user.");
+        return true; // Return true if the follow request is successful
+      } else {
+        console.error("Failed to follow the user.");
+      }
+    } catch (error) {
+      console.error("Error following the user:", error);
+    }
+    return false; // Return false if the follow request fails
+  };
+  const handleFollowPrivate = async (followerId, subjectId) => {
     try {
       const response = await fetch(`http://localhost:8080/api/users/${followerId}/userUsers/`, {
         method: "POST",

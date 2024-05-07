@@ -1,5 +1,5 @@
+import { formattedDate } from "../shared/FormattedDate.js";
 export function CommentCard({ comment }) {
-	const formattedDate = new Date(comment.createdAt).toLocaleString()
 
 	return (
 		<div className="card mt-3">
@@ -26,7 +26,7 @@ export function CommentCard({ comment }) {
 					>
 						{comment.userId}
 					</h6>
-					<p className="text-muted small mb-0">{formattedDate}</p>
+					<p className="text-muted small mb-0">{formattedDate(comment.createdAt)}</p>
 				</div>
 			</div>
 			{comment.imageURL && (

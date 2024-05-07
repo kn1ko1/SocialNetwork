@@ -1,4 +1,4 @@
-import { formattedDate } from "../../shared/FormattedDate.js";
+import { formattedDate } from "../shared/FormattedDate.js";
 export function GroupDetailsEvents({
   groupEvents
 }) {

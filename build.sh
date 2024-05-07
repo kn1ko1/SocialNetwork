@@ -1,5 +1,4 @@
 npx babel jsx/components/shared/*.jsx -d static/js/components/shared/
-npx babel jsx/components/*.jsx -d static/js/components/
 npx babel jsx/components/Chat/*.jsx -d static/js/components/Chat/
 npx babel jsx/components/Groups/*.jsx -d static/js/components/Groups/
 npx babel jsx/components/GroupDetail/*.jsx -d static/js/components/GroupDetail/

@@ -3,7 +3,7 @@ const {
   useEffect
 } = React;
 import { GroupDetails } from "./GroupDetails.js";
-import { getCurrentUserId } from "./shared/getCurrentUserId.js";
+import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js";
 export const renderGroup = () => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Group, null), pageContainer);

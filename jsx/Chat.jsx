@@ -1,4 +1,4 @@
-import { getCurrentUserId } from "./shared/getCurrentUserId.js"
+import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js"
 const { useState } = React
 
 const GROUP_CHAT_MESSAGE = 1

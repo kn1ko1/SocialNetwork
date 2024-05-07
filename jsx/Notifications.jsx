@@ -1,5 +1,5 @@
 const { useState, useEffect } = React
-import { getCurrentUserId } from "./shared/getCurrentUserId.js"
+import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js"
 import { GroupInvite } from "./components/Notifications/GroupInvite.js"
 import { GroupRequest } from "./components/Notifications/GroupRequest.js"
 import { FollowRequest } from "./components/Notifications/FollowRequest.js"

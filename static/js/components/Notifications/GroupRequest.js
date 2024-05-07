@@ -2,9 +2,9 @@ const {
   useState,
   useEffect
 } = React;
-import { fetchUsername } from "../FetchUsername.js";
-import { fetchGroupName } from "../FetchGroupName.js";
-import { respondToNotification } from "../RespondToNotification.js";
+import { fetchGroupName } from "../shared/FetchGroupName.js";
+import { fetchUsername } from "../shared/FetchUsername.js";
+import { respondToNotification } from "./RespondToNotification.js";
 import { notificationCardStyle } from "./NotificationCardStyle.js";
 export function GroupRequest({
   notification

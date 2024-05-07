@@ -1,6 +1,6 @@
 const { useState, useEffect } = React
-import { fetchUsername } from "../FetchUsername.js";
-import { respondToNotification } from "../RespondToNotification.js";
+import { fetchUsername } from "../shared/FetchUsername.js";
+import { respondToNotification } from "./RespondToNotification.js";
 import { notificationCardStyle } from "./NotificationCardStyle.js";
 
 
