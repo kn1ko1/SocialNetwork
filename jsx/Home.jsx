@@ -96,8 +96,8 @@ export function Home({ socket }) {
 					<div class="col-3">
 						<div className="userList">
 							<h2>UserList</h2>
-							{userList !== null && userList.length > 0 ? (
-								userList
+							{userList2 !== null && userList2.length > 0 ? (
+								userList2
 									// Filter out the current user
 									.filter(user => user.userId !== currentUserId)
 									.map((user, index) => (
@@ -111,8 +111,7 @@ export function Home({ socket }) {
 											</a>
 											<FollowButton
 												followerId={currentUserId}
-												subjectId={user.userId}
-												isFollowed={user.isFollowed}
+												user={user}
 											/>
 										</div>
 									))

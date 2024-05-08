@@ -48,12 +48,16 @@ export function Profile({ userId, isEditable }) {
 				)
 			}
 
-			const data = await response.json()
-			setProfileUserData(data.profileUserData)
-			setUserPostData(data.userPostData || [])
-			setUserFollowerData(data.userFollowerData || [])
-			setUserFollowsData(data.userFollowsData || [])
-			setIsPublicValue(data.profileUserData.isPublic)
+			const data = await response.json();
+			const updatedProfileUserData = {
+				...data.profileUserData,
+				isFollowed: data.isFollowed,
+			};
+			setProfileUserData(updatedProfileUserData);
+			setUserPostData(data.userPostData || []);
+			setUserFollowerData(data.userFollowerData || []);
+			setUserFollowsData(data.userFollowsData || []);
+			setIsPublicValue(updatedProfileUserData.isPublic);
 		} catch (error) {
 			console.error("Error fetching profile data:", error)
 		}
@@ -119,8 +123,7 @@ export function Profile({ userId, isEditable }) {
 				{!isEditable && (
 					<FollowButton
 						followerId={currentUserId}
-						subjectId={userId}
-						isFollowed={isFollowed}
+						user={ profileUserData }
 					/>
 				)}
 				{isPublicValue || isEditable || isFollowed ? (
@@ -183,7 +186,7 @@ export function Profile({ userId, isEditable }) {
 							{userPostData.map((post) => (
 								<div key={post.postId}>
 									<PostCard post={post}
-									showCommentForm={false}/>
+										showCommentForm={false} />
 								</div>
 							))}
 						</div>

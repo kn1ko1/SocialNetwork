@@ -92,7 +92,7 @@ export function Home({
     class: "col-3"
   }, /*#__PURE__*/React.createElement("div", {
     className: "userList"
-  }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList !== null && userList.length > 0 ? userList
+  }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList2 !== null && userList2.length > 0 ? userList2
   // Filter out the current user
   .filter(user => user.userId !== currentUserId).map((user, index) => /*#__PURE__*/React.createElement("div", {
     key: index
@@ -102,8 +102,7 @@ export function Home({
     onClick: () => renderProfile(user.userId)
   }, user.username), /*#__PURE__*/React.createElement(FollowButton, {
     followerId: currentUserId,
-    subjectId: user.userId,
-    isFollowed: user.isFollowed
+    user: user
   }))) : /*#__PURE__*/React.createElement("p", null, "No Users?!"))), /*#__PURE__*/React.createElement("div", {
     class: "col-6"
   }, /*#__PURE__*/React.createElement("div", {

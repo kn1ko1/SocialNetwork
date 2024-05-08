@@ -45,11 +45,15 @@ export function Profile({
         throw new Error(`Failed to fetch profile data: ${response.status} ${response.statusText}`);
       }
       const data = await response.json();
-      setProfileUserData(data.profileUserData);
+      const updatedProfileUserData = {
+        ...data.profileUserData,
+        isFollowed: data.isFollowed
+      };
+      setProfileUserData(updatedProfileUserData);
       setUserPostData(data.userPostData || []);
       setUserFollowerData(data.userFollowerData || []);
       setUserFollowsData(data.userFollowsData || []);
-      setIsPublicValue(data.profileUserData.isPublic);
+      setIsPublicValue(updatedProfileUserData.isPublic);
     } catch (error) {
       console.error("Error fetching profile data:", error);
     }
@@ -101,8 +105,7 @@ export function Profile({
     id: "profileData"
   }, /*#__PURE__*/React.createElement("h2", null, profileUserData.username, "'s Profile"), !isEditable && /*#__PURE__*/React.createElement(FollowButton, {
     followerId: currentUserId,
-    subjectId: userId,
-    isFollowed: isFollowed
+    user: profileUserData
   }), isPublicValue || isEditable || isFollowed ? /*#__PURE__*/React.createElement(React.Fragment, null, isEditable ? /*#__PURE__*/React.createElement("div", {
     id: "isPublicToggle"
   }, /*#__PURE__*/React.createElement("label", null, /*#__PURE__*/React.createElement("input", {
