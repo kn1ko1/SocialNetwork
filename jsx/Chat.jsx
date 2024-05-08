@@ -1,5 +1,5 @@
 import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js"
-const { useState } = React
+const { useState, useEffect } = React
 
 const GROUP_CHAT_MESSAGE = 1
 const PRIVATE_MESSAGE = 2
@@ -32,17 +32,17 @@ export function Chat({ socket }) {
 
 				const results = await Promise.all(promises);
 
-				const usersIFollow = results[0]
-				const usersFollowMe = results[1]
-				const groupsPartOf = results[2]
+				const usersIFollowResponse = results[0]
+				const usersFollowMeResponse = results[1]
+				const groupsPartOfResponse = results[2]
 
-				if (!usersIFollow.ok) {
+				if (!usersIFollowResponse.ok) {
 					throw new Error('Failed to fetch usersIFollow list');
 				}
-				if (!usersFollowMe.ok) {
+				if (!usersFollowMeResponse.ok) {
 					throw new Error('Failed to fetch usersFollowMe list');
 				}
-				if (!groupsPartOf.ok) {
+				if (!groupsPartOfResponse.ok) {
 					throw new Error('Failed to fetch groupsPartOf list');
 				}
 
@@ -62,10 +62,14 @@ export function Chat({ socket }) {
 				console.error('Error fetching possible chat options list:', error);
 			}
 		};
+		if (currentUserId !== null) {
+			fetchUserAndGroupData();
+		}
 
-		fetchUserAndGroupData();
-	}, []);
+	}, [currentUserId]);
 
+
+	
 	const handleMessages = (e) => {
 		setSendMessage(e.target.value)
 	}

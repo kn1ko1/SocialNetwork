@@ -50,12 +50,8 @@ export function Home({
         const userListData = await userListResponse.json();
         const followedUsersList = await followedUserListResponse.json();
         setUserList2(userListData);
-        // setGroupMembers(groupMembersData);
-        console.log("UserListData2", userListData);
-        console.log("followedUserList", followedUsersList);
         const filteredFollowedUsers = userListData.filter(user => followedUsersList.some(followedUser => followedUser.subjectId === user.userId));
         setFollowedUsersList(filteredFollowedUsers);
-        console.log("filteredFollowedUsers", filteredFollowedUsers);
       } catch (error) {
         console.error('Error fetching group data:', error);
       }
@@ -127,13 +123,7 @@ export function Home({
     className: "userGroups"
   }, /*#__PURE__*/React.createElement("h2", null, "Groups"), /*#__PURE__*/React.createElement("ul", null, userGroups !== null && userGroups.map(userGroup => /*#__PURE__*/React.createElement("li", {
     key: userGroup.createdAt
-  }, userGroup.title))))), /*#__PURE__*/React.createElement("div", {
+  }, userGroup.title, "onClick=", () => renderProfile(user.userId)))))), /*#__PURE__*/React.createElement("div", {
     class: "col-3"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "card"
-  }, /*#__PURE__*/React.createElement(Chat, {
-    socket: {
-      socket
-    }
-  }))))));
+  }))));
 }

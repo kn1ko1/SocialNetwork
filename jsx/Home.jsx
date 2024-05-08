@@ -32,7 +32,7 @@ export function Home({ socket }) {
 				const promises = [];
 				promises.push(fetch(`http://localhost:8080/api/users`));
 				promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/userUsers`));
-				
+
 				const results = await Promise.all(promises);
 
 				const userListResponse = results[0]
@@ -44,19 +44,16 @@ export function Home({ socket }) {
 				if (!followedUserListResponse.ok) {
 					throw new Error('Failed to fetch followed users list');
 				}
-				
+
 				const userListData = await userListResponse.json();
 				const followedUsersList = await followedUserListResponse.json();
 
 				setUserList2(userListData);
-				console.log("UserListData2", userListData)
-				console.log("followedUserList", followedUsersList)
+
 				const filteredFollowedUsers = userListData.filter(user =>
 					followedUsersList.some(followedUser => followedUser.subjectId === user.userId)
 				);
-			
 				setFollowedUsersList(filteredFollowedUsers);
-				console.log("filteredFollowedUsers", filteredFollowedUsers)
 			} catch (error) {
 				console.error('Error fetching group data:', error);
 			}
@@ -177,16 +174,17 @@ export function Home({ socket }) {
 									userGroups.map((userGroup) => (
 										<li key={userGroup.createdAt}>
 											{userGroup.title}
-											{/* Render whatever user properties you need */}
+											onClick={() => renderProfile(user.userId)}
+
 										</li>
 									))}
 							</ul>
 						</div>
 					</div>
 					<div class="col-3">
-						<div className="card">
+						{/* <div className="card">
 							<Chat socket={{ socket }} />
-						</div>
+						</div> */}
 					</div>
 				</div>
 			</div>
