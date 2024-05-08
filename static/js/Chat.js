@@ -4,8 +4,6 @@ import { fetchGroupName } from "./components/shared/FetchGroupName.js";
 const {
   useState,
   useEffect
-  useState,
-  useEffect
 } = React;
 const GROUP_CHAT_MESSAGE = 1;
 const PRIVATE_MESSAGE = 2;
@@ -49,25 +47,27 @@ export function Chat({
           throw new Error('Failed to fetch usersFollowMe list');
         }
         if (!groupsPartOfResponse.ok) {
-          throw new Error('Failed to fetch groupsPartOf list');
+          if (!groupsPartOfResponse.ok) {
+            throw new Error('Failed to fetch groupsPartOf list');
+          }
+          const userUsersIFollowData = await userUsersIFollowResponse.json();
+          const userUsersFollowMeData = await userUsersFollowMeResponse.json();
+          const groupsPartOfData = await groupsPartOfResponse.json();
+
+          // Extract usernames from userUsersIFollowData and usersFollowMeData
+          const usersIFollowUsernames = await Promise.all(userUsersIFollowData.map(userUser => fetchUsername(userUser.subjectId)));
+          const usersFollowMeUsernames = await Promise.all(userUsersFollowMeData.map(userFollower => fetchUsername(userFollower.subjectId)));
+          const groupsPartOfGroupNames = await Promise.all(groupsPartOfData.map(group => fetchGroupName(group.groupId)));
+
+          // Update the state with the extracted usernames
+          setUsersIFollow(usersIFollowUsernames);
+          setUsersFollowMe(usersFollowMeUsernames);
+          setGroupsPartOf(groupsPartOfGroupNames);
+          const uniqueUsernames = Array.from(new Set([...usersIFollowUsernames, ...usersFollowMeUsernames]));
+          setUniqueUsernames(uniqueUsernames);
+          console.log("Unique Usernames:", uniqueUsernames);
+          console.log("groupsPartOfGroupNames:", groupsPartOfGroupNames);
         }
-        const userUsersIFollowData = await userUsersIFollowResponse.json();
-        const userUsersFollowMeData = await userUsersFollowMeResponse.json();
-        const groupsPartOfData = await groupsPartOfResponse.json();
-
-        // Extract usernames from userUsersIFollowData and usersFollowMeData
-        const usersIFollowUsernames = await Promise.all(userUsersIFollowData.map(userUser => fetchUsername(userUser.subjectId)));
-        const usersFollowMeUsernames = await Promise.all(userUsersFollowMeData.map(userFollower => fetchUsername(userFollower.subjectId)));
-        const groupsPartOfGroupNames = await Promise.all(groupsPartOfData.map(group => fetchGroupName(group.groupId)));
-
-        // Update the state with the extracted usernames
-        setUsersIFollow(usersIFollowUsernames);
-        setUsersFollowMe(usersFollowMeUsernames);
-        setGroupsPartOf(groupsPartOfGroupNames);
-        const uniqueUsernames = Array.from(new Set([...usersIFollowUsernames, ...usersFollowMeUsernames]));
-        setUniqueUsernames(uniqueUsernames);
-        console.log("Unique Usernames:", uniqueUsernames);
-        console.log("groupsPartOfGroupNames:", groupsPartOfGroupNames);
       } catch (error) {
         console.error('Error fetching possible chat options list:', error);
       }
