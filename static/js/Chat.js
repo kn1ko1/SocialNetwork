@@ -52,7 +52,7 @@ export function Chat({
   const messageStyle = {
     color: "orange"
   };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Chat"), /*#__PURE__*/React.createElement("ul", {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Chat"), /*#__PURE__*/React.createElement("h3", null, "Users"), /*#__PURE__*/React.createElement("h3", null, "Groups"), /*#__PURE__*/React.createElement("ul", {
     id: "messages",
     style: messageStyle
   }), /*#__PURE__*/React.createElement("form", {
