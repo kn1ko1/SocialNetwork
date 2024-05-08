@@ -1,5 +1,9 @@
 const { useState } = React
 import { initializeSocket } from "./app.js"
+import { renderNavbar } from "./components/shared/Navbar.js"
+import { renderHome } from "./Home.js"
+import { renderLogin } from "./Login.js"
+
 
 export const renderRegister = () => {
 	const pageContainer = document.querySelector(".page-container")
@@ -8,7 +12,6 @@ export const renderRegister = () => {
 
 
 export function Register() {
-	let socket = null
 	const [email, setEmail] = useState("")
 	const [encryptedPassword, setEncryptedPassword] = useState("")
 	const [firstName, setFirstName] = useState("")
