@@ -46,6 +46,7 @@ export function Chat({ socket }) {
 					throw new Error('Failed to fetch usersFollowMe list');
 				}
 				if (!groupsPartOfResponse.ok) {
+				if (!groupsPartOfResponse.ok) {
 					throw new Error('Failed to fetch groupsPartOf list');
 				}
 

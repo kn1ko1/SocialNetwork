@@ -4,7 +4,7 @@ export const fetchUsername = async userId => {
     const data = await response.json();
     return data.username;
   } catch (error) {
-    console.error("Error fetching username:", error);
+    console.error(`Error fetching username for user ${userId}:`, error);
     return null;
   }
 };

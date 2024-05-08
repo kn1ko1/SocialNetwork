@@ -4,7 +4,7 @@ export const fetchGroupName = async (objectId) => {
         const data = await response.json();
         return data.title;
     } catch (error) {
-        console.error("Error fetching group name:", error);
+        console.error(`Error fetching group ${objectId}:`, error);
         return null;
     }
 };

@@ -4,6 +4,8 @@ import { fetchGroupName } from "./components/shared/FetchGroupName.js";
 const {
   useState,
   useEffect
+  useState,
+  useEffect
 } = React;
 const GROUP_CHAT_MESSAGE = 1;
 const PRIVATE_MESSAGE = 2;
