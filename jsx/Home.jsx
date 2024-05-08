@@ -119,6 +119,24 @@ export function Home({ socket }) {
 						</div>
 					</div>
 					<div class="col-6">
+
+	{/* Rendering Public Posts */}
+	<div className="publicPostsWithComments">
+							<h2>Public Posts</h2>
+							{publicPostsWithComments !== null &&
+								publicPostsWithComments.length > 0 ? (
+								publicPostsWithComments.map((publicPostsWithComment, index) => (
+									<PostCard
+										key={index}
+										post={publicPostsWithComment.post}
+										comments={publicPostsWithComment.comments}
+										showCommentForm={true} />
+								))
+							) : (
+								<p>public posts</p>
+							)}
+						</div>
+
 						{/* Rendering Almost Private Posts */}
 						<div className="almostPrivatePosts">
 							<h2>Almost Private Posts</h2>
@@ -149,23 +167,6 @@ export function Home({ socket }) {
 								))
 							) : (
 								<p>No private posts</p>
-							)}
-						</div>
-
-						{/* Rendering Public Posts */}
-						<div className="publicPostsWithComments">
-							<h2>Public Posts With Comments</h2>
-							{publicPostsWithComments !== null &&
-								publicPostsWithComments.length > 0 ? (
-								publicPostsWithComments.map((publicPostsWithComment, index) => (
-									<PostCard
-										key={index}
-										post={publicPostsWithComment.post}
-										comments={publicPostsWithComment.comments}
-										showCommentForm={true} />
-								))
-							) : (
-								<p>public posts</p>
 							)}
 						</div>
 

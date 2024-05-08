@@ -1,7 +1,8 @@
 import { CommentCard } from "../Home/CommentCard.js"
 import { formattedDate } from "./FormattedDate.js";
 import { renderProfile } from "../../Profile.js";
-const { useState } = React
+import {fetchUsername} from "../shared/FetchUsername.js";
+const { useState, useEffect } = React
 
 const postCardStyle = {
 	maxWidth: '600px',
@@ -16,8 +17,22 @@ const postCardStyle = {
 export function PostCard({ post, comments, showCommentForm }) {
 	const [body, setBody] = useState("")
 	const [selectedFile, setSelectedFile] = useState(null)
+	const [username, setUsername] = useState("")
 
 	const postDate = formattedDate(post.createdAt)
+
+	// useEffect(() => {
+	// 	setUsername(fetchUsername(post.userId))
+	// }, []);
+
+	useEffect(() => {
+		const fetchUserData = async () => {
+			const fetchedUsername = await fetchUsername(post.userId);
+			setUsername(fetchedUsername);
+		};
+	
+		fetchUserData();
+	}, []);
 
 	const submit = async (e) => {
 		e.preventDefault() // prevent reload.
@@ -86,7 +101,7 @@ export function PostCard({ post, comments, showCommentForm }) {
 								href="#"
 								onClick={() => renderProfile(post.userId)}
 							>
-								{post.userId}
+								{username}
 							</a>
 						</div>
 						<p className="text-muted small mb-0">{postDate}</p>
