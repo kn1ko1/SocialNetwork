@@ -107,6 +107,13 @@ export function Home({
   }))) : /*#__PURE__*/React.createElement("p", null, "No Users?!"))), /*#__PURE__*/React.createElement("div", {
     class: "col-6"
   }, /*#__PURE__*/React.createElement("div", {
+    className: "publicPostsWithComments"
+  }, /*#__PURE__*/React.createElement("h2", null, "Public Posts"), publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? publicPostsWithComments.map((publicPostsWithComment, index) => /*#__PURE__*/React.createElement(PostCard, {
+    key: index,
+    post: publicPostsWithComment.post,
+    comments: publicPostsWithComment.comments,
+    showCommentForm: true
+  })) : /*#__PURE__*/React.createElement("p", null, "public posts")), /*#__PURE__*/React.createElement("div", {
     className: "almostPrivatePosts"
   }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? almostPrivatePosts.map(almostPrivatePost => /*#__PURE__*/React.createElement(PostCard, {
     key: almostPrivatePost.createdAt,
@@ -121,13 +128,6 @@ export function Home({
     comments: privatePost.comments,
     showCommentForm: true
   })) : /*#__PURE__*/React.createElement("p", null, "No private posts")), /*#__PURE__*/React.createElement("div", {
-    className: "publicPostsWithComments"
-  }, /*#__PURE__*/React.createElement("h2", null, "Public Posts With Comments"), publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? publicPostsWithComments.map((publicPostsWithComment, index) => /*#__PURE__*/React.createElement(PostCard, {
-    key: index,
-    post: publicPostsWithComment.post,
-    comments: publicPostsWithComment.comments,
-    showCommentForm: true
-  })) : /*#__PURE__*/React.createElement("p", null, "public posts")), /*#__PURE__*/React.createElement("div", {
     className: "userGroups"
   }, /*#__PURE__*/React.createElement("h2", null, "Groups"), /*#__PURE__*/React.createElement("ul", null, userGroups !== null && userGroups.map(userGroup => /*#__PURE__*/React.createElement("li", {
     key: userGroup.createdAt
