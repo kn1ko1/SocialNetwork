@@ -1,5 +1,9 @@
 const { useState, useEffect } = React
-import { getCurrentUserId } from "./shared/getCurrentUserId.js"
+import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js"
+import { GroupInvite } from "./components/Notifications/GroupInvite.js"
+import { GroupRequest } from "./components/Notifications/GroupRequest.js"
+import { FollowRequest } from "./components/Notifications/FollowRequest.js"
+import { EventInvite } from "./components/Notifications/EventInvite.js"
 
 export const renderNotifications = () => {
 	const pageContainer = document.querySelector(".page-container")
@@ -8,7 +12,7 @@ export const renderNotifications = () => {
 
 export function Notifications() {
 	const { currentUserId } = getCurrentUserId()
-	const [notifications, setNotifications] = useState({})
+	const [notifications, setNotifications] = useState(null);
 
 
 	useEffect(() => {
@@ -35,31 +39,21 @@ export function Notifications() {
 			{notifications !== null && Object.keys(notifications).length > 0 ? (
 				<ul>
 					{Object.values(notifications).map((notification, index) => (
-						
-							<li key={index}><GroupInvite notification={notification}/></li>
-					
-
+						<li key={index}>
+							{notification.notificationType === "groupInvite" && <GroupInvite notification={notification} />}
+							{notification.notificationType === "groupRequest" && <GroupRequest notification={notification} />}
+							{notification.notificationType === "eventInvite" && <EventInvite notification={notification} />}
+							{notification.notificationType === "followRequest" && <FollowRequest notification={notification} />}
+						</li>
 					))}
 				</ul>
 			) : (
 				<div>No notifications</div>
 			)}
+
 		</div>
 	);
 }
 
-function GroupInvite({ notification }) {
-	return (
-		<div id="GroupInvite" className="card" style={{ maxWidth: "400px" }}>
-			User {notification.senderId} invited you to join Group {notification.objectId}
-		</div>
-	)
-}
 
-function GroupRequest({ notification }) {
-	return (
-		<div id="GroupRequest" className="card" style={{ maxWidth: "400px" }}>
-			User {notification.senderId} has requested to join Group {notification.objectId}
-		</div>
-	)
-}
+

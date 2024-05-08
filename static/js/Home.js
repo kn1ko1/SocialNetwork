@@ -2,10 +2,10 @@ const {
   useState,
   useEffect
 } = React;
-import { getCurrentUserId } from "./shared/getCurrentUserId.js";
-import { PostForm } from "./components/PostForm.js";
-import { PostCard } from "./components/PostCard.js";
-import { FollowButton } from "./components/FollowButton.js";
+import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js";
+import { PostForm } from "./components/Home/PostForm.js";
+import { PostCard } from "./components/shared/PostCard.js";
+import { FollowButton } from "./components/shared/FollowButton.js";
 import { renderProfile } from "./Profile.js";
 import { Chat } from "./Chat.js";
 export const renderHome = ({
@@ -30,6 +30,40 @@ export function Home({
   const [privatePosts, setPrivatePosts] = useState([]);
   const [publicPostsWithComments, setPublicPostsWithComments] = useState([]);
   const [userGroups, setUserGroups] = useState([]);
+  const [userList2, setUserList2] = useState([]);
+  const [followedUsersList, setFollowedUsersList] = useState([]);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const promises = [];
+        promises.push(fetch(`http://localhost:8080/api/users`));
+        promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/userUsers`));
+        const results = await Promise.all(promises);
+        const userListResponse = results[0];
+        const followedUserListResponse = results[1];
+        if (!userListResponse.ok) {
+          throw new Error('Failed to fetch user list');
+        }
+        if (!followedUserListResponse.ok) {
+          throw new Error('Failed to fetch followed users list');
+        }
+        const userListData = await userListResponse.json();
+        const followedUsersList = await followedUserListResponse.json();
+        setUserList2(userListData);
+        // setGroupMembers(groupMembersData);
+        console.log("UserListData2", userListData);
+        console.log("followedUserList", followedUsersList);
+        const filteredFollowedUsers = userList2.filter(user => followedUsersList.some(followedUser => followedUser.subjectId === user.userId));
+        setFollowedUsersList(filteredFollowedUsers);
+        console.log("filteredFollowedUsers", filteredFollowedUsers);
+      } catch (error) {
+        console.error('Error fetching group data:', error);
+      }
+    };
+    if (currentUserId !== null) {
+      fetchUserData();
+    }
+  }, [currentUserId]);
   useEffect(() => {
     fetch("http://localhost:8080/api/home").then(response => response.json()).then(data => {
       setUserList(data.userList);
@@ -41,18 +75,11 @@ export function Home({
       console.error("Error fetching data:", error);
     });
   }, []);
-  useEffect(() => {
-    // Filter userList to get only the followed users
-    const filteredFollowedUsers = userList.filter(user => user.isFollowed === true);
-
-    // Set the filtered list to followedUsers state
-    setFollowedUsers(filteredFollowedUsers);
-  }, [userList]);
   return /*#__PURE__*/React.createElement("main", {
     className: "homePage"
   }, /*#__PURE__*/React.createElement(PostForm, {
     groupId: 0,
-    followedUsers: followedUsers
+    followedUsers: followedUsersList
   }), /*#__PURE__*/React.createElement("div", {
     class: "container text-center"
   }, /*#__PURE__*/React.createElement("div", {
@@ -100,11 +127,13 @@ export function Home({
     className: "userGroups"
   }, /*#__PURE__*/React.createElement("h2", null, "Groups"), /*#__PURE__*/React.createElement("ul", null, userGroups !== null && userGroups.map(userGroup => /*#__PURE__*/React.createElement("li", {
     key: userGroup.createdAt
-  }, userGroup.Title, " "))))), /*#__PURE__*/React.createElement("div", {
+  }, userGroup.title))))), /*#__PURE__*/React.createElement("div", {
     class: "col-3"
   }, /*#__PURE__*/React.createElement("div", {
     className: "card"
   }, /*#__PURE__*/React.createElement(Chat, {
-    socket: socket
+    socket: {
+      socket
+    }
   }))))));
 }

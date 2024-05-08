@@ -1,6 +1,6 @@
-import { getCurrentUserId } from "./shared/getCurrentUserId.js"
-import { PostCard } from "./components/PostCard.js"
-import { FollowButton } from "./components/FollowButton.js"
+import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js"
+import { PostCard } from "./components/shared/PostCard.js"
+import { FollowButton } from "./components/shared/FollowButton.js"
 const { useState, useEffect } = React
 
 export const renderProfile = (userId, isEditable) => {

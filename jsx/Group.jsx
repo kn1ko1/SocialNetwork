@@ -1,6 +1,6 @@
 const { useState, useEffect } = React
 import { GroupDetails } from "./GroupDetails.js"
-import { getCurrentUserId } from "./shared/getCurrentUserId.js"
+import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js"
 
 
 export const renderGroup = () => {

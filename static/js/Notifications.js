@@ -2,7 +2,11 @@ const {
   useState,
   useEffect
 } = React;
-import { getCurrentUserId } from "./shared/getCurrentUserId.js";
+import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js";
+import { GroupInvite } from "./components/Notifications/GroupInvite.js";
+import { GroupRequest } from "./components/Notifications/GroupRequest.js";
+import { FollowRequest } from "./components/Notifications/FollowRequest.js";
+import { EventInvite } from "./components/Notifications/EventInvite.js";
 export const renderNotifications = () => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Notifications, null), pageContainer);
@@ -11,7 +15,7 @@ export function Notifications() {
   const {
     currentUserId
   } = getCurrentUserId();
-  const [notifications, setNotifications] = useState({});
+  const [notifications, setNotifications] = useState(null);
   useEffect(() => {
     if (currentUserId !== null) {
       fetchNotifications();
@@ -26,29 +30,13 @@ export function Notifications() {
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Notifications"), notifications !== null && Object.keys(notifications).length > 0 ? /*#__PURE__*/React.createElement("ul", null, Object.values(notifications).map((notification, index) => /*#__PURE__*/React.createElement("li", {
     key: index
-  }, /*#__PURE__*/React.createElement(GroupInvite, {
+  }, notification.notificationType === "groupInvite" && /*#__PURE__*/React.createElement(GroupInvite, {
+    notification: notification
+  }), notification.notificationType === "groupRequest" && /*#__PURE__*/React.createElement(GroupRequest, {
+    notification: notification
+  }), notification.notificationType === "eventInvite" && /*#__PURE__*/React.createElement(EventInvite, {
+    notification: notification
+  }), notification.notificationType === "followRequest" && /*#__PURE__*/React.createElement(FollowRequest, {
     notification: notification
   })))) : /*#__PURE__*/React.createElement("div", null, "No notifications"));
-}
-function GroupInvite({
-  notification
-}) {
-  return /*#__PURE__*/React.createElement("div", {
-    id: "GroupInvite",
-    className: "card",
-    style: {
-      maxWidth: "400px"
-    }
-  }, "User ", notification.senderId, " invited you to join Group ", notification.objectId);
-}
-function GroupRequest({
-  notification
-}) {
-  return /*#__PURE__*/React.createElement("div", {
-    id: "GroupRequest",
-    className: "card",
-    style: {
-      maxWidth: "400px"
-    }
-  }, "User ", notification.senderId, " has requested to join Group ", notification.objectId);
 }

@@ -28,7 +28,7 @@ func (h *UserUsersByFollowerIdHandler) ServeHTTP(w http.ResponseWriter, r *http.
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
 
-	case http.MethodPost:
+	case http.MethodGet:
 		h.get(w, r)
 		return
 	case http.MethodDelete:
@@ -43,7 +43,7 @@ func (h *UserUsersByFollowerIdHandler) ServeHTTP(w http.ResponseWriter, r *http.
 
 func (h *UserUsersByFollowerIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	fields := strings.Split(r.URL.Path, "/")
-	followerId, followerIdErr := strconv.Atoi(fields[len(fields)-1])
+	followerId, followerIdErr := strconv.Atoi(fields[len(fields)-2])
 	if followerIdErr != nil {
 		utils.HandleError("Problem with AtoI followerId. ", followerIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

@@ -77,9 +77,10 @@ func addApiHandlers(rt *router.Router) {
 	postsByGroupIdHandler := api.NewPostsByGroupIdHandler(r)
 	messagesByTypeAndTargetIdHandler := api.NewMessagesByTypeAndTargetIdHandler(r)
 	notificationsHandler := api.NewNotificationsHandler(r)
-	// notificationByIdHandler := api.NewNotificationByIdHandler(r)
+	notificationByIdHandler := api.NewNotificationByIdHandler(r)
 	notificationsByUserIdHandler := api.NewNotificationsByUserIdHandler(r)
 	userUsersHandler := api.NewUserUsersHandler(r)
+	userUsersByFollowerIdHandler := api.NewUserUsersByFollowerIdHandler(r)
 	UserUserBySubjectIdAndFollowerIdHandler := api.NewUserUserBySubjectIdAndFollowerIdHandler(r)
 
 	userIdHandler := api.NewUserIdHandler(r)
@@ -141,9 +142,10 @@ func addApiHandlers(rt *router.Router) {
 
 	// // Notification Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/notifications$`), notificationsHandler)
-	// rt.AddHandler(regexp.MustCompile(`^/api/notifications/{notificationId}$`), notificationByIdHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/notifications/[0-9]+$`), notificationByIdHandler)
 	// UserUser Handlers
-	rt.AddHandler(regexp.MustCompile(`^/api/users/[0-9]+/userUsers/$`), userUsersHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/userUsers$`), userUsersHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/users/[0-9]+/userUsers$`), userUsersByFollowerIdHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/users/[0-9]+/userUsers/[0-9]+$`), UserUserBySubjectIdAndFollowerIdHandler)
 
 	rt.AddHandler(regexp.MustCompile(`^/api/userId$`), userIdHandler)

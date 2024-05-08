@@ -1,9 +1,9 @@
-import { getCurrentUserId } from "./shared/getCurrentUserId.js";
-import { PostFormGroup } from "./components/PostFormGroup.js";
-import { EventForm } from "./components/EventForm.js";
-import { GroupDetailsUserList } from "./components/GroupDetailsUserList.js";
-import { PostCard } from "./components/PostCard.js";
-import { GroupDetailsEvents } from "./components/GroupDetailsEvent.js";
+import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js";
+import { PostFormGroup } from "./components/GroupDetail/PostFormGroup.js";
+import { EventForm } from "./components/GroupDetail/EventForm.js";
+import { GroupDetailsUserList } from "./components/GroupDetail/GroupDetailsUserList.js";
+import { PostCard } from "./components/shared/PostCard.js";
+import { GroupDetailsEvents } from "./components/GroupDetail/GroupDetailsEvent.js";
 
 const { useState, useEffect } = React
 
@@ -54,14 +54,7 @@ export function GroupDetails({ group }) {
 					const postsData = await postsResponse.json();
 					const messagesData = await messagesResponse.json();
 					const eventsData = await eventsResponse.json();
-					if (eventsData != null) {
-						for (let i = 0; i < eventsData.length; i++) {
-							const milliseconds = eventsData[i].dateTime;
-							const date = new Date(milliseconds);
-							const formattedDate = date.toLocaleDateString();
-							eventsData[i].dateTime = formattedDate;
-						}
-					}
+					
 
 					setUserList(userListData);
 					setGroupMembers(groupMembersData);
@@ -81,10 +74,11 @@ export function GroupDetails({ group }) {
 
 	}
 
-	// Function to add a new group user
-	async function AddGroupUser(userId, groupId) {
+
+
+	async function AddGroupUser(userId, groupId, notificationType) {
 		const notificationtData = {
-			notificationType: "groupInvite",
+			notificationType: notificationType,
 			objectId: groupId,
 			senderId: currentUserId,
 			status: "pending",
@@ -116,12 +110,6 @@ export function GroupDetails({ group }) {
 			console.error('Error adding group user:', error);
 		}
 	}
-
-	const handleAddToGroup = (userId) => {
-		console.log('Adding user to group with groupId:', group.groupId);
-		console.log('User ID:', userId);
-		AddGroupUser({ groupId: group.groupId, userId: userId }); // Call AddGroupUser function with groupId and userId
-	};
 
 	return (
 		<div className="group-details">
@@ -183,13 +171,13 @@ export function GroupDetails({ group }) {
 							<p>No Messages</p>
 						)}
 					</div>
-					<GroupDetailsEvents groupEvents={groupEvents}/>
+					<GroupDetailsEvents groupEvents={groupEvents} />
 
 				</div>
 			) : (
 				<div>
 					<div>You are not a member yet</div>
-					<button onClick={() => handleAddToGroup(currentUserId)}>Request to join group</button>
+					<button onClick={() => AddGroupUser(group.creatorId, group.groupId, "groupRequest")}>Request to join group</button>
 				</div>
 			)}
 

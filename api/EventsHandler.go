@@ -45,7 +45,7 @@ func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
 	ctime := time.Now().UTC().UnixMilli()
 	event.CreatedAt = ctime
 
-	date, err := time.Parse("2006-01-02", r.PostFormValue("dateTime"))
+	date, err := time.Parse(time.RFC3339, r.PostFormValue("dateTime"))
 	if err != nil {
 		utils.HandleError("Failed to parse dateTime", err)
 		http.Error(w, "Failed to parse dateTime", http.StatusInternalServerError)
@@ -81,15 +81,16 @@ func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
 	log.Println("Received event:", event.Title, event.Description)
 
 	// Create event in the repository
-	result, createErr := h.Repo.CreateEvent(event)
+	eventResult, createErr := h.Repo.CreateEvent(event)
 	if createErr != nil {
 		utils.HandleError("Failed to create event in the repository:", createErr)
 		http.Error(w, "Failed to create event", http.StatusInternalServerError)
 		return
 	}
+
 	newEventUser := models.EventUser{
 		CreatedAt: ctime,
-		EventId:   result.EventId,
+		EventId:   eventResult.EventId,
 		IsGoing:   true,
 		UpdatedAt: ctime,
 		UserId:    user.UserId,
@@ -101,8 +102,31 @@ func (h *EventsHandler) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	groupUsers, err := h.Repo.GetGroupUsersByGroupId(eventResult.GroupId)
+	if err != nil {
+		utils.HandleError("Problem with getting groupUsers in EventsHandler. ", err)
+		http.Error(w, "Internal Server Error, Problem with getting groupUsers in EventsHandler", http.StatusInternalServerError)
+		return
+	}
+
+	for i := 0; i < len(groupUsers); i++ {
+		if groupUsers[i].UserId == user.UserId {
+			continue
+		}
+		notification := models.Notification{
+			CreatedAt:        ctime,
+			NotificationType: "eventInvite",
+			ObjectId:         eventResult.EventId,
+			SenderId:         user.UserId,
+			Status:           "pending",
+			TargetId:         groupUsers[i].UserId,
+			UpdatedAt:        ctime,
+		}
+		h.Repo.CreateNotification(notification)
+	}
+
 	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode(result)
+	err = json.NewEncoder(w).Encode(eventResult)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

@@ -110,14 +110,14 @@ func (h *UsersHandler) post(w http.ResponseWriter, r *http.Request) {
 
 func (h *UsersHandler) get(w http.ResponseWriter) {
 
-	userUsers, err := h.Repo.GetAllUsers()
+	users, err := h.Repo.GetAllUsers()
 	if err != nil {
 		utils.HandleError("Failed to get all Users. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(userUsers)
+	err = json.NewEncoder(w).Encode(users)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
