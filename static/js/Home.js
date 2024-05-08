@@ -7,7 +7,6 @@ import { PostForm } from "./components/Home/PostForm.js";
 import { PostCard } from "./components/shared/PostCard.js";
 import { FollowButton } from "./components/shared/FollowButton.js";
 import { renderProfile } from "./Profile.js";
-import { Chat } from "./Chat.js";
 export const renderHome = ({
   socket
 }) => {
@@ -49,8 +48,17 @@ export function Home({
         }
         const userListData = await userListResponse.json();
         const followedUsersList = await followedUserListResponse.json();
-        setUserList2(userListData);
+
+        // Filter the userListData to get followed users
         const filteredFollowedUsers = userListData.filter(user => followedUsersList.some(followedUser => followedUser.subjectId === user.userId));
+
+        // Add isFollowed property to each user where userId matches subjectId
+        const updatedUserListData = userListData.map(user => ({
+          ...user,
+          isFollowed: followedUsersList.some(followedUser => followedUser.subjectId === user.userId)
+        }));
+        console.log("updatedUserListData", updatedUserListData);
+        setUserList2(updatedUserListData);
         setFollowedUsersList(filteredFollowedUsers);
       } catch (error) {
         console.error('Error fetching group data:', error);
