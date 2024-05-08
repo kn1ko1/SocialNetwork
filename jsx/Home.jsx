@@ -52,7 +52,12 @@ export function Home({ socket }) {
 				// setGroupMembers(groupMembersData);
 				console.log("UserListData2", userListData)
 				console.log("followedUserList", followedUsersList)
-
+				const filteredFollowedUsers = userList2.filter(user =>
+					followedUsersList.some(followedUser => followedUser.subjectId === user.userId)
+				);
+			
+				setFollowedUsersList(filteredFollowedUsers);
+				console.log("filteredFollowedUsers", filteredFollowedUsers)
 			} catch (error) {
 				console.error('Error fetching group data:', error);
 			}
@@ -78,16 +83,6 @@ export function Home({ socket }) {
 				console.error("Error fetching data:", error)
 			})
 	}, [])
-
-	useEffect(() => {
-		// Filter userList to get only the followed users
-		const filteredFollowedUsers = userList2.filter(user =>
-			followedUsersList.some(followedUser => followedUser.userId === user.userId)
-		);
-	
-		// Set the filtered list to followedUsers state
-		setFollowedUsersList(filteredFollowedUsers);
-	}, [userList, followedUsersList])
 
 
 	return (
