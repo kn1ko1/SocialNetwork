@@ -49,7 +49,6 @@ export function Home({ socket }) {
 				const followedUsersList = await followedUserListResponse.json();
 
 				setUserList2(userListData);
-				// setGroupMembers(groupMembersData);
 				console.log("UserListData2", userListData)
 				console.log("followedUserList", followedUsersList)
 				const filteredFollowedUsers = userListData.filter(user =>
