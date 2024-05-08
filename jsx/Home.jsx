@@ -52,7 +52,7 @@ export function Home({ socket }) {
 				// setGroupMembers(groupMembersData);
 				console.log("UserListData2", userListData)
 				console.log("followedUserList", followedUsersList)
-				const filteredFollowedUsers = userList2.filter(user =>
+				const filteredFollowedUsers = userListData.filter(user =>
 					followedUsersList.some(followedUser => followedUser.subjectId === user.userId)
 				);
 			

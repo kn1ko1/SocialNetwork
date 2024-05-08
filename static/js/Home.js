@@ -53,7 +53,7 @@ export function Home({
         // setGroupMembers(groupMembersData);
         console.log("UserListData2", userListData);
         console.log("followedUserList", followedUsersList);
-        const filteredFollowedUsers = userList2.filter(user => followedUsersList.some(followedUser => followedUser.subjectId === user.userId));
+        const filteredFollowedUsers = userListData.filter(user => followedUsersList.some(followedUser => followedUser.subjectId === user.userId));
         setFollowedUsersList(filteredFollowedUsers);
         console.log("filteredFollowedUsers", filteredFollowedUsers);
       } catch (error) {
