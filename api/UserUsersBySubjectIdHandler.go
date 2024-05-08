@@ -28,7 +28,7 @@ func (h *UserUsersBySubjectIdHandler) ServeHTTP(w http.ResponseWriter, r *http.R
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
 
-	case http.MethodPost:
+	case http.MethodGet:
 		h.get(w, r)
 		return
 	case http.MethodDelete:

@@ -1,5 +1,7 @@
 import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js"
-const { useState } = React
+import { fetchUsername } from "./components/shared/FetchUsername.js"
+import { fetchGroupName } from "./components/shared/FetchGroupName.js"
+const { useState, useEffect } = React
 
 const GROUP_CHAT_MESSAGE = 1
 const PRIVATE_MESSAGE = 2
@@ -19,6 +21,7 @@ export function Chat({ socket }) {
 	const [usersIFollow, setUsersIFollow] = useState([]);
 	const [usersFollowMe, setUsersFollowMe] = useState([]);
 	const [groupsPartOf, setGroupsPartOf] = useState([]);
+	const [uniqueUsernames, setUniqueUsernames] = useState([]);
 
 	let messages = document.getElementById("messages")
 
@@ -32,40 +35,52 @@ export function Chat({ socket }) {
 
 				const results = await Promise.all(promises);
 
-				const usersIFollow = results[0]
-				const usersFollowMe = results[1]
-				const groupsPartOf = results[2]
+				const userUsersIFollowResponse = results[0]
+				const userUsersFollowMeResponse = results[1]
+				const groupsPartOfResponse = results[2]
 
-				if (!usersIFollow.ok) {
+				if (!userUsersIFollowResponse.ok) {
 					throw new Error('Failed to fetch usersIFollow list');
 				}
-				if (!usersFollowMe.ok) {
+				if (!userUsersFollowMeResponse.ok) {
 					throw new Error('Failed to fetch usersFollowMe list');
 				}
-				if (!groupsPartOf.ok) {
+				if (!groupsPartOfResponse.ok) {
 					throw new Error('Failed to fetch groupsPartOf list');
 				}
 
-				const usersIFollowData = await usersIFollowResponse.json();
-				const usersFollowMeData = await usersFollowMeResponse.json();
+				const userUsersIFollowData = await userUsersIFollowResponse.json();
+				const userUsersFollowMeData = await userUsersFollowMeResponse.json();
 				const groupsPartOfData = await groupsPartOfResponse.json();
 
-				setUsersIFollow(usersIFollowData);
-				setUsersFollowMe(usersFollowMeData);
-				setGroupsPartOf(groupsPartOfData);
+ // Extract usernames from userUsersIFollowData and usersFollowMeData
+ const usersIFollowUsernames = await Promise.all(userUsersIFollowData.map(userUser => fetchUsername(userUser.subjectId)));
+ const usersFollowMeUsernames = await Promise.all(userUsersFollowMeData.map(userFollower => fetchUsername(userFollower.subjectId)));
+ const groupsPartOfGroupNames = await Promise.all(groupsPartOfData.map(group => fetchGroupName(group.groupId)));
 
-				console.log("usersIFollowData:", usersIFollowData)
-				console.log("usersFollowMeData:", usersFollowMeData)
-				console.log("groupsPartOfData:", groupsPartOfData)
+ // Update the state with the extracted usernames
+ setUsersIFollow(usersIFollowUsernames);
+ setUsersFollowMe(usersFollowMeUsernames);
+ setGroupsPartOf(groupsPartOfGroupNames);
+ 
+
+const uniqueUsernames = Array.from(new Set([...usersIFollowUsernames, ...usersFollowMeUsernames]));
+setUniqueUsernames(uniqueUsernames);
+
+console.log("Unique Usernames:", uniqueUsernames);
+console.log("groupsPartOfGroupNames:", groupsPartOfGroupNames);
 
 			} catch (error) {
 				console.error('Error fetching possible chat options list:', error);
 			}
 		};
 
+	if (currentUserId !== null){
 		fetchUserAndGroupData();
-	}, []);
+	}
+	}, [currentUserId]);
 
+	
 	const handleMessages = (e) => {
 		setSendMessage(e.target.value)
 	}
@@ -101,7 +116,21 @@ export function Chat({ socket }) {
 		<div>
 			<h1>Chat</h1>
 			<h3>Users</h3>
+			<ul>
+            {uniqueUsernames.map((username, index) => (
+                <li key={index}>
+					 <a href="#" >{username}</a>
+					 </li>
+            ))}
+        </ul>
 			<h3>Groups</h3>
+			<ul>
+            {groupsPartOf.map((groupName, index) => (
+                <li key={index}>
+					 <a href="#" >{groupName}</a>
+				</li>
+            ))}
+        </ul>
 			<ul id="messages" style={messageStyle}></ul>
 			<form id="chatbox" onSubmit={handleSubmit}>
 				<textarea onChange={handleMessages}></textarea>
@@ -112,3 +141,4 @@ export function Chat({ socket }) {
 		</div>
 	)
 }
+
