@@ -7,6 +7,7 @@ export function FollowButton({ followerId, user }) {
 	}, [user.isFollowed])
 
 	const handleFollowToggle = async () => {
+
 		if (isFollowing) {
 			// If already following, unfollow the user
 			await handleUnfollow(followerId, user.userId)
@@ -27,7 +28,7 @@ export function FollowButton({ followerId, user }) {
 
 	const handleFollowPublic = async (followerId, userId) => {
 		try {
-			const bodyData = { followerId, userId };
+			const bodyData = { followerId, subjectId: userId };
 			const response = await fetch(
 				`http://localhost:8080/api/userUsers`,
 				{
@@ -50,69 +51,7 @@ export function FollowButton({ followerId, user }) {
 		return false // Return false if the follow request fails
 	}
 
-	async function AddGroupUser(userId, groupId, notificationType) {
 
-
-		console.log('notificationtData:', notificationtData);
-
-		try {
-			const response = await fetch('http://localhost:8080/api/notifications', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(notificationtData)
-			});
-
-			console.log('Response:', response);
-
-
-			if (response.ok) {
-				// Handle success response
-				console.log('Group user added successfully!');
-			} else {
-				// Handle error response
-				console.error('Failed to add group user:', response.statusText);
-			}
-		} catch (error) {
-			console.error('Error adding group user:', error);
-		}
-	}
-
-
-	const handleFollowPrivate = async (followerId, userId) => {
-		const notificationtData = {
-			notificationType: "followRequest",
-			objectId: followerId,
-			senderId: followerId,
-			status: "pending",
-			targetId: userId,
-		};
-		console.log('notificationtData:', notificationtData);
-
-		try {
-			const response = await fetch('http://localhost:8080/api/notifications', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(notificationtData)
-			});
-
-			console.log('Response:', response);
-
-
-			if (response.ok) {
-				// Handle success response
-				console.log('Follow notification added successfully!');
-			} else {
-				// Handle error response
-				console.error('Failed to send follow notification:', response.statusText);
-			}
-		} catch (error) {
-			console.error('Error adding group user:', error);
-		}
-	}
 
 	const handleUnfollow = async (followerId, userId) => {
 		try {

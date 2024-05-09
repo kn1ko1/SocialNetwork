@@ -29,9 +29,18 @@ export function Notifications() {
 			})
 			.catch((error) => {
 				console.error("Error fetching notifications data:", error);
-			});
+			});console.log("notifications:", data)
 	};
 
+	const handleNotificationResponse = (notificationId) => {
+		console.log("notificationId", notificationId)
+		// Filter out the notification with the given ID from notifications state
+		const updatedNotifications = notifications.filter(
+			(notification) => notification.notificationId !== notificationId
+		);
+		// Update notifications state with the filtered notifications
+		setNotifications(updatedNotifications);
+	};
 
 	return (
 		<div>
@@ -40,10 +49,22 @@ export function Notifications() {
 				<ul>
 					{Object.values(notifications).map((notification, index) => (
 						<li key={index}>
-							{notification.notificationType === "groupInvite" && <GroupInvite notification={notification} />}
-							{notification.notificationType === "groupRequest" && <GroupRequest notification={notification} />}
-							{notification.notificationType === "eventInvite" && <EventInvite notification={notification} />}
-							{notification.notificationType === "followRequest" && <FollowRequest notification={notification} />}
+							{notification.notificationType === "groupInvite" && <GroupInvite
+								notification={notification}
+								onNotificationResponse={handleNotificationResponse}
+							/>}
+							{notification.notificationType === "groupRequest" && <GroupRequest
+								notification={notification}
+								onNotificationResponse={handleNotificationResponse}
+							/>}
+							{notification.notificationType === "eventInvite" && <EventInvite
+								notification={notification}
+								onNotificationResponse={handleNotificationResponse}
+							/>}
+							{notification.notificationType === "followRequest" && <FollowRequest
+								notification={notification}
+								onNotificationResponse={handleNotificationResponse}
+							/>}
 						</li>
 					))}
 				</ul>

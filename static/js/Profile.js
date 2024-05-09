@@ -29,10 +29,10 @@ export function Profile({
     fetchProfileData();
   }, [userId]);
   useEffect(() => {
-    if (!isPublicValue && !isEditable && currentUserId) {
+    if (!isEditable && currentUserId) {
       checkIfFollowed(currentUserId);
     }
-  }, [isPublicValue, isEditable, currentUserId]);
+  }, [profileUserData]);
   const fetchProfileData = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/profile/${userId}`, {
@@ -45,15 +45,11 @@ export function Profile({
         throw new Error(`Failed to fetch profile data: ${response.status} ${response.statusText}`);
       }
       const data = await response.json();
-      const updatedProfileUserData = {
-        ...data.profileUserData,
-        isFollowed: data.isFollowed
-      };
-      setProfileUserData(updatedProfileUserData);
+      setProfileUserData(data.profileUserData);
       setUserPostData(data.userPostData || []);
       setUserFollowerData(data.userFollowerData || []);
       setUserFollowsData(data.userFollowsData || []);
-      setIsPublicValue(updatedProfileUserData.isPublic);
+      setIsPublicValue(data.profileUserData.isPublic);
     } catch (error) {
       console.error("Error fetching profile data:", error);
     }
@@ -67,10 +63,22 @@ export function Profile({
         }
       });
       if (response.ok) {
+        const updatedProfileUserData = {
+          ...profileUserData,
+          isFollowed: true
+        };
+        setProfileUserData(updatedProfileUserData);
+        console.log("updatedProfileUserData", updatedProfileUserData);
         setIsFollowed(true);
         console.log("checkIfFollowed.  isFollowed", isFollowed);
         console.log("response", response);
       } else if (response.status === 404) {
+        const updatedProfileUserData = {
+          ...profileUserData,
+          isFollowed: false
+        };
+        console.log("updatedProfileUserData", updatedProfileUserData);
+        setProfileUserData(updatedProfileUserData);
         setIsFollowed(false);
         console.log("checkIfFollowed.  isFollowed", isFollowed);
       } else {

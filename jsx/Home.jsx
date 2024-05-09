@@ -34,8 +34,8 @@ export function Home({ socket }) {
 
 				const results = await Promise.all(promises);
 
-				const userListResponse = results[0]
-				const followedUserListResponse = results[1]
+				const userListResponse = results[0];
+				const followedUserListResponse = results[1];
 
 				if (!userListResponse.ok) {
 					throw new Error('Failed to fetch user list');
@@ -45,46 +45,42 @@ export function Home({ socket }) {
 				}
 
 				const userListData = await userListResponse.json();
-				const followedUsersList = await followedUserListResponse.json();
+				let followedUsersList = await followedUserListResponse.json();
 
-				// Filter the userListData to get followed users
-				const filteredFollowedUsers = userListData.filter(user =>
-					followedUsersList.some(followedUser => followedUser.subjectId === user.userId)
-				);
+				let filteredFollowedUsers = null;
+				let updatedUserListData = userListData;
 
-				// Add isFollowed property to each user where userId matches subjectId
-				const updatedUserListData = userListData.map(user => ({
-					...user,
-					isFollowed: followedUsersList.some(followedUser => followedUser.subjectId === user.userId)
-				}));
-				console.log("updatedUserListData", updatedUserListData)
+				if (followedUsersList != null) {
+					filteredFollowedUsers = userListData.filter(user =>
+						followedUsersList.some(followedUser => followedUser.subjectId === user.userId)
+					);
+
+					// Add isFollowed property to each user where userId matches subjectId
+					updatedUserListData = userListData.map(user => ({
+						...user,
+						isFollowed: followedUsersList.some(followedUser => followedUser.subjectId === user.userId)
+					}));
+				} else {
+					// If followedUsersList is null, set isFollowed to false for every user
+					updatedUserListData = userListData.map(user => ({
+						...user,
+						isFollowed: false
+					}));
+				}
+
 				setUserList2(updatedUserListData);
+				console.log("updatedUserListData", updatedUserListData)
 				setFollowedUsersList(filteredFollowedUsers);
+				console.log("filteredFollowedUsers", filteredFollowedUsers)
 			} catch (error) {
 				console.error('Error fetching group data:', error);
 			}
 		};
-		if (currentUserId !== null) {
-			fetchUserData();
+		if (currentUserId != null) {
+			fetchUserData()
 		}
-
-
-	}, [currentUserId]);
-
-	useEffect(() => {
-		fetch("http://localhost:8080/api/home")
-			.then((response) => response.json())
-			.then((data) => {
-				setUserList(data.userList)
-				setAlmostPrivatePosts(data.almostPrivatePosts)
-				setPrivatePosts(data.privatePosts)
-				setPublicPostsWithComments(data.publicPostsWithComments)
-				setUserGroups(data.userGroups)
-			})
-			.catch((error) => {
-				console.error("Error fetching data:", error)
-			})
-	}, [])
+		
+	}, [currentUserId])
 
 
 	return (
@@ -122,8 +118,8 @@ export function Home({ socket }) {
 					</div>
 					<div class="col-6">
 
-	{/* Rendering Public Posts */}
-	<div className="publicPostsWithComments">
+						{/* Rendering Public Posts */}
+						<div className="publicPostsWithComments">
 							<h2>Public Posts</h2>
 							{publicPostsWithComments !== null &&
 								publicPostsWithComments.length > 0 ? (
@@ -180,7 +176,6 @@ export function Home({ socket }) {
 									userGroups.map((userGroup) => (
 										<li key={userGroup.createdAt}>
 											{userGroup.title}
-											onClick={() => renderProfile(user.userId)}
 
 										</li>
 									))}

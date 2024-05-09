@@ -6,12 +6,19 @@ import { fetchUsername } from "../shared/FetchUsername.js";
 import { respondToNotification } from "./RespondToNotification.js";
 import { notificationCardStyle } from "./NotificationCardStyle.js";
 export function FollowRequest({
-  notification
+  notification,
+  onNotificationResponse
 }) {
   const [username, setUsername] = useState("");
   useEffect(() => {
     fetchUsername(notification.senderId).then(username => setUsername(username));
   }, [notification.senderId]);
+  const handleNotificationResponse = async responseType => {
+    // Call the respondToNotification function to handle the response
+    respondToNotification(responseType, notification);
+    // Call the parent component's callback to remove this notification
+    onNotificationResponse(notification.notificationId);
+  };
   return /*#__PURE__*/React.createElement("div", {
     id: notification.notificationType,
     style: notificationCardStyle,
@@ -23,8 +30,8 @@ export function FollowRequest({
   }, username, " has requested to follow you"), /*#__PURE__*/React.createElement("div", {
     className: "col-auto d-flex align-items-center"
   }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => respondToNotification("confirm", notification)
+    onClick: () => handleNotificationResponse("confirm")
   }, "\u2713"), /*#__PURE__*/React.createElement("button", {
-    onClick: () => respondToNotification("deny", notification)
+    onClick: () => handleNotificationResponse("deny")
   }, "\u2717"))));
 }

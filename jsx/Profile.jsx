@@ -25,10 +25,13 @@ export function Profile({ userId, isEditable }) {
 	}, [userId])
 
 	useEffect(() => {
-		if (!isPublicValue && !isEditable && currentUserId) {
-			checkIfFollowed(currentUserId)
-		}
-	}, [isPublicValue, isEditable, currentUserId])
+		
+			if (
+				!isEditable && currentUserId) {
+				checkIfFollowed(currentUserId)
+			}
+
+	}, [profileUserData])
 
 	const fetchProfileData = async () => {
 		try {
@@ -49,15 +52,12 @@ export function Profile({ userId, isEditable }) {
 			}
 
 			const data = await response.json();
-			const updatedProfileUserData = {
-				...data.profileUserData,
-				isFollowed: data.isFollowed,
-			};
-			setProfileUserData(updatedProfileUserData);
+
+			setProfileUserData(data.profileUserData);
 			setUserPostData(data.userPostData || []);
 			setUserFollowerData(data.userFollowerData || []);
 			setUserFollowsData(data.userFollowsData || []);
-			setIsPublicValue(updatedProfileUserData.isPublic);
+			setIsPublicValue(data.profileUserData.isPublic);
 		} catch (error) {
 			console.error("Error fetching profile data:", error)
 		}
@@ -76,10 +76,23 @@ export function Profile({ userId, isEditable }) {
 			)
 
 			if (response.ok) {
+				const updatedProfileUserData = {
+					...profileUserData,
+					isFollowed: true,
+				};
+				setProfileUserData(updatedProfileUserData);
+				console.log("updatedProfileUserData", updatedProfileUserData)
 				setIsFollowed(true)
 				console.log("checkIfFollowed.  isFollowed", isFollowed)
 				console.log("response", response)
 			} else if (response.status === 404) {
+				const updatedProfileUserData = {
+					...profileUserData,
+					isFollowed: false,
+				};
+				console.log("updatedProfileUserData", updatedProfileUserData)
+
+				setProfileUserData(updatedProfileUserData);
 				setIsFollowed(false)
 				console.log("checkIfFollowed.  isFollowed", isFollowed)
 			} else {
@@ -123,7 +136,7 @@ export function Profile({ userId, isEditable }) {
 				{!isEditable && (
 					<FollowButton
 						followerId={currentUserId}
-						user={ profileUserData }
+						user={profileUserData}
 					/>
 				)}
 				{isPublicValue || isEditable || isFollowed ? (

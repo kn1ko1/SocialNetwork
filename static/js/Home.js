@@ -47,38 +47,36 @@ export function Home({
           throw new Error('Failed to fetch followed users list');
         }
         const userListData = await userListResponse.json();
-        const followedUsersList = await followedUserListResponse.json();
+        let followedUsersList = await followedUserListResponse.json();
+        let filteredFollowedUsers = null;
+        let updatedUserListData = userListData;
+        if (followedUsersList != null) {
+          filteredFollowedUsers = userListData.filter(user => followedUsersList.some(followedUser => followedUser.subjectId === user.userId));
 
-        // Filter the userListData to get followed users
-        const filteredFollowedUsers = userListData.filter(user => followedUsersList.some(followedUser => followedUser.subjectId === user.userId));
-
-        // Add isFollowed property to each user where userId matches subjectId
-        const updatedUserListData = userListData.map(user => ({
-          ...user,
-          isFollowed: followedUsersList.some(followedUser => followedUser.subjectId === user.userId)
-        }));
-        console.log("updatedUserListData", updatedUserListData);
+          // Add isFollowed property to each user where userId matches subjectId
+          updatedUserListData = userListData.map(user => ({
+            ...user,
+            isFollowed: followedUsersList.some(followedUser => followedUser.subjectId === user.userId)
+          }));
+        } else {
+          // If followedUsersList is null, set isFollowed to false for every user
+          updatedUserListData = userListData.map(user => ({
+            ...user,
+            isFollowed: false
+          }));
+        }
         setUserList2(updatedUserListData);
+        console.log("updatedUserListData", updatedUserListData);
         setFollowedUsersList(filteredFollowedUsers);
+        console.log("filteredFollowedUsers", filteredFollowedUsers);
       } catch (error) {
         console.error('Error fetching group data:', error);
       }
     };
-    if (currentUserId !== null) {
+    if (currentUserId != null) {
       fetchUserData();
     }
   }, [currentUserId]);
-  useEffect(() => {
-    fetch("http://localhost:8080/api/home").then(response => response.json()).then(data => {
-      setUserList(data.userList);
-      setAlmostPrivatePosts(data.almostPrivatePosts);
-      setPrivatePosts(data.privatePosts);
-      setPublicPostsWithComments(data.publicPostsWithComments);
-      setUserGroups(data.userGroups);
-    }).catch(error => {
-      console.error("Error fetching data:", error);
-    });
-  }, []);
   return /*#__PURE__*/React.createElement("main", {
     className: "homePage"
   }, /*#__PURE__*/React.createElement(PostForm, {
@@ -130,7 +128,7 @@ export function Home({
     className: "userGroups"
   }, /*#__PURE__*/React.createElement("h2", null, "Groups"), /*#__PURE__*/React.createElement("ul", null, userGroups !== null && userGroups.map(userGroup => /*#__PURE__*/React.createElement("li", {
     key: userGroup.createdAt
-  }, userGroup.title, "onClick=", () => renderProfile(user.userId)))))), /*#__PURE__*/React.createElement("div", {
+  }, userGroup.title))))), /*#__PURE__*/React.createElement("div", {
     class: "col-3"
   }))));
 }
