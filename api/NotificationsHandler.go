@@ -46,9 +46,10 @@ func (h *NotificationsHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
-	log.Println("Received notification type:", notification.NotificationType, "for user: ", notification.TargetId)
 	notification.CreatedAt = ctime
 	notification.UpdatedAt = ctime
+	log.Println("[api/NotificationsHandler] Received notification:", notification)
+
 	// // Validate the event
 	if validationErr := notification.Validate(); validationErr != nil {
 		utils.HandleError("Validation failed:", validationErr)
@@ -56,10 +57,59 @@ func (h *NotificationsHandler) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Create event in the repository
-	result, createErr := h.Repo.CreateNotification(notification)
-	if createErr != nil {
-		utils.HandleError("Failed to create notification in the repository:", createErr)
+	// var result any
+	// switch notification.NotificationType {
+	// case "groupInvite":
+	// 	log.Println("groupInvite")
+	// 	// Create event in the repository
+	// 	result, err = h.Repo.CreateNotification(notification)
+	// 	if err != nil {
+	// 		utils.HandleError("Failed to create notification in the repository:", err)
+	// 		http.Error(w, "Failed to create notification", http.StatusInternalServerError)
+	// 		return
+	// 	}
+	// case "groupRequest":
+	// 	log.Println("groupRequest")
+	// 	// Create event in the repository
+	// 	log.Println("groupInvite")
+	// 	// Create event in the repository
+	// 	result, err = h.Repo.CreateNotification(notification)
+	// 	if err != nil {
+	// 		utils.HandleError("Failed to create notification in the repository:", err)
+	// 		http.Error(w, "Failed to create notification", http.StatusInternalServerError)
+	// 		return
+	// 	}
+	// case "eventInvite":
+	// 	log.Println("eventInvite")
+	// 	groupUsers, groupUsersErr := h.Repo.GetGroupUsersByGroupId(notification.ObjectId)
+	// 	if groupUsersErr != nil {
+	// 		utils.HandleError("Failed to get groupUsers in NotificationsHandler:", err)
+	// 		http.Error(w, "Failed to get groupUsers in NotificationsHandler", http.StatusInternalServerError)
+	// 		return
+	// 	}
+
+	// 	for i := 0; i < len(groupUsers); i++ {
+	// 		notification.TargetId = groupUsers[i].UserId
+	// 		result, err = h.Repo.CreateNotification(notification)
+	// 		if err != nil {
+	// 			utils.HandleError("Failed to create notification in the repository:", err)
+	// 			http.Error(w, "Failed to create notification", http.StatusInternalServerError)
+	// 			return
+	// 		}
+	// 	}
+	// case "followRequest":
+	// 	log.Println("groupInvite")
+	// 	// Create event in the repository
+	// 	result, err = h.Repo.CreateNotification(notification)
+	// 	if err != nil {
+	// 		utils.HandleError("Failed to create notification in the repository:", err)
+	// 		http.Error(w, "Failed to create notification", http.StatusInternalServerError)
+	// 		return
+	// 	}
+	// }
+	result, err := h.Repo.CreateNotification(notification)
+	if err != nil {
+		utils.HandleError("Failed to create notification in the repository:", err)
 		http.Error(w, "Failed to create notification", http.StatusInternalServerError)
 		return
 	}

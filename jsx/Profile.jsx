@@ -25,12 +25,10 @@ export function Profile({ userId, isEditable }) {
 	}, [userId])
 
 	useEffect(() => {
-		
 			if (
 				!isEditable && currentUserId) {
 				checkIfFollowed(currentUserId)
 			}
-
 	}, [profileUserData])
 
 	const fetchProfileData = async () => {

@@ -26,10 +26,11 @@ export function Notifications() {
 			.then((response) => response.json())
 			.then((data) => {
 				setNotifications(data);
+				console.log("notifications:", data)
 			})
 			.catch((error) => {
 				console.error("Error fetching notifications data:", error);
-			});console.log("notifications:", data)
+			});
 	};
 
 	const handleNotificationResponse = (notificationId) => {

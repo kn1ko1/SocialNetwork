@@ -24,10 +24,10 @@ export function Notifications() {
   const fetchNotifications = () => {
     fetch(`http://localhost:8080/api/users/${currentUserId}/notifications`).then(response => response.json()).then(data => {
       setNotifications(data);
+      console.log("notifications:", data);
     }).catch(error => {
       console.error("Error fetching notifications data:", error);
     });
-    console.log("notifications:", data);
   };
   const handleNotificationResponse = notificationId => {
     console.log("notificationId", notificationId);
