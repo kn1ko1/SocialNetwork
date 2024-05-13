@@ -1,5 +1,5 @@
 const { useState } = React
-
+import { GroupDetails } from "../../GroupDetails.js";
 export function PostFormGroup({ group }) {
 	const [body, setBody] = useState("");
 	const [selectedFile, setSelectedFile] = useState(null);

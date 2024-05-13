@@ -1,6 +1,7 @@
 const {
   useState
 } = React;
+import { GroupDetails } from "../../GroupDetails.js";
 export function PostFormGroup({
   group
 }) {
