@@ -30,6 +30,7 @@ export function Chat({
   const [uniqueUsernames, setUniqueUsernames] = useState([]);
   let messages = document.getElementById("messages");
   useEffect(() => {
+    console.log("currentUserId", currentUserId);
     const fetchUserAndGroupData = async () => {
       try {
         const promises = [];
@@ -47,27 +48,39 @@ export function Chat({
           throw new Error('Failed to fetch usersFollowMe list');
         }
         if (!groupsPartOfResponse.ok) {
-          if (!groupsPartOfResponse.ok) {
-            throw new Error('Failed to fetch groupsPartOf list');
-          }
-          const userUsersIFollowData = await userUsersIFollowResponse.json();
-          const userUsersFollowMeData = await userUsersFollowMeResponse.json();
-          const groupsPartOfData = await groupsPartOfResponse.json();
-
-          // Extract usernames from userUsersIFollowData and usersFollowMeData
-          const usersIFollowUsernames = await Promise.all(userUsersIFollowData.map(userUser => fetchUsername(userUser.subjectId)));
-          const usersFollowMeUsernames = await Promise.all(userUsersFollowMeData.map(userFollower => fetchUsername(userFollower.subjectId)));
-          const groupsPartOfGroupNames = await Promise.all(groupsPartOfData.map(group => fetchGroupName(group.groupId)));
-
-          // Update the state with the extracted usernames
-          setUsersIFollow(usersIFollowUsernames);
-          setUsersFollowMe(usersFollowMeUsernames);
-          setGroupsPartOf(groupsPartOfGroupNames);
-          const uniqueUsernames = Array.from(new Set([...usersIFollowUsernames, ...usersFollowMeUsernames]));
-          setUniqueUsernames(uniqueUsernames);
-          console.log("Unique Usernames:", uniqueUsernames);
-          console.log("groupsPartOfGroupNames:", groupsPartOfGroupNames);
+          throw new Error('Failed to fetch groupsPartOf list');
         }
+        const userUsersIFollowData = await userUsersIFollowResponse.json();
+        const userUsersFollowMeData = await userUsersFollowMeResponse.json();
+        const groupsPartOfData = await groupsPartOfResponse.json();
+        let usersIFollowUsernames = null;
+        // Extract usernames from userUsersIFollowData and usersFollowMeData
+        if (userUsersIFollowData != null) {
+          usersIFollowUsernames = await Promise.all(userUsersIFollowData.map(userUser => fetchUsername(userUser.subjectId)));
+        }
+        let usersFollowMeUsernames = null;
+        if (userUsersFollowMeData != null) {
+          usersFollowMeUsernames = await Promise.all(userUsersFollowMeData.map(userFollower => fetchUsername(userFollower.subjectId)));
+        }
+        let groupsPartOfGroupNames = null;
+        if (userUsersIFollowData != null) {
+          groupsPartOfGroupNames = await Promise.all(groupsPartOfData.map(group => fetchGroupName(group.groupId)));
+        }
+        // Update the state with the extracted usernames
+        setUsersIFollow(usersIFollowUsernames);
+        setUsersFollowMe(usersFollowMeUsernames);
+        setGroupsPartOf(groupsPartOfGroupNames);
+        let uniqueUsernames = null;
+        if (usersIFollowUsernames != null & usersFollowMeUsernames != null) {
+          uniqueUsernames = Array.from(new Set([...usersIFollowUsernames, ...usersFollowMeUsernames]));
+        } else if (usersIFollowUsernames == null) {
+          uniqueUsernames = usersFollowMeUsernames;
+        } else if (usersFollowMeUsernames == null) {
+          uniqueUsernames = usersIFollowUsernames;
+        }
+        setUniqueUsernames(uniqueUsernames);
+        console.log("Unique Usernames:", uniqueUsernames);
+        console.log("groupsPartOfGroupNames:", groupsPartOfGroupNames);
       } catch (error) {
         console.error('Error fetching possible chat options list:', error);
       }
@@ -106,15 +119,15 @@ export function Chat({
   const messageStyle = {
     color: "orange"
   };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Chat"), /*#__PURE__*/React.createElement("h3", null, "Users"), /*#__PURE__*/React.createElement("ul", null, uniqueUsernames.map((username, index) => /*#__PURE__*/React.createElement("li", {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Chat"), /*#__PURE__*/React.createElement("h3", null, "Users"), uniqueUsernames && uniqueUsernames.length > 0 ? /*#__PURE__*/React.createElement("ul", null, uniqueUsernames.map((username, index) => /*#__PURE__*/React.createElement("li", {
     key: index
   }, /*#__PURE__*/React.createElement("a", {
     href: "#"
-  }, username)))), /*#__PURE__*/React.createElement("h3", null, "Groups"), /*#__PURE__*/React.createElement("ul", null, groupsPartOf.map((groupName, index) => /*#__PURE__*/React.createElement("li", {
+  }, username)))) : /*#__PURE__*/React.createElement("p", null, "You're not following/followed by any users"), /*#__PURE__*/React.createElement("h3", null, "Groups"), groupsPartOf && groupsPartOf.length > 0 ? /*#__PURE__*/React.createElement("ul", null, groupsPartOf.map((groupName, index) => /*#__PURE__*/React.createElement("li", {
     key: index
   }, /*#__PURE__*/React.createElement("a", {
     href: "#"
-  }, groupName)))), /*#__PURE__*/React.createElement("ul", {
+  }, groupName)))) : /*#__PURE__*/React.createElement("p", null, "You're not part of any groups"), /*#__PURE__*/React.createElement("ul", {
     id: "messages",
     style: messageStyle
   }), /*#__PURE__*/React.createElement("form", {
@@ -127,3 +140,4 @@ export function Chat({
     className: "btn btn-primary"
   }, "send")));
 }
+;

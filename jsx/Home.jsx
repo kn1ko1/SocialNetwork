@@ -31,11 +31,13 @@ export function Home({ socket }) {
 				const promises = [];
 				promises.push(fetch(`http://localhost:8080/api/users`));
 				promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/userUsers`));
+				// promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/posts`));
 
 				const results = await Promise.all(promises);
 
 				const userListResponse = results[0];
 				const followedUserListResponse = results[1];
+				// const allPostsResponse = results[2];
 
 				if (!userListResponse.ok) {
 					throw new Error('Failed to fetch user list');
@@ -43,6 +45,9 @@ export function Home({ socket }) {
 				if (!followedUserListResponse.ok) {
 					throw new Error('Failed to fetch followed users list');
 				}
+				// if (!allPostsResponse.ok) {
+				// 	throw new Error('Failed to fetch all posts available to user');
+				// }
 
 				const userListData = await userListResponse.json();
 				let followedUsersList = await followedUserListResponse.json();
@@ -79,9 +84,23 @@ export function Home({ socket }) {
 		if (currentUserId != null) {
 			fetchUserData()
 		}
-		
+
 	}, [currentUserId])
 
+	useEffect(() => {
+		fetch("http://localhost:8080/api/home")
+			.then((response) => response.json())
+			.then((data) => {
+				setUserList(data.userList)
+				setAlmostPrivatePosts(data.almostPrivatePosts)
+				setPrivatePosts(data.privatePosts)
+				setPublicPostsWithComments(data.publicPostsWithComments)
+				setUserGroups(data.userGroups)
+			})
+			.catch((error) => {
+				console.error("Error fetching data:", error)
+			})
+	}, [])
 
 	return (
 		<main className="homePage">

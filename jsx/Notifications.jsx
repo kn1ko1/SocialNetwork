@@ -34,7 +34,6 @@ export function Notifications() {
 	};
 
 	const handleNotificationResponse = (notificationId) => {
-		console.log("notificationId", notificationId)
 		// Filter out the notification with the given ID from notifications state
 		const updatedNotifications = notifications.filter(
 			(notification) => notification.notificationId !== notificationId
