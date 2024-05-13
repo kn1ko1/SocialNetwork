@@ -92,6 +92,19 @@ export function Chat({
   const handleMessages = e => {
     setSendMessage(e.target.value);
   };
+  const [isChatboxVisible, setChatboxVisible] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const handleUserClick = username => {
+    setSelectedUser(username);
+    setSelectedGroup(null); // Clear the selected group when selecting a user
+    setChatboxVisible(true);
+  };
+  const handleGroupClick = groupName => {
+    setSelectedGroup(groupName);
+    setSelectedUser(null); // Clear the selected user when selecting a group
+    setChatboxVisible(true);
+  };
   const handleSubmit = e => {
     e.preventDefault();
     let bodymessage = {
@@ -106,6 +119,9 @@ export function Chat({
     };
     socket.send(JSON.stringify(obj));
     setSendMessage("");
+
+    // Toggle the value of isChatboxVisible when a chat is selected
+    setChatboxVisible(!isChatboxVisible);
   };
   socket.onmessage = function (e) {
     let data = JSON.parse(e.data);
@@ -122,17 +138,25 @@ export function Chat({
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Chat"), /*#__PURE__*/React.createElement("h3", null, "Users"), uniqueUsernames && uniqueUsernames.length > 0 ? /*#__PURE__*/React.createElement("ul", null, uniqueUsernames.map((username, index) => /*#__PURE__*/React.createElement("li", {
     key: index
   }, /*#__PURE__*/React.createElement("a", {
-    href: "#"
+    href: "#",
+    onClick: () => handleUserClick(username)
   }, username)))) : /*#__PURE__*/React.createElement("p", null, "You're not following/followed by any users"), /*#__PURE__*/React.createElement("h3", null, "Groups"), groupsPartOf && groupsPartOf.length > 0 ? /*#__PURE__*/React.createElement("ul", null, groupsPartOf.map((groupName, index) => /*#__PURE__*/React.createElement("li", {
     key: index
   }, /*#__PURE__*/React.createElement("a", {
-    href: "#"
+    href: "#",
+    onClick: () => handleGroupClick(groupName)
   }, groupName)))) : /*#__PURE__*/React.createElement("p", null, "You're not part of any groups"), /*#__PURE__*/React.createElement("ul", {
     id: "messages",
-    style: messageStyle
-  }), /*#__PURE__*/React.createElement("form", {
+    style: {
+      ...messageStyle,
+      display: isChatboxVisible ? "block" : "none"
+    }
+  }, selectedUser && /*#__PURE__*/React.createElement("li", null, "Chat with ", selectedUser), selectedGroup && /*#__PURE__*/React.createElement("li", null, "Chat in ", selectedGroup)), /*#__PURE__*/React.createElement("form", {
     id: "chatbox",
-    onSubmit: handleSubmit
+    onSubmit: handleSubmit,
+    style: {
+      display: isChatboxVisible ? "block" : "none"
+    }
   }, /*#__PURE__*/React.createElement("textarea", {
     onChange: handleMessages
   }), /*#__PURE__*/React.createElement("button", {
