@@ -20,17 +20,13 @@ const postCardStyle = {
 export function PostCard({
   post,
   comments,
-  showCommentForm
+  showCommentForm,
+  fetchFunc
 }) {
   const [body, setBody] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [username, setUsername] = useState("");
   const postDate = formattedDate(post.createdAt);
-
-  // useEffect(() => {
-  // 	setUsername(fetchUsername(post.userId))
-  // }, []);
-
   useEffect(() => {
     const fetchUserData = async () => {
       const fetchedUsername = await fetchUsername(post.userId);
@@ -62,6 +58,7 @@ export function PostCard({
     setBody("");
     setSelectedFile(null);
     document.getElementById("commentTextArea").value = "";
+    fetchFunc();
   };
 
   // Function to handle file selection

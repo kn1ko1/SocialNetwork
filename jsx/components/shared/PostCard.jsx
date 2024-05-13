@@ -14,16 +14,13 @@ const postCardStyle = {
 	marginBottom: '20px', // Adjust spacing between post cards
 };
 
-export function PostCard({ post, comments, showCommentForm }) {
+export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
 	const [body, setBody] = useState("")
 	const [selectedFile, setSelectedFile] = useState(null)
 	const [username, setUsername] = useState("")
 
 	const postDate = formattedDate(post.createdAt)
 
-	// useEffect(() => {
-	// 	setUsername(fetchUsername(post.userId))
-	// }, []);
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -60,6 +57,7 @@ export function PostCard({ post, comments, showCommentForm }) {
 		setSelectedFile(null)
 
 		document.getElementById("commentTextArea").value = ""
+		fetchFunc()
 	}
 
 	// Function to handle file selection

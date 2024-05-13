@@ -135,7 +135,8 @@ export function Home() {
     key: index,
     post: publicPostsWithComment.post,
     comments: publicPostsWithComment.comments,
-    showCommentForm: true
+    showCommentForm: true,
+    fetchFunc: fetchUserPostData
   })) : /*#__PURE__*/React.createElement("p", null, "public posts")), /*#__PURE__*/React.createElement("div", {
     className: "almostPrivatePosts"
   }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? almostPrivatePosts.map((almostPrivatePost, index) => /*#__PURE__*/React.createElement(PostCard, {

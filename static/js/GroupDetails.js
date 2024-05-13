@@ -4,10 +4,17 @@ import { EventForm } from "./components/GroupDetail/EventForm.js";
 import { GroupDetailsUserList } from "./components/GroupDetail/GroupDetailsUserList.js";
 import { PostCard } from "./components/shared/PostCard.js";
 import { GroupDetailsEvents } from "./components/GroupDetail/GroupDetailsEvent.js";
+import { fetchCommentsForPosts } from "./components/shared/FetchCommentsForPosts.js";
 const {
   useState,
   useEffect
 } = React;
+export const renderGroupDetails = group => {
+  const pageContainer = document.querySelector(".page-container");
+  ReactDOM.render( /*#__PURE__*/React.createElement(GroupDetails, {
+    group: group
+  }), pageContainer);
+};
 export function GroupDetails({
   group
 }) {
@@ -21,17 +28,17 @@ export function GroupDetails({
   const [groupEvents, setGroupEvents] = useState([]);
   if (group.isMember) {
     useEffect(() => {
-      fetchGroupData();
+      fetchGroupData(group.groupId);
     }, [group.groupId]);
   }
-  const fetchGroupData = async () => {
+  const fetchGroupData = async groupId => {
     try {
       const promises = [];
       promises.push(fetch(`http://localhost:8080/api/users/transport`));
-      promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/groupUsers`));
-      promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/posts`));
-      promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/messages`));
-      promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/events`));
+      promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/groupUsers`));
+      promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/posts`));
+      promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/messages`));
+      promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/events`));
       const results = await Promise.all(promises);
       const userListResponse = results[0];
       const groupMembersResponse = results[1];
@@ -58,9 +65,10 @@ export function GroupDetails({
       const postsData = await postsResponse.json();
       const messagesData = await messagesResponse.json();
       const eventsData = await eventsResponse.json();
+      const postsWithComments = await fetchCommentsForPosts(postsData);
       setUserList(userListData);
       setGroupMembers(groupMembersData);
-      setGroupPosts(postsData);
+      setGroupPosts(postsWithComments);
       setGroupMessages(messagesData);
       setGroupEvents(eventsData);
     } catch (error) {
@@ -102,7 +110,7 @@ export function GroupDetails({
     id: "groupData"
   }, /*#__PURE__*/React.createElement(PostFormGroup, {
     group: group,
-    fetchGroupData: fetchGroupData
+    fetchGroupData: () => fetchGroupData(group.groupId)
   }), /*#__PURE__*/React.createElement(EventForm, {
     group: group
   }), /*#__PURE__*/React.createElement(GroupDetailsUserList, {
@@ -123,7 +131,10 @@ export function GroupDetails({
   }, /*#__PURE__*/React.createElement("h2", null, "Posts"), groupPosts !== null ? groupPosts.map(post => /*#__PURE__*/React.createElement("li", {
     key: post.createdAt
   }, /*#__PURE__*/React.createElement(PostCard, {
-    post: post
+    post: post,
+    comments: post.comments,
+    showCommentForm: true,
+    fetchFunc: () => fetchGroupData(group.groupId)
   }))) : /*#__PURE__*/React.createElement("div", {
     id: "groupPosts"
   }, "There are no posts in this groups yet")), /*#__PURE__*/React.createElement("div", {

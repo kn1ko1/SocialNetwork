@@ -165,6 +165,7 @@ export function Home() {
 											post={publicPostsWithComment.post}
 											comments={publicPostsWithComment.comments}
 											showCommentForm={true}
+											fetchFunc={fetchUserPostData}
 										/>
 									))
 							) : (

@@ -4,8 +4,14 @@ import { EventForm } from "./components/GroupDetail/EventForm.js";
 import { GroupDetailsUserList } from "./components/GroupDetail/GroupDetailsUserList.js";
 import { PostCard } from "./components/shared/PostCard.js";
 import { GroupDetailsEvents } from "./components/GroupDetail/GroupDetailsEvent.js";
+import { fetchCommentsForPosts } from "./components/shared/FetchCommentsForPosts.js";
 
 const { useState, useEffect } = React
+
+export const renderGroupDetails = (group) => {
+	const pageContainer = document.querySelector(".page-container")
+	ReactDOM.render(<GroupDetails group={group} />, pageContainer)
+}
 
 export function GroupDetails({ group }) {
 
@@ -20,18 +26,18 @@ export function GroupDetails({ group }) {
 	if (group.isMember) {
 		useEffect(() => {
 
-			fetchGroupData();
+			fetchGroupData(group.groupId);
 		}, [group.groupId]);
 	}
 
-	const fetchGroupData = async () => {
+	const fetchGroupData = async (groupId) => {
 		try {
 			const promises = [];
 			promises.push(fetch(`http://localhost:8080/api/users/transport`));
-			promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/groupUsers`));
-			promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/posts`));
-			promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/messages`));
-			promises.push(fetch(`http://localhost:8080/api/groups/${group.groupId}/events`));
+			promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/groupUsers`));
+			promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/posts`));
+			promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/messages`));
+			promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/events`));
 			const results = await Promise.all(promises);
 
 			const userListResponse = results[0]
@@ -60,10 +66,11 @@ export function GroupDetails({ group }) {
 			const messagesData = await messagesResponse.json();
 			const eventsData = await eventsResponse.json();
 
+			const postsWithComments = await fetchCommentsForPosts(postsData)
 
 			setUserList(userListData);
 			setGroupMembers(groupMembersData);
-			setGroupPosts(postsData);
+			setGroupPosts(postsWithComments);
 			setGroupMessages(messagesData);
 			setGroupEvents(eventsData);
 
@@ -115,7 +122,7 @@ export function GroupDetails({ group }) {
 
 			{group.isMember ? (
 				<div id="groupData">
-					<PostFormGroup group={group} fetchGroupData={fetchGroupData} />
+					<PostFormGroup group={group} fetchGroupData={() => fetchGroupData(group.groupId)} />
 
 					<EventForm group={group} />
 					{/* Render user List here */}
@@ -148,7 +155,12 @@ export function GroupDetails({ group }) {
 						{groupPosts !== null ? (
 							groupPosts.map((post) => (
 								<li key={post.createdAt}>
-									<PostCard post={post} />
+									<PostCard
+										post={post}
+										comments={post.comments}
+										showCommentForm={true}
+										fetchFunc={() => fetchGroupData(group.groupId)} />
+
 								</li>
 							))
 						) : (
