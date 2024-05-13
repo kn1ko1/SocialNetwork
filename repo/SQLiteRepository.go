@@ -65,9 +65,7 @@ func (r *SQLiteRepository) CreateUser(user models.User) (models.User, error) {
 func (r *SQLiteRepository) GetAllUsers() ([]models.User, error) {
 	return users.GetAllUsers(r.identityDb)
 }
-func (r *SQLiteRepository) GetAllUsersTransport() ([]transport.UserTransport, error) {
-	return sqlite.GetAllUsersTransport(r.identityDb)
-}
+
 func (r *SQLiteRepository) GetUsersByPublic() ([]models.User, error) {
 	return users.GetUsersByPublic(r.identityDb)
 }

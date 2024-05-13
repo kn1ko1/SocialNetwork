@@ -93,7 +93,7 @@ export function Home() {
 
 	}, [currentUserId])
 
-	
+
 
 	const fetchUserPostData = async () => {
 		fetch("http://localhost:8080/api/home")
@@ -154,11 +154,11 @@ export function Home() {
 						<div className="publicPostsWithComments">
 							<h2>Public Posts</h2>
 							{publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? (
-								publicPostsWithComments
-									.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort by createdAt in reverse order
-									.map((publicPostsWithComment, index) => (
+								[...publicPostsWithComments]
+									.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+									.map((publicPostsWithComment) => (
 										<PostCard
-											key={index}
+											key={`public-${publicPostsWithComment.post.id}`}
 											post={publicPostsWithComment.post}
 											comments={publicPostsWithComment.comments}
 											showCommentForm={true}
@@ -166,7 +166,7 @@ export function Home() {
 										/>
 									))
 							) : (
-								<p>public posts</p>
+								<p>No public posts</p>
 							)}
 						</div>
 
@@ -174,9 +174,63 @@ export function Home() {
 						<div className="almostPrivatePosts">
 							<h2>Almost Private Posts</h2>
 							{almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? (
-								almostPrivatePosts.map((almostPrivatePost, index) => (
+								[...almostPrivatePosts]
+									.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+									.map((almostPrivatePost) => (
+										<PostCard
+											key={`almost-private-${almostPrivatePost.post.id}`}
+											post={almostPrivatePost.post}
+											comments={almostPrivatePost.comments}
+											showCommentForm={true}
+										/>
+									))
+							) : (
+								<p>No almost private posts</p>
+							)}
+						</div>
+
+						{/* Rendering Private Posts */}
+						<div className="privatePosts">
+							<h2>Private Posts</h2>
+							{privatePosts !== null && privatePosts.length > 0 ? (
+								[...privatePosts]
+									.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+									.map((privatePost) => (
+										<PostCard
+											key={`private-${privatePost.post.id}`}
+											post={privatePost.post}
+											comments={privatePost.comments}
+											showCommentForm={true}
+										/>
+									))
+							) : (
+								<p>No private posts</p>
+							)}
+						</div>{/* Rendering Public Posts */}
+						<div className="publicPostsWithComments">
+							<h2>Public Posts</h2>
+							{publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? (
+								publicPostsWithComments.map((publicPostsWithComment) => (
 									<PostCard
-										key={index}
+										key={`public-${publicPostsWithComment.post.id}`}
+										post={publicPostsWithComment.post}
+										comments={publicPostsWithComment.comments}
+										showCommentForm={true}
+										fetchFunc={fetchUserPostData}
+									/>
+								))
+							) : (
+								<p>No public posts</p>
+							)}
+						</div>
+
+						{/* Rendering Almost Private Posts */}
+						<div className="almostPrivatePosts">
+							<h2>Almost Private Posts</h2>
+							{almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? (
+								almostPrivatePosts.map((almostPrivatePost) => (
+									<PostCard
+										key={`almost-private-${almostPrivatePost.post.id}`}
 										post={almostPrivatePost.post}
 										comments={almostPrivatePost.comments}
 										showCommentForm={true}
@@ -191,12 +245,13 @@ export function Home() {
 						<div className="privatePosts">
 							<h2>Private Posts</h2>
 							{privatePosts !== null && privatePosts.length > 0 ? (
-								privatePosts.map((privatePost, index) => (
+								privatePosts.map((privatePost) => (
 									<PostCard
-										key={index}
+										key={`private-${privatePost.post.id}`}
 										post={privatePost.post}
 										comments={privatePost.comments}
-										showCommentForm={true} />
+										showCommentForm={true}
+									/>
 								))
 							) : (
 								<p>No private posts</p>
@@ -226,7 +281,6 @@ export function Home() {
 									<li key={event.dateTime}>
 										{event.title} - {event.description}
 										- {formattedDate(event.dateTime)}
-										onClick={() => renderProfile(user.userId)}
 									</li>
 								))
 							) : (

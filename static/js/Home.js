@@ -127,24 +127,45 @@ export function Home() {
     class: "col-6"
   }, /*#__PURE__*/React.createElement("div", {
     className: "publicPostsWithComments"
-  }, /*#__PURE__*/React.createElement("h2", null, "Public Posts"), publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? publicPostsWithComments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort by createdAt in reverse order
-  .map((publicPostsWithComment, index) => /*#__PURE__*/React.createElement(PostCard, {
-    key: index,
+  }, /*#__PURE__*/React.createElement("h2", null, "Public Posts"), publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? [...publicPostsWithComments].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(publicPostsWithComment => /*#__PURE__*/React.createElement(PostCard, {
+    key: `public-${publicPostsWithComment.post.id}`,
     post: publicPostsWithComment.post,
     comments: publicPostsWithComment.comments,
     showCommentForm: true,
     fetchFunc: fetchUserPostData
-  })) : /*#__PURE__*/React.createElement("p", null, "public posts")), /*#__PURE__*/React.createElement("div", {
+  })) : /*#__PURE__*/React.createElement("p", null, "No public posts")), /*#__PURE__*/React.createElement("div", {
     className: "almostPrivatePosts"
-  }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? almostPrivatePosts.map((almostPrivatePost, index) => /*#__PURE__*/React.createElement(PostCard, {
-    key: index,
+  }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? [...almostPrivatePosts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(almostPrivatePost => /*#__PURE__*/React.createElement(PostCard, {
+    key: `almost-private-${almostPrivatePost.post.id}`,
     post: almostPrivatePost.post,
     comments: almostPrivatePost.comments,
     showCommentForm: true
   })) : /*#__PURE__*/React.createElement("p", null, "No almost private posts")), /*#__PURE__*/React.createElement("div", {
     className: "privatePosts"
-  }, /*#__PURE__*/React.createElement("h2", null, "Private Posts"), privatePosts !== null && privatePosts.length > 0 ? privatePosts.map((privatePost, index) => /*#__PURE__*/React.createElement(PostCard, {
-    key: index,
+  }, /*#__PURE__*/React.createElement("h2", null, "Private Posts"), privatePosts !== null && privatePosts.length > 0 ? [...privatePosts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(privatePost => /*#__PURE__*/React.createElement(PostCard, {
+    key: `private-${privatePost.post.id}`,
+    post: privatePost.post,
+    comments: privatePost.comments,
+    showCommentForm: true
+  })) : /*#__PURE__*/React.createElement("p", null, "No private posts")), /*#__PURE__*/React.createElement("div", {
+    className: "publicPostsWithComments"
+  }, /*#__PURE__*/React.createElement("h2", null, "Public Posts"), publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? publicPostsWithComments.map(publicPostsWithComment => /*#__PURE__*/React.createElement(PostCard, {
+    key: `public-${publicPostsWithComment.post.id}`,
+    post: publicPostsWithComment.post,
+    comments: publicPostsWithComment.comments,
+    showCommentForm: true,
+    fetchFunc: fetchUserPostData
+  })) : /*#__PURE__*/React.createElement("p", null, "No public posts")), /*#__PURE__*/React.createElement("div", {
+    className: "almostPrivatePosts"
+  }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? almostPrivatePosts.map(almostPrivatePost => /*#__PURE__*/React.createElement(PostCard, {
+    key: `almost-private-${almostPrivatePost.post.id}`,
+    post: almostPrivatePost.post,
+    comments: almostPrivatePost.comments,
+    showCommentForm: true
+  })) : /*#__PURE__*/React.createElement("p", null, "No almost private posts")), /*#__PURE__*/React.createElement("div", {
+    className: "privatePosts"
+  }, /*#__PURE__*/React.createElement("h2", null, "Private Posts"), privatePosts !== null && privatePosts.length > 0 ? privatePosts.map(privatePost => /*#__PURE__*/React.createElement(PostCard, {
+    key: `private-${privatePost.post.id}`,
     post: privatePost.post,
     comments: privatePost.comments,
     showCommentForm: true
@@ -154,5 +175,5 @@ export function Home() {
     className: "userEvents"
   }, /*#__PURE__*/React.createElement("h2", null, "Events that you're attending"), userEvents !== null && userEvents.length > 0 ? userEvents.map(event => /*#__PURE__*/React.createElement("li", {
     key: event.dateTime
-  }, event.title, " - ", event.description, "- ", formattedDate(event.dateTime), "onClick=", () => renderProfile(user.userId))) : /*#__PURE__*/React.createElement("p", null, "No almost private posts"))))));
+  }, event.title, " - ", event.description, "- ", formattedDate(event.dateTime))) : /*#__PURE__*/React.createElement("p", null, "No almost private posts"))))));
 }

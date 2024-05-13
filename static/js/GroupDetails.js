@@ -65,9 +65,14 @@ export function GroupDetails({
       const postsData = await postsResponse.json();
       const messagesData = await messagesResponse.json();
       const eventsData = await eventsResponse.json();
-      const postsWithComments = await fetchCommentsForPosts(postsData);
       setUserList(userListData);
       setGroupMembers(groupMembersData);
+      if (postsData != null) {
+        const postsWithComments = await fetchCommentsForPosts(postsData);
+        setGroupPosts(postsWithComments);
+      } else {
+        setGroupPosts(null);
+      }
       setGroupPosts(postsWithComments);
       setGroupMessages(messagesData);
       setGroupEvents(eventsData);

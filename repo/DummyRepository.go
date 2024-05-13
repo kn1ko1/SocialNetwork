@@ -139,10 +139,6 @@ func (r *DummyRepository) GetAllUsers() ([]models.User, error) {
 	return users, nil
 }
 
-func (r *DummyRepository) GetAllUsersTransport() ([]transport.UserTransport, error) {
-	var userTransports []transport.UserTransport
-	return userTransports, errors.New("not yet implimented")
-}
 func (r *DummyRepository) GetUserById(userId int) (models.User, error) {
 	user := validUser
 	user.UserId = userId
