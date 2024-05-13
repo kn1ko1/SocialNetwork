@@ -9,7 +9,7 @@ const {
 export function PostForm({
   groupId,
   followedUsers,
-  fetchUserPostData
+  fetchFunc
 }) {
   const [body, setBody] = useState("");
   const [privacy, setPrivacy] = useState("");
@@ -70,7 +70,7 @@ export function PostForm({
       console.error("Error submitting post:", error);
     }
     // Really we should do something clever with websockets and updating useStates, but this is much easier
-    fetchUserPostData();
+    fetchFunc();
   };
   const handlePrivacyChange = e => {
     const newValue = e.target.value;

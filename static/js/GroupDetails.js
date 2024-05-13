@@ -110,7 +110,7 @@ export function GroupDetails({
     id: "groupData"
   }, /*#__PURE__*/React.createElement(PostFormGroup, {
     group: group,
-    fetchGroupData: () => fetchGroupData(group.groupId)
+    fetchFunc: () => fetchGroupData(group.groupId)
   }), /*#__PURE__*/React.createElement(EventForm, {
     group: group
   }), /*#__PURE__*/React.createElement(GroupDetailsUserList, {

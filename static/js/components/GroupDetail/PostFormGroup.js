@@ -4,7 +4,7 @@ const {
 import { GroupDetails } from "../../GroupDetails.js";
 export function PostFormGroup({
   group,
-  fetchGroupData
+  fetchFunc
 }) {
   const [body, setBody] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -41,7 +41,7 @@ export function PostFormGroup({
     } catch (error) {
       console.error("Error submitting post:", error);
     }
-    fetchGroupData();
+    fetchFunc();
   };
 
   // Handler for file selection

@@ -18,13 +18,11 @@ export function Home() {
   const {
     currentUserId
   } = getCurrentUserId();
-  const [userList, setUserList] = useState([]);
-  const [followedUsers, setFollowedUsers] = useState([]);
   const [almostPrivatePosts, setAlmostPrivatePosts] = useState([]);
   const [privatePosts, setPrivatePosts] = useState([]);
   const [publicPostsWithComments, setPublicPostsWithComments] = useState([]);
-  const [userGroups, setUserGroups] = useState([]);
-  const [userList2, setUserList2] = useState([]);
+  // const [userGroups, setUserGroups] = useState([])
+  const [userList, setUserList] = useState([]);
   const [followedUsersList, setFollowedUsersList] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
   useEffect(() => {
@@ -75,7 +73,7 @@ export function Home() {
             isFollowed: false
           }));
         }
-        setUserList2(updatedUserListData);
+        setUserList(updatedUserListData);
         setFollowedUsersList(filteredFollowedUsers);
         setUserEvents(userEventsData);
       } catch (error) {
@@ -92,7 +90,6 @@ export function Home() {
       setAlmostPrivatePosts(data.almostPrivatePosts);
       setPrivatePosts(data.privatePosts);
       setPublicPostsWithComments(data.publicPostsWithComments);
-      console.log("data.publicPostsWithComments", data.publicPostsWithComments);
       // setUserGroups(data.userGroups)
     }).catch(error => {
       console.error("Error fetching data:", error);
@@ -106,7 +103,7 @@ export function Home() {
   }, /*#__PURE__*/React.createElement(PostForm, {
     groupId: 0,
     followedUsers: followedUsersList,
-    fetchUserPostData: fetchUserPostData
+    fetchFunc: fetchUserPostData
   }), /*#__PURE__*/React.createElement("div", {
     class: "container text-center"
   }, /*#__PURE__*/React.createElement("div", {
@@ -115,7 +112,7 @@ export function Home() {
     class: "col-3"
   }, /*#__PURE__*/React.createElement("div", {
     className: "userList"
-  }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList2 !== null && userList2.length > 0 ? userList2
+  }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList !== null && userList.length > 0 ? userList
   // Filter out the current user
   .filter(user => user.userId !== currentUserId).map((user, index) => /*#__PURE__*/React.createElement("div", {
     key: index

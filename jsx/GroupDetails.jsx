@@ -122,7 +122,7 @@ export function GroupDetails({ group }) {
 
 			{group.isMember ? (
 				<div id="groupData">
-					<PostFormGroup group={group} fetchGroupData={() => fetchGroupData(group.groupId)} />
+					<PostFormGroup group={group} fetchFunc={() => fetchGroupData(group.groupId)} />
 
 					<EventForm group={group} />
 					{/* Render user List here */}

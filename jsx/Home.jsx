@@ -14,13 +14,11 @@ export const renderHome = () => {
 // Display information relating to homepage
 export function Home() {
 	const { currentUserId } = getCurrentUserId()
-	const [userList, setUserList] = useState([])
-	const [followedUsers, setFollowedUsers] = useState([]);
 	const [almostPrivatePosts, setAlmostPrivatePosts] = useState([])
 	const [privatePosts, setPrivatePosts] = useState([])
 	const [publicPostsWithComments, setPublicPostsWithComments] = useState([])
-	const [userGroups, setUserGroups] = useState([])
-	const [userList2, setUserList2] = useState([])
+	// const [userGroups, setUserGroups] = useState([])
+	const [userList, setUserList] = useState([])
 	const [followedUsersList, setFollowedUsersList] = useState([])
 	const [userEvents, setUserEvents] = useState([])
 
@@ -82,7 +80,7 @@ export function Home() {
 					}));
 				}
 
-				setUserList2(updatedUserListData);
+				setUserList(updatedUserListData);
 				setFollowedUsersList(filteredFollowedUsers);
 				setUserEvents(userEventsData);
 			} catch (error) {
@@ -105,7 +103,6 @@ export function Home() {
 				setAlmostPrivatePosts(data.almostPrivatePosts)
 				setPrivatePosts(data.privatePosts)
 				setPublicPostsWithComments(data.publicPostsWithComments)
-				console.log("data.publicPostsWithComments", data.publicPostsWithComments)
 				// setUserGroups(data.userGroups)
 			})
 			.catch((error) => {
@@ -120,15 +117,15 @@ export function Home() {
 
 	return (
 		<main className="homePage">
-			<PostForm groupId={0} followedUsers={followedUsersList} fetchUserPostData={fetchUserPostData} />
+			<PostForm groupId={0} followedUsers={followedUsersList} fetchFunc={fetchUserPostData} />
 
 			<div class="container text-center">
 				<div class="row align-items-start">
 					<div class="col-3">
 						<div className="userList">
 							<h2>UserList</h2>
-							{userList2 !== null && userList2.length > 0 ? (
-								userList2
+							{userList !== null && userList.length > 0 ? (
+								userList
 									// Filter out the current user
 									.filter(user => user.userId !== currentUserId)
 									.map((user, index) => (
