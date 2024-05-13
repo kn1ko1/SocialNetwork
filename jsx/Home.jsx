@@ -1,5 +1,6 @@
 const { useState, useEffect } = React
 import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js"
+import { formattedDate } from "./components/shared/FormattedDate.js"
 import { PostForm } from "./components/Home/PostForm.js"
 import { PostCard } from "./components/shared/PostCard.js"
 import { FollowButton } from "./components/shared/FollowButton.js"
@@ -21,6 +22,7 @@ export function Home({ socket }) {
 	const [userGroups, setUserGroups] = useState([])
 	const [userList2, setUserList2] = useState([])
 	const [followedUsersList, setFollowedUsersList] = useState([])
+	const [userEvents, setUserEvents] = useState([])
 
 
 
@@ -31,13 +33,15 @@ export function Home({ socket }) {
 				const promises = [];
 				promises.push(fetch(`http://localhost:8080/api/users`));
 				promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/userUsers`));
+				promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/events`));
 				// promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/posts`));
 
 				const results = await Promise.all(promises);
 
 				const userListResponse = results[0];
 				const followedUserListResponse = results[1];
-				// const allPostsResponse = results[2];
+				const userEventsResponse = results[2];
+				// const allPostsResponse = results[3];
 
 				if (!userListResponse.ok) {
 					throw new Error('Failed to fetch user list');
@@ -45,25 +49,30 @@ export function Home({ socket }) {
 				if (!followedUserListResponse.ok) {
 					throw new Error('Failed to fetch followed users list');
 				}
+				if (!userEventsResponse.ok) {
+					throw new Error('Failed to fetch users events');
+				}
 				// if (!allPostsResponse.ok) {
 				// 	throw new Error('Failed to fetch all posts available to user');
 				// }
 
 				const userListData = await userListResponse.json();
-				let followedUsersList = await followedUserListResponse.json();
+				const followedUsersListData = await followedUserListResponse.json();
+				const userEventsData = await userEventsResponse.json();
+
 
 				let filteredFollowedUsers = null;
 				let updatedUserListData = userListData;
 
-				if (followedUsersList != null) {
+				if (followedUsersListData != null) {
 					filteredFollowedUsers = userListData.filter(user =>
-						followedUsersList.some(followedUser => followedUser.subjectId === user.userId)
+						followedUsersListData.some(followedUser => followedUser.subjectId === user.userId)
 					);
 
 					// Add isFollowed property to each user where userId matches subjectId
 					updatedUserListData = userListData.map(user => ({
 						...user,
-						isFollowed: followedUsersList.some(followedUser => followedUser.subjectId === user.userId)
+						isFollowed: followedUsersListData.some(followedUser => followedUser.subjectId === user.userId)
 					}));
 				} else {
 					// If followedUsersList is null, set isFollowed to false for every user
@@ -77,6 +86,8 @@ export function Home({ socket }) {
 				console.log("updatedUserListData", updatedUserListData)
 				setFollowedUsersList(filteredFollowedUsers);
 				console.log("filteredFollowedUsers", filteredFollowedUsers)
+				setUserEvents(userEventsData);
+				console.log("userEventsData", userEventsData)
 			} catch (error) {
 				console.error('Error fetching group data:', error);
 			}
@@ -202,9 +213,20 @@ export function Home({ socket }) {
 						</div>
 					</div>
 					<div class="col-3">
-						{/* <div className="card">
-							<Chat socket={{ socket }} />
-						</div> */}
+
+						<div className="userEvents">
+							<h2>Events that you're attending</h2>
+							{userEvents !== null && userEvents.length > 0 ? (
+								userEvents.map((event) => (
+									<li key={event.dateTime}>
+										{event.title} - {event.description} 
+										- {formattedDate(event.dateTime)} 
+									</li>
+								))
+							) : (
+								<p>No almost private posts</p>
+							)}
+						</div>
 					</div>
 				</div>
 			</div>

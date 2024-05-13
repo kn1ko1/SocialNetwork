@@ -62,6 +62,7 @@ func addApiHandlers(rt *router.Router) {
 	eventsHandler := api.NewEventsHandler(r)
 	eventByIdHandler := api.NewEventByIdHandler(r)
 	eventsByGroupIdHandler := api.NewEventsByGroupIdHandler(r)
+	eventsByUserIdHandler := api.NewEventsByUserIdHandler(r)
 	eventUsersHandler := api.NewEventUsersHandler(r)
 	// eventUsersByEventIdHandler := api.NewEventUsersByEventIdHandler(r)
 	// eventUsersByEventIdAndUserIdHandler := api.NewEventUserByEventIdAndUserIdHandler(r)
@@ -119,6 +120,8 @@ func addApiHandlers(rt *router.Router) {
 	// // Event Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/events$`), eventsHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/events/[0-9]+$`), eventByIdHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/users/[0-9]+/events$`), eventsByUserIdHandler)
+
 	// // EventUser Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/eventUsers$`), eventUsersHandler)
 	// rt.AddHandler(regexp.MustCompile(`^/api/events/{eventId}/eventUsers$`), eventUsersByEventIdHandler)
