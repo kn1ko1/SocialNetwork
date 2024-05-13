@@ -102,6 +102,22 @@ export function Chat({ socket }) {
 		setSendMessage(e.target.value)
 	}
 
+	const [isChatboxVisible, setChatboxVisible] = useState(false);
+	const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedGroup, setSelectedGroup] = useState(null);
+
+	const handleUserClick = (username) => {
+		setSelectedUser(username);
+		setSelectedGroup(null); // Clear the selected group when selecting a user
+		setChatboxVisible(true);
+	};
+	
+	const handleGroupClick = (groupName) => {
+		setSelectedGroup(groupName);
+		setSelectedUser(null); // Clear the selected user when selecting a group
+		setChatboxVisible(true);
+	};
+
 	const handleSubmit = (e) => {
 		e.preventDefault()
 		let bodymessage = {
@@ -113,6 +129,9 @@ export function Chat({ socket }) {
 		let obj = { code: GROUP_CHAT_MESSAGE, body: JSON.stringify(bodymessage) }
 		socket.send(JSON.stringify(obj))
 		setSendMessage("")
+
+		// Toggle the value of isChatboxVisible when a chat is selected
+		setChatboxVisible(!isChatboxVisible);
 	}
 
 	socket.onmessage = function (e) {
@@ -137,7 +156,7 @@ export function Chat({ socket }) {
 				<ul>
 					{uniqueUsernames.map((username, index) => (
 						<li key={index}>
-							<a href="#">{username}</a>
+							<a href="#" onClick={() => handleUserClick(username)}>{username}</a>
 						</li>
 					))}
 				</ul>
@@ -149,20 +168,23 @@ export function Chat({ socket }) {
 				<ul>
 					{groupsPartOf.map((groupName, index) => (
 						<li key={index}>
-							<a href="#">{groupName}</a>
+							<a href="#" onClick={() => handleGroupClick(groupName)}>{groupName}</a>
 						</li>
 					))}
 				</ul>
 			) : (
 				<p>You're not part of any groups</p>
 			)}
-			<ul id="messages" style={messageStyle}></ul>
-			<form id="chatbox" onSubmit={handleSubmit}>
-				<textarea onChange={handleMessages}></textarea>
-				<button type="submit" className="btn btn-primary">
-					send
-				</button>
-			</form>
+			<ul id="messages" style={{ ...messageStyle, display: isChatboxVisible ? "block" : "none" }}>
+    {selectedUser && <li>Chat with {selectedUser}</li>}
+    {selectedGroup && <li>Chat in {selectedGroup}</li>}
+</ul>
+<form id="chatbox" onSubmit={handleSubmit} style={{ display: isChatboxVisible ? "block" : "none" }}>
+    <textarea onChange={handleMessages}></textarea>
+    <button type="submit" className="btn btn-primary">
+        send
+    </button>
+</form>
 		</div>
 	);
 };	
