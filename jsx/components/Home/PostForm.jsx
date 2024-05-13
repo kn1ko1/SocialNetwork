@@ -3,7 +3,7 @@ const { useState, useEffect } = React
 // This component renders a form for creating a new post.
 // It accepts a `groupId` prop to determine the group for the post
 // and followedUsers so that you can assign users to Almost Private Posts
-export function PostForm({ groupId, followedUsers }) {
+export function PostForm({ groupId, followedUsers, fetchUserPostData }) {
 	const [body, setBody] = useState("");
 	const [privacy, setPrivacy] = useState("");
 	const [selectedFile, setSelectedFile] = useState(null);
@@ -69,6 +69,8 @@ export function PostForm({ groupId, followedUsers }) {
 		} catch (error) {
 			console.error("Error submitting post:", error)
 		}
+		// Really we should do something clever with websockets and updating useStates, but this is much easier
+		fetchUserPostData()
 	};
 
 	const handlePrivacyChange = (e) => {

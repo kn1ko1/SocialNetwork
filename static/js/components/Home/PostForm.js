@@ -8,7 +8,8 @@ const {
 // and followedUsers so that you can assign users to Almost Private Posts
 export function PostForm({
   groupId,
-  followedUsers
+  followedUsers,
+  fetchUserPostData
 }) {
   const [body, setBody] = useState("");
   const [privacy, setPrivacy] = useState("");
@@ -68,6 +69,8 @@ export function PostForm({
     } catch (error) {
       console.error("Error submitting post:", error);
     }
+    // Really we should do something clever with websockets and updating useStates, but this is much easier
+    fetchUserPostData();
   };
   const handlePrivacyChange = e => {
     const newValue = e.target.value;

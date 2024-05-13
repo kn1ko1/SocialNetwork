@@ -8,19 +8,13 @@ import { PostForm } from "./components/Home/PostForm.js";
 import { PostCard } from "./components/shared/PostCard.js";
 import { FollowButton } from "./components/shared/FollowButton.js";
 import { renderProfile } from "./Profile.js";
-export const renderHome = ({
-  socket
-}) => {
+export const renderHome = () => {
   const pageContainer = document.querySelector(".page-container");
-  ReactDOM.render( /*#__PURE__*/React.createElement(Home, {
-    socket: socket
-  }), pageContainer);
+  ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), pageContainer);
 };
 
 // Display information relating to homepage
-export function Home({
-  socket
-}) {
+export function Home() {
   const {
     currentUserId
   } = getCurrentUserId();
@@ -82,11 +76,8 @@ export function Home({
           }));
         }
         setUserList2(updatedUserListData);
-        console.log("updatedUserListData", updatedUserListData);
         setFollowedUsersList(filteredFollowedUsers);
-        console.log("filteredFollowedUsers", filteredFollowedUsers);
         setUserEvents(userEventsData);
-        console.log("userEventsData", userEventsData);
       } catch (error) {
         console.error('Error fetching group data:', error);
       }
@@ -95,22 +86,27 @@ export function Home({
       fetchUserData();
     }
   }, [currentUserId]);
-  useEffect(() => {
+  const fetchUserPostData = async () => {
     fetch("http://localhost:8080/api/home").then(response => response.json()).then(data => {
-      setUserList(data.userList);
+      // setUserList(data.userList)
       setAlmostPrivatePosts(data.almostPrivatePosts);
       setPrivatePosts(data.privatePosts);
       setPublicPostsWithComments(data.publicPostsWithComments);
-      setUserGroups(data.userGroups);
+      console.log("data.publicPostsWithComments", data.publicPostsWithComments);
+      // setUserGroups(data.userGroups)
     }).catch(error => {
       console.error("Error fetching data:", error);
     });
+  };
+  useEffect(() => {
+    fetchUserPostData();
   }, []);
   return /*#__PURE__*/React.createElement("main", {
     className: "homePage"
   }, /*#__PURE__*/React.createElement(PostForm, {
     groupId: 0,
-    followedUsers: followedUsersList
+    followedUsers: followedUsersList,
+    fetchUserPostData: fetchUserPostData
   }), /*#__PURE__*/React.createElement("div", {
     class: "container text-center"
   }, /*#__PURE__*/React.createElement("div", {
@@ -134,34 +130,31 @@ export function Home({
     class: "col-6"
   }, /*#__PURE__*/React.createElement("div", {
     className: "publicPostsWithComments"
-  }, /*#__PURE__*/React.createElement("h2", null, "Public Posts"), publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? publicPostsWithComments.map((publicPostsWithComment, index) => /*#__PURE__*/React.createElement(PostCard, {
+  }, /*#__PURE__*/React.createElement("h2", null, "Public Posts"), publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? publicPostsWithComments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort by createdAt in reverse order
+  .map((publicPostsWithComment, index) => /*#__PURE__*/React.createElement(PostCard, {
     key: index,
     post: publicPostsWithComment.post,
     comments: publicPostsWithComment.comments,
     showCommentForm: true
   })) : /*#__PURE__*/React.createElement("p", null, "public posts")), /*#__PURE__*/React.createElement("div", {
     className: "almostPrivatePosts"
-  }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? almostPrivatePosts.map(almostPrivatePost => /*#__PURE__*/React.createElement(PostCard, {
-    key: almostPrivatePost.createdAt,
+  }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? almostPrivatePosts.map((almostPrivatePost, index) => /*#__PURE__*/React.createElement(PostCard, {
+    key: index,
     post: almostPrivatePost.post,
     comments: almostPrivatePost.comments,
     showCommentForm: true
   })) : /*#__PURE__*/React.createElement("p", null, "No almost private posts")), /*#__PURE__*/React.createElement("div", {
     className: "privatePosts"
-  }, /*#__PURE__*/React.createElement("h2", null, "Private Posts"), privatePosts !== null && privatePosts.length > 0 ? privatePosts.map(privatePost => /*#__PURE__*/React.createElement(PostCard, {
-    key: privatePost.createdAt,
+  }, /*#__PURE__*/React.createElement("h2", null, "Private Posts"), privatePosts !== null && privatePosts.length > 0 ? privatePosts.map((privatePost, index) => /*#__PURE__*/React.createElement(PostCard, {
+    key: index,
     post: privatePost.post,
     comments: privatePost.comments,
     showCommentForm: true
-  })) : /*#__PURE__*/React.createElement("p", null, "No private posts")), /*#__PURE__*/React.createElement("div", {
-    className: "userGroups"
-  }, /*#__PURE__*/React.createElement("h2", null, "Groups"), /*#__PURE__*/React.createElement("ul", null, userGroups !== null && userGroups.map(userGroup => /*#__PURE__*/React.createElement("li", {
-    key: userGroup.createdAt
-  }, userGroup.title))))), /*#__PURE__*/React.createElement("div", {
+  })) : /*#__PURE__*/React.createElement("p", null, "No private posts"))), /*#__PURE__*/React.createElement("div", {
     class: "col-3"
   }, /*#__PURE__*/React.createElement("div", {
     className: "userEvents"
   }, /*#__PURE__*/React.createElement("h2", null, "Events that you're attending"), userEvents !== null && userEvents.length > 0 ? userEvents.map(event => /*#__PURE__*/React.createElement("li", {
     key: event.dateTime
-  }, event.title, " - ", event.description, "- ", formattedDate(event.dateTime))) : /*#__PURE__*/React.createElement("p", null, "No almost private posts"))))));
+  }, event.title, " - ", event.description, "- ", formattedDate(event.dateTime), "onClick=", () => renderProfile(user.userId))) : /*#__PURE__*/React.createElement("p", null, "No almost private posts"))))));
 }

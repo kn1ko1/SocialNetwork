@@ -6,13 +6,13 @@ import { PostCard } from "./components/shared/PostCard.js"
 import { FollowButton } from "./components/shared/FollowButton.js"
 import { renderProfile } from "./Profile.js"
 
-export const renderHome = ({ socket }) => {
+export const renderHome = () => {
 	const pageContainer = document.querySelector(".page-container")
-	ReactDOM.render(<Home socket={socket} />, pageContainer)
+	ReactDOM.render(<Home />, pageContainer)
 }
 
 // Display information relating to homepage
-export function Home({ socket }) {
+export function Home() {
 	const { currentUserId } = getCurrentUserId()
 	const [userList, setUserList] = useState([])
 	const [followedUsers, setFollowedUsers] = useState([]);
@@ -83,11 +83,8 @@ export function Home({ socket }) {
 				}
 
 				setUserList2(updatedUserListData);
-				console.log("updatedUserListData", updatedUserListData)
 				setFollowedUsersList(filteredFollowedUsers);
-				console.log("filteredFollowedUsers", filteredFollowedUsers)
 				setUserEvents(userEventsData);
-				console.log("userEventsData", userEventsData)
 			} catch (error) {
 				console.error('Error fetching group data:', error);
 			}
@@ -98,24 +95,32 @@ export function Home({ socket }) {
 
 	}, [currentUserId])
 
-	useEffect(() => {
+	
+
+	const fetchUserPostData = async () => {
 		fetch("http://localhost:8080/api/home")
 			.then((response) => response.json())
 			.then((data) => {
-				setUserList(data.userList)
+				// setUserList(data.userList)
 				setAlmostPrivatePosts(data.almostPrivatePosts)
 				setPrivatePosts(data.privatePosts)
 				setPublicPostsWithComments(data.publicPostsWithComments)
-				setUserGroups(data.userGroups)
+				console.log("data.publicPostsWithComments", data.publicPostsWithComments)
+				// setUserGroups(data.userGroups)
 			})
 			.catch((error) => {
 				console.error("Error fetching data:", error)
 			})
+	}
+
+	useEffect(() => {
+		fetchUserPostData()
 	}, [])
+
 
 	return (
 		<main className="homePage">
-			<PostForm groupId={0} followedUsers={followedUsersList} />
+			<PostForm groupId={0} followedUsers={followedUsersList} fetchUserPostData={fetchUserPostData} />
 
 			<div class="container text-center">
 				<div class="row align-items-start">
@@ -151,15 +156,17 @@ export function Home({ socket }) {
 						{/* Rendering Public Posts */}
 						<div className="publicPostsWithComments">
 							<h2>Public Posts</h2>
-							{publicPostsWithComments !== null &&
-								publicPostsWithComments.length > 0 ? (
-								publicPostsWithComments.map((publicPostsWithComment, index) => (
-									<PostCard
-										key={index}
-										post={publicPostsWithComment.post}
-										comments={publicPostsWithComment.comments}
-										showCommentForm={true} />
-								))
+							{publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? (
+								publicPostsWithComments
+									.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort by createdAt in reverse order
+									.map((publicPostsWithComment, index) => (
+										<PostCard
+											key={index}
+											post={publicPostsWithComment.post}
+											comments={publicPostsWithComment.comments}
+											showCommentForm={true}
+										/>
+									))
 							) : (
 								<p>public posts</p>
 							)}
@@ -169,9 +176,9 @@ export function Home({ socket }) {
 						<div className="almostPrivatePosts">
 							<h2>Almost Private Posts</h2>
 							{almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? (
-								almostPrivatePosts.map((almostPrivatePost) => (
+								almostPrivatePosts.map((almostPrivatePost, index) => (
 									<PostCard
-										key={almostPrivatePost.createdAt}
+										key={index}
 										post={almostPrivatePost.post}
 										comments={almostPrivatePost.comments}
 										showCommentForm={true}
@@ -186,9 +193,9 @@ export function Home({ socket }) {
 						<div className="privatePosts">
 							<h2>Private Posts</h2>
 							{privatePosts !== null && privatePosts.length > 0 ? (
-								privatePosts.map((privatePost) => (
+								privatePosts.map((privatePost, index) => (
 									<PostCard
-										key={privatePost.createdAt}
+										key={index}
 										post={privatePost.post}
 										comments={privatePost.comments}
 										showCommentForm={true} />
@@ -198,19 +205,19 @@ export function Home({ socket }) {
 							)}
 						</div>
 
-						{/* Rendering User Groups */}
+						{/* Rendering User Groups
 						<div className="userGroups">
 							<h2>Groups</h2>
 							<ul>
 								{userGroups !== null &&
 									userGroups.map((userGroup) => (
-										<li key={userGroup.createdAt}>
+										<li key={userGroup.title}>
 											{userGroup.title}
 
 										</li>
 									))}
 							</ul>
-						</div>
+						</div> */}
 					</div>
 					<div class="col-3">
 
@@ -219,8 +226,9 @@ export function Home({ socket }) {
 							{userEvents !== null && userEvents.length > 0 ? (
 								userEvents.map((event) => (
 									<li key={event.dateTime}>
-										{event.title} - {event.description} 
-										- {formattedDate(event.dateTime)} 
+										{event.title} - {event.description}
+										- {formattedDate(event.dateTime)}
+										onClick={() => renderProfile(user.userId)}
 									</li>
 								))
 							) : (

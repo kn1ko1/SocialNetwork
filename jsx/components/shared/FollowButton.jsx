@@ -51,7 +51,37 @@ export function FollowButton({ followerId, user }) {
 		return false // Return false if the follow request fails
 	}
 
+	const handleFollowPrivate = async (followerId, userId) => {
+		try {
 
+			const bodyData = {
+				notificationType: "followRequest",
+				objectId: userId,
+				senderId: followerId,
+				status: "pending",
+				targetId: userId,
+			};
+			const response = await fetch(
+				`http://localhost:8080/api/notifications`,
+				{
+					method: "POST",
+					credentials: "include",
+					body: JSON.stringify(bodyData),
+				}
+			)
+
+			if (response.ok) {
+				console.log("Successfully sent follow notification to user", userId)
+				return true // Return true if the follow request is successful
+			} else {
+				console.error("Failed to send follow notification to user", userId)
+			}
+		} catch (error) {
+			console.error("Error sending follow notification to user:", error)
+		}
+
+		return false // Return false if the follow request fails
+	}
 
 	const handleUnfollow = async (followerId, userId) => {
 		try {

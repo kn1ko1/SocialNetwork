@@ -131,6 +131,16 @@ func (h *PostsHandler) post(w http.ResponseWriter, r *http.Request) {
 			}
 			userIds = append(userIds, userId)
 		}
+
+		// allows you to see your own almost private posts
+		postUser := models.PostUser{
+			CreatedAt: ctime,
+			PostId:    result.PostId,
+			UpdatedAt: ctime,
+			UserId:    user.UserId,
+		}
+		h.Repo.CreatePostUser(postUser)
+		// allows your chosen followees to see your almost private post
 		for i := 0; i < len(userIds); i++ {
 			postUser := models.PostUser{
 				CreatedAt: ctime,
