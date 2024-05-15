@@ -91,7 +91,6 @@ export function Home() {
       setPrivatePosts(data.privatePosts);
       setPublicPostsWithComments(data.publicPostsWithComments);
       // setUserGroups(data.userGroups)
-      console.log(data.publicPostsWithComments);
     }).catch(error => {
       console.error("Error fetching data:", error);
     });

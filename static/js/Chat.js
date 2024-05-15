@@ -1,6 +1,4 @@
 import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js";
-import { fetchUsername } from "./components/shared/FetchUsername.js";
-import { fetchGroupById } from "./components/shared/FetchGroupById.js";
 const {
   useState,
   useEffect
@@ -25,53 +23,54 @@ export function Chat({
   const [sendMessage, setSendMessage] = useState("");
   const [receiveMessage, setReceiveMessage] = useState("");
   const [groupsPartOf, setGroupsPartOf] = useState([]);
-  const [uniqueUsernames, setUniqueUsernames] = useState([]);
+  const [uniqueUsers, setUniqueUsers] = useState([]);
   let messages = document.getElementById("messages");
   useEffect(() => {
     console.log("currentUserId", currentUserId);
     const fetchUserAndGroupData = async () => {
       try {
         const promises = [];
-        promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/userUsers`));
-        promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/followerUserUsers`));
+        promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/followedUsers`));
+        promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/followerUsers`));
         promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/groups`));
         const results = await Promise.all(promises);
-        const userUsersIFollowResponse = results[0];
-        const userUsersFollowMeResponse = results[1];
+        const usersIFollowResponse = results[0];
+        const usersFollowMeResponse = results[1];
         const groupsPartOfResponse = results[2];
-        if (!userUsersIFollowResponse.ok) {
+        if (!usersIFollowResponse.ok) {
           throw new Error('Failed to fetch usersIFollow list');
         }
-        if (!userUsersFollowMeResponse.ok) {
+        if (!usersFollowMeResponse.ok) {
           throw new Error('Failed to fetch usersFollowMe list');
         }
         if (!groupsPartOfResponse.ok) {
           throw new Error('Failed to fetch groupsPartOf list');
         }
-        const userUsersIFollowData = await userUsersIFollowResponse.json();
-        const userUsersFollowMeData = await userUsersFollowMeResponse.json();
+        const usersIFollowData = await usersIFollowResponse.json();
+        const usersFollowMeData = await usersFollowMeResponse.json();
         const groupsPartOfData = await groupsPartOfResponse.json();
         setGroupsPartOf(groupsPartOfData);
-        let usersIFollowUsernames = null;
-        // Extract usernames from userUsersIFollowData and usersFollowMeData
-        if (userUsersIFollowData != null) {
-          usersIFollowUsernames = await Promise.all(userUsersIFollowData.map(userUser => fetchUsername(userUser.subjectId)));
+        // let usersIFollowUsernames = null
+        // // Extract usernames from userUsersIFollowData and usersFollowMeData
+        // if (userUsersIFollowData != null) {
+        // 	usersIFollowUsernames = await Promise.all(userUsersIFollowData.map(userUser => fetchUsername(userUser.subjectId)));
+
+        // }
+        // let usersFollowMeUsernames = null
+        // if (userUsersFollowMeData != null) {
+        // 	usersFollowMeUsernames = await Promise.all(userUsersFollowMeData.map(userFollower => fetchUsername(userFollower.subjectId)));
+        // }
+
+        let uniqueUsers = null;
+        if (usersIFollowData != null & usersFollowMeData != null) {
+          uniqueUsers = Array.from(new Set([...usersIFollowData, ...usersFollowMeData]));
+        } else if (usersIFollowData == null) {
+          uniqueUsers = usersFollowMeData;
+        } else if (usersFollowMeData == null) {
+          uniqueUsers = usersIFollowData;
         }
-        let usersFollowMeUsernames = null;
-        if (userUsersFollowMeData != null) {
-          usersFollowMeUsernames = await Promise.all(userUsersFollowMeData.map(userFollower => fetchUsername(userFollower.subjectId)));
-        }
-        let uniqueUsernames = null;
-        if (usersIFollowUsernames != null & usersFollowMeUsernames != null) {
-          uniqueUsernames = Array.from(new Set([...usersIFollowUsernames, ...usersFollowMeUsernames]));
-        } else if (usersIFollowUsernames == null) {
-          uniqueUsernames = usersFollowMeUsernames;
-        } else if (usersFollowMeUsernames == null) {
-          uniqueUsernames = usersIFollowUsernames;
-        }
-        setUniqueUsernames(uniqueUsernames);
-        console.log("Unique Usernames:", uniqueUsernames);
-        console.log("groupsPartOfGroupNames:", groupsPartOfGroupNames);
+        setUniqueUsers(uniqueUsers);
+        console.log("Unique Usernames:", uniqueUsers);
       } catch (error) {
         console.error('Error fetching possible chat options list:', error);
       }
@@ -86,8 +85,8 @@ export function Chat({
   const [isChatboxVisible, setChatboxVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedGroup, setSelectedGroup] = useState(null);
-  const handleUserClick = username => {
-    setSelectedUser(username);
+  const handleUserClick = user => {
+    setSelectedUser(user);
     setSelectedGroup(null); // Clear the selected group when selecting a user
     setChatboxVisible(true);
   };
@@ -126,12 +125,12 @@ export function Chat({
   const messageStyle = {
     color: "orange"
   };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Chat"), /*#__PURE__*/React.createElement("h3", null, "Users"), uniqueUsernames && uniqueUsernames.length > 0 ? /*#__PURE__*/React.createElement("ul", null, uniqueUsernames.map((username, index) => /*#__PURE__*/React.createElement("li", {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Chat"), /*#__PURE__*/React.createElement("h3", null, "Users"), uniqueUsers && uniqueUsers.length > 0 ? /*#__PURE__*/React.createElement("ul", null, uniqueUsers.map((user, index) => /*#__PURE__*/React.createElement("li", {
     key: index
   }, /*#__PURE__*/React.createElement("a", {
     href: "#",
-    onClick: () => handleUserClick(username)
-  }, username)))) : /*#__PURE__*/React.createElement("p", null, "You're not following/followed by any users"), /*#__PURE__*/React.createElement("h3", null, "Groups"), groupsPartOf && groupsPartOf.length > 0 ? /*#__PURE__*/React.createElement("ul", null, groupsPartOf.map((group, index) => /*#__PURE__*/React.createElement("li", {
+    onClick: () => handleUserClick(user)
+  }, user.username)))) : /*#__PURE__*/React.createElement("p", null, "You're not following/followed by any users"), /*#__PURE__*/React.createElement("h3", null, "Groups"), groupsPartOf && groupsPartOf.length > 0 ? /*#__PURE__*/React.createElement("ul", null, groupsPartOf.map((group, index) => /*#__PURE__*/React.createElement("li", {
     key: index
   }, /*#__PURE__*/React.createElement("a", {
     href: "#",
@@ -142,7 +141,7 @@ export function Chat({
       ...messageStyle,
       display: isChatboxVisible ? "block" : "none"
     }
-  }, selectedUser && /*#__PURE__*/React.createElement("li", null, "Chat with ", selectedUser), selectedGroup && /*#__PURE__*/React.createElement("li", null, "Chat in ", selectedGroup.title)), /*#__PURE__*/React.createElement("form", {
+  }, selectedUser && /*#__PURE__*/React.createElement("li", null, "Chat with ", selectedUser.username), selectedGroup && /*#__PURE__*/React.createElement("li", null, "Chat in ", selectedGroup.title)), /*#__PURE__*/React.createElement("form", {
     id: "chatbox",
     onSubmit: handleSubmit,
     style: {
