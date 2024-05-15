@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
@@ -54,7 +53,6 @@ func (h *UsersBySubjectIdHandler) get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	log.Println("followed", userUsers)
 	var users []models.User
 	for i := 0; i < len(userUsers); i++ {
 		user, err := h.Repo.GetUserById(userUsers[i].FollowerId)

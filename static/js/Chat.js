@@ -20,6 +20,9 @@ export function Chat({
   const {
     currentUserId
   } = getCurrentUserId();
+  const [messageCode, setMessageCode] = useState(0);
+  const [messageType, setMessageType] = useState("");
+  const [targetId, setTargetId] = useState(0);
   const [sendMessage, setSendMessage] = useState("");
   const [receiveMessage, setReceiveMessage] = useState("");
   const [groupsPartOf, setGroupsPartOf] = useState([]);
@@ -87,11 +90,17 @@ export function Chat({
   const [selectedGroup, setSelectedGroup] = useState(null);
   const handleUserClick = user => {
     setSelectedUser(user);
+    setMessageCode(2);
+    setMessageType("private");
+    setTargetId(user.userId);
     setSelectedGroup(null); // Clear the selected group when selecting a user
     setChatboxVisible(true);
   };
   const handleGroupClick = group => {
     setSelectedGroup(group);
+    setMessageCode(1);
+    setMessageType("group");
+    setTargetId(group.groupId);
     setSelectedUser(null); // Clear the selected user when selecting a group
     setChatboxVisible(true);
   };
@@ -99,19 +108,19 @@ export function Chat({
     e.preventDefault();
     let bodymessage = {
       body: sendMessage,
-      messageType: "group",
+      messageType: messageType,
       senderId: currentUserId,
-      targetId: 100
+      targetId: targetId
     };
     let obj = {
-      code: GROUP_CHAT_MESSAGE,
+      code: messageCode,
       body: JSON.stringify(bodymessage)
     };
     socket.send(JSON.stringify(obj));
     setSendMessage("");
 
     // Toggle the value of isChatboxVisible when a chat is selected
-    setChatboxVisible(!isChatboxVisible);
+    // setChatboxVisible(!isChatboxVisible);
   };
   socket.onmessage = function (e) {
     let data = JSON.parse(e.data);

@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
@@ -55,7 +54,6 @@ func (h *UsersByFollowerIdHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("followers", userUsers)
 	var users []models.User
 	for i := 0; i < len(userUsers); i++ {
 		user, err := h.Repo.GetUserById(userUsers[i].SubjectId)
