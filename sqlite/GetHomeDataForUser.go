@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	groups "socialnetwork/sqlite/GROUPS"
 	"socialnetwork/transport"
 	"socialnetwork/utils"
 )
@@ -28,7 +29,6 @@ func GetHomeDataForUser(identityDB, businessDb *sql.DB, userId int) (transport.H
 	}
 
 	// GetPostsAlmostPrivate retrieves posts for the provided userId from the POST_USERS table
-
 	userHomeData.AlmostPrivatePosts, err = GetPostsAlmostPrivateWithComments(businessDb, userId)
 	if err != nil {
 		utils.HandleError("Error in GetHomeDataForUser", err)
@@ -36,7 +36,7 @@ func GetHomeDataForUser(identityDB, businessDb *sql.DB, userId int) (transport.H
 	}
 
 	// Get groups that the user is a member of
-	userHomeData.UserGroups, err = GetGroupsByUserId(businessDb, userId)
+	userHomeData.UserGroups, err = groups.GetGroupsByUserId(businessDb, userId)
 	if err != nil {
 		utils.HandleError("Error in GetHomeDataForUser", err)
 		// return userHomeData, err

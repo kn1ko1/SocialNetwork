@@ -69,6 +69,7 @@ func addApiHandlers(rt *router.Router) {
 	// messageByIdHandler := api.NewMessageByIdHandler(r)
 	groupsHandler := api.NewGroupsHandler(r)
 	groupByIdHandler := api.NewGroupByIdHandler(r)
+	groupsByUserIdHandler := api.NewGroupsByUserIdHandler(r)
 	groupUsersHandler := api.NewGroupUsersHandler(r)
 	groupUsersByGroupIdHandler := api.NewGroupUsersByGroupIdHandler(r)
 	groupUsersByUserIdHandler := api.NewGroupUsersByUserIdHandler(r)
@@ -100,18 +101,9 @@ func addApiHandlers(rt *router.Router) {
 	rt.AddHandler(regexp.MustCompile(`^/api/users/[0-9]+/groupUsers$`), groupUsersByUserIdHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/users/[0-9]+/notifications$`), notificationsByUserIdHandler)
 
-	// rt.AddHandler(regexp.MustCompile(`^/api/users/privacy/public$`), usersByPublicHandler)
-	// rt.AddHandler(regexp.MustCompile(`^/api/users/[0-9]+/posts/[0-9]+$`), postUserByPostIdAndUserIdHandler)
-	// rt.AddHandler(regexp.MustCompile(`^/api/users/[0-9]+$`), postUsersByPostIdHandler)
-	// // Post Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/posts$`), postsHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/posts/[0-9]+$`), postByIdHandler)
-	// rt.AddHandler(regexp.MustCompile(`^/api/user/{userId}/posts$`), userPostsHandler)
-	// rt.AddHandler(regexp.MustCompile(`^/api/posts/privacy/{privacyStatus}$`), postByPrivacyHandler)
-	// // PostUser Handlers
-	// rt.AddHandler(regexp.MustCompile(`^/api/postUsers/$`), postUserHandler)
-	// rt.AddHandler(regexp.MustCompile(`^/api/postUsers/users/{userId$`), postUserByUserIdHandler)
-	// // Comment Handlers
+
 	rt.AddHandler(regexp.MustCompile(`^/api/comments$`), commentsHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/comments/[0-9]+$`), commentByIdHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/posts/[0-9]+/comments$`), commentByPostIdHandler)
@@ -122,25 +114,19 @@ func addApiHandlers(rt *router.Router) {
 
 	// // EventUser Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/eventUsers$`), eventUsersHandler)
-	// rt.AddHandler(regexp.MustCompile(`^/api/events/{eventId}/eventUsers$`), eventUsersByEventIdHandler)
-	// rt.AddHandler(regexp.MustCompile(`^/api/events/{eventId}/eventUsers/users/{userId}$`), eventUsersByEventIdAndUserIdHandler)
-	// // Message Handlers
-	// rt.AddHandler(regexp.MustCompile(`^/api/messages$`), messagesHandler)
 
 	// // Group Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/groups$`), groupsHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/groups/[0-9]+$`), groupByIdHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/users/[0-9]+/groups$`), groupsByUserIdHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/groups/[0-9]+/posts$`), postsByGroupIdHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/groups/[0-9]+/groupUsers$`), groupUsersByGroupIdHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/groups/[0-9]+/messages$`), messagesByTypeAndTargetIdHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/groups/[0-9]+/events$`), eventsByGroupIdHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/groups/[0-9]+/events/[0-9]+$`), eventByIdHandler)
-	// rt.AddHandler(regexp.MustCompile(`^/api/groups/[0-9]+/{groupUserId$`), groupUserByIdHandler)
 
 	// // GroupUser Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/groupUsers$`), groupUsersHandler)
-	// rt.AddHandler(regexp.MustCompile(`^/api/groups/[0-9]+/{groupUserId$`), groupUserByIdHandler)
-	// rt.AddHandler(regexp.MustCompile(`^/api/groups/{groupId}/users/{userId}$`), groupUserByGroupIdAndUserIdHandler)
 
 	// // Notification Handlers
 	rt.AddHandler(regexp.MustCompile(`^/api/notifications$`), notificationsHandler)

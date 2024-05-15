@@ -1,6 +1,6 @@
 import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js"
 import { fetchUsername } from "./components/shared/FetchUsername.js"
-import { fetchGroupName } from "./components/shared/FetchGroupName.js"
+import { fetchGroupById } from "./components/shared/FetchGroupById.js"
 const { useState, useEffect } = React
 
 const GROUP_CHAT_MESSAGE = 1
@@ -18,8 +18,6 @@ export function Chat({ socket }) {
 
 	const [sendMessage, setSendMessage] = useState("")
 	const [receiveMessage, setReceiveMessage] = useState("")
-	const [usersIFollow, setUsersIFollow] = useState([]);
-	const [usersFollowMe, setUsersFollowMe] = useState([]);
 	const [groupsPartOf, setGroupsPartOf] = useState([]);
 	const [uniqueUsernames, setUniqueUsernames] = useState([]);
 
@@ -32,7 +30,7 @@ export function Chat({ socket }) {
 				const promises = [];
 				promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/userUsers`));
 				promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/followerUserUsers`));
-				promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/groupUsers`));
+				promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/groups`));
 
 				const results = await Promise.all(promises);
 
@@ -54,6 +52,7 @@ export function Chat({ socket }) {
 				const userUsersFollowMeData = await userUsersFollowMeResponse.json();
 				const groupsPartOfData = await groupsPartOfResponse.json();
 
+				setGroupsPartOf(groupsPartOfData);
 				let usersIFollowUsernames = null
 				// Extract usernames from userUsersIFollowData and usersFollowMeData
 				if (userUsersIFollowData != null) {
@@ -64,14 +63,8 @@ export function Chat({ socket }) {
 				if (userUsersFollowMeData != null) {
 					usersFollowMeUsernames = await Promise.all(userUsersFollowMeData.map(userFollower => fetchUsername(userFollower.subjectId)));
 				}
-				let groupsPartOfGroupNames = null
-				if (userUsersIFollowData != null) {
-					groupsPartOfGroupNames = await Promise.all(groupsPartOfData.map(group => fetchGroupName(group.groupId)));
-				}
-				// Update the state with the extracted usernames
-				setUsersIFollow(usersIFollowUsernames);
-				setUsersFollowMe(usersFollowMeUsernames);
-				setGroupsPartOf(groupsPartOfGroupNames);
+
+
 
 				let uniqueUsernames = null
 				if (usersIFollowUsernames != null & usersFollowMeUsernames != null) {
@@ -104,16 +97,16 @@ export function Chat({ socket }) {
 
 	const [isChatboxVisible, setChatboxVisible] = useState(false);
 	const [selectedUser, setSelectedUser] = useState(null);
-    const [selectedGroup, setSelectedGroup] = useState(null);
+	const [selectedGroup, setSelectedGroup] = useState(null);
 
 	const handleUserClick = (username) => {
 		setSelectedUser(username);
 		setSelectedGroup(null); // Clear the selected group when selecting a user
 		setChatboxVisible(true);
 	};
-	
-	const handleGroupClick = (groupName) => {
-		setSelectedGroup(groupName);
+
+	const handleGroupClick = (group) => {
+		setSelectedGroup(group);
 		setSelectedUser(null); // Clear the selected user when selecting a group
 		setChatboxVisible(true);
 	};
@@ -166,9 +159,9 @@ export function Chat({ socket }) {
 			<h3>Groups</h3>
 			{groupsPartOf && groupsPartOf.length > 0 ? (
 				<ul>
-					{groupsPartOf.map((groupName, index) => (
+					{groupsPartOf.map((group, index) => (
 						<li key={index}>
-							<a href="#" onClick={() => handleGroupClick(groupName)}>{groupName}</a>
+							<a href="#" onClick={() => handleGroupClick(group)}>{group.title}</a>
 						</li>
 					))}
 				</ul>
@@ -176,15 +169,15 @@ export function Chat({ socket }) {
 				<p>You're not part of any groups</p>
 			)}
 			<ul id="messages" style={{ ...messageStyle, display: isChatboxVisible ? "block" : "none" }}>
-    {selectedUser && <li>Chat with {selectedUser}</li>}
-    {selectedGroup && <li>Chat in {selectedGroup}</li>}
-</ul>
-<form id="chatbox" onSubmit={handleSubmit} style={{ display: isChatboxVisible ? "block" : "none" }}>
-    <textarea onChange={handleMessages}></textarea>
-    <button type="submit" className="btn btn-primary">
-        send
-    </button>
-</form>
+				{selectedUser && <li>Chat with {selectedUser}</li>}
+				{selectedGroup && <li>Chat in {selectedGroup.title}</li>}
+			</ul>
+			<form id="chatbox" onSubmit={handleSubmit} style={{ display: isChatboxVisible ? "block" : "none" }}>
+				<textarea onChange={handleMessages}></textarea>
+				<button type="submit" className="btn btn-primary">
+					send
+				</button>
+			</form>
 		</div>
 	);
 };	
