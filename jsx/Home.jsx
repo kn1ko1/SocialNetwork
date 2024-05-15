@@ -104,6 +104,7 @@ export function Home() {
 				setPrivatePosts(data.privatePosts)
 				setPublicPostsWithComments(data.publicPostsWithComments)
 				// setUserGroups(data.userGroups)
+				console.log(data.publicPostsWithComments)
 			})
 			.catch((error) => {
 				console.error("Error fetching data:", error)
@@ -170,6 +171,25 @@ export function Home() {
 							)}
 						</div>
 
+						{/* Rendering Private Posts */}
+						<div className="privatePosts">
+							<h2>Private Posts</h2>
+							{privatePosts !== null && privatePosts.length > 0 ? (
+								[...privatePosts]
+									.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+									.map((privatePost) => (
+										<PostCard
+											key={`private-${privatePost.post.id}`}
+											post={privatePost.post}
+											comments={privatePost.comments}
+											showCommentForm={true}
+										/>
+									))
+							) : (
+								<p>No private posts</p>
+							)}
+						</div>
+
 						{/* Rendering Almost Private Posts */}
 						<div className="almostPrivatePosts">
 							<h2>Almost Private Posts</h2>
@@ -189,74 +209,7 @@ export function Home() {
 							)}
 						</div>
 
-						{/* Rendering Private Posts */}
-						<div className="privatePosts">
-							<h2>Private Posts</h2>
-							{privatePosts !== null && privatePosts.length > 0 ? (
-								[...privatePosts]
-									.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-									.map((privatePost) => (
-										<PostCard
-											key={`private-${privatePost.post.id}`}
-											post={privatePost.post}
-											comments={privatePost.comments}
-											showCommentForm={true}
-										/>
-									))
-							) : (
-								<p>No private posts</p>
-							)}
-						</div>{/* Rendering Public Posts */}
-						<div className="publicPostsWithComments">
-							<h2>Public Posts</h2>
-							{publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? (
-								publicPostsWithComments.map((publicPostsWithComment) => (
-									<PostCard
-										key={`public-${publicPostsWithComment.post.id}`}
-										post={publicPostsWithComment.post}
-										comments={publicPostsWithComment.comments}
-										showCommentForm={true}
-										fetchFunc={fetchUserPostData}
-									/>
-								))
-							) : (
-								<p>No public posts</p>
-							)}
-						</div>
 
-						{/* Rendering Almost Private Posts */}
-						<div className="almostPrivatePosts">
-							<h2>Almost Private Posts</h2>
-							{almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? (
-								almostPrivatePosts.map((almostPrivatePost) => (
-									<PostCard
-										key={`almost-private-${almostPrivatePost.post.id}`}
-										post={almostPrivatePost.post}
-										comments={almostPrivatePost.comments}
-										showCommentForm={true}
-									/>
-								))
-							) : (
-								<p>No almost private posts</p>
-							)}
-						</div>
-
-						{/* Rendering Private Posts */}
-						<div className="privatePosts">
-							<h2>Private Posts</h2>
-							{privatePosts !== null && privatePosts.length > 0 ? (
-								privatePosts.map((privatePost) => (
-									<PostCard
-										key={`private-${privatePost.post.id}`}
-										post={privatePost.post}
-										comments={privatePost.comments}
-										showCommentForm={true}
-									/>
-								))
-							) : (
-								<p>No private posts</p>
-							)}
-						</div>
 
 						{/* Rendering User Groups
 						<div className="userGroups">

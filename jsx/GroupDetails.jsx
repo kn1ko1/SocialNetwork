@@ -33,7 +33,7 @@ export function GroupDetails({ group }) {
 	const fetchGroupData = async (groupId) => {
 		try {
 			const promises = [];
-			promises.push(fetch(`http://localhost:8080/api/users/transport`));
+			promises.push(fetch(`http://localhost:8080/api/users`));
 			promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/groupUsers`));
 			promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/posts`));
 			promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/messages`));
@@ -75,7 +75,6 @@ export function GroupDetails({ group }) {
 			} else {
 				setGroupPosts(null)
 			}
-			setGroupPosts(postsWithComments);
 			setGroupMessages(messagesData);
 			setGroupEvents(eventsData);
 

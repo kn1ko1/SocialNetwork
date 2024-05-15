@@ -35,7 +35,6 @@ ORDER BY
 
 	// Map to store posts with their comments
 	postMap := make(map[int]*transport.PostWithComments)
-
 	for rows.Next() {
 		var postWithComment transport.PostWithComments
 		var post models.Post
@@ -54,16 +53,13 @@ ORDER BY
 		if comment.CommentId != 0 {
 			postMap[post.PostId].Comments = append(postMap[post.PostId].Comments, comment)
 		}
+		result = append(result, postWithComment)
 
 	}
-
 	if err := rows.Err(); err != nil {
 		utils.HandleError("Error iterating over rows in GetHomeDataForUser.", err)
 		return nil, err
 	}
 
-	for _, postWithComment := range postMap {
-		result = append(result, *postWithComment)
-	}
 	return result, nil
 }
