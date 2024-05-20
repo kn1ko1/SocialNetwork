@@ -127,100 +127,131 @@ export function Profile({ userId, isEditable }) {
 			})
 	}
 
+	const postCardStyle = {
+		maxWidth: '1000px',
+		background: 'linear-gradient(to bottom, #c7ddef, #ffffff)', // Light blue/grey to white gradient
+		borderRadius: '10px',
+		boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth
+		padding: '40px',
+		margin: 'auto',
+		marginBottom: '20px', // Adjust spacing between post cards
+		border: '1px solid #ccc', // Add a thin border
+	};
+
 	return (
-		<div>
-			<div id="profileData">
-				<h2>{profileUserData.username}'s Profile</h2>
-				{!isEditable && (
-					<FollowButton
-						followerId={currentUserId}
-						user={profileUserData}
-					/>
-				)}
-				{isPublicValue || isEditable || isFollowed ? (
-					<>
-						{isEditable ? (
-							<div id="isPublicToggle">
-								<label>
-									<input
-										type="radio"
-										value={true}
-										checked={isPublicValue === true}
-										onChange={handlePrivacyChange}
-									/>
-									Public
-								</label>
-								<label>
-									<input
-										type="radio"
-										value={false}
-										checked={isPublicValue === false}
-										onChange={handlePrivacyChange}
-									/>
-									Private
-								</label>
-							</div>
-						) : (
-							<p>
-								<strong>Privacy:</strong> {isPublicValue ? "Public" : "Private"}
-							</p>
-						)}
-
-						<p>
-							<strong>User ID:</strong> {profileUserData.userId}
-						</p>
-						<p>
-							<strong>Username:</strong> {profileUserData.username}
-						</p>
-						<p>
-							<strong>Email:</strong> {profileUserData.email}
-						</p>
-						<p>
-							<strong>First Name:</strong> {profileUserData.firstName}
-						</p>
-						<p>
-							<strong>Last Name:</strong> {profileUserData.lastName}
-						</p>
-						<p>
-							<strong>Date of Birth:</strong>{" "}
-							{new Date(profileUserData.dob).toLocaleDateString()}
-						</p>
-						<p>
-							<strong>Bio:</strong> {profileUserData.bio}
-						</p>
-						<p>
-							<strong>Image URL:</strong> {profileUserData.imageURL}
-						</p>
-
-						<h2>{profileUserData.username}'s Posts</h2>
-						<div id="myPostsData">
-							{userPostData.map((post) => (
-								<div key={post.postId}>
-									<PostCard post={post}
-										showCommentForm={false} />
+		<div className="container" style={postCardStyle}>
+			<div className="row">
+				<div className="col-md-4">
+					{/* User data */}
+					<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>{profileUserData.username}'s Profile</h2>
+					{/* <h2>{profileUserData.username}'s Profile</h2> */}
+					
+					<br />
+					{!isEditable && (
+						<div className="d-flex justify-content-center align-items-center">
+						<FollowButton
+							followerId={currentUserId}
+							user={profileUserData}
+						/>
+						</div>
+					)}
+					{isPublicValue || isEditable || isFollowed ? (
+						<>
+							{isEditable ? (
+								<div id="isPublicToggle">
+									<p>
+									<h4 style={{ fontSize: '14px' }}>Toggle to change profile privacy setting</h4>
+									<strong>Privacy:</strong>
+									<label>
+										<input
+											type="radio"
+											value={true}
+											checked={isPublicValue === true}
+											onChange={handlePrivacyChange}
+										/>
+										Public
+									</label>
+									<label>
+										<input
+											type="radio"
+											value={false}
+											checked={isPublicValue === false}
+											onChange={handlePrivacyChange}
+										/>
+										Private
+									</label>
+									</p>
 								</div>
+							) : (
+								<p>
+									<strong>Privacy:</strong> {isPublicValue ? "Public" : "Private"}
+								</p>
+							)}
+
+	
+	
+
+							<p>
+								<strong>User ID:</strong> {profileUserData.userId}
+							</p>
+							<p>
+								<strong>Username:</strong> {profileUserData.username}
+							</p>
+							<p>
+								<strong>Email:</strong> {profileUserData.email}
+							</p>
+							<p>
+								<strong>First Name:</strong> {profileUserData.firstName}
+							</p>
+							<p>
+								<strong>Last Name:</strong> {profileUserData.lastName}
+							</p>
+							<p>
+								<strong>Date of Birth:</strong>{" "}
+								{new Date(profileUserData.dob).toLocaleDateString()}
+							</p>
+							<p>
+								<strong>Bio:</strong> {profileUserData.bio}
+							</p>
+							<p>
+								<strong>Image URL:</strong> {profileUserData.imageURL}
+							</p>
+						</>
+					) : (
+						<p>This profile is private.</p>
+					)}
+				</div>
+				<div className="col-md-4">
+					{/* Posts data */}
+					<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>{profileUserData.username}'s Posts</h2>
+					<div id="myPostsData">
+						{userPostData.map((post) => (
+							<div key={post.postId}>
+								<PostCard post={post} showCommentForm={false} />
+							</div>
+						))}
+					</div>
+				</div>
+				<div className="col-md-4">
+					{/* Followers data */}
+					<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>{profileUserData.username}'s Followers</h2>
+					<div id="myFollowersData">
+						{userFollowerData &&
+							userFollowerData.map((follower) => (
+								<p key={follower.username}>{follower.username}</p>
 							))}
-						</div>
-
-						<h2>{profileUserData.username}'s Followers</h2>
-						<div id="myFollowersData">
-							{userFollowerData &&
-								userFollowerData.map((follower) => (
-									<p key={follower.username}>{follower.username}</p>
-								))}
-						</div>
-
-						<h2>{profileUserData.username}'s Followed</h2>
-						<div id="usersIFollowData">
-							{userFollowsData &&
-								userFollowsData.map((user) => (
-									<p key={user.username}>{user.username}</p>
-								))}
-						</div>
-					</>
-				) : (
-					<p>This profile is private.</p>
-				)}
+					</div>
+				
+			
+					{/* Followed data */}
+					<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>Users {profileUserData.username} Follows</h2>
+					<div id="usersIFollowData">
+						{userFollowsData &&
+							userFollowsData.map((user) => (
+								<p key={user.username}>{user.username}</p>
+							))}
+					</div>
+				</div>
 			</div>
 		</div>
 	)
