@@ -64,6 +64,7 @@ func (h *WebSocketHandler) get(w http.ResponseWriter, r *http.Request) {
 
 	// Get all groups associated with the user and put the client in those groups.
 	groupUsers, err := h.Repo.GetGroupUsersByUserId(user.UserId)
+
 	if err != nil {
 		log.Println(err.Error())
 		http.Error(w, "internal server error", http.StatusInternalServerError)

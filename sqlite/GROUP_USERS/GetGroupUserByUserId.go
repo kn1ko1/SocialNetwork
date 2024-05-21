@@ -2,6 +2,7 @@ package group_users
 
 import (
 	"database/sql"
+	"log"
 	"socialnetwork/models"
 	"socialnetwork/utils"
 )
@@ -33,7 +34,7 @@ func GetGroupUsersByUserId(database *sql.DB, userId int) ([]models.GroupUser, er
 
 		groupUsers = append(groupUsers, groupUser)
 	}
-
+	log.Println("[GetGroupUsersByUserId], groupUsers:", groupUsers)
 	if err := rows.Err(); err != nil {
 		utils.HandleError("Error iterating over rows in GetGroupUsersByUserId.", err)
 		return nil, err

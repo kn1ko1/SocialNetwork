@@ -58,55 +58,38 @@ func (c *Client) Send(v any) {
 
 func (c *Client) HandleMessage(msg WebSocketMessage) {
 	fmt.Println("message is:", msg)
+	var body models.Message
 	switch msg.Code {
 	case GROUP_CHAT_MESSAGE:
-		var body GroupChatBody
 		err := json.Unmarshal([]byte(msg.Body), &body)
 		if err != nil {
 			log.Println(err.Error())
+			return
 		}
 		fmt.Printf("%+v\n", body)
 		fmt.Println("1 testBody")
-		groupId := body.GroupID
-		c.SocketGroups[groupId].Broadcast <- msg
+		groupId := body.TargetId
+		group, ok := c.SocketGroups[groupId]
+		if !ok {
+			log.Printf("SocketGroup %d does not exist\n", groupId)
+			return
+		}
+		group.Broadcast <- msg
 		// store message in DB
 		// do stuff
 	case PRIVATE_MESSAGE:
-		var body PrivateMessageBody
 		err := json.Unmarshal([]byte(msg.Body), &body)
 		if err != nil {
 			log.Println(err.Error())
+			return
 		}
 		fmt.Printf("%+v\n", body)
 		fmt.Println("2 person")
-		c.SocketGroups[0].Broadcast <- msg
-		// case CREATE_EVENT:
-		// 	// User action on front-end triggers this
-		// 	var body models.Event
-		// 	err := json.Unmarshal([]byte(msg.Body), &body)
-		// 	if err != nil {
-		// 		log.Println(err.Error())
-		// 	}
-		// 	body.Validate()
-		// 	// Create Event in DB
-		// 	event, err = c.Repo.CreateEvent(body)
-		// 	if err != nil {
-		// 		log.Println(err.Error())
-		// 	}
-		// 	n := models.Notification{
-		// 		NotificationType: "Create Event",
-		// 		ObjectId:         body.GroupID,
-		// 		SenderId:         body.SenderID,
-		// 		TargetId:         body.GroupID,
-		// 	}
-		// case 3:
-		// 	var event models.Event
-		// 	err := json.Unmarshal([]byte(msg.Body), &event)
-		// 	if err != nil {
-		// 		log.Println(err.Error())
-		// 	}
-		// 	fmt.Printf("%+v\n", event)
-		// 	fmt.Println("3 event")
-		// 	fmt.Println(msg.Body)
+		group, ok := c.SocketGroups[0]
+		if !ok {
+			log.Println("Private message group does not exist")
+			return
+		}
+		group.Broadcast <- msg
 	}
 }

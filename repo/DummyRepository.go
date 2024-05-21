@@ -620,7 +620,6 @@ func (r *DummyRepository) GetGroupUser(groupUserId int) (models.GroupUser, error
 }
 func (r *DummyRepository) GetGroupUsersByUserId(userId int) ([]models.GroupUser, error) {
 	var groupUsers []models.GroupUser
-
 	for i := 0; i < rand.Intn(6); i++ {
 		groupUser := validGroupUser
 		groupUser.UserId = userId

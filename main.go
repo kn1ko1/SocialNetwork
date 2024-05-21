@@ -150,7 +150,7 @@ func addApiHandlers(rt *router.Router) {
 }
 
 func addWSHandler(rt *router.Router) {
-	rt.AddHandler(regexp.MustCompile(`^/ws$`), ws.NewWebSocketHandler(repo.NewDummyRepository()))
+	rt.AddHandler(regexp.MustCompile(`^/ws$`), ws.NewWebSocketHandler(repo.NewSQLiteRepository()))
 }
 
 func addUIHandlers(rt *router.Router) {
