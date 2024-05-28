@@ -1,8 +1,16 @@
+const GROUP_CHAT_MESSAGE = 1;
+const PRIVATE_MESSAGE = 2;
+const CREATE_EVENT = 3;
 export const NotificationPopUp = ({
-  message,
+  data,
   onClose
 }) => {
+  let message = JSON.parse(data.body).body;
+  let code = JSON.parse(data.code);
+  console.log("socket message data:", data);
   return /*#__PURE__*/React.createElement("div", {
+    id: "notificationPopup"
+  }, /*#__PURE__*/React.createElement("div", {
     className: "toast show position-fixed bottom-0 end-0 p-3 m-3",
     style: {
       zIndex: 1000
@@ -18,5 +26,5 @@ export const NotificationPopUp = ({
     onClick: onClose
   })), /*#__PURE__*/React.createElement("div", {
     className: "toast-body"
-  }, message));
+  }, message)));
 };

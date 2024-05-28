@@ -21,45 +21,61 @@ export function Profile({ userId, isEditable }) {
 	const [isFollowed, setIsFollowed] = useState(false)
 
 	useEffect(() => {
-		fetchProfileData()
+		const fetchProfileData = async () => {
+			try {
+				const promises = [];
+				promises.push(fetch(`http://localhost:8080/api/users/${userId}`));
+				promises.push(fetch(`http://localhost:8080/api/users/${userId}/posts`));
+				promises.push(fetch(`http://localhost:8080/api/users/${userId}/followedUsers`));
+				promises.push(fetch(`http://localhost:8080/api/users/${userId}/followerUsers`));
+
+				const results = await Promise.all(promises);
+
+				const userDataResponse = results[0];
+				const userPostResponse = results[1]
+				const usersIFollowResponse = results[2];
+				const usersFollowMeResponse = results[3];
+
+				if (!userDataResponse.ok) {
+					throw new Error('Failed to fetch user profile');
+				}
+				if (!userPostResponse.ok) {
+					throw new Error('Failed to fetch user posts');
+				}
+				if (!usersIFollowResponse.ok) {
+					throw new Error('Failed to fetch followed users list');
+				}
+				if (!usersFollowMeResponse.ok) {
+					throw new Error('Failed to fetch follower users list');
+				}
+
+
+				const userData = await userDataResponse.json();
+				const userPostData = await userPostResponse.json();
+				const usersIFollowData = await usersIFollowResponse.json();
+				const usersFollowMeData = await usersFollowMeResponse.json();
+
+				setProfileUserData(userData);
+				setUserPostData(userPostData || []);
+				setUserFollowerData(usersIFollowData || []);
+				setUserFollowsData(usersFollowMeData || []);
+				setIsPublicValue(userData.isPublic);
+			} catch (error) {
+				console.error('Error fetching user data:', error);
+			}
+		};
+		
+			fetchProfileData()
+		
+
 	}, [userId])
 
 	useEffect(() => {
-			if (
-				!isEditable && currentUserId) {
-				checkIfFollowed(currentUserId)
-			}
-	}, [profileUserData])
-
-	const fetchProfileData = async () => {
-		try {
-			const response = await fetch(
-				`http://localhost:8080/api/profile/${userId}`,
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-					},
-				}
-			)
-
-			if (!response.ok) {
-				throw new Error(
-					`Failed to fetch profile data: ${response.status} ${response.statusText}`
-				)
-			}
-
-			const data = await response.json();
-
-			setProfileUserData(data.profileUserData);
-			setUserPostData(data.userPostData || []);
-			setUserFollowerData(data.userFollowerData || []);
-			setUserFollowsData(data.userFollowsData || []);
-			setIsPublicValue(data.profileUserData.isPublic);
-		} catch (error) {
-			console.error("Error fetching profile data:", error)
+		if (!isEditable && currentUserId) {
+			checkIfFollowed(currentUserId)
 		}
-	}
+	}, [currentUserId, isEditable, userId])
+
 
 	const checkIfFollowed = async (currentUserId) => {
 		try {
@@ -74,25 +90,18 @@ export function Profile({ userId, isEditable }) {
 			)
 
 			if (response.ok) {
-				const updatedProfileUserData = {
-					...profileUserData,
+				setIsFollowed(true);
+				setProfileUserData((prevData) => ({
+					...prevData,
 					isFollowed: true,
-				};
-				setProfileUserData(updatedProfileUserData);
-				console.log("updatedProfileUserData", updatedProfileUserData)
-				setIsFollowed(true)
-				console.log("checkIfFollowed.  isFollowed", isFollowed)
-				console.log("response", response)
+				}));
 			} else if (response.status === 404) {
-				const updatedProfileUserData = {
-					...profileUserData,
+				setIsFollowed(false);
+				setProfileUserData((prevData) => ({
+					...prevData,
 					isFollowed: false,
-				};
-				console.log("updatedProfileUserData", updatedProfileUserData)
+				}));
 
-				setProfileUserData(updatedProfileUserData);
-				setIsFollowed(false)
-				console.log("checkIfFollowed.  isFollowed", isFollowed)
 			} else {
 				console.error("Error fetching user user data:", response.statusText)
 			}
@@ -144,15 +153,13 @@ export function Profile({ userId, isEditable }) {
 				<div className="col-md-4">
 					{/* User data */}
 					<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>{profileUserData.username}'s Profile</h2>
-					{/* <h2>{profileUserData.username}'s Profile</h2> */}
-					
 					<br />
 					{!isEditable && (
 						<div className="d-flex justify-content-center align-items-center">
-						<FollowButton
-							followerId={currentUserId}
-							user={profileUserData}
-						/>
+							<FollowButton
+								followerId={currentUserId}
+								user={profileUserData}
+							/>
 						</div>
 					)}
 					{isPublicValue || isEditable || isFollowed ? (
@@ -160,26 +167,26 @@ export function Profile({ userId, isEditable }) {
 							{isEditable ? (
 								<div id="isPublicToggle">
 									<p>
-									<h4 style={{ fontSize: '14px' }}>Toggle to change profile privacy setting</h4>
-									<strong>Privacy:</strong>
-									<label>
-										<input
-											type="radio"
-											value={true}
-											checked={isPublicValue === true}
-											onChange={handlePrivacyChange}
-										/>
-										Public
-									</label>
-									<label>
-										<input
-											type="radio"
-											value={false}
-											checked={isPublicValue === false}
-											onChange={handlePrivacyChange}
-										/>
-										Private
-									</label>
+										<h4 style={{ fontSize: '14px' }}>Toggle to change profile privacy setting</h4>
+										<strong>Privacy:</strong>
+										<label>
+											<input
+												type="radio"
+												value={true}
+												checked={isPublicValue === true}
+												onChange={handlePrivacyChange}
+											/>
+											Public
+										</label>
+										<label>
+											<input
+												type="radio"
+												value={false}
+												checked={isPublicValue === false}
+												onChange={handlePrivacyChange}
+											/>
+											Private
+										</label>
 									</p>
 								</div>
 							) : (
@@ -187,10 +194,6 @@ export function Profile({ userId, isEditable }) {
 									<strong>Privacy:</strong> {isPublicValue ? "Public" : "Private"}
 								</p>
 							)}
-
-	
-	
-
 							<p>
 								<strong>User ID:</strong> {profileUserData.userId}
 							</p>
@@ -241,8 +244,6 @@ export function Profile({ userId, isEditable }) {
 								<p key={follower.username}>{follower.username}</p>
 							))}
 					</div>
-				
-			
 					{/* Followed data */}
 					<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>Users {profileUserData.username} Follows</h2>
 					<div id="usersIFollowData">

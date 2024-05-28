@@ -26,34 +26,50 @@ export function Profile({
   const [isPublicValue, setIsPublicValue] = useState(null);
   const [isFollowed, setIsFollowed] = useState(false);
   useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const promises = [];
+        promises.push(fetch(`http://localhost:8080/api/users/${userId}`));
+        promises.push(fetch(`http://localhost:8080/api/users/${userId}/posts`));
+        promises.push(fetch(`http://localhost:8080/api/users/${userId}/followedUsers`));
+        promises.push(fetch(`http://localhost:8080/api/users/${userId}/followerUsers`));
+        const results = await Promise.all(promises);
+        const userDataResponse = results[0];
+        const userPostResponse = results[1];
+        const usersIFollowResponse = results[2];
+        const usersFollowMeResponse = results[3];
+        if (!userDataResponse.ok) {
+          throw new Error('Failed to fetch user profile');
+        }
+        if (!userPostResponse.ok) {
+          throw new Error('Failed to fetch user posts');
+        }
+        if (!usersIFollowResponse.ok) {
+          throw new Error('Failed to fetch followed users list');
+        }
+        if (!usersFollowMeResponse.ok) {
+          throw new Error('Failed to fetch follower users list');
+        }
+        const userData = await userDataResponse.json();
+        const userPostData = await userPostResponse.json();
+        const usersIFollowData = await usersIFollowResponse.json();
+        const usersFollowMeData = await usersFollowMeResponse.json();
+        setProfileUserData(userData);
+        setUserPostData(userPostData || []);
+        setUserFollowerData(usersIFollowData || []);
+        setUserFollowsData(usersFollowMeData || []);
+        setIsPublicValue(userData.isPublic);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
     fetchProfileData();
   }, [userId]);
   useEffect(() => {
     if (!isEditable && currentUserId) {
       checkIfFollowed(currentUserId);
     }
-  }, [profileUserData]);
-  const fetchProfileData = async () => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/profile/${userId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-      if (!response.ok) {
-        throw new Error(`Failed to fetch profile data: ${response.status} ${response.statusText}`);
-      }
-      const data = await response.json();
-      setProfileUserData(data.profileUserData);
-      setUserPostData(data.userPostData || []);
-      setUserFollowerData(data.userFollowerData || []);
-      setUserFollowsData(data.userFollowsData || []);
-      setIsPublicValue(data.profileUserData.isPublic);
-    } catch (error) {
-      console.error("Error fetching profile data:", error);
-    }
-  };
+  }, [currentUserId, isEditable, userId]);
   const checkIfFollowed = async currentUserId => {
     try {
       const response = await fetch(`http://localhost:8080/api/users/${currentUserId}/userUsers/${userId}`, {
@@ -63,24 +79,17 @@ export function Profile({
         }
       });
       if (response.ok) {
-        const updatedProfileUserData = {
-          ...profileUserData,
-          isFollowed: true
-        };
-        setProfileUserData(updatedProfileUserData);
-        console.log("updatedProfileUserData", updatedProfileUserData);
         setIsFollowed(true);
-        console.log("checkIfFollowed.  isFollowed", isFollowed);
-        console.log("response", response);
+        setProfileUserData(prevData => ({
+          ...prevData,
+          isFollowed: true
+        }));
       } else if (response.status === 404) {
-        const updatedProfileUserData = {
-          ...profileUserData,
-          isFollowed: false
-        };
-        console.log("updatedProfileUserData", updatedProfileUserData);
-        setProfileUserData(updatedProfileUserData);
         setIsFollowed(false);
-        console.log("checkIfFollowed.  isFollowed", isFollowed);
+        setProfileUserData(prevData => ({
+          ...prevData,
+          isFollowed: false
+        }));
       } else {
         console.error("Error fetching user user data:", response.statusText);
       }

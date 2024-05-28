@@ -15,15 +15,13 @@ export const renderNavbar = ({ socket }) => {
 
 export function Navbar({ socket }) {
 	const { currentUserId } = getCurrentUserId()
-	const [notification, setNotification] = useState(null);
+	const [notificationData, setNotificationData] = useState(null);
 
 	socket.onmessage = function (e) {
 		let data = JSON.parse(e.data);
-		let msg = JSON.parse(data.body).body;
-		console.log("you received websocket message:", msg);
 
 		// Show custom notification
-		setNotification(msg);
+		setNotificationData(data);
 
 	}
 
@@ -69,8 +67,9 @@ export function Navbar({ socket }) {
 					<span className="navbar-toggler-icon"></span>
 				</button>
 				<div className="collapse navbar-collapse" id="navbarSupportedContent">
-					{notification && (
-						<NotificationPopUp message={notification} onClose={() => setNotification(null)} />
+					{/* Notification Popup comes from here */}
+					{notificationData && (
+						<NotificationPopUp data={notificationData} onClose={() => setNotificationData(null)} />
 					)}
 					<ul className="navbar-nav me-auto mx-auto mb-2 mb-lg-0">
 						<li className="nav-item">

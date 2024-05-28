@@ -23,14 +23,12 @@ export function Navbar({
   const {
     currentUserId
   } = getCurrentUserId();
-  const [notification, setNotification] = useState(null);
+  const [notificationData, setNotificationData] = useState(null);
   socket.onmessage = function (e) {
     let data = JSON.parse(e.data);
-    let msg = JSON.parse(data.body).body;
-    console.log("you received websocket message:", msg);
 
     // Show custom notification
-    setNotification(msg);
+    setNotificationData(data);
   };
   const logout = async () => {
     try {
@@ -72,9 +70,9 @@ export function Navbar({
   })), /*#__PURE__*/React.createElement("div", {
     className: "collapse navbar-collapse",
     id: "navbarSupportedContent"
-  }, notification && /*#__PURE__*/React.createElement(NotificationPopUp, {
-    message: notification,
-    onClose: () => setNotification(null)
+  }, notificationData && /*#__PURE__*/React.createElement(NotificationPopUp, {
+    data: notificationData,
+    onClose: () => setNotificationData(null)
   }), /*#__PURE__*/React.createElement("ul", {
     className: "navbar-nav me-auto mx-auto mb-2 mb-lg-0"
   }, /*#__PURE__*/React.createElement("li", {

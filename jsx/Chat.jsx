@@ -1,6 +1,5 @@
 import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js"
 const { useState, useEffect } = React
-import { NotificationPopUp } from "./components/Notifications/NotificationPopUp.js";
 
 const GROUP_CHAT_MESSAGE = 1;
 const PRIVATE_MESSAGE = 2;
@@ -17,10 +16,8 @@ export function Chat({ socket }) {
     const [messageType, setMessageType] = useState("");
     const [targetId, setTargetId] = useState(0);
     const [sendMessage, setSendMessage] = useState("");
-    const [receiveMessage, setReceiveMessage] = useState("");
     const [groupsPartOf, setGroupsPartOf] = useState([]);
     const [uniqueUsers, setUniqueUsers] = useState([]);
-    const [notification, setNotification] = useState(null);
 
     let messages = document.getElementById("messages");
 
@@ -121,9 +118,6 @@ export function Chat({ socket }) {
         let data = JSON.parse(e.data);
         let msg = JSON.parse(data.body).body;
         console.log("you received websocket message:", msg);
-
-        // Show custom notification
-        setNotification(msg);
 
         let entry = document.createElement("li");
         entry.appendChild(document.createTextNode(msg));
