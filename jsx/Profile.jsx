@@ -23,37 +23,47 @@ export function Profile({ userId, isEditable }) {
 	useEffect(() => {
 		const fetchProfileData = async () => {
 			try {
-				const promises = [];
-				promises.push(fetch(`http://localhost:8080/api/users/${userId}`));
-				promises.push(fetch(`http://localhost:8080/api/users/${userId}/posts`));
-				promises.push(fetch(`http://localhost:8080/api/users/${userId}/followedUsers`));
-				promises.push(fetch(`http://localhost:8080/api/users/${userId}/followerUsers`));
 
-				const results = await Promise.all(promises);
+				const initialFetch = await fetch(`http://localhost:8080/api/users/${userId}`);
+				const userData = await initialFetch.json();
+				let userPostData = null
+				let usersIFollowData = null
+				let usersFollowMeData = null
 
-				const userDataResponse = results[0];
-				const userPostResponse = results[1]
-				const usersIFollowResponse = results[2];
-				const usersFollowMeResponse = results[3];
+				if (userData.isPublic || isEditable) {
+					const promises = [];
+					
+					// promises.push(fetch(`http://localhost:8080/api/users/${userId}`));
+					promises.push(fetch(`http://localhost:8080/api/users/${userId}/posts`));
+					promises.push(fetch(`http://localhost:8080/api/users/${userId}/followedUsers`));
+					promises.push(fetch(`http://localhost:8080/api/users/${userId}/followerUsers`));
 
-				if (!userDataResponse.ok) {
-					throw new Error('Failed to fetch user profile');
+					const results = await Promise.all(promises);
+
+					// const userDataResponse = results[0];
+					const userPostResponse = results[0]
+					const usersIFollowResponse = results[1];
+					const usersFollowMeResponse = results[2];
+
+					// if (!userDataResponse.ok) {
+					// 	throw new Error('Failed to fetch user profile');
+					// }
+					if (!userPostResponse.ok) {
+						throw new Error('Failed to fetch user posts');
+					}
+					if (!usersIFollowResponse.ok) {
+						throw new Error('Failed to fetch followed users list');
+					}
+					if (!usersFollowMeResponse.ok) {
+						throw new Error('Failed to fetch follower users list');
+					}
+
+
+					// const userData = await userDataResponse.json();
+					 userPostData = await userPostResponse.json();
+					 usersIFollowData = await usersIFollowResponse.json();
+					 usersFollowMeData = await usersFollowMeResponse.json();
 				}
-				if (!userPostResponse.ok) {
-					throw new Error('Failed to fetch user posts');
-				}
-				if (!usersIFollowResponse.ok) {
-					throw new Error('Failed to fetch followed users list');
-				}
-				if (!usersFollowMeResponse.ok) {
-					throw new Error('Failed to fetch follower users list');
-				}
-
-
-				const userData = await userDataResponse.json();
-				const userPostData = await userPostResponse.json();
-				const usersIFollowData = await usersIFollowResponse.json();
-				const usersFollowMeData = await usersFollowMeResponse.json();
 
 				setProfileUserData(userData);
 				setUserPostData(userPostData || []);
@@ -64,9 +74,9 @@ export function Profile({ userId, isEditable }) {
 				console.error('Error fetching user data:', error);
 			}
 		};
-		
-			fetchProfileData()
-		
+
+		fetchProfileData()
+
 
 	}, [userId])
 
