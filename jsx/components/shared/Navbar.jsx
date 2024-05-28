@@ -5,14 +5,27 @@ import { renderNotifications } from "../../Notifications.js"
 import { renderChat } from "../../Chat.js"
 import { renderGroup } from "../../Group.js"
 import { renderLogin } from "../../Login.js"
+import { NotificationPopUp } from "../Notifications/NotificationPopUp.js"
+const { useState } = React
 
 export const renderNavbar = ({ socket }) => {
 	const navContainer = document.querySelector(".nav-container")
-	ReactDOM.render(<Navbar socket={ socket } />, navContainer)
+	ReactDOM.render(<Navbar socket={socket} />, navContainer)
 }
 
 export function Navbar({ socket }) {
 	const { currentUserId } = getCurrentUserId()
+	const [notification, setNotification] = useState(null);
+
+	socket.onmessage = function (e) {
+		let data = JSON.parse(e.data);
+		let msg = JSON.parse(data.body).body;
+		console.log("you received websocket message:", msg);
+
+		// Show custom notification
+		setNotification(msg);
+
+	}
 
 	const logout = async () => {
 		try {
@@ -42,6 +55,7 @@ export function Navbar({ socket }) {
 
 	return (
 		<nav className="navbar navbar-expand-md bg-body-tertiary">
+
 			<div className="container-fluid">
 				<button
 					className="navbar-toggler"
@@ -55,6 +69,9 @@ export function Navbar({ socket }) {
 					<span className="navbar-toggler-icon"></span>
 				</button>
 				<div className="collapse navbar-collapse" id="navbarSupportedContent">
+					{notification && (
+						<NotificationPopUp message={notification} onClose={() => setNotification(null)} />
+					)}
 					<ul className="navbar-nav me-auto mx-auto mb-2 mb-lg-0">
 						<li className="nav-item">
 							<a

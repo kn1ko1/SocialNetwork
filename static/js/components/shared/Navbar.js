@@ -5,6 +5,10 @@ import { renderNotifications } from "../../Notifications.js";
 import { renderChat } from "../../Chat.js";
 import { renderGroup } from "../../Group.js";
 import { renderLogin } from "../../Login.js";
+import { NotificationPopUp } from "../Notifications/NotificationPopUp.js";
+const {
+  useState
+} = React;
 export const renderNavbar = ({
   socket
 }) => {
@@ -19,6 +23,15 @@ export function Navbar({
   const {
     currentUserId
   } = getCurrentUserId();
+  const [notification, setNotification] = useState(null);
+  socket.onmessage = function (e) {
+    let data = JSON.parse(e.data);
+    let msg = JSON.parse(data.body).body;
+    console.log("you received websocket message:", msg);
+
+    // Show custom notification
+    setNotification(msg);
+  };
   const logout = async () => {
     try {
       const response = await fetch("http://localhost:8080/auth/logout", {
@@ -59,7 +72,10 @@ export function Navbar({
   })), /*#__PURE__*/React.createElement("div", {
     className: "collapse navbar-collapse",
     id: "navbarSupportedContent"
-  }, /*#__PURE__*/React.createElement("ul", {
+  }, notification && /*#__PURE__*/React.createElement(NotificationPopUp, {
+    message: notification,
+    onClose: () => setNotification(null)
+  }), /*#__PURE__*/React.createElement("ul", {
     className: "navbar-nav me-auto mx-auto mb-2 mb-lg-0"
   }, /*#__PURE__*/React.createElement("li", {
     className: "nav-item"

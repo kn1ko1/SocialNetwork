@@ -3,6 +3,7 @@ const {
   useState,
   useEffect
 } = React;
+import { NotificationPopUp } from "./components/Notifications/NotificationPopUp.js";
 const GROUP_CHAT_MESSAGE = 1;
 const PRIVATE_MESSAGE = 2;
 const CREATE_EVENT = 3;
@@ -27,6 +28,7 @@ export function Chat({
   const [receiveMessage, setReceiveMessage] = useState("");
   const [groupsPartOf, setGroupsPartOf] = useState([]);
   const [uniqueUsers, setUniqueUsers] = useState([]);
+  const [notification, setNotification] = useState(null);
   let messages = document.getElementById("messages");
   useEffect(() => {
     console.log("currentUserId", currentUserId);
@@ -53,19 +55,8 @@ export function Chat({
         const usersFollowMeData = await usersFollowMeResponse.json();
         const groupsPartOfData = await groupsPartOfResponse.json();
         setGroupsPartOf(groupsPartOfData);
-        // let usersIFollowUsernames = null
-        // // Extract usernames from userUsersIFollowData and usersFollowMeData
-        // if (userUsersIFollowData != null) {
-        // 	usersIFollowUsernames = await Promise.all(userUsersIFollowData.map(userUser => fetchUsername(userUser.subjectId)));
-
-        // }
-        // let usersFollowMeUsernames = null
-        // if (userUsersFollowMeData != null) {
-        // 	usersFollowMeUsernames = await Promise.all(userUsersFollowMeData.map(userFollower => fetchUsername(userFollower.subjectId)));
-        // }
-
         let uniqueUsers = null;
-        if (usersIFollowData != null & usersFollowMeData != null) {
+        if (usersIFollowData != null && usersFollowMeData != null) {
           uniqueUsers = Array.from(new Set([...usersIFollowData, ...usersFollowMeData]));
         } else if (usersIFollowData == null) {
           uniqueUsers = usersFollowMeData;
@@ -118,15 +109,14 @@ export function Chat({
     };
     socket.send(JSON.stringify(obj));
     setSendMessage("");
-
-    // Toggle the value of isChatboxVisible when a chat is selected
-    // setChatboxVisible(!isChatboxVisible);
   };
   socket.onmessage = function (e) {
     let data = JSON.parse(e.data);
     let msg = JSON.parse(data.body).body;
-    // setReceiveMessage(msg)
-    // console.log("receiveMessage:", receiveMessage)
+    console.log("you received websocket message:", msg);
+
+    // Show custom notification
+    setNotification(msg);
     let entry = document.createElement("li");
     entry.appendChild(document.createTextNode(msg));
     messages.appendChild(entry);
@@ -134,13 +124,21 @@ export function Chat({
   const messageStyle = {
     color: "orange"
   };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Chat"), /*#__PURE__*/React.createElement("h3", null, "Users"), uniqueUsers && uniqueUsers.length > 0 ? /*#__PURE__*/React.createElement("ul", null, uniqueUsers.map((user, index) => /*#__PURE__*/React.createElement("li", {
-    key: index
+  return /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("h1", null, "Chat"), /*#__PURE__*/React.createElement("h3", null, "Users"), uniqueUsers && uniqueUsers.length > 0 ? /*#__PURE__*/React.createElement("ul", {
+    className: "list-group"
+  }, uniqueUsers.map((user, index) => /*#__PURE__*/React.createElement("li", {
+    key: index,
+    className: "list-group-item"
   }, /*#__PURE__*/React.createElement("a", {
     href: "#",
     onClick: () => handleUserClick(user)
-  }, user.username)))) : /*#__PURE__*/React.createElement("p", null, "You're not following/followed by any users"), /*#__PURE__*/React.createElement("h3", null, "Groups"), groupsPartOf && groupsPartOf.length > 0 ? /*#__PURE__*/React.createElement("ul", null, groupsPartOf.map((group, index) => /*#__PURE__*/React.createElement("li", {
-    key: index
+  }, user.username)))) : /*#__PURE__*/React.createElement("p", null, "You're not following/followed by any users"), /*#__PURE__*/React.createElement("h3", null, "Groups"), groupsPartOf && groupsPartOf.length > 0 ? /*#__PURE__*/React.createElement("ul", {
+    className: "list-group"
+  }, groupsPartOf.map((group, index) => /*#__PURE__*/React.createElement("li", {
+    key: index,
+    className: "list-group-item"
   }, /*#__PURE__*/React.createElement("a", {
     href: "#",
     onClick: () => handleGroupClick(group)
@@ -157,10 +155,10 @@ export function Chat({
       display: isChatboxVisible ? "block" : "none"
     }
   }, /*#__PURE__*/React.createElement("textarea", {
+    className: "form-control",
     onChange: handleMessages
   }), /*#__PURE__*/React.createElement("button", {
     type: "submit",
-    className: "btn btn-primary"
-  }, "send")));
+    className: "btn btn-primary mt-2"
+  }, "Send")));
 }
-;

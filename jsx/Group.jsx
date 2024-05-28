@@ -40,15 +40,21 @@ export function Group() {
 
 			if (groupListData != null) {
 				for (let i = 0; i < groupListData.length; i++) {
-					const joinedGroup = joinedGroupsData.find(group => group.groupId === groupListData[i].groupId);
-					// If a corresponding group is found in joinedGroupsData
-					if (joinedGroup) {
-						// Add a new field 'isMember' to groupListData and set its value to true
-						groupListData[i].isMember = true;
+					if (joinedGroupsData !== null) {
+						const joinedGroup = joinedGroupsData.find(group => group.groupId === groupListData[i].groupId);
+						// If a corresponding group is found in joinedGroupsData
+						if (joinedGroup) {
+							// Add a new field 'isMember' to groupListData and set its value to true
+							groupListData[i].isMember = true;
+						} else {
+							// If no corresponding group is found, set 'isMember' to false or undefined
+							groupListData[i].isMember = false;
+						}
 					} else {
-						// If no corresponding group is found, set 'isMember' to false or undefined
 						groupListData[i].isMember = false;
+
 					}
+				
 				}
 			}
 			

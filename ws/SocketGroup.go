@@ -33,7 +33,7 @@ func NewSocketGroup(id int) *SocketGroup {
 
 // Run starts the SocketGroup's main loop for handling client events.
 func (g *SocketGroup) Run() {
-	var body models.Message
+	var message models.Message
 	for {
 		select {
 		case c := <-g.Enter:
@@ -48,16 +48,24 @@ func (g *SocketGroup) Run() {
 			// Handle different types of messages.
 			switch msg.Code {
 			case PRIVATE_MESSAGE:
-				err := json.Unmarshal([]byte(msg.Body), &body)
+				err := json.Unmarshal([]byte(msg.Body), &message)
 				if err != nil {
 					log.Println(err.Error())
 				}
-				log.Println("Private Message Body in socketGroup is:", msg.Body)
+				log.Println("Private Message Body in socketGroup is:", message)
 				// Find the target user and send the message.
-				c := g.Clients[body.TargetId]
+				ctime := time.Now().UTC().UnixMilli()
+				message.CreatedAt = ctime
+				message.UpdatedAt = ctime
+				ret, err := g.Repo.CreateMessage(message)
+				if err != nil {
+					log.Println(err.Error())
+				}
+				log.Println("Group Message added to db in socketGroup is:", ret)
+
+				c := g.Clients[message.TargetId]
 				c.Send(msg)
 			case GROUP_CHAT_MESSAGE:
-				var message models.Message
 				err := json.Unmarshal([]byte(msg.Body), &message)
 				if err != nil {
 					log.Println(err.Error())
