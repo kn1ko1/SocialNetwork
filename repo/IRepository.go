@@ -30,6 +30,5 @@ type IRepository interface {
 	GetHomeDataForUser(userId int) (transport.HomeModel, error)
 
 	//Profile
-	GetProfileDataForUser(userId int) (transport.ProfileModel, error)
 	UpdateIsPublic(userId int, isPublic bool) error
 }

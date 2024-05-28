@@ -90,7 +90,6 @@ func addApiHandlers(rt *router.Router) {
 
 	userIdHandler := api.NewUserIdHandler(r)
 	homeHandler := api.NewHomeHandler(r)
-	profileHandler := api.NewProfileHandler(r)
 	privacyHandler := api.NewPrivacyHandler(r)
 
 	// Auth Handlers
@@ -147,7 +146,6 @@ func addApiHandlers(rt *router.Router) {
 
 	rt.AddHandler(regexp.MustCompile(`^/api/userId$`), userIdHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/home$`), homeHandler)
-	rt.AddHandler(regexp.MustCompile(`^/api/profile/[0-9]+$`), profileHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/profile/privacy$`), privacyHandler)
 }
 
