@@ -86,7 +86,7 @@ export function Chat({ socket }) {
     const handleUserClick = (user) => {
         setSelectedUser(user);
         setMessageCode(2);
-        setMessageType("private");
+        setMessageType("users");
         setTargetId(user.userId);
         setSelectedGroup(null); // Clear the selected group when selecting a user
         setChatboxVisible(true);
@@ -95,7 +95,7 @@ export function Chat({ socket }) {
     const handleGroupClick = (group) => {
         setSelectedGroup(group);
         setMessageCode(1);
-        setMessageType("group");
+        setMessageType("groups");
         setTargetId(group.groupId);
         setSelectedUser(null); // Clear the selected user when selecting a group
         setChatboxVisible(true);

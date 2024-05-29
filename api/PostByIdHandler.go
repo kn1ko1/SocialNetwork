@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"socialnetwork/imageProcessing"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
@@ -101,7 +102,7 @@ func (h *PostByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	if file != nil {
 		defer file.Close()
 		var ImageProcessingrErr error
-		post.ImageURL, ImageProcessingrErr = ImageProcessing(w, r, file, *fileHeader)
+		post.ImageURL, ImageProcessingrErr = imageProcessing.ImageProcessing(w, r, file, *fileHeader)
 		if ImageProcessingrErr != nil {
 			utils.HandleError("Error with ImageHandler", ImageProcessingrErr)
 		}

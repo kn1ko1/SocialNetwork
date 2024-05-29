@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"socialnetwork/imageProcessing"
 	"socialnetwork/models"
 	"socialnetwork/repo"
-	"socialnetwork/transport"
 	"socialnetwork/utils"
 	"time"
 
@@ -35,16 +35,6 @@ func (h *RegistrationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 
 func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 
-	// Checks cookies
-	// cookie, err := r.Cookie(CookieName)
-	// if err == nil {
-	// 	_, exists := SessionMap[cookie.Value]
-	// 	if exists {
-	// 		utils.HandleError("Login failed - user already logged in:", err)
-	// 		http.Error(w, "user already logged in", http.StatusBadRequest)
-	// 		return
-	// 	}
-	// }
 	cookie, err := r.Cookie("SessionID")
 	if err == nil {
 		_, err = DefaultManager.Get(cookie.Value)
@@ -55,51 +45,76 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Decodes incoming json into registeringUser (transport.RegisteringUser)
-	var registeringUser transport.RegisteringUser
-	json.NewDecoder(r.Body).Decode(&registeringUser)
+	ctime := time.Now().UTC().UnixMilli()
+	// Parse form data
+	err = r.ParseMultipartForm(10 << 20)
+	if err != nil {
+		utils.HandleError("Failed to parse form data:", err)
+		http.Error(w, "Failed to parse form data", http.StatusBadRequest)
+		return
+	}
 
-	// converts date from string to milliseconds for storage in database
-	date, err := time.Parse("2006-01-02", registeringUser.DOB)
+	// Extract form fields
+	bio := r.FormValue("bio")
+	date, err := time.Parse("2006-01-02", r.FormValue("dob"))
 	if err != nil {
 		fmt.Println("Error parsing date:", err)
 		return
 	}
 	dateInMilliseconds := date.UTC().UnixMilli()
-
+	email := r.FormValue("email")
+	password := r.FormValue("password")
 	// Encrypt Password for Storage
-	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(registeringUser.EncryptedPassword), bcrypt.DefaultCost)
+	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		utils.HandleError("Error with password encryption", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
-	// Creates current time in milliseconds for CreatedAt and UpdatedAt fields
-	ctime := time.Now().UTC().UnixMilli()
+	firstName := r.FormValue("firstName")
+	imageURL := ""
+	file, fileHeader, _ := r.FormFile("image")
+	if file != nil {
 
-	// Creates a models.User struct to passing to CreateUser, so that it both takes in and passes out the same types of data
-	processedUser := models.User{
-		Bio:               registeringUser.Bio,
+		defer file.Close()
+		imageURL, err = imageProcessing.ImageProcessing(w, r, file, *fileHeader)
+		if err != nil {
+			utils.HandleError("Error with ImageHandler", err)
+			// http.Error(w, "Failed to process image", http.StatusInternalServerError)
+			return
+		}
+		log.Println("[api/PostsHandler] Image Stored at:", imageURL)
+	}
+	isPublic := r.FormValue("isPublic")
+	isPublicBool := false
+	if isPublic == "true" {
+		isPublicBool = true
+	}
+	lastName := r.FormValue("lastName")
+	username := r.FormValue("username")
+
+	user := models.User{
+		Bio:               bio,
 		CreatedAt:         ctime,
 		DOB:               dateInMilliseconds,
-		Email:             registeringUser.Email,
+		Email:             email,
 		EncryptedPassword: string(encryptedPassword),
-		FirstName:         registeringUser.FirstName,
-		ImageURL:          registeringUser.ImageURL,
-		IsPublic:          registeringUser.IsPublic,
-		LastName:          registeringUser.LastName,
+		FirstName:         firstName,
+		ImageURL:          imageURL,
+		IsPublic:          isPublicBool,
+		LastName:          lastName,
 		UpdatedAt:         ctime,
-		Username:          registeringUser.Username,
+		Username:          username,
 	}
 
-	err = processedUser.Validate()
+	err = user.Validate()
 	if err != nil {
 		utils.HandleError("User invalid", err)
 		http.Error(w, "validation failed for user registration", http.StatusBadRequest)
 		return
 	}
-	log.Println("Received user in RegistrationHandler:", processedUser)
+	log.Println("Received user in RegistrationHandler:", user)
 
-	processedUser, err = h.Repo.CreateUser(processedUser)
+	user, err = h.Repo.CreateUser(user)
 	if err != nil {
 		utils.HandleError("Unable to register a new user in AddUserHandler", err)
 		http.Error(w, "Unable to register a new user", http.StatusBadRequest)
@@ -120,9 +135,9 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 			Email    string `json:"email"`
 			// Add other user fields as needed
 		}{
-			ID:       processedUser.UserId,
-			Username: processedUser.Username,
-			Email:    processedUser.Email,
+			ID:       user.UserId,
+			Username: user.Username,
+			Email:    user.Email,
 			// Assign other user fields as needed
 		},
 	}
@@ -134,7 +149,7 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Problem generating cookie", http.StatusInternalServerError)
 		return
 	}
-	err = DefaultManager.Add(cookieValue, processedUser)
+	err = DefaultManager.Add(cookieValue, user)
 	if err != nil {
 		utils.HandleError("Cookie Generation Error", err)
 		http.Error(w, "Problem generating cookie", http.StatusInternalServerError)

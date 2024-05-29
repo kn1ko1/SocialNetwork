@@ -35,8 +35,6 @@ export function Profile({
         let usersFollowMeData = null;
         if (userData.isPublic || isEditable) {
           const promises = [];
-
-          // promises.push(fetch(`http://localhost:8080/api/users/${userId}`));
           promises.push(fetch(`http://localhost:8080/api/users/${userId}/posts`));
           promises.push(fetch(`http://localhost:8080/api/users/${userId}/followedUsers`));
           promises.push(fetch(`http://localhost:8080/api/users/${userId}/followerUsers`));

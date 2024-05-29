@@ -2,14 +2,9 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
-	"log"
 	"net/http"
-	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 // Endpoint: /api/users
@@ -30,9 +25,9 @@ func (h *UsersHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 
-	case http.MethodPost:
-		h.post(w, r)
-		return
+	// case http.MethodPost:
+	// 	h.post(w, r)
+	// 	return
 	case http.MethodGet:
 		h.get(w)
 		return
@@ -42,71 +37,71 @@ func (h *UsersHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *UsersHandler) post(w http.ResponseWriter, r *http.Request) {
+// func (h *UsersHandler) post(w http.ResponseWriter, r *http.Request) {
 
-	var user models.User
-	err := json.NewDecoder(r.Body).Decode(&user)
-	if err != nil {
-		utils.HandleError("Failed to decode request body:", err)
-		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
-		return
-	}
-	log.Println("Received user:", user.Username)
+// 	var user models.User
+// 	err := json.NewDecoder(r.Body).Decode(&user)
+// 	if err != nil {
+// 		utils.HandleError("Failed to decode request body:", err)
+// 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+// 		return
+// 	}
+// 	log.Println("Received user:", user.Username)
 
-	// Validate the user
-	if validationErr := user.Validate(); validationErr != nil {
-		utils.HandleError("Validation failed:", validationErr)
-		http.Error(w, "Validation failed", http.StatusBadRequest)
-		return
-	}
+// 	// Validate the user
+// 	if validationErr := user.Validate(); validationErr != nil {
+// 		utils.HandleError("Validation failed:", validationErr)
+// 		http.Error(w, "Validation failed", http.StatusBadRequest)
+// 		return
+// 	}
 
-	hashPassword, err := bcrypt.GenerateFromPassword([]byte(user.EncryptedPassword), bcrypt.DefaultCost)
-	if err != nil {
-		utils.HandleError("error in encryption", err)
-	}
+// 	hashPassword, err := bcrypt.GenerateFromPassword([]byte(user.EncryptedPassword), bcrypt.DefaultCost)
+// 	if err != nil {
+// 		utils.HandleError("error in encryption", err)
+// 	}
 
-	user.EncryptedPassword = string(hashPassword)
+// 	user.EncryptedPassword = string(hashPassword)
 
-	parseMultipartFormErr := r.ParseMultipartForm(10 << 20)
-	if parseMultipartFormErr != nil {
-		utils.HandleError("Unable to Parse Multipart Form.", parseMultipartFormErr)
-	}
+// 	parseMultipartFormErr := r.ParseMultipartForm(10 << 20)
+// 	if parseMultipartFormErr != nil {
+// 		utils.HandleError("Unable to Parse Multipart Form.", parseMultipartFormErr)
+// 	}
 
-	file, fileHeader, formFileErr := r.FormFile("image")
-	if formFileErr != nil {
-		utils.HandleError("Error reading image.", formFileErr)
-	}
+// 	file, fileHeader, formFileErr := r.FormFile("image")
+// 	if formFileErr != nil {
+// 		utils.HandleError("Error reading image.", formFileErr)
+// 	}
 
-	//if file is given
-	if file != nil {
-		defer file.Close()
-		var ImageProcessingrErr error
-		user.ImageURL, ImageProcessingrErr = ImageProcessing(w, r, file, *fileHeader)
-		if ImageProcessingrErr != nil {
-			utils.HandleError("Error with ImageHandler", ImageProcessingrErr)
-		}
-		fmt.Println("USER INSERTED WITH FILE")
-	} else {
-		fmt.Println("USER INSERTED WITHOUT FILE")
-	}
+// 	//if file is given
+// 	if file != nil {
+// 		defer file.Close()
+// 		var ImageProcessingrErr error
+// 		user.ImageURL, ImageProcessingrErr = imageProcessing.ImageProcessing(w, r, file, *fileHeader)
+// 		if ImageProcessingrErr != nil {
+// 			utils.HandleError("Error with ImageHandler", ImageProcessingrErr)
+// 		}
+// 		fmt.Println("USER INSERTED WITH FILE")
+// 	} else {
+// 		fmt.Println("USER INSERTED WITHOUT FILE")
+// 	}
 
-	// Create post in the repository
-	result, createErr := h.Repo.CreateUser(user)
-	if createErr != nil {
-		utils.HandleError("Failed to create user in the repository:", createErr)
-		http.Error(w, "Failed to create user", http.StatusInternalServerError)
-		return
-	}
+// 	// Create post in the repository
+// 	result, createErr := h.Repo.CreateUser(user)
+// 	if createErr != nil {
+// 		utils.HandleError("Failed to create user in the repository:", createErr)
+// 		http.Error(w, "Failed to create user", http.StatusInternalServerError)
+// 		return
+// 	}
 
-	// Encode and write the response
-	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode(result)
-	if err != nil {
-		utils.HandleError("Failed to encode and write JSON response. ", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-}
+// 	// Encode and write the response
+// 	w.WriteHeader(http.StatusCreated)
+// 	err = json.NewEncoder(w).Encode(result)
+// 	if err != nil {
+// 		utils.HandleError("Failed to encode and write JSON response. ", err)
+// 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 		return
+// 	}
+// }
 
 func (h *UsersHandler) get(w http.ResponseWriter) {
 
