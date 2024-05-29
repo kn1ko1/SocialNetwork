@@ -2,7 +2,7 @@ const {
   useState,
   useEffect
 } = React;
-import { fetchUsername } from "../shared/FetchUsername.js";
+import { fetchUserById } from "../shared/FetchUserById.js";
 import { respondToNotification } from "./RespondToNotification.js";
 import { notificationCardStyle } from "./NotificationCardStyle.js";
 import { formattedDate } from "../shared/FormattedDate.js";
@@ -14,7 +14,7 @@ export function EventInvite({
   const [event, setEvent] = useState({});
   const dateTime = formattedDate(event.dateTime);
   useEffect(() => {
-    fetchUsername(notification.senderId).then(username => setUsername(username));
+    fetchUserById(notification.senderId).then(user => setUsername(user.username));
     fetchEvent(notification.objectId).then(event => setEvent(event));
   }, [notification.senderId, notification.objectId]);
   const fetchEvent = async () => {

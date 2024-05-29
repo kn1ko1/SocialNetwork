@@ -1,7 +1,7 @@
 import { CommentCard } from "../Home/CommentCard.js";
 import { formattedDate } from "./FormattedDate.js";
 import { renderProfile } from "../../Profile.js";
-import { fetchUsername } from "../shared/FetchUsername.js";
+import { fetchUserById } from "./FetchUserById.js";
 const {
   useState,
   useEffect
@@ -25,12 +25,12 @@ export function PostCard({
 }) {
   const [body, setBody] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-  const [username, setUsername] = useState("");
+  const [user, setUser] = useState("");
   const postDate = formattedDate(post.createdAt);
   useEffect(() => {
     const fetchUserData = async () => {
-      const fetchedUsername = await fetchUsername(post.userId);
-      setUsername(fetchedUsername);
+      const fetchedUser = await fetchUserById(post.userId);
+      setUser(fetchedUser);
     };
     fetchUserData();
   }, []);
@@ -77,8 +77,8 @@ export function PostCard({
     className: "card-body"
   }, /*#__PURE__*/React.createElement("div", {
     className: "d-flex flex-start align-items-center"
-  }, post.userAvatar ? /*#__PURE__*/React.createElement("img", {
-    src: post.userAvatar,
+  }, showCommentForm && /*#__PURE__*/React.createElement(React.Fragment, null, user.imageURL ? /*#__PURE__*/React.createElement("img", {
+    src: user.imageURL,
     className: "rounded-circle shadow-1-strong me-3 img-fluid rounded-circle",
     width: "60",
     height: "60"
@@ -87,13 +87,13 @@ export function PostCard({
     className: "rounded-circle shadow-1-strong me-3 img-fluid rounded-circle",
     width: "60",
     height: "60"
-  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "d-flex align-items-center mb-1"
   }, /*#__PURE__*/React.createElement("a", {
     className: "fw-bold text-primary mb-0 me-2",
     href: "#",
     onClick: () => renderProfile(post.userId)
-  }, username)), /*#__PURE__*/React.createElement("p", {
+  }, user.username)), /*#__PURE__*/React.createElement("p", {
     className: "text-muted small mb-0"
   }, postDate))), !post.imageURL ? null : /*#__PURE__*/React.createElement("p", {
     className: "mt-3 mb-2 pb-1"

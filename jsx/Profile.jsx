@@ -32,7 +32,7 @@ export function Profile({ userId, isEditable }) {
 
 				if (userData.isPublic || isEditable) {
 					const promises = [];
-					
+
 					promises.push(fetch(`http://localhost:8080/api/users/${userId}/posts`));
 					promises.push(fetch(`http://localhost:8080/api/users/${userId}/followedUsers`));
 					promises.push(fetch(`http://localhost:8080/api/users/${userId}/followerUsers`));
@@ -59,9 +59,9 @@ export function Profile({ userId, isEditable }) {
 
 
 					// const userData = await userDataResponse.json();
-					 userPostData = await userPostResponse.json();
-					 usersIFollowData = await usersIFollowResponse.json();
-					 usersFollowMeData = await usersFollowMeResponse.json();
+					userPostData = await userPostResponse.json();
+					usersIFollowData = await usersIFollowResponse.json();
+					usersFollowMeData = await usersFollowMeResponse.json();
 				}
 
 				setProfileUserData(userData);
@@ -204,9 +204,6 @@ export function Profile({ userId, isEditable }) {
 								</p>
 							)}
 							<p>
-								<strong>User ID:</strong> {profileUserData.userId}
-							</p>
-							<p>
 								<strong>Username:</strong> {profileUserData.username}
 							</p>
 							<p>
@@ -226,7 +223,23 @@ export function Profile({ userId, isEditable }) {
 								<strong>Bio:</strong> {profileUserData.bio}
 							</p>
 							<p>
-								<strong>Image URL:</strong> {profileUserData.imageURL}
+								<strong>Image:</strong>
+								{profileUserData.imageURL ? (
+									<img
+										src={profileUserData.imageURL}
+										className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle"
+										width="60"
+										height="60"
+									/>
+								) : (
+									<img
+										src="https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-479x512-n8sg74wg.png"
+										className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle"
+										width="60"
+										height="60"
+									/>
+								)}
+
 							</p>
 						</>
 					) : (

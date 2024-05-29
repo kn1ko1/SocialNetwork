@@ -1,6 +1,6 @@
 const { useState, useEffect } = React
-import { fetchGroupName } from "../shared/FetchGroupName.js";
-import { fetchUsername } from "../shared/FetchUsername.js";
+import { fetchGroupById } from "../shared/FetchGroupById.js";
+import { fetchUserById } from "../shared/FetchUserById.js";
 import { respondToNotification } from "./RespondToNotification.js";
 import { notificationCardStyle } from "./NotificationCardStyle.js";
 
@@ -9,10 +9,10 @@ export function GroupRequest({ notification, onNotificationResponse }) {
 	const [groupName, setGroupName] = useState("");
 
 	useEffect(() => {
-		fetchUsername(notification.senderId)
-			.then(username => setUsername(username));
-		fetchGroupName(notification.objectId)
-			.then(groupName => setGroupName(groupName));
+		fetchUserById(notification.senderId)
+			.then(user => setUsername(user.username));
+		fetchGroupById(notification.objectId)
+			.then(group => setGroupName(group.title));
 	}, [notification.senderId, notification.objectId]);
 
 	const handleNotificationResponse = async (responseType) => {

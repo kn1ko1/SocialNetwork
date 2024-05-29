@@ -1,5 +1,5 @@
 const { useState, useEffect } = React
-import { fetchUsername } from "../shared/FetchUsername.js";
+import { fetchUserById } from "../shared/FetchUserById.js";
 import { respondToNotification } from "./RespondToNotification.js";
 import { notificationCardStyle } from "./NotificationCardStyle.js";
 
@@ -8,8 +8,8 @@ export function FollowRequest({ notification, onNotificationResponse }) {
 	const [username, setUsername] = useState("");
 
 	useEffect(() => {
-		fetchUsername(notification.senderId)
-			.then(username => setUsername(username));
+		fetchUserById(notification.senderId)
+			.then(user => setUsername(user.username));
 	}, [notification.senderId]);
 
 	const handleNotificationResponse = async (responseType) => {

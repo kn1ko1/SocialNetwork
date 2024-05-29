@@ -14,7 +14,7 @@ export const renderRegister = () => {
 export function Register() {
 	const [formValues, setFormValues] = useState({
 		email: "",
-		encryptedPassword: "",
+		password: "",
 		firstName: "",
 		lastName: "",
 		dob: "",
@@ -53,7 +53,7 @@ export function Register() {
 			if (selectedFile) {
 				formData.append("image", selectedFile);
 			}
-console.log("formData:", formData)
+			console.log("formData:", formData)
 			// Send user data to backend
 			const response = await fetch("http://localhost:8080/auth/registration", {
 				method: "POST",

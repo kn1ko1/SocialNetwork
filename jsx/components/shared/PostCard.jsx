@@ -1,7 +1,7 @@
 import { CommentCard } from "../Home/CommentCard.js"
 import { formattedDate } from "./FormattedDate.js";
 import { renderProfile } from "../../Profile.js";
-import {fetchUsername} from "../shared/FetchUsername.js";
+import { fetchUserById } from "./FetchUserById.js";
 const { useState, useEffect } = React
 
 const postCardStyle = {
@@ -17,17 +17,17 @@ const postCardStyle = {
 export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
 	const [body, setBody] = useState("")
 	const [selectedFile, setSelectedFile] = useState(null)
-	const [username, setUsername] = useState("")
+	const [user, setUser] = useState("")
 
 	const postDate = formattedDate(post.createdAt)
 
 
 	useEffect(() => {
 		const fetchUserData = async () => {
-			const fetchedUsername = await fetchUsername(post.userId);
-			setUsername(fetchedUsername);
+			const fetchedUser = await fetchUserById(post.userId);
+			setUser(fetchedUser);
 		};
-	
+
 		fetchUserData();
 	}, []);
 
@@ -77,21 +77,28 @@ export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
 		<div className="card" style={postCardStyle}>
 			<div className="card-body">
 				<div className="d-flex flex-start align-items-center">
-					{post.userAvatar ? (
-						<img
-							src={post.userAvatar}
-							className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle"
-							width="60"
-							height="60"
-						/>
-					) : (
-						<img
-							src="https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-479x512-n8sg74wg.png"
-							className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle"
-							width="60"
-							height="60"
-						/>
+					{showCommentForm && (
+						<>
+							{
+								user.imageURL ? (
+									<img
+										src={user.imageURL}
+										className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle"
+										width="60"
+										height="60"
+									/>
+								) : (
+									<img
+										src="https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-479x512-n8sg74wg.png"
+										className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle"
+										width="60"
+										height="60"
+									/>
+								)
+							}
+						</>
 					)}
+
 					<div>
 						<div className="d-flex align-items-center mb-1">
 							<a
@@ -99,7 +106,7 @@ export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
 								href="#"
 								onClick={() => renderProfile(post.userId)}
 							>
-								{username}
+								{user.username}
 							</a>
 						</div>
 						<p className="text-muted small mb-0">{postDate}</p>

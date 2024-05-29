@@ -12,7 +12,7 @@ export const renderRegister = () => {
 export function Register() {
   const [formValues, setFormValues] = useState({
     email: "",
-    encryptedPassword: "",
+    password: "",
     firstName: "",
     lastName: "",
     dob: "",
