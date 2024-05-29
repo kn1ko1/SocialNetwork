@@ -64,6 +64,7 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 	dateInMilliseconds := date.UTC().UnixMilli()
 	email := r.FormValue("email")
 	password := r.FormValue("password")
+	log.Println("password", password)
 	// Encrypt Password for Storage
 	encryptedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {

@@ -103,11 +103,6 @@ export function Group({ socket }) {
 		//setShowGroupDetails(true);
 	}
 
-	const handleGoBack = () => {
-		setSelectedGroup(null)
-		setShowGroupDetails(false) // Update showGroupDetails to false when going back
-	}
-
 	return (
 		<div>
 			{selectedGroup ? (

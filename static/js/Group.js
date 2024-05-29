@@ -93,10 +93,6 @@ export function Group({
     setSelectedGroup(group);
     //setShowGroupDetails(true);
   };
-  const handleGoBack = () => {
-    setSelectedGroup(null);
-    setShowGroupDetails(false); // Update showGroupDetails to false when going back
-  };
   return /*#__PURE__*/React.createElement("div", null, selectedGroup ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     onClick: () => setSelectedGroup(null)
   }, "Go Back"), /*#__PURE__*/React.createElement(GroupDetails, {

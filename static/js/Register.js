@@ -107,7 +107,7 @@ export function Register() {
     type: "password",
     className: "form-control reginput",
     id: "regpassword",
-    name: "encryptedPassword",
+    name: "password",
     placeholder: "Password",
     onChange: handleChange
   })), /*#__PURE__*/React.createElement("div", {

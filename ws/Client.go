@@ -13,6 +13,9 @@ const (
 	GROUP_CHAT_MESSAGE = 1
 	PRIVATE_MESSAGE    = 2
 	CREATE_EVENT       = 3
+	GROUP_REQUEST      = 4
+	GROUP_INVITE       = 5
+	EVENT_INVITE       = 6
 )
 
 type Client struct {

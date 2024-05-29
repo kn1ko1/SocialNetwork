@@ -4,7 +4,8 @@ const {
 // import { GroupDetails } from "./GroupDetails";
 
 export function EventForm({
-  group
+  group,
+  socket
 }) {
   const [dateTime, setDateTime] = useState("");
   const [description, setDescription] = useState("");
@@ -31,6 +32,11 @@ export function EventForm({
         credentials: "include",
         body: formData
       });
+      let obj = {
+        code: 6,
+        body: JSON.stringify(formData)
+      };
+      socket.send(JSON.stringify(obj));
 
       // Reset form fields after successful submission
       setDateTime("");

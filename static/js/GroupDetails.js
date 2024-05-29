@@ -77,7 +77,6 @@ export function GroupDetails({
       }
       setGroupMessages(messagesData);
       setGroupEvents(eventsData);
-      socket.send(JSON.stringify("hello"));
     } catch (error) {
       console.error('Error fetching group data:', error);
     }
@@ -91,6 +90,10 @@ export function GroupDetails({
       targetId: userId
     };
     console.log('notificationtData:', notificationtData);
+    let codeNum = 4;
+    if (notificationType == "groupInvite") {
+      codeNum = 5;
+    }
     try {
       const response = await fetch('http://localhost:8080/api/notifications', {
         method: 'POST',
@@ -107,6 +110,11 @@ export function GroupDetails({
         // Handle error response
         console.error('Failed to add group user:', response.statusText);
       }
+      let obj = {
+        code: codeNum,
+        body: JSON.stringify(notificationtData)
+      };
+      socket.send(JSON.stringify(obj));
     } catch (error) {
       console.error('Error adding group user:', error);
     }
@@ -119,7 +127,8 @@ export function GroupDetails({
     group: group,
     fetchFunc: () => fetchGroupData(group.groupId)
   }), /*#__PURE__*/React.createElement(EventForm, {
-    group: group
+    group: group,
+    socket: socket
   }), /*#__PURE__*/React.createElement(GroupDetailsUserList, {
     userList: userList,
     groupId: group.groupId,

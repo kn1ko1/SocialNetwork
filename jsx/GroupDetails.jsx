@@ -10,10 +10,10 @@ const { useState, useEffect } = React
 
 export const renderGroupDetails = (group, socket) => {
 	const pageContainer = document.querySelector(".page-container")
-	ReactDOM.render(<GroupDetails group={group} socket={socket}/>, pageContainer)
+	ReactDOM.render(<GroupDetails group={group} socket={socket} />, pageContainer)
 }
 
-export function GroupDetails({ group, socket}) {
+export function GroupDetails({ group, socket }) {
 
 	const { currentUserId } = getCurrentUserId()
 	const [userList, setUserList] = useState([]);
@@ -77,7 +77,7 @@ export function GroupDetails({ group, socket}) {
 			}
 			setGroupMessages(messagesData);
 			setGroupEvents(eventsData);
-			socket.send(JSON.stringify("hello"))
+
 
 		} catch (error) {
 			console.error('Error fetching group data:', error);
@@ -94,6 +94,10 @@ export function GroupDetails({ group, socket}) {
 		};
 
 		console.log('notificationtData:', notificationtData);
+		let codeNum = 4
+		if (notificationType == "groupInvite") {
+			codeNum = 5
+		}
 
 		try {
 			const response = await fetch('http://localhost:8080/api/notifications', {
@@ -114,6 +118,9 @@ export function GroupDetails({ group, socket}) {
 				// Handle error response
 				console.error('Failed to add group user:', response.statusText);
 			}
+
+			let obj = { code: codeNum, body: JSON.stringify(notificationtData) }
+			socket.send(JSON.stringify(obj));
 		} catch (error) {
 			console.error('Error adding group user:', error);
 		}
@@ -128,7 +135,7 @@ export function GroupDetails({ group, socket}) {
 				<div id="groupData">
 					<PostFormGroup group={group} fetchFunc={() => fetchGroupData(group.groupId)} />
 
-					<EventForm group={group} />
+					<EventForm group={group} socket={socket} />
 					{/* Render user List here */}
 					<GroupDetailsUserList
 						userList={userList}
