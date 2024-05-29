@@ -8,12 +8,12 @@ import { fetchCommentsForPosts } from "./components/shared/FetchCommentsForPosts
 
 const { useState, useEffect } = React
 
-export const renderGroupDetails = (group) => {
+export const renderGroupDetails = (group, socket) => {
 	const pageContainer = document.querySelector(".page-container")
-	ReactDOM.render(<GroupDetails group={group} />, pageContainer)
+	ReactDOM.render(<GroupDetails group={group} socket={socket}/>, pageContainer)
 }
 
-export function GroupDetails({ group }) {
+export function GroupDetails({ group, socket}) {
 
 	const { currentUserId } = getCurrentUserId()
 	const [userList, setUserList] = useState([]);
@@ -77,7 +77,7 @@ export function GroupDetails({ group }) {
 			}
 			setGroupMessages(messagesData);
 			setGroupEvents(eventsData);
-
+			socket.send(JSON.stringify("hello"))
 
 		} catch (error) {
 			console.error('Error fetching group data:', error);

@@ -9,14 +9,16 @@ const {
   useState,
   useEffect
 } = React;
-export const renderGroupDetails = group => {
+export const renderGroupDetails = (group, socket) => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(GroupDetails, {
-    group: group
+    group: group,
+    socket: socket
   }), pageContainer);
 };
 export function GroupDetails({
-  group
+  group,
+  socket
 }) {
   const {
     currentUserId
@@ -75,6 +77,7 @@ export function GroupDetails({
       }
       setGroupMessages(messagesData);
       setGroupEvents(eventsData);
+      socket.send(JSON.stringify("hello"));
     } catch (error) {
       console.error('Error fetching group data:', error);
     }

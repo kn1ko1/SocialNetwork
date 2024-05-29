@@ -3,12 +3,12 @@ import { GroupDetails } from "./GroupDetails.js"
 import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js"
 
 
-export const renderGroup = () => {
+export const renderGroup = ({ socket }) => {
 	const pageContainer = document.querySelector(".page-container")
-	ReactDOM.render(<Group />, pageContainer)
+	ReactDOM.render(<Group socket={socket} />, pageContainer)
 }
 
-export function Group() {
+export function Group({ socket }) {
 	const [title, setTitle] = useState("")
 	const [description, setDescription] = useState("")
 	const [groupData, setGroupData] = useState([])
@@ -17,7 +17,7 @@ export function Group() {
 	const { currentUserId } = getCurrentUserId();
 
 	const fetchGroupData = async () => {
-		
+
 		try {
 			const promises = [];
 			promises.push(fetch("http://localhost:8080/api/groups"));
@@ -54,39 +54,16 @@ export function Group() {
 						groupListData[i].isMember = false;
 
 					}
-				
+
 				}
 			}
-			
+
 			setGroupData(groupListData)
 
 		} catch (error) {
 			console.error('Error fetching group data:', error);
 		}
 	};
-
-
-	// const fetchGroupData = async () => {
-	// 	try {
-
-	// 		const response = await fetch("http://localhost:8080/api/groups", {
-	// 			method: "GET",
-	// 			credentials: "include",
-	// 			headers: {
-	// 				"Content-Type": "application/json",
-	// 			},
-	// 		})
-
-	// 		if (!response.ok) {
-	// 			throw new Error("Failed to fetch group data")
-	// 		}
-
-	// 		const data = await response.json()
-	// 		setGroupData(data)
-	// 	} catch (error) {
-	// 		console.error("Error fetching group data:", error)
-	// 	}
-	// }
 
 	useEffect(() => {
 		if (currentUserId) {
@@ -136,7 +113,7 @@ export function Group() {
 			{selectedGroup ? (
 				<div>
 					<button onClick={() => setSelectedGroup(null)}>Go Back</button>
-					<GroupDetails group={selectedGroup} />
+					<GroupDetails group={selectedGroup} socket={socket} />
 				</div>
 			) : (
 				<div>
