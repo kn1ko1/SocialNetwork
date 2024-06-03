@@ -6,6 +6,7 @@ import (
 	"log"
 	"socialnetwork/models"
 	"socialnetwork/repo"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -70,7 +71,7 @@ func (c *Client) Send(v any) {
 }
 
 func (c *Client) HandleMessage(msg WebSocketMessage) {
-	fmt.Println("message is:", msg)
+	fmt.Println("[ws/Client.go] message is:", msg)
 	var message models.Message
 	switch msg.Code {
 	case GROUP_CHAT_MESSAGE:
@@ -79,8 +80,6 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			log.Println(err.Error())
 			return
 		}
-		fmt.Printf("%+v\n", message)
-		fmt.Println("1 testBody")
 		groupId := message.TargetId
 		group, ok := c.SocketGroups[groupId]
 		if !ok {
@@ -98,7 +97,6 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			log.Println(err.Error())
 			return
 		}
-		fmt.Printf("%+v\n", message)
 		fmt.Println("2 person")
 		group, ok := c.SocketGroups[0]
 		if !ok {
@@ -108,6 +106,43 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		group.Broadcast <- msg
 		c.Repo.CreateMessage(message)
 		log.Println("'prvivate' (group 0) Message added to db in Client.go is:", message)
+	case EVENT_INVITE:
+		var event models.Event
+		err := json.Unmarshal([]byte(msg.Body), &event)
+		if err != nil {
+			log.Println(err.Error())
+			return
+		}
+		ctime := time.Now().UTC().UnixMilli()
+		event.CreatedAt = ctime
+		event.UpdatedAt = ctime
+		returnEvent, err := c.Repo.CreateEvent(event)
+		if err != nil {
+			log.Println(err.Error())
+			return
+		}
+
+		fmt.Println("6 EVENT_INVITE")
+
+		notification := models.Notification{
+			CreatedAt:        ctime,
+			NotificationType: "event",
+			ObjectId:         returnEvent.EventId,
+			SenderId:         returnEvent.UserId,
+			Status:           "pending",
+			TargetId:         returnEvent.GroupId,
+			UpdatedAt:        ctime,
+		}
+		c.Repo.CreateNotification(notification)
+		log.Println("6 EVENT_INVITE Notification added to db in Client.go is:", notification)
+
+		groupId := notification.TargetId
+		group, ok := c.SocketGroups[groupId]
+		if !ok {
+			log.Printf("SocketGroup %d does not exist\n", groupId)
+			return
+		}
+		group.Broadcast <- msg
 
 	}
 }

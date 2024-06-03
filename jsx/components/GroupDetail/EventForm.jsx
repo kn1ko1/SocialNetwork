@@ -25,11 +25,11 @@ export function EventForm({ group, socket }) {
 
         try {
             // Send user data to the server
-            await fetch("http://localhost:8080/api/events", {
-                method: "POST",
-                credentials: "include",
-                body: formData,
-            });
+            // await fetch("http://localhost:8080/api/events", {
+            //     method: "POST",
+            //     credentials: "include",
+            //     body: formData,
+            // });
 
             let obj = { code: 6, body: JSON.stringify(formData) }
 			socket.send(JSON.stringify(obj));
