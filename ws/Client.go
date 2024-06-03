@@ -35,6 +35,13 @@ func NewClient(conn *websocket.Conn, user models.User) *Client {
 }
 
 func (c *Client) Receive() {
+	defer func() {
+		// Remove the client from all SocketGroups when the connection is closed
+		for _, group := range c.SocketGroups {
+			group.Exit <- c
+		}
+		c.Connection.Close()
+	}()
 	for {
 		var wsm WebSocketMessage
 		_, p, err := c.Connection.ReadMessage()

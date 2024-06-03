@@ -97,7 +97,7 @@ export function Navbar({ socket }) {
 							</a>
 						</li>
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={renderGroup({ socket })}>
+							<a className="nav-link" href="#" onClick={() => renderGroup({ socket })}>
 								GROUP
 							</a>
 						</li>

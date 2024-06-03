@@ -63,7 +63,11 @@ func (g *SocketGroup) Run() {
 				}
 				log.Println("Group Message added to db in socketGroup is:", ret)
 
-				c := g.Clients[message.TargetId]
+				c, ok := g.Clients[message.TargetId]
+				if !ok {
+					log.Printf("Target client %d not found for private message\n", message.TargetId)
+					return
+				}
 				c.Send(msg)
 			case GROUP_CHAT_MESSAGE:
 				err := json.Unmarshal([]byte(msg.Body), &message)
@@ -82,9 +86,12 @@ func (g *SocketGroup) Run() {
 				log.Println("Group Message added to db in socketGroup is:", ret)
 
 				// Broadcast the message to all clients in the group.
-				for _, c := range g.Clients {
-					c.Send(msg)
+				if len(g.Clients) > 1 {
+					for _, c := range g.Clients {
+						c.Send(msg)
+					}
 				}
+
 			}
 
 		}
