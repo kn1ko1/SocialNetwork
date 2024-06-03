@@ -97,7 +97,11 @@ export function Navbar({ socket }) {
 							</a>
 						</li>
 						<li className="nav-item">
+<<<<<<< HEAD
 							<a className="nav-link" href="#" onClick={() => renderGroup({ socket })}>
+=======
+							<a className="nav-link" href="#" onClick={() =>renderGroup({ socket })}>
+>>>>>>> origin/Rupert
 								GROUP
 							</a>
 						</li>
