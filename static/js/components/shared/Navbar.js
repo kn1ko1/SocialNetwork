@@ -106,7 +106,7 @@ export function Navbar({
   }, /*#__PURE__*/React.createElement("a", {
     className: "nav-link",
     href: "#",
-    onClick: renderGroup({
+    onClick: () => renderGroup({
       socket
     })
   }, "GROUP")), /*#__PURE__*/React.createElement("li", {

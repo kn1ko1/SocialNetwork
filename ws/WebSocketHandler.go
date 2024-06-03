@@ -56,7 +56,7 @@ func (h *WebSocketHandler) get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create a new WebSocket client and add it to the appropriate socket group.
-	client := NewClient(conn, user)
+	client := NewClient(conn, user, h.Repo)
 	client.SocketGroups[0] = socketGroupManager.SocketGroups[0] // Assuming there is a global socketGroupManager
 
 	// Add the client to the default socket group.

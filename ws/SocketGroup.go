@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 	"socialnetwork/models"
-	"socialnetwork/repo"
-	"time"
 )
 
 // SocketGroup represents a group of WebSocket clients.
@@ -16,10 +14,8 @@ type SocketGroup struct {
 	Enter         chan *Client          // Channel for entering clients.
 	Exit          chan *Client          // Channel for exiting clients.
 	Broadcast     chan WebSocketMessage // Channel for broadcasting messages to clients.
-	Repo          repo.IRepository
 }
 
-// NewSocketGroup creates a new instance of SocketGroup.
 func NewSocketGroup(id int) *SocketGroup {
 	ret := new(SocketGroup)
 	ret.SocketGroupID = id
@@ -27,7 +23,6 @@ func NewSocketGroup(id int) *SocketGroup {
 	ret.Enter = make(chan *Client)
 	ret.Exit = make(chan *Client)
 	ret.Broadcast = make(chan WebSocketMessage)
-	ret.Repo = repo.NewSQLiteRepository()
 	return ret
 }
 
@@ -54,14 +49,14 @@ func (g *SocketGroup) Run() {
 				}
 				log.Println("Private Message Body in socketGroup is:", message)
 				// Find the target user and send the message.
-				ctime := time.Now().UTC().UnixMilli()
-				message.CreatedAt = ctime
-				message.UpdatedAt = ctime
-				ret, err := g.Repo.CreateMessage(message)
-				if err != nil {
-					log.Println(err.Error())
-				}
-				log.Println("Group Message added to db in socketGroup is:", ret)
+				// ctime := time.Now().UTC().UnixMilli()
+				// message.CreatedAt = ctime
+				// message.UpdatedAt = ctime
+				// ret, err := g.Repo.CreateMessage(message)
+				// if err != nil {
+				// 	log.Println(err.Error())
+				// }
+				// log.Println("Group Message added to db in socketGroup is:", ret)
 
 				c := g.Clients[message.TargetId]
 				c.Send(msg)
@@ -72,14 +67,14 @@ func (g *SocketGroup) Run() {
 				}
 				log.Println("Group Message Body in socketGroup is:", message)
 				// Persist the group message to the database.
-				ctime := time.Now().UTC().UnixMilli()
-				message.CreatedAt = ctime
-				message.UpdatedAt = ctime
-				ret, err := g.Repo.CreateMessage(message)
-				if err != nil {
-					log.Println(err.Error())
-				}
-				log.Println("Group Message added to db in socketGroup is:", ret)
+				// ctime := time.Now().UTC().UnixMilli()
+				// message.CreatedAt = ctime
+				// message.UpdatedAt = ctime
+				// ret, err := g.Repo.CreateMessage(message)
+				// if err != nil {
+				// 	log.Println(err.Error())
+				// }
+				// log.Println("Group Message added to db in socketGroup is:", ret)
 
 				// Broadcast the message to all clients in the group.
 				for _, c := range g.Clients {
