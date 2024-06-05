@@ -1,3 +1,4 @@
+// Package repo does something.
 package repo
 
 import "socialnetwork/models"

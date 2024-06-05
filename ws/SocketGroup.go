@@ -7,6 +7,15 @@ import (
 	"socialnetwork/models"
 )
 
+// const (
+// 	GROUP_CHAT_MESSAGE = 1
+// 	PRIVATE_MESSAGE    = 2
+// 	CREATE_EVENT       = 3
+// 	GROUP_REQUEST      = 4
+// 	GROUP_INVITE       = 5
+// 	EVENT_INVITE       = 6
+// )
+
 // SocketGroup represents a group of WebSocket clients.
 type SocketGroup struct {
 	SocketGroupID int                   // ID of the socket group.
@@ -86,7 +95,29 @@ func (g *SocketGroup) Run() {
 						c.Send(msg)
 					}
 				}
+			case EVENT_INVITE:
+				var notification models.Notification
+				err := json.Unmarshal([]byte(msg.Body), &notification)
+				if err != nil {
+					log.Println(err.Error())
+				}
+				log.Println("Event Body in socketGroup is:", notification)
+				// Persist the group message to the database.
+				// ctime := time.Now().UTC().UnixMilli()
+				// message.CreatedAt = ctime
+				// message.UpdatedAt = ctime
+				// ret, err := g.Repo.CreateMessage(message)
+				// if err != nil {
+				// 	log.Println(err.Error())
+				// }
+				// log.Println("Group Message added to db in socketGroup is:", ret)
 
+				// Broadcast the message to all clients in the group.
+				if len(g.Clients) > 1 {
+					for _, c := range g.Clients {
+						c.Send(msg)
+					}
+				}
 			}
 
 		}

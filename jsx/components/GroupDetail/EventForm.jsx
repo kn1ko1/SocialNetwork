@@ -1,43 +1,37 @@
 const { useState } = React
 // import { GroupDetails } from "./GroupDetails";
 
+//Test Description
 export function EventForm({ group, socket }) {
     const [dateTime, setDateTime] = useState("");
-    const [description, setDescription] = useState("");
-    const [title, setTitle] = useState("");
+    const [eventDescription, setEventDescription] = useState("");
+    const [eventTitle, setEventTitle] = useState("");
 
     // Handler for form submission
     const submit = async (e) => {
         e.preventDefault(); // Prevent page reload
 
         // Create a combined date-time string
-        const dateTimeString = new Date(dateTime).toISOString();
+        const dateTimeMillis = new Date(dateTime).getTime();
 
-        const formData = new FormData();
+        const eventData = {
+            dateTime: dateTimeMillis,
+            description: eventDescription,
+            groupId: group.groupId,
+            title: eventTitle
+        };
 
-        // Append form data
-        formData.append("dateTime", dateTimeString);
-        formData.append("description", description);
-        formData.append("groupId", group.groupId);
-        formData.append("title", title);
-
-        console.log("Event Form data being sent to backend: ", formData);
+        console.log("Event Form data being sent to backend: ", eventData);
 
         try {
-            // Send user data to the server
-            // await fetch("http://localhost:8080/api/events", {
-            //     method: "POST",
-            //     credentials: "include",
-            //     body: formData,
-            // });
 
-            let obj = { code: 6, body: JSON.stringify(formData) }
-			socket.send(JSON.stringify(obj));
+            let obj = { code: 6, body: JSON.stringify(eventData) }
+            socket.send(JSON.stringify(obj));
 
             // Reset form fields after successful submission
             setDateTime("");
-            setDescription("");
-            setTitle("");
+            setEventDescription("");
+            setEventTitle("");
             document.getElementById("eventFormDescription").value = "";
             document.getElementById("eventFormTitle").value = "";
         } catch (error) {
@@ -56,7 +50,7 @@ export function EventForm({ group, socket }) {
                             className="form-control"
                             id="eventFormTitle"
                             placeholder="Type your event title here..."
-                            onChange={(e) => setTitle(e.target.value)}
+                            onChange={(e) => setEventTitle(e.target.value)}
                         />
                     </div>
                     <div className="form-floating mb-3">
@@ -65,7 +59,7 @@ export function EventForm({ group, socket }) {
                             className="form-control"
                             id="eventFormDescription"
                             placeholder="Type your event Description here..."
-                            onChange={(e) => setDescription(e.target.value)}
+                            onChange={(e) => setEventDescription(e.target.value)}
                         />
                     </div>
                     <div className="mb-3">

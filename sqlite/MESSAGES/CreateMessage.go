@@ -1,3 +1,4 @@
+// Package messages does something.
 package messages
 
 import (

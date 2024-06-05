@@ -135,6 +135,15 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		}
 		c.Repo.CreateNotification(notification)
 		log.Println("6 EVENT_INVITE Notification added to db in Client.go is:", notification)
+		jsonNotification, err := json.Marshal(notification)
+		if err != nil {
+			log.Println("[ws/client.go]", err.Error())
+
+		}
+		returnMessage := WebSocketMessage{
+			Code: 6,
+			Body: string(jsonNotification),
+		}
 
 		groupId := notification.TargetId
 		group, ok := c.SocketGroups[groupId]
@@ -142,7 +151,8 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			log.Printf("SocketGroup %d does not exist\n", groupId)
 			return
 		}
-		group.Broadcast <- msg
+		log.Println("[ws/Client.go] Event GroupId is:", groupId)
+		group.Broadcast <- returnMessage
 
 	}
 }
