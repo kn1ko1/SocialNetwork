@@ -15,7 +15,7 @@ export function EventInvite({ notification, onNotificationResponse }) {
         fetchEvent(notification.objectId)
             .then(event => setEvent(event));
     }, [notification.senderId, notification.objectId]);
-
+    console.log("notification", notification)
     const fetchEvent = async () => {
         try {
             const response = await fetch(`http://localhost:8080/api/events/${notification.objectId}`);
@@ -31,7 +31,10 @@ export function EventInvite({ notification, onNotificationResponse }) {
         // Call the respondToNotification function to handle the response
         respondToNotification(responseType, notification);
         // Call the parent component's callback to remove this notification
-        onNotificationResponse(notification.notificationId);
+        if (onNotificationResponse != null) {
+            onNotificationResponse(notification.notificationId);
+        }
+
     };
 
     return (

@@ -1,30 +1,47 @@
-const GROUP_CHAT_MESSAGE = 1;
-const PRIVATE_MESSAGE = 2;
-const CREATE_EVENT = 3;
+import { EventInvite } from "./EventInvite.js";
+const codeToHeaderText = {
+  1: "Group Chat Message",
+  2: "Private Message",
+  3: "Create Event",
+  4: "Group Request",
+  5: "Group Invite",
+  6: "Event Invite"
+};
 export const NotificationPopUp = ({
   data,
   onClose
 }) => {
-  let message = JSON.parse(data.body).body;
-  let code = JSON.parse(data.code);
-  console.log("socket message data:", data);
-  return /*#__PURE__*/React.createElement("div", {
-    id: "notificationPopup"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "toast show position-fixed bottom-0 end-0 p-3 m-3",
-    style: {
-      zIndex: 1000
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "toast-header"
-  }, /*#__PURE__*/React.createElement("strong", {
-    className: "me-auto"
-  }, "Notification"), /*#__PURE__*/React.createElement("button", {
-    type: "button",
-    className: "btn-close",
-    "aria-label": "Close",
-    onClick: onClose
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "toast-body"
-  }, message)));
+  try {
+    const notification = JSON.parse(data.body);
+    const code = parseInt(data.code, 10);
+    console.log("socket message notification:", notification);
+
+    // Get the header text based on the code
+    const headerText = codeToHeaderText[code] || "Notification";
+    return /*#__PURE__*/React.createElement("div", {
+      id: "notificationPopup"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "toast show position-fixed bottom-0 end-0 p-3 m-3",
+      style: {
+        zIndex: 1000
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "toast-header"
+    }, /*#__PURE__*/React.createElement("strong", {
+      className: "me-auto"
+    }, headerText), /*#__PURE__*/React.createElement("button", {
+      type: "button",
+      className: "btn-close",
+      "aria-label": "Close",
+      onClick: onClose
+    })), /*#__PURE__*/React.createElement("div", {
+      className: "toast-body"
+    }, code === 6 ? /*#__PURE__*/React.createElement(EventInvite, {
+      notification: notification,
+      onNotificationResponse: onClose
+    }) : notification)));
+  } catch (error) {
+    console.error("Error processing notification data:", error);
+    return null;
+  }
 };

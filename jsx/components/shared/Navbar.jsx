@@ -19,7 +19,7 @@ export function Navbar({ socket }) {
 
 	socket.onmessage = function (e) {
 		let data = JSON.parse(e.data);
-
+		console.log("data:", data)
 		// Show custom notification
 		setNotificationData(data);
 

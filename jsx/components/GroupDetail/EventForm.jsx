@@ -1,3 +1,5 @@
+import { getCurrentUserId } from "../shared/GetCurrentUserId.js";
+
 const { useState } = React
 // import { GroupDetails } from "./GroupDetails";
 
@@ -6,6 +8,8 @@ export function EventForm({ group, socket }) {
     const [dateTime, setDateTime] = useState("");
     const [eventDescription, setEventDescription] = useState("");
     const [eventTitle, setEventTitle] = useState("");
+    const { currentUserId } = getCurrentUserId();
+
 
     // Handler for form submission
     const submit = async (e) => {
@@ -18,7 +22,8 @@ export function EventForm({ group, socket }) {
             dateTime: dateTimeMillis,
             description: eventDescription,
             groupId: group.groupId,
-            title: eventTitle
+            title: eventTitle,
+            userId: currentUserId
         };
 
         console.log("Event Form data being sent to backend: ", eventData);

@@ -1,3 +1,4 @@
+import { getCurrentUserId } from "../shared/GetCurrentUserId.js";
 const {
   useState
 } = React;
@@ -11,6 +12,9 @@ export function EventForm({
   const [dateTime, setDateTime] = useState("");
   const [eventDescription, setEventDescription] = useState("");
   const [eventTitle, setEventTitle] = useState("");
+  const {
+    currentUserId
+  } = getCurrentUserId();
 
   // Handler for form submission
   const submit = async e => {
@@ -22,7 +26,8 @@ export function EventForm({
       dateTime: dateTimeMillis,
       description: eventDescription,
       groupId: group.groupId,
-      title: eventTitle
+      title: eventTitle,
+      userId: currentUserId
     };
     console.log("Event Form data being sent to backend: ", eventData);
     try {

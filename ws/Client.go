@@ -123,6 +123,7 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		}
 
 		fmt.Println("6 EVENT_INVITE")
+		fmt.Println("[ws/Client.go]] subjectId", event.UserId)
 
 		notification := models.Notification{
 			CreatedAt:        ctime,

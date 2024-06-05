@@ -26,7 +26,7 @@ export function Navbar({
   const [notificationData, setNotificationData] = useState(null);
   socket.onmessage = function (e) {
     let data = JSON.parse(e.data);
-
+    console.log("data:", data);
     // Show custom notification
     setNotificationData(data);
   };
