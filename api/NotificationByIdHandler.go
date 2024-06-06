@@ -136,7 +136,6 @@ func (h *NotificationByIdHandler) delete(w http.ResponseWriter, r *http.Request)
 	if notificationResponse.Reply == "confirm" {
 		switch notificationResponse.Notification.NotificationType {
 		case "groupInvite":
-			log.Println("groupInvite")
 			groupUser := models.GroupUser{
 				CreatedAt: ctime,
 				GroupId:   notificationResponse.Notification.ObjectId,
@@ -145,7 +144,6 @@ func (h *NotificationByIdHandler) delete(w http.ResponseWriter, r *http.Request)
 			}
 			h.Repo.CreateGroupUser(groupUser)
 		case "groupRequest":
-			log.Println("groupRequest")
 			groupUser := models.GroupUser{
 				CreatedAt: ctime,
 				GroupId:   notificationResponse.Notification.ObjectId,
@@ -154,7 +152,6 @@ func (h *NotificationByIdHandler) delete(w http.ResponseWriter, r *http.Request)
 			}
 			h.Repo.CreateGroupUser(groupUser)
 		case "eventInvite":
-			log.Println("eventInvite")
 			eventUser := models.EventUser{
 				CreatedAt: ctime,
 				EventId:   notificationResponse.Notification.ObjectId,
@@ -164,7 +161,6 @@ func (h *NotificationByIdHandler) delete(w http.ResponseWriter, r *http.Request)
 			}
 			h.Repo.CreateEventUser(eventUser)
 		case "followRequest":
-			log.Println("followRequest")
 			userUser := models.UserUser{
 				CreatedAt:  ctime,
 				FollowerId: notificationResponse.Notification.SenderId,

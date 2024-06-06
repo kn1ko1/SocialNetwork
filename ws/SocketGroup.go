@@ -10,7 +10,7 @@ import (
 // const (
 // 	GROUP_CHAT_MESSAGE = 1
 // 	PRIVATE_MESSAGE    = 2
-// 	CREATE_EVENT       = 3
+// 	FOLLOW_REQUEST       = 3
 // 	GROUP_REQUEST      = 4
 // 	GROUP_INVITE       = 5
 // 	EVENT_INVITE       = 6
@@ -38,7 +38,6 @@ func NewSocketGroup(id int) *SocketGroup {
 
 // Run starts the SocketGroup's main loop for handling client events.
 func (g *SocketGroup) Run() {
-	var message models.Message
 	for {
 		select {
 		case c := <-g.Enter:
@@ -52,20 +51,10 @@ func (g *SocketGroup) Run() {
 		case msg := <-g.Broadcast:
 			// Handle different types of messages.
 			switch msg.Code {
-			case PRIVATE_MESSAGE:
-				err := json.Unmarshal([]byte(msg.Body), &message)
-				if err != nil {
-					log.Println(err.Error())
-				}
-				log.Println("Private Message Body in socketGroup is:", message)
 
-				c, ok := g.Clients[message.TargetId]
-				if !ok {
-					log.Printf("Target client %d not found for private message\n", message.TargetId)
-					return
-				}
-				c.Send(msg)
 			case GROUP_CHAT_MESSAGE:
+				var message models.Message
+
 				err := json.Unmarshal([]byte(msg.Body), &message)
 				if err != nil {
 					log.Println(err.Error())
@@ -87,15 +76,43 @@ func (g *SocketGroup) Run() {
 						c.Send(msg)
 					}
 				}
+			case PRIVATE_MESSAGE:
+				var message models.Message
+
+				err := json.Unmarshal([]byte(msg.Body), &message)
+				if err != nil {
+					log.Println(err.Error())
+				}
+				log.Println("Private Message Body in socketGroup is:", message)
+
+				c, ok := g.Clients[message.TargetId]
+				if !ok {
+					log.Printf("Target client %d not found for private message\n", message.TargetId)
+					return
+				}
+				c.Send(msg)
+			case FOLLOW_REQUEST:
+				var notification models.Notification
+				err := json.Unmarshal([]byte(msg.Body), &notification)
+				if err != nil {
+					log.Println(err.Error())
+				}
+				log.Println("Private Message Body in socketGroup is:", notification)
+
+				c, ok := g.Clients[notification.TargetId]
+				if !ok {
+					log.Printf("Target client %d not found for private message\n", notification.TargetId)
+					return
+				}
+				c.Send(msg)
 			case EVENT_INVITE:
 				var notification models.Notification
 				err := json.Unmarshal([]byte(msg.Body), &notification)
 				if err != nil {
 					log.Println(err.Error())
 				}
-				log.Println("Event Body in socketGroup is:", notification)
 
-				// Broadcast the message to all clients in the group.
+				// Broadcast the message to target within the group.
 				targetClient, ok := g.Clients[notification.TargetId]
 				if ok {
 					targetClient.Send(msg)

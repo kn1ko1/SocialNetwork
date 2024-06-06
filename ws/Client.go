@@ -2,7 +2,6 @@ package ws
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"socialnetwork/models"
 	"socialnetwork/repo"
@@ -16,7 +15,7 @@ import (
 const (
 	GROUP_CHAT_MESSAGE = 1
 	PRIVATE_MESSAGE    = 2
-	CREATE_EVENT       = 3
+	FOLLOW_REQUEST     = 3
 	GROUP_REQUEST      = 4
 	GROUP_INVITE       = 5
 	EVENT_INVITE       = 6
@@ -82,10 +81,10 @@ func (c *Client) Send(v any) {
 
 // HandleMessage processes incoming WebSocket messages
 func (c *Client) HandleMessage(msg WebSocketMessage) {
-	fmt.Println("[ws/Client.go] message is:", msg)
-	var message models.Message
 	switch msg.Code {
 	case GROUP_CHAT_MESSAGE:
+		var message models.Message
+
 		// Handle group chat message
 		err := json.Unmarshal([]byte(msg.Body), &message)
 		if err != nil {
@@ -105,24 +104,42 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		log.Println("Group Message added to db in Client.go is:", message)
 
 	case PRIVATE_MESSAGE:
+		var message models.Message
+
 		// Handle private message
 		err := json.Unmarshal([]byte(msg.Body), &message)
 		if err != nil {
 			log.Println(err.Error())
 			return
 		}
-		fmt.Println("2 person")
+		c.Repo.CreateMessage(message)
+
+		group, ok := c.SocketGroups[0]
+		if !ok {
+			log.Println("primary group does not exist")
+			return
+		}
+		// Broadcast the message to the main group (group 0)
+		group.Broadcast <- msg
+		// Store the message in the database
+	case FOLLOW_REQUEST:
+		var notification models.Notification
+		// Handle private message
+		err := json.Unmarshal([]byte(msg.Body), &notification)
+		if err != nil {
+			log.Println(err.Error())
+			return
+		}
 		group, ok := c.SocketGroups[0]
 		if !ok {
 			log.Println("Private message group does not exist")
 			return
 		}
-		// Broadcast the message to the private group (group 0)
+
+		// Broadcast the message to the main group (group 0)
 		group.Broadcast <- msg
 		// Store the message in the database
-		c.Repo.CreateMessage(message)
-		log.Println("'private' (group 0) Message added to db in Client.go is:", message)
-
+		c.Repo.CreateNotification(notification)
 	case EVENT_INVITE:
 		ctime := time.Now().UTC().UnixMilli()
 
@@ -141,6 +158,7 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			log.Println(err.Error())
 			return
 		}
+
 		// Adds user who made event to eventUsers table.  It's their event, they better be going!
 		eventUserWhoMadeEvent := models.EventUser{
 			CreatedAt: ctime,
@@ -150,13 +168,18 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			UserId:    event.UserId,
 		}
 		c.Repo.CreateEventUser(eventUserWhoMadeEvent)
+		groupId := event.GroupId
+		group, ok := c.SocketGroups[groupId]
+		if !ok {
+			log.Printf("SocketGroup %d does not exist\n", groupId)
+			return
+		}
 		// retrieves all members of the event's group
 		groupUsers, err := c.Repo.GetGroupUsersByGroupId(event.GroupId)
 		if err != nil {
 			utils.HandleError("Error in GetGroupUsersByGroupId, in ws/Client.go.", err)
 			return
 		}
-
 		for i := 0; i < len(groupUsers); i++ {
 			// so long as the member of the group is not the person who made the event (they're automatically attending the event)
 			if groupUsers[i].UserId != event.UserId {
@@ -167,7 +190,7 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 					ObjectId:         returnEvent.EventId,
 					SenderId:         returnEvent.UserId,
 					Status:           "pending",
-					TargetId:         returnEvent.GroupId,
+					TargetId:         groupUsers[i].UserId,
 					UpdatedAt:        ctime,
 				}
 				// Store the notification in the database
@@ -175,19 +198,19 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 				if err != nil {
 					utils.HandleError("Error in CreateNotification, in ws/Client.go.", err)
 				}
-				// Check if the client is in the socket group and send the notification
-				notificationClient, ok := c.SocketGroups[returnEvent.GroupId].Clients[groupUsers[i].UserId]
+
+				jsonNotification, err := json.Marshal(returnNotification)
+				if err != nil {
+					utils.HandleError("[ws/client.go] Error marshalling returnNotification", err)
+					continue
+				}
+				returnMessage := WebSocketMessage{
+					Code: 6,
+					Body: string(jsonNotification),
+				}
+				_, ok := group.Clients[groupUsers[i].UserId]
 				if ok {
-					jsonNotification, err := json.Marshal(returnNotification)
-					if err != nil {
-						log.Println("[ws/client.go]", err.Error())
-						continue
-					}
-					returnMessage := WebSocketMessage{
-						Code: 6,
-						Body: string(jsonNotification),
-					}
-					notificationClient.Send(returnMessage)
+					group.Broadcast <- returnMessage
 				}
 			}
 
