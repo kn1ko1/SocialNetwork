@@ -25,6 +25,7 @@ type SocketGroup struct {
 	Broadcast     chan WebSocketMessage // Channel for broadcasting messages to clients.
 }
 
+// NewSocketGroup creates a new SocketGroup instance
 func NewSocketGroup(id int) *SocketGroup {
 	ret := new(SocketGroup)
 	ret.SocketGroupID = id
@@ -57,15 +58,6 @@ func (g *SocketGroup) Run() {
 					log.Println(err.Error())
 				}
 				log.Println("Private Message Body in socketGroup is:", message)
-				// Find the target user and send the message.
-				// ctime := time.Now().UTC().UnixMilli()
-				// message.CreatedAt = ctime
-				// message.UpdatedAt = ctime
-				// ret, err := g.Repo.CreateMessage(message)
-				// if err != nil {
-				// 	log.Println(err.Error())
-				// }
-				// log.Println("Group Message added to db in socketGroup is:", ret)
 
 				c, ok := g.Clients[message.TargetId]
 				if !ok {
@@ -102,21 +94,11 @@ func (g *SocketGroup) Run() {
 					log.Println(err.Error())
 				}
 				log.Println("Event Body in socketGroup is:", notification)
-				// Persist the group message to the database.
-				// ctime := time.Now().UTC().UnixMilli()
-				// message.CreatedAt = ctime
-				// message.UpdatedAt = ctime
-				// ret, err := g.Repo.CreateMessage(message)
-				// if err != nil {
-				// 	log.Println(err.Error())
-				// }
-				// log.Println("Group Message added to db in socketGroup is:", ret)
 
 				// Broadcast the message to all clients in the group.
-				if len(g.Clients) > 1 {
-					for _, c := range g.Clients {
-						c.Send(msg)
-					}
+				targetClient, ok := g.Clients[notification.TargetId]
+				if ok {
+					targetClient.Send(msg)
 				}
 			}
 

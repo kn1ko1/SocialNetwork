@@ -158,6 +158,7 @@ func (h *NotificationByIdHandler) delete(w http.ResponseWriter, r *http.Request)
 			eventUser := models.EventUser{
 				CreatedAt: ctime,
 				EventId:   notificationResponse.Notification.ObjectId,
+				IsGoing:   true,
 				UpdatedAt: ctime,
 				UserId:    notificationResponse.Notification.TargetId,
 			}
