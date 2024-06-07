@@ -3,7 +3,6 @@ const { useState, useEffect } = React
 
 const GROUP_CHAT_MESSAGE = 1;
 const PRIVATE_MESSAGE = 2;
-const CREATE_EVENT = 3;
 
 export const renderChat = ({ socket }) => {
     const pageContainer = document.querySelector(".page-container");
@@ -12,6 +11,7 @@ export const renderChat = ({ socket }) => {
 
 export function Chat({ socket }) {
     const { currentUserId } = getCurrentUserId();
+    const [chatHistory, setChatHistory] = useState([]);
     const [messageCode, setMessageCode] = useState(0);
     const [messageType, setMessageType] = useState("");
     const [targetId, setTargetId] = useState(0);

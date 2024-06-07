@@ -118,14 +118,14 @@ export function GroupDetails({ group, socket }) {
 					<PostFormGroup group={group} fetchFunc={() => fetchGroupData(group.groupId)} />
 
 					<EventForm group={group} socket={socket} />
-					{/* Render user List here */}
+					{/* user List here */}
 					<GroupDetailsUserList
 						userList={userList}
 						groupId={group.groupId}
 						groupMembers={groupMembers}
 						AddGroupUser={AddGroupUser} />
 
-					{/* Render group members here */}
+					{/* group members here */}
 					<div className="groupMembers">
 						<h2>Group Members</h2>
 						{groupMembers !== null && groupMembers.length > 0 ? (
@@ -142,7 +142,7 @@ export function GroupDetails({ group, socket }) {
 							<p>It's just you... Maybe you should invite someone?</p>
 						)}
 					</div>
-					{/* Render group posts here */}
+					{/* group posts here */}
 					<div id="groupPosts">
 						<h2>Posts</h2>
 						{groupPosts !== null ? (
@@ -160,7 +160,7 @@ export function GroupDetails({ group, socket }) {
 							<div id="groupPosts">There are no posts in this groups yet</div>
 						)}
 					</div>
-					{/* Render group Messages here */}
+					{/* group Messages here */}
 					<div className="groupMessages">
 						<h2>Messages</h2>
 						{groupMessages !== null && groupMessages.length > 0 ? (
