@@ -83,6 +83,9 @@ func (c *Client) Send(v any) {
 func (c *Client) HandleMessage(msg WebSocketMessage) {
 	switch msg.Code {
 	case GROUP_CHAT_MESSAGE:
+
+		ctime := time.Now().UTC().UnixMilli()
+
 		var message models.Message
 
 		// Handle group chat message
@@ -91,6 +94,10 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			log.Println(err.Error())
 			return
 		}
+
+		message.CreatedAt = ctime
+		message.UpdatedAt = ctime
+
 		groupId := message.TargetId
 		group, ok := c.SocketGroups[groupId]
 		if !ok {
@@ -104,6 +111,8 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		log.Println("Group Message added to db in Client.go is:", message)
 
 	case PRIVATE_MESSAGE:
+
+		ctime := time.Now().UTC().UnixMilli()
 		var message models.Message
 
 		// Handle private message
@@ -112,6 +121,10 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			log.Println(err.Error())
 			return
 		}
+
+		message.CreatedAt = ctime
+		message.UpdatedAt = ctime
+
 		c.Repo.CreateMessage(message)
 
 		group, ok := c.SocketGroups[0]
