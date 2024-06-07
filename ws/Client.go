@@ -142,6 +142,9 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		c.Repo.CreateNotification(notification)
 
 	case GROUP_INVITE:
+
+		ctime := time.Now().UTC().UnixMilli()
+
 		var notification models.Notification
 
 		// Handle group invite
@@ -150,6 +153,10 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			log.Println(err.Error())
 			return
 		}
+
+		notification.CreatedAt = ctime
+		notification.UpdatedAt = ctime
+
 		returnNotification, err := c.Repo.CreateNotification(notification)
 		if err != nil {
 			utils.HandleError("Failed to create notification. ", err)
@@ -175,6 +182,7 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		group.Broadcast <- returnMessage
 		// Store the message in the database
 	case GROUP_REQUEST:
+		ctime := time.Now().UTC().UnixMilli()
 		var notification models.Notification
 
 		// Handle group invite
@@ -183,6 +191,10 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			log.Println(err.Error())
 			return
 		}
+
+		notification.CreatedAt = ctime
+		notification.UpdatedAt = ctime
+
 		returnNotification, err := c.Repo.CreateNotification(notification)
 		if err != nil {
 			utils.HandleError("Failed to create notification. ", err)
