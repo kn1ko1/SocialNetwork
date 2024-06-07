@@ -65,6 +65,10 @@ func (c *Client) Receive() {
 			log.Println(err.Error())
 			return
 		}
+		switch wsm.Code {
+		case 10:
+			c.CreateGroupAndSocketGroup(wsm)
+		}
 		// Handle the received message
 		c.HandleMessage(wsm)
 	}
@@ -77,6 +81,62 @@ func (c *Client) Send(v any) {
 		log.Println(err.Error())
 		return
 	}
+}
+
+// HandleMessage processes incoming WebSocket messages
+func (c *Client) CreateGroupAndSocketGroup(msg WebSocketMessage) {
+	//switch msg.Code {
+	//case GROUP_CHAT_MESSAGE:
+	var group models.Group
+	ctime := time.Now().UTC().UnixMilli()
+
+	err := json.Unmarshal([]byte(msg.Body), &group)
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+	group.CreatedAt = ctime
+	group.UpdatedAt = ctime
+	// Validate the group
+	if validationErr := group.Validate(); validationErr != nil {
+		utils.HandleError("Validation failed:", validationErr)
+		return
+	}
+	createdGroup, err := c.Repo.CreateGroup(group)
+	if err != nil {
+		utils.HandleError("Error in CreateGroup, in ws/Client.go.", err)
+		return
+	}
+
+	groupUser := models.GroupUser{
+		CreatedAt: ctime,
+		GroupId:   createdGroup.GroupId,
+		UpdatedAt: ctime,
+		UserId:    createdGroup.CreatorId,
+	}
+
+	_, createGroupUserErr := c.Repo.CreateGroupUser(groupUser)
+	if createGroupUserErr != nil {
+		utils.HandleError("Failed to add user to groupUser table. ", createGroupUserErr)
+		return
+	}
+
+	log.Println("CLient.Go.  Trying to create socket group", createdGroup.GroupId)
+	// Check if the socket group exists, and create it if it doesn't.
+	_, exists := socketGroupManager.SocketGroups[createdGroup.GroupId]
+	if !exists {
+		socketGroupManager.SocketGroups[createdGroup.GroupId] = NewSocketGroup(createdGroup.GroupId)
+		go socketGroupManager.SocketGroups[createdGroup.GroupId].Run() // Run the socket group in a separate goroutine.
+		log.Println("CLient.Go.  Socket group", createdGroup.GroupId, "should exist")
+	}
+	// Add the client to the socket group.
+	c.SocketGroups[createdGroup.GroupId] = socketGroupManager.SocketGroups[createdGroup.GroupId]
+	socketGroupManager.SocketGroups[createdGroup.GroupId].Enter <- c
+	//	}
+
+	//case PRIVATE_MESSAGE:
+
+	//}
 }
 
 // HandleMessage processes incoming WebSocket messages

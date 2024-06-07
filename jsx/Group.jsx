@@ -74,21 +74,13 @@ export function Group({ socket }) {
 	const create = async (e) => {
 		e.preventDefault() // prevent reload.
 
-		const groupData = new FormData()
-
-		// Append form data
-		groupData.append("group-title", title)
-		groupData.append("group-description", description)
-
-		console.log("Group data being sent to backend:", title)
-		console.log("Group data being sent to backend:", description)
-
-		// Send user data to golang api/PostHandler.go.
-		await fetch("http://localhost:8080/api/groups", {
-			method: "POST",
-			credentials: "include",
-			body: groupData,
-		})
+		const groupData = {
+			creatorId: currentUserId,
+			description: description,
+			title: title,
+		};
+		let obj = { code: 10, body: JSON.stringify(groupData) }
+		socket.send(JSON.stringify(obj));
 
 		setTitle("")
 		setDescription("")
