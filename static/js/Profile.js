@@ -5,14 +5,16 @@ const {
   useState,
   useEffect
 } = React;
-export const renderProfile = (userId, isEditable) => {
+export const renderProfile = (socket, userId, isEditable) => {
   const pageContainer = document.querySelector(".page-container");
   ReactDOM.render( /*#__PURE__*/React.createElement(Profile, {
+    socket: socket,
     userId: userId,
     isEditable: isEditable
   }), pageContainer);
 };
 export function Profile({
+  socket,
   userId,
   isEditable
 }) {
@@ -155,6 +157,7 @@ export function Profile({
   }, profileUserData.username, "'s Profile"), /*#__PURE__*/React.createElement("br", null), !isEditable && /*#__PURE__*/React.createElement("div", {
     className: "d-flex justify-content-center align-items-center"
   }, /*#__PURE__*/React.createElement(FollowButton, {
+    socket: socket,
     followerId: currentUserId,
     user: profileUserData
   })), isPublicValue || isEditable || isFollowed ? /*#__PURE__*/React.createElement(React.Fragment, null, isEditable ? /*#__PURE__*/React.createElement("div", {

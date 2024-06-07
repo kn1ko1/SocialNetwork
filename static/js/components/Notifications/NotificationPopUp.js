@@ -1,10 +1,11 @@
 import { EventInvite } from "./EventInvite.js";
 import { GroupRequest } from "./GroupRequest.js";
 import { GroupInvite } from "./GroupInvite.js";
+import { FollowRequest } from "./FollowRequest.js";
 const codeToHeaderText = {
   1: "Group Chat Message",
   2: "Private Message",
-  3: "Create Event",
+  3: "Follow Request",
   4: "Group Request",
   5: "Group Invite",
   6: "Event Invite"
@@ -38,7 +39,10 @@ export const NotificationPopUp = ({
       onClick: onClose
     })), /*#__PURE__*/React.createElement("div", {
       className: "toast-body"
-    }, code === 4 || code === 5 || code === 6 ? /*#__PURE__*/React.createElement(React.Fragment, null, code === 4 && /*#__PURE__*/React.createElement(GroupRequest, {
+    }, code === 3 || code === 4 || code === 5 || code === 6 ? /*#__PURE__*/React.createElement(React.Fragment, null, code === 3 && /*#__PURE__*/React.createElement(FollowRequest, {
+      notification: notification,
+      onNotificationResponse: onClose
+    }), code === 4 && /*#__PURE__*/React.createElement(GroupRequest, {
       notification: notification,
       onNotificationResponse: onClose
     }), code === 5 && /*#__PURE__*/React.createElement(GroupInvite, {

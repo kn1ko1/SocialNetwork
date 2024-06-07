@@ -1,6 +1,6 @@
 const { useState, useEffect } = React
 
-export function FollowButton({ followerId, user }) {
+export function FollowButton({ socket, followerId, user }) {
 	const [isFollowing, setIsFollowing] = useState(user.isFollowed)
 	useEffect(() => {
 		setIsFollowing(user.isFollowed)
@@ -53,29 +53,16 @@ export function FollowButton({ followerId, user }) {
 
 	const handleFollowPrivate = async (followerId, userId) => {
 		try {
-
-			const bodyData = {
+			const notificationData = {
 				notificationType: "followRequest",
 				objectId: userId,
 				senderId: followerId,
 				status: "pending",
 				targetId: userId,
 			};
-			const response = await fetch(
-				`http://localhost:8080/api/notifications`,
-				{
-					method: "POST",
-					credentials: "include",
-					body: JSON.stringify(bodyData),
-				}
-			)
+			let obj = { code: 3, body: JSON.stringify(notificationData) }
+			socket.send(JSON.stringify(obj));
 
-			if (response.ok) {
-				console.log("Successfully sent follow notification to user", userId)
-				return true // Return true if the follow request is successful
-			} else {
-				console.error("Failed to send follow notification to user", userId)
-			}
 		} catch (error) {
 			console.error("Error sending follow notification to user:", error)
 		}

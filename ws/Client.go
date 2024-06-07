@@ -123,6 +123,8 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		group.Broadcast <- msg
 		// Store the message in the database
 	case FOLLOW_REQUEST:
+		ctime := time.Now().UTC().UnixMilli()
+
 		var notification models.Notification
 		// Handle private message
 		err := json.Unmarshal([]byte(msg.Body), &notification)
@@ -130,6 +132,8 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			log.Println(err.Error())
 			return
 		}
+		notification.CreatedAt = ctime
+		notification.UpdatedAt = ctime
 		returnNotification, err := c.Repo.CreateNotification(notification)
 		if err != nil {
 			utils.HandleError("Error in CreateNotification, in ws/Client.go.", err)
@@ -147,14 +151,13 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 
 		group, ok := c.SocketGroups[0]
 		if !ok {
-			log.Println("Private message group does not exist")
+			log.Println("primary socket group does not exist")
 			return
 		}
 
 		// Broadcast the message to the main group (group 0)
 		group.Broadcast <- returnMessage
 		// Store the message in the database
-		c.Repo.CreateNotification(notification)
 
 	case GROUP_INVITE:
 		var notification models.Notification

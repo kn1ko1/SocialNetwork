@@ -82,7 +82,7 @@ export function Navbar({ socket }) {
 							</a>
 						</li>
 						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={renderHome}>
+							<a className="nav-link" href="#" onClick={() => renderHome({ socket })}>
 								HOME
 							</a>
 						</li>

@@ -101,7 +101,7 @@ func (g *SocketGroup) Run() {
 
 				c, ok := g.Clients[notification.TargetId]
 				if !ok {
-					log.Printf("Target client %d not found for follow request\n", notification.TargetId)
+					log.Printf("Target client %d not found for FOLLOW_REQUEST\n", notification.TargetId)
 					return
 				}
 				c.Send(msg)
