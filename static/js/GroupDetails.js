@@ -95,21 +95,6 @@ export function GroupDetails({
       codeNum = 5;
     }
     try {
-      const response = await fetch('http://localhost:8080/api/notifications', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(notificationtData)
-      });
-      console.log('Response:', response);
-      if (response.ok) {
-        // Handle success response
-        console.log('Group user added successfully!');
-      } else {
-        // Handle error response
-        console.error('Failed to add group user:', response.statusText);
-      }
       let obj = {
         code: codeNum,
         body: JSON.stringify(notificationtData)
