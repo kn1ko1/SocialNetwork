@@ -80,7 +80,7 @@ export function Navbar({
   }, /*#__PURE__*/React.createElement("a", {
     className: "nav-link",
     href: "#",
-    onClick: () => renderProfile(currentUserId, true)
+    onClick: () => renderProfile(socket, currentUserId, true)
   }, "PROFILE")), /*#__PURE__*/React.createElement("li", {
     className: "nav-item"
   }, /*#__PURE__*/React.createElement("a", {

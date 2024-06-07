@@ -150,7 +150,7 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		returnNotification, err := c.Repo.CreateNotification(notification)
 		if err != nil {
 			utils.HandleError("Error in CreateNotification, in ws/Client.go.", err)
-
+			return
 		}
 
 		jsonNotification, err := json.Marshal(returnNotification)

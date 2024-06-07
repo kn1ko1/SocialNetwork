@@ -76,7 +76,7 @@ export function Navbar({ socket }) {
 							<a
 								className="nav-link"
 								href="#"
-								onClick={() => renderProfile(currentUserId, true)}
+								onClick={() => renderProfile( socket, currentUserId, true )}
 							>
 								PROFILE
 							</a>
