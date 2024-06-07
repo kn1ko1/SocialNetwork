@@ -86,7 +86,9 @@ export function Navbar({
   }, /*#__PURE__*/React.createElement("a", {
     className: "nav-link",
     href: "#",
-    onClick: renderHome
+    onClick: () => renderHome({
+      socket
+    })
   }, "HOME")), /*#__PURE__*/React.createElement("li", {
     className: "nav-item"
   }, /*#__PURE__*/React.createElement("a", {

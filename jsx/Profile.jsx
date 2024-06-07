@@ -3,15 +3,15 @@ import { PostCard } from "./components/shared/PostCard.js"
 import { FollowButton } from "./components/shared/FollowButton.js"
 const { useState, useEffect } = React
 
-export const renderProfile = (userId, isEditable) => {
+export const renderProfile = (socket, userId, isEditable) => {
 	const pageContainer = document.querySelector(".page-container")
 	ReactDOM.render(
-		<Profile userId={userId} isEditable={isEditable} />,
+		<Profile socket={socket} userId={userId} isEditable={isEditable} />,
 		pageContainer
 	)
 }
 
-export function Profile({ userId, isEditable }) {
+export function Profile({ socket, userId, isEditable }) {
 	const { currentUserId } = getCurrentUserId()
 	const [profileUserData, setProfileUserData] = useState({})
 	const [userPostData, setUserPostData] = useState([])
@@ -166,6 +166,7 @@ export function Profile({ userId, isEditable }) {
 					{!isEditable && (
 						<div className="d-flex justify-content-center align-items-center">
 							<FollowButton
+								socket={socket}
 								followerId={currentUserId}
 								user={profileUserData}
 							/>

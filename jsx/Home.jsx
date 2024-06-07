@@ -6,13 +6,13 @@ import { PostCard } from "./components/shared/PostCard.js"
 import { FollowButton } from "./components/shared/FollowButton.js"
 import { renderProfile } from "./Profile.js"
 
-export const renderHome = () => {
+export const renderHome = ({ socket }) => {
 	const pageContainer = document.querySelector(".page-container")
-	ReactDOM.render(<Home />, pageContainer)
+	ReactDOM.render(<Home socket={socket} />, pageContainer)
 }
 
 // Display information relating to homepage
-export function Home() {
+export function Home({ socket }) {
 	const { currentUserId } = getCurrentUserId()
 	const [almostPrivatePosts, setAlmostPrivatePosts] = useState([])
 	const [privatePosts, setPrivatePosts] = useState([])
@@ -138,6 +138,7 @@ export function Home() {
 												{user.username}
 											</a>
 											<FollowButton
+												socket={socket}
 												followerId={currentUserId}
 												user={user}
 											/>

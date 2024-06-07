@@ -8,13 +8,19 @@ import { PostForm } from "./components/Home/PostForm.js";
 import { PostCard } from "./components/shared/PostCard.js";
 import { FollowButton } from "./components/shared/FollowButton.js";
 import { renderProfile } from "./Profile.js";
-export const renderHome = () => {
+export const renderHome = ({
+  socket
+}) => {
   const pageContainer = document.querySelector(".page-container");
-  ReactDOM.render( /*#__PURE__*/React.createElement(Home, null), pageContainer);
+  ReactDOM.render( /*#__PURE__*/React.createElement(Home, {
+    socket: socket
+  }), pageContainer);
 };
 
 // Display information relating to homepage
-export function Home() {
+export function Home({
+  socket
+}) {
   const {
     currentUserId
   } = getCurrentUserId();
@@ -121,6 +127,7 @@ export function Home() {
     href: "#",
     onClick: () => renderProfile(user.userId)
   }, user.username), /*#__PURE__*/React.createElement(FollowButton, {
+    socket: socket,
     followerId: currentUserId,
     user: user
   }))) : /*#__PURE__*/React.createElement("p", null, "No Users?!"))), /*#__PURE__*/React.createElement("div", {
