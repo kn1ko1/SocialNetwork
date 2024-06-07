@@ -1,4 +1,6 @@
 import { EventInvite } from "./EventInvite.js";
+import { GroupRequest } from "./GroupRequest.js";
+import { GroupInvite } from "./GroupInvite.js";
 
 const codeToHeaderText = {
     1: "Group Chat Message",
@@ -28,7 +30,15 @@ export const NotificationPopUp = ({ data, onClose }) => {
                         <button type="button" className="btn-close" aria-label="Close" onClick={onClose}></button>
                     </div>
                     <div className="toast-body">
-                        {code === 6 ? <EventInvite notification={notification} onNotificationResponse={onClose} /> : notification}
+                        {
+                          code === 4 || code === 5 || code === 6 ? (
+                            <>
+                                {code === 4 && <GroupRequest notification={notification} onNotificationResponse={onClose} />}
+                                {code === 5 && <GroupInvite notification={notification} onNotificationResponse={onClose} />}
+                                {code === 6 && <EventInvite notification={notification} onNotificationResponse={onClose} />}
+                            </>
+                        ) : notification
+                        }
                     </div>
                 </div>
             </div>
