@@ -145,7 +145,7 @@ export function Profile({ socket, userId, isEditable }) {
 			})
 	}
 
-	const postCardStyle = {
+	const profileStyle = {
 		maxWidth: '1000px',
 		background: 'linear-gradient(to bottom, #c7ddef, #ffffff)', // Light blue/grey to white gradient
 		borderRadius: '10px',
@@ -157,7 +157,7 @@ export function Profile({ socket, userId, isEditable }) {
 	};
 
 	return (
-		<div className="container" style={postCardStyle}>
+		<div className="container" style={profileStyle}>
 			<div className="row">
 				<div className="col-md-4">
 					{/* User data */}

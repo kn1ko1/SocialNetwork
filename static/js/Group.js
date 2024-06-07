@@ -93,7 +93,23 @@ export function Group({
     setSelectedGroup(group);
     //setShowGroupDetails(true);
   };
-  return /*#__PURE__*/React.createElement("div", null, selectedGroup ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
+  const groupStyle = {
+    maxWidth: '1000px',
+    background: 'linear-gradient(to bottom, #c7ddef, #ffffff)',
+    // Light blue/grey to white gradient
+    borderRadius: '10px',
+    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+    // Optional: Add shadow for depth
+    padding: '40px',
+    margin: 'auto',
+    marginBottom: '20px',
+    // Adjust spacing between post cards
+    border: '1px solid #ccc' // Add a thin border
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "container",
+    style: groupStyle
+  }, selectedGroup ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     onClick: () => setSelectedGroup(null)
   }, "Go Back"), /*#__PURE__*/React.createElement(GroupDetails, {
     group: selectedGroup,
@@ -102,7 +118,11 @@ export function Group({
     onSubmit: create,
     className: "container",
     style: {
-      maxWidth: "400px"
+      maxWidth: "400px",
+      border: "1px solid #ccc",
+      borderRadius: "10px",
+      padding: "20px",
+      marginBottom: "20px"
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "mb-3"
@@ -131,11 +151,30 @@ export function Group({
     type: "submit",
     className: "btn btn-primary"
   }, "Create")), /*#__PURE__*/React.createElement("div", {
-    id: "groupData"
+    className: "text-center"
+  }, /*#__PURE__*/React.createElement("h2", {
+    style: {
+      textDecoration: 'underline'
+    }
+  }, "Groups"), /*#__PURE__*/React.createElement("div", {
+    id: "groupData",
+    className: "row"
   }, groupData !== null ? groupData.map(group => /*#__PURE__*/React.createElement("div", {
     key: group.title,
+    className: "col-lg-3 col-md-4 col-sm-6 col-12 mb-4",
     onClick: () => handleGroupClick(group)
-  }, /*#__PURE__*/React.createElement("h3", null, group.title), /*#__PURE__*/React.createElement("p", null, group.description))) : /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "p-3 border rounded"
+  }, /*#__PURE__*/React.createElement("h3", {
+    style: {
+      textDecoration: 'underline',
+      fontSize: '14px'
+    }
+  }, group.title), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: '10px'
+    }
+  }, group.description)))) : /*#__PURE__*/React.createElement("div", {
     id: "noGroupsError"
-  }, "There are no created groups yet"))));
+  }, "There are no created groups yet")))));
 }
