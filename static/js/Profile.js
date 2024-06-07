@@ -127,7 +127,7 @@ export function Profile({
       setIsPublicValue(!newPrivacySetting);
     });
   };
-  const postCardStyle = {
+  const profileStyle = {
     maxWidth: '1000px',
     background: 'linear-gradient(to bottom, #c7ddef, #ffffff)',
     // Light blue/grey to white gradient
@@ -142,7 +142,7 @@ export function Profile({
   };
   return /*#__PURE__*/React.createElement("div", {
     className: "container",
-    style: postCardStyle
+    style: profileStyle
   }, /*#__PURE__*/React.createElement("div", {
     className: "row"
   }, /*#__PURE__*/React.createElement("div", {

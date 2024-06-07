@@ -103,60 +103,81 @@ export function Group({ socket }) {
 		//setShowGroupDetails(true);
 	}
 
-	return (
-		<div>
-			{selectedGroup ? (
-				<div>
-					<button onClick={() => setSelectedGroup(null)}>Go Back</button>
-					<GroupDetails group={selectedGroup} socket={socket} />
-				</div>
-			) : (
-				<div>
-					<form onSubmit={create} className="container" style={{ maxWidth: "400px" }}>
-						<div className="mb-3">
-							<label htmlFor="exampleTitle" className="form-label">
-								Title
-							</label>
-							<input
-								type="text"
-								className="form-control"
-								id="exampleTitle"
-								aria-describedby="emailHelp"
-								value={title}
-								onChange={(e) => setTitle(e.target.value)}
-							/>
-						</div>
-						<div className="mb-3">
-							<label htmlFor="exampleInputPassword1" className="form-label">
-								Description
-							</label>
-							<input
-								type="text"
-								className="form-control"
-								id="exampleDescription"
-								value={description}
-								onChange={(e) => setDescription(e.target.value)}
-							/>
-						</div>
-						<button type="submit" className="btn btn-primary">
-							Create
-						</button>
-					</form>
+	
 
-					<div id="groupData">
-						{groupData !== null ? (
-							groupData.map((group) => (
-								<div key={group.title} onClick={() => handleGroupClick(group)}>
-									<h3>{group.title}</h3>
-									<p>{group.description}</p>
-								</div>
-							))
-						) : (
-							<div id="noGroupsError">There are no created groups yet</div>
-						)}
-					</div>
+	const groupStyle = {
+		maxWidth: '1000px',
+		background: 'linear-gradient(to bottom, #c7ddef, #ffffff)', // Light blue/grey to white gradient
+		borderRadius: '10px',
+		boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth
+		padding: '40px',
+		margin: 'auto',
+		marginBottom: '20px', // Adjust spacing between post cards
+		border: '1px solid #ccc', // Add a thin border
+	  };
+	  
+	  return (
+		<div className="container" style={groupStyle}>
+		  {selectedGroup ? (
+			<div>
+			  <button onClick={() => setSelectedGroup(null)}>Go Back</button>
+			  <GroupDetails group={selectedGroup} socket={socket} />
+			</div>
+		  ) : (
+			<div>
+			  <form onSubmit={create} className="container" style={{ maxWidth: "400px", border: "1px solid #ccc", borderRadius: "10px", padding: "20px", marginBottom: "20px" }}>
+				<div className="mb-3">
+				  <label htmlFor="exampleTitle" className="form-label">
+					Title
+				  </label>
+				  <input
+					type="text"
+					className="form-control"
+					id="exampleTitle"
+					aria-describedby="emailHelp"
+					value={title}
+					onChange={(e) => setTitle(e.target.value)}
+				  />
 				</div>
-			)}
+				<div className="mb-3">
+				  <label htmlFor="exampleInputPassword1" className="form-label">
+					Description
+				  </label>
+				  <input
+					type="text"
+					className="form-control"
+					id="exampleDescription"
+					value={description}
+					onChange={(e) => setDescription(e.target.value)}
+				  />
+				</div>
+				<button type="submit" className="btn btn-primary">
+				  Create
+				</button>
+			  </form>
+	  
+			  <div className="text-center">
+				<h2 style={{ textDecoration: 'underline' }}>Groups</h2>
+				<div id="groupData" className="row">
+				  {groupData !== null ? (
+					groupData.map((group) => (
+					  <div key={group.title} className="col-lg-3 col-md-4 col-sm-6 col-12 mb-4" onClick={() => handleGroupClick(group)}>
+						<div className="p-3 border rounded">
+						  <h3 style={{ textDecoration: 'underline', fontSize: '14px' }}>{group.title}</h3>
+						  <p style={{ fontSize: '10px' }}>{group.description}</p>
+						</div>
+					  </div>
+					))
+				  ) : (
+					<div id="noGroupsError">There are no created groups yet</div>
+				  )}
+				</div>
+			  </div>
+			</div>
+		  )}
 		</div>
-	)
-}
+	  );
+	  
+	 
+	  
+	}
