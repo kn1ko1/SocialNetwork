@@ -130,6 +130,21 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			log.Println(err.Error())
 			return
 		}
+		returnNotification, err := c.Repo.CreateNotification(notification)
+		if err != nil {
+			utils.HandleError("Error in CreateNotification, in ws/Client.go.", err)
+
+		}
+
+		jsonNotification, err := json.Marshal(returnNotification)
+		if err != nil {
+			utils.HandleError("[ws/client.go] Error marshalling returnNotification", err)
+		}
+		returnMessage := WebSocketMessage{
+			Code: 3,
+			Body: string(jsonNotification),
+		}
+
 		group, ok := c.SocketGroups[0]
 		if !ok {
 			log.Println("Private message group does not exist")
@@ -137,9 +152,9 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		}
 
 		// Broadcast the message to the main group (group 0)
-		group.Broadcast <- msg
+		group.Broadcast <- returnMessage
 		// Store the message in the database
-		c.Repo.CreateNotification(notification)
+
 	case EVENT_INVITE:
 		ctime := time.Now().UTC().UnixMilli()
 

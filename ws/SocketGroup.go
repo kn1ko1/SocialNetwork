@@ -97,11 +97,11 @@ func (g *SocketGroup) Run() {
 				if err != nil {
 					log.Println(err.Error())
 				}
-				log.Println("Private Message Body in socketGroup is:", notification)
+				log.Println("FOLLOW_REQUEST Body in socketGroup is:", notification)
 
 				c, ok := g.Clients[notification.TargetId]
 				if !ok {
-					log.Printf("Target client %d not found for private message\n", notification.TargetId)
+					log.Printf("Target client %d not found for follow request\n", notification.TargetId)
 					return
 				}
 				c.Send(msg)
