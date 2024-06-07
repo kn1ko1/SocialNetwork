@@ -5,6 +5,7 @@ const {
 } = React;
 const GROUP_CHAT_MESSAGE = 1;
 const PRIVATE_MESSAGE = 2;
+const CREATE_EVENT = 3;
 export const renderChat = ({
   socket
 }) => {
@@ -19,13 +20,13 @@ export function Chat({
   const {
     currentUserId
   } = getCurrentUserId();
-  const [chatHistory, setChatHistory] = useState([]);
   const [messageCode, setMessageCode] = useState(0);
   const [messageType, setMessageType] = useState("");
   const [targetId, setTargetId] = useState(0);
   const [sendMessage, setSendMessage] = useState("");
   const [groupsPartOf, setGroupsPartOf] = useState([]);
   const [uniqueUsers, setUniqueUsers] = useState([]);
+  const [isEmojiPickerVisible, setEmojiPickerVisible] = useState(false);
   let messages = document.getElementById("messages");
   useEffect(() => {
     console.log("currentUserId", currentUserId);
@@ -118,6 +119,41 @@ export function Chat({
   const messageStyle = {
     color: "orange"
   };
+
+  // Function to handle opening/closing the emoji picker
+  const toggleEmojiPicker = () => {
+    setEmojiPickerVisible(!isEmojiPickerVisible);
+  };
+
+  // // Function to handle emoji selection
+  // const handleEmojiSelect = (emoji) => {
+  //     const messageTextarea = document.getElementById('message-textarea');
+  //     const startPos = messageTextarea.selectionStart;
+  //     const endPos = messageTextarea.selectionEnd;
+
+  //     // Insert the emoji at the current cursor position
+  //     const messageText = messageTextarea.value;
+  //     // const updatedMessageText =
+  //     //     messageText.substring(0, startPos) +
+  //     //     emoji +
+  //     //     messageText.substring(endPos, messageText.length);
+  //     const updatedMessageText = messageText + emoji;
+
+  //     // Update the message text in the textarea
+  //     setSendMessage(updatedMessageText);
+  // };
+
+  const handleEmojiSelect = emoji => {
+    // Get the current text in the textarea
+    const messageTextarea = document.getElementById('message-textarea');
+    const messageText = messageTextarea.value;
+
+    // Append the emoji to the end of the text
+    const updatedMessageText = messageText + emoji;
+
+    // Update the message text in the textarea
+    messageTextarea.value = updatedMessageText;
+  };
   return /*#__PURE__*/React.createElement("div", {
     className: "container"
   }, /*#__PURE__*/React.createElement("h1", null, "Chat"), /*#__PURE__*/React.createElement("h3", null, "Users"), uniqueUsers && uniqueUsers.length > 0 ? /*#__PURE__*/React.createElement("ul", {
@@ -148,10 +184,24 @@ export function Chat({
     style: {
       display: isChatboxVisible ? "block" : "none"
     }
-  }, /*#__PURE__*/React.createElement("textarea", {
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("textarea", {
+    id: "message-textarea",
     className: "form-control",
-    onChange: handleMessages
+    value: sendMessage,
+    onChange: handleMessages,
+    placeholder: "Type your message..."
   }), /*#__PURE__*/React.createElement("button", {
+    onClick: toggleEmojiPicker
+  }, "\uD83D\uDE0A"), isEmojiPickerVisible && /*#__PURE__*/React.createElement("div", {
+    id: "emoji-picker",
+    className: "emoji-picker"
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => handleEmojiSelect('😊')
+  }, "\uD83D\uDE0A"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => handleEmojiSelect('😂')
+  }, "\uD83D\uDE02"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => handleEmojiSelect('❤️')
+  }, "\u2764\uFE0F"))), /*#__PURE__*/React.createElement("button", {
     type: "submit",
     className: "btn btn-primary mt-2"
   }, "Send")));
