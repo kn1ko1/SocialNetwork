@@ -1,4 +1,6 @@
 import { EventInvite } from "./EventInvite.js";
+import { GroupRequest } from "./GroupRequest.js";
+import { GroupInvite } from "./GroupInvite.js";
 const codeToHeaderText = {
   1: "Group Chat Message",
   2: "Private Message",
@@ -36,10 +38,16 @@ export const NotificationPopUp = ({
       onClick: onClose
     })), /*#__PURE__*/React.createElement("div", {
       className: "toast-body"
-    }, code === 6 ? /*#__PURE__*/React.createElement(EventInvite, {
+    }, code === 4 || code === 5 || code === 6 ? /*#__PURE__*/React.createElement(React.Fragment, null, code === 4 && /*#__PURE__*/React.createElement(GroupRequest, {
       notification: notification,
       onNotificationResponse: onClose
-    }) : notification)));
+    }), code === 5 && /*#__PURE__*/React.createElement(GroupInvite, {
+      notification: notification,
+      onNotificationResponse: onClose
+    }), code === 6 && /*#__PURE__*/React.createElement(EventInvite, {
+      notification: notification,
+      onNotificationResponse: onClose
+    })) : notification)));
   } catch (error) {
     console.error("Error processing notification data:", error);
     return null;

@@ -154,6 +154,41 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		// Broadcast the message to the main group (group 0)
 		group.Broadcast <- returnMessage
 		// Store the message in the database
+		c.Repo.CreateNotification(notification)
+
+	case GROUP_INVITE:
+		var notification models.Notification
+
+		// Handle group invite
+		err := json.Unmarshal([]byte(msg.Body), &notification)
+		if err != nil {
+			log.Println(err.Error())
+			return
+		}
+		returnNotification, err := c.Repo.CreateNotification(notification)
+		if err != nil {
+			utils.HandleError("Failed to create notification. ", err)
+			return
+		}
+
+		jsonNotification, err := json.Marshal(returnNotification)
+		if err != nil {
+			utils.HandleError("[ws/client.go] Error marshalling returnNotification", err)
+			return
+		}
+		returnMessage := WebSocketMessage{
+			Code: 5,
+			Body: string(jsonNotification),
+		}
+
+		group, ok := c.SocketGroups[0]
+		if !ok {
+			log.Println("primary group does not exist")
+			return
+		}
+		// Broadcast the message to the main group (group 0)
+		group.Broadcast <- returnMessage
+		// Store the message in the database
 
 	case EVENT_INVITE:
 		ctime := time.Now().UTC().UnixMilli()
@@ -227,6 +262,7 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 				if ok {
 					group.Broadcast <- returnMessage
 				}
+
 			}
 
 		}

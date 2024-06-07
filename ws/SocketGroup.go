@@ -117,6 +117,19 @@ func (g *SocketGroup) Run() {
 				if ok {
 					targetClient.Send(msg)
 				}
+			case GROUP_INVITE:
+				var notification models.Notification
+				err := json.Unmarshal([]byte(msg.Body), &notification)
+				if err != nil {
+					log.Println(err.Error())
+				}
+
+				c, ok := g.Clients[notification.TargetId]
+				if !ok {
+					log.Printf("Target client %d not found for group invite\n", notification.TargetId)
+					return
+				}
+				c.Send(msg)
 			}
 
 		}
