@@ -116,12 +116,14 @@ export function PostForm({ groupId, followedUsers, fetchFunc }) {
 	) : null;
 
 	return (
-		<div>
-			<main className="postForm container" style={{ maxWidth: "400px" }}>
-				<h1 className="h3 mb-3 fw-normal">Post Message Here</h1>
-				<form onSubmit={submit}>
-					<div className="form-floating mb-3">
-						<input
+		<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '40vh', padding: '10px' }}>
+		<main className="postForm container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0'}}>
+		  <div className="border" style={{ borderRadius: "10px", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', border: "3px solid #333", padding: "10px", width: '100%', maxWidth: '600px', background: 'linear-gradient(to bottom, #c7ddef, #ffffff)'  }}>
+			<div className="col-12">
+			  <h1 className="h3 mb-3 fw-normal" style={{ textDecoration: 'underline', textAlign: "center" }}>New Post</h1>
+			  <form onSubmit={submit}>
+				<div className="form-floating mb-3" style={{ textAlign: "center" }}>
+				  <input
 							type="text"
 							className="form-control"
 							id="postFormBody"
@@ -134,6 +136,7 @@ export function PostForm({ groupId, followedUsers, fetchFunc }) {
 							type="button"
 							className="btn btn-primary"
 							onClick={handleSelectFile}
+							style={{ marginRight: "10px" }}
 						>
 							Select File
 						</button>
@@ -194,11 +197,14 @@ export function PostForm({ groupId, followedUsers, fetchFunc }) {
 							</label>
 						</div>
 					</div>
+					
 					{followedUsersList}
 					<button className="w-100 btn btn-lg btn-primary" type="submit">
 						Submit
 					</button>
 				</form>
+				</div>
+				</div>
 			</main>
 		</div>
 	)

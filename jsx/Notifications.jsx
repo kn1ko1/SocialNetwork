@@ -42,9 +42,21 @@ export function Notifications() {
 		setNotifications(updatedNotifications);
 	};
 
+
+	const notificationsStyle = {
+		maxWidth: '1000px',
+		background: 'linear-gradient(to bottom, #c7ddef, #ffffff)', // Light blue/grey to white gradient
+		borderRadius: '10px',
+		boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth
+		padding: '40px',
+		margin: 'auto',
+		marginBottom: '20px', // Adjust spacing between post cards
+		border: '1px solid #ccc', // Add a thin border
+	  };
+
 	return (
-		<div>
-			<h1>Notifications</h1>
+		<div style={notificationsStyle} className="col-md-4">
+			<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>Notifications</h2>
 			{notifications !== null && Object.keys(notifications).length > 0 ? (
 				<ul>
 					{Object.values(notifications).map((notification, index) => (

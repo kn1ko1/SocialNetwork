@@ -104,21 +104,52 @@ export function Home({
   useEffect(() => {
     fetchUserPostData();
   }, []);
+  const homeStyle = {
+    maxWidth: '1000px',
+    background: 'linear-gradient(to bottom, #c7ddef, #ffffff)',
+    // Light blue/grey to white gradient
+    borderRadius: '10px',
+    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+    // Optional: Add shadow for depth
+    padding: '40px',
+    margin: 'auto',
+    marginBottom: '20px',
+    // Adjust spacing between post cards
+    border: '1px solid #ccc' // Add a thin border
+  };
   return /*#__PURE__*/React.createElement("main", {
-    className: "homePage"
+    className: "homePage",
+    style: homeStyle
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '20px'
+    }
   }, /*#__PURE__*/React.createElement(PostForm, {
     groupId: 0,
     followedUsers: followedUsersList,
     fetchFunc: fetchUserPostData
-  }), /*#__PURE__*/React.createElement("div", {
-    class: "container text-center"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "container text-center"
   }, /*#__PURE__*/React.createElement("div", {
-    class: "row align-items-start"
+    className: "row align-items-start"
   }, /*#__PURE__*/React.createElement("div", {
-    class: "col-3"
+    className: "col-3"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "border",
+    style: {
+      borderRadius: "10px",
+      boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+      border: "3px solid #333",
+      padding: "10px"
+    }
   }, /*#__PURE__*/React.createElement("div", {
     className: "userList"
-  }, /*#__PURE__*/React.createElement("h2", null, "UserList"), userList !== null && userList.length > 0 ? userList
+  }, /*#__PURE__*/React.createElement("h2", {
+    style: {
+      textDecoration: 'underline',
+      textAlign: 'center'
+    }
+  }, "User List"), userList !== null && userList.length > 0 ? userList
   // Filter out the current user
   .filter(user => user.userId !== currentUserId).map((user, index) => /*#__PURE__*/React.createElement("div", {
     key: index
@@ -130,11 +161,16 @@ export function Home({
     socket: socket,
     followerId: currentUserId,
     user: user
-  }))) : /*#__PURE__*/React.createElement("p", null, "No Users?!"))), /*#__PURE__*/React.createElement("div", {
+  }))) : /*#__PURE__*/React.createElement("p", null, "No Users?!")))), /*#__PURE__*/React.createElement("div", {
     class: "col-6"
   }, /*#__PURE__*/React.createElement("div", {
     className: "publicPostsWithComments"
-  }, /*#__PURE__*/React.createElement("h2", null, "Public Posts"), publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? [...publicPostsWithComments].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(publicPostsWithComment => /*#__PURE__*/React.createElement(PostCard, {
+  }, /*#__PURE__*/React.createElement("h2", {
+    style: {
+      textDecoration: 'underline',
+      textAlign: 'center'
+    }
+  }, "Public Posts"), publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? [...publicPostsWithComments].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(publicPostsWithComment => /*#__PURE__*/React.createElement(PostCard, {
     key: `public-${publicPostsWithComment.post.id}`,
     post: publicPostsWithComment.post,
     comments: publicPostsWithComment.comments,
@@ -142,14 +178,24 @@ export function Home({
     fetchFunc: fetchUserPostData
   })) : /*#__PURE__*/React.createElement("p", null, "No public posts")), /*#__PURE__*/React.createElement("div", {
     className: "privatePosts"
-  }, /*#__PURE__*/React.createElement("h2", null, "Private Posts"), privatePosts !== null && privatePosts.length > 0 ? [...privatePosts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(privatePost => /*#__PURE__*/React.createElement(PostCard, {
+  }, /*#__PURE__*/React.createElement("h2", {
+    style: {
+      textDecoration: 'underline',
+      textAlign: 'center'
+    }
+  }, "Private Posts"), privatePosts !== null && privatePosts.length > 0 ? [...privatePosts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(privatePost => /*#__PURE__*/React.createElement(PostCard, {
     key: `private-${privatePost.post.id}`,
     post: privatePost.post,
     comments: privatePost.comments,
     showCommentForm: true
   })) : /*#__PURE__*/React.createElement("p", null, "No private posts")), /*#__PURE__*/React.createElement("div", {
     className: "almostPrivatePosts"
-  }, /*#__PURE__*/React.createElement("h2", null, "Almost Private Posts"), almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? [...almostPrivatePosts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(almostPrivatePost => /*#__PURE__*/React.createElement(PostCard, {
+  }, /*#__PURE__*/React.createElement("h2", {
+    style: {
+      textDecoration: 'underline',
+      textAlign: 'center'
+    }
+  }, "Almost Private Posts"), almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? [...almostPrivatePosts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(almostPrivatePost => /*#__PURE__*/React.createElement(PostCard, {
     key: `almost-private-${almostPrivatePost.post.id}`,
     post: almostPrivatePost.post,
     comments: almostPrivatePost.comments,
@@ -158,7 +204,21 @@ export function Home({
     class: "col-3"
   }, /*#__PURE__*/React.createElement("div", {
     className: "userEvents"
-  }, /*#__PURE__*/React.createElement("h2", null, "Events that you're attending"), userEvents !== null && userEvents.length > 0 ? userEvents.map(event => /*#__PURE__*/React.createElement("li", {
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "border",
+    style: {
+      borderRadius: "10px",
+      boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+      border: "3px solid #333",
+      padding: "10px",
+      background: 'linear-gradient(to bottom, #c7ddef, #ffffff)'
+    }
+  }, /*#__PURE__*/React.createElement("h2", {
+    style: {
+      textDecoration: 'underline',
+      textAlign: 'center'
+    }
+  }, "Events"), userEvents !== null && userEvents.length > 0 ? userEvents.map(event => /*#__PURE__*/React.createElement("li", {
     key: event.dateTime
-  }, event.title, " - ", event.description, "- ", formattedDate(event.dateTime))) : /*#__PURE__*/React.createElement("p", null, "No almost private posts"))))));
+  }, event.title, " - ", event.description, "- ", formattedDate(event.dateTime))) : /*#__PURE__*/React.createElement("p", null, "No almost private posts")))))));
 }

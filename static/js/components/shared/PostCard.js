@@ -105,7 +105,9 @@ export function PostCard({
   }, post.body)), showCommentForm && /*#__PURE__*/React.createElement("div", {
     className: "card-footer py-3 border-0",
     style: {
-      backgroundColor: "#f8f9fa"
+      backgroundColor: "#f8f9fa",
+      borderRadius: "10px",
+      border: "1px solid #ccc"
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "d-flex flex-start w-100"
@@ -124,8 +126,15 @@ export function PostCard({
   }, /*#__PURE__*/React.createElement("button", {
     type: "button",
     className: "btn btn-primary",
-    onClick: handleSelectFile
-  }, "Select File"), /*#__PURE__*/React.createElement("span", null, selectedFile ? selectedFile.name : "No file selected"), /*#__PURE__*/React.createElement("input", {
+    onClick: handleSelectFile,
+    style: {
+      marginRight: "10px"
+    }
+  }, "Select File"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      marginRight: "10px"
+    }
+  }, selectedFile ? selectedFile.name : "No file selected"), /*#__PURE__*/React.createElement("input", {
     type: "file",
     id: `commentFileInput${post.postId}`,
     accept: "image/*",
@@ -136,7 +145,10 @@ export function PostCard({
   }), /*#__PURE__*/React.createElement("button", {
     type: "submit",
     className: "btn btn-primary btn-sm",
-    onClick: submit
+    onClick: submit,
+    style: {
+      marginTop: "10px"
+    }
   }, "Post comment")), comments && comments.length > 0 && /*#__PURE__*/React.createElement("div", {
     className: "comments"
   }, /*#__PURE__*/React.createElement("h2", null, "Comments"), comments.map(comment => /*#__PURE__*/React.createElement(CommentCard, {
