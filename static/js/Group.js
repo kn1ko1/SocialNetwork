@@ -106,7 +106,9 @@ export function Group({
     className: "container",
     style: groupStyle
   }, selectedGroup ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
-    onClick: () => setSelectedGroup(null)
+    onClick: () => setSelectedGroup(null),
+    type: "submit",
+    className: "btn btn-primary"
   }, "Go Back"), /*#__PURE__*/React.createElement(GroupDetails, {
     group: selectedGroup,
     socket: socket
@@ -164,11 +166,11 @@ export function Group({
   }, /*#__PURE__*/React.createElement("h3", {
     style: {
       textDecoration: 'underline',
-      fontSize: '14px'
+      fontSize: '18px'
     }
   }, group.title), /*#__PURE__*/React.createElement("p", {
     style: {
-      fontSize: '10px'
+      fontSize: '14px'
     }
   }, group.description)))) : /*#__PURE__*/React.createElement("div", {
     id: "noGroupsError"

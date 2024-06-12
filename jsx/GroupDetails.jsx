@@ -108,85 +108,200 @@ export function GroupDetails({ group, socket }) {
 		}
 	}
 
+	const groupDetailsStyle = {
+		maxWidth: '1000px',
+		background: 'linear-gradient(to bottom, #c7ddef, #ffffff)', // Light blue/grey to white gradient
+		borderRadius: '10px',
+		boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth
+		padding: '40px',
+		margin: 'auto',
+		marginBottom: '20px', // Adjust spacing between post cards
+		border: '1px solid #ccc', // Add a thin border
+	  };
+
+	// return (
+	// 	<div className="group-details">
+	// 		<h2 style={{ textDecoration: 'underline', fontSize: '18px'  }}>{group.title}</h2>
+	// 		<p style={{ fontSize: '14px' }}>{group.description}</p>
+
+	// 		{group.isMember ? (
+	// 			<div id="groupData">
+	// 				<PostFormGroup group={group} fetchFunc={() => fetchGroupData(group.groupId)} />
+
+	// 				<EventForm group={group} socket={socket} />
+	// 				{/* user List here */}
+	// 				<GroupDetailsUserList
+	// 					userList={userList}
+	// 					groupId={group.groupId}
+	// 					groupMembers={groupMembers}
+	// 					AddGroupUser={AddGroupUser} />
+
+	// 				{/* group members here */}
+	// 				<div className="groupMembers">
+	// 					<h2>Group Members</h2>
+	// 					{groupMembers !== null && groupMembers.length > 0 ? (
+	// 						groupMembers.map((member, index) => {
+	// 							// Find the user object corresponding to the member's userId
+	// 							const user = userList.find((user) => user.userId === member.userId);
+	// 							return (
+	// 								<div key={index}>
+	// 									{user ? user.username : 'Unknown User'}
+	// 								</div>
+	// 							);
+	// 						})
+	// 					) : (
+	// 						<p>It's just you... Maybe you should invite someone?</p>
+	// 					)}
+	// 				</div>
+	// 				{/* group posts here */}
+	// 				<div id="groupPosts">
+	// 					<h2>Posts</h2>
+	// 					{groupPosts !== null ? (
+	// 						groupPosts.map((post) => (
+	// 							<li key={post.createdAt}>
+	// 								<PostCard
+	// 									post={post}
+	// 									comments={post.comments}
+	// 									showCommentForm={true}
+	// 									fetchFunc={() => fetchGroupData(group.groupId)} />
+
+	// 							</li>
+	// 						))
+	// 					) : (
+	// 						<div id="groupPosts">There are no posts in this groups yet</div>
+	// 					)}
+	// 				</div>
+	// 				{/* group Messages here */}
+	// 				<div className="groupMessages">
+	// 					<h2>Messages</h2>
+	// 					{groupMessages !== null && groupMessages.length > 0 ? (
+	// 						groupMessages.map((message, index) => (
+	// 							<div key={index}>
+	// 								{message.body}
+	// 							</div>
+	// 						))
+	// 					) : (
+	// 						<p>No Messages</p>
+	// 					)}
+	// 				</div>
+	// 				<GroupDetailsEvents groupEvents={groupEvents} />
+
+	// 			</div>
+	// 		) : (
+	// 			<div>
+	// 				<div>You are not a member yet</div>
+	// 				<button onClick={() => AddGroupUser(group.creatorId, group.groupId, "groupRequest")}>Request to join group</button>
+	// 			</div>
+	// 		)}
+
+
+
+
+
+	// 	</div>
+	// )
+
 	return (
-		<div className="group-details">
-			<h2>{group.title}</h2>
-			<p>{group.description}</p>
+		<div className="group-details container">
 
-			{group.isMember ? (
-				<div id="groupData">
-					<PostFormGroup group={group} fetchFunc={() => fetchGroupData(group.groupId)} />
+			<div style={groupDetailsStyle}>
+		  <h2 style={{ textDecoration: 'underline', fontSize: '24px', textAlign: 'center'  }}>{group.title}</h2>
+		  <p style={{ fontSize: '20px', textAlign: 'center'  }}>{group.description}</p>
+	  </div>
 
-					<EventForm group={group} socket={socket} />
-					{/* user List here */}
-					<GroupDetailsUserList
-						userList={userList}
-						groupId={group.groupId}
-						groupMembers={groupMembers}
-						AddGroupUser={AddGroupUser} />
+		
+		  {group.isMember ? (
+			<div className="row">
+			  {/* Column 1 */}
+			  <div className="col-lg-3 text-center">
 
-					{/* group members here */}
-					<div className="groupMembers">
-						<h2>Group Members</h2>
-						{groupMembers !== null && groupMembers.length > 0 ? (
-							groupMembers.map((member, index) => {
-								// Find the user object corresponding to the member's userId
-								const user = userList.find((user) => user.userId === member.userId);
-								return (
-									<div key={index}>
-										{user ? user.username : 'Unknown User'}
-									</div>
-								);
-							})
-						) : (
-							<p>It's just you... Maybe you should invite someone?</p>
-						)}
-					</div>
-					{/* group posts here */}
-					<div id="groupPosts">
-						<h2>Posts</h2>
-						{groupPosts !== null ? (
-							groupPosts.map((post) => (
-								<li key={post.createdAt}>
-									<PostCard
-										post={post}
-										comments={post.comments}
-										showCommentForm={true}
-										fetchFunc={() => fetchGroupData(group.groupId)} />
-
-								</li>
-							))
-						) : (
-							<div id="groupPosts">There are no posts in this groups yet</div>
-						)}
-					</div>
-					{/* group Messages here */}
-					<div className="groupMessages">
-						<h2>Messages</h2>
-						{groupMessages !== null && groupMessages.length > 0 ? (
-							groupMessages.map((message, index) => (
-								<div key={index}>
-									{message.body}
-								</div>
-							))
-						) : (
-							<p>No Messages</p>
-						)}
-					</div>
-					<GroupDetailsEvents groupEvents={groupEvents} />
-
+				<div style={groupDetailsStyle}>
+				<h3 style={{textDecoration: 'underline'}}>Group Members</h3>
+				<div className="groupMembers" >
+				  {groupMembers !== null && groupMembers.length > 0 ? (
+					groupMembers.map((member, index) => {
+					  const user = userList.find((user) => user.userId === member.userId);
+					  return (
+						<div key={index}>
+						  {user ? user.username : 'Unknown User'}
+						</div>
+					  );
+					})
+				  ) : (
+					<p>It's just you... Maybe you should invite someone?</p>
+				  )}
 				</div>
-			) : (
-				<div>
-					<div>You are not a member yet</div>
-					<button onClick={() => AddGroupUser(group.creatorId, group.groupId, "groupRequest")}>Request to join group</button>
 				</div>
-			)}
 
+				<div style={groupDetailsStyle}>
+				<GroupDetailsUserList
+				  userList={userList}
+				  groupId={group.groupId}
+				  groupMembers={groupMembers}
+				  AddGroupUser={AddGroupUser}
+				/>
+			  </div>
+			  </div>
+			  
+	  
+			  {/* Column 2 */}
+			  <div className="col-lg-6 text-center">
+				
+				<div style={groupDetailsStyle}>
+				<PostFormGroup group={group} fetchFunc={() => fetchGroupData(group.groupId)} />
+					</div>
 
+				<h3 style={{textDecoration: 'underline'}}>Posts</h3>
+				<div id="groupPosts">
+				  {groupPosts !== null ? (
+					groupPosts.map((post) => (
+					  <li key={post.createdAt}>
+						<PostCard
+						  post={post}
+						  comments={post.comments}
+						  showCommentForm={true}
+						  fetchFunc={() => fetchGroupData(group.groupId)}
+						/>
+					  </li>
+					))
+				  ) : (
+					<div>There are no posts in this group yet</div>
+				  )}
+				</div>
 
+				<div style={groupDetailsStyle}>
+				<h3 style={{textDecoration: 'underline'}}>Messages</h3>
+				<div className="groupMessages">
+				  {groupMessages !== null && groupMessages.length > 0 ? (
+					groupMessages.map((message, index) => (
+					  <div key={index}>{message.body}</div>
+					))
+				  ) : (
+					<p>No Messages</p>
+				  )}
+				</div>
+			  </div>
+			  </div>
+	  
+			  {/* Column 3 */}
+			  <div className="col-lg-3 text-center">
+				
+				<div style={groupDetailsStyle}>
+				<EventForm  group={group} socket={socket} />
+				</div>
 
-
+				<div style={groupDetailsStyle}>
+				<GroupDetailsEvents groupEvents={groupEvents}  />	
+			  </div>
+			</div>
+			</div>
+		  ) : (
+			<div className="text-center" style={groupDetailsStyle}>
+			  <div>You are not a member yet</div>
+			  <button onClick={() => AddGroupUser(group.creatorId, group.groupId, "groupRequest")}>Request to join group</button>
+			</div>
+		  )}
 		</div>
-	)
+	  );
+	  
 }
