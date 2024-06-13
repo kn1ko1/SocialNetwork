@@ -112,7 +112,7 @@ export function Group({ socket }) {
 		<div className="container" style={groupStyle}>
 		  {selectedGroup ? (
 			<div>
-			  <button onClick={() => setSelectedGroup(null)}>Go Back</button>
+			  <button onClick={() => setSelectedGroup(null)} type="submit" className="btn btn-primary" >Go Back</button>
 			  <GroupDetails group={selectedGroup} socket={socket} />
 			</div>
 		  ) : (
@@ -155,8 +155,8 @@ export function Group({ socket }) {
 					groupData.map((group) => (
 					  <div key={group.title} className="col-lg-3 col-md-4 col-sm-6 col-12 mb-4" onClick={() => handleGroupClick(group)}>
 						<div className="p-3 border rounded">
-						  <h3 style={{ textDecoration: 'underline', fontSize: '14px' }}>{group.title}</h3>
-						  <p style={{ fontSize: '10px' }}>{group.description}</p>
+						  <h3 style={{ textDecoration: 'underline', fontSize: '18px' }}>{group.title}</h3>
+						  <p style={{ fontSize: '14px' }}>{group.description}</p>
 						</div>
 					  </div>
 					))

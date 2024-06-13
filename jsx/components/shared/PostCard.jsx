@@ -124,7 +124,7 @@ export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
 			{showCommentForm && (
 				<div
 					className="card-footer py-3 border-0"
-					style={{ backgroundColor: "#f8f9fa" }}
+					style={{ backgroundColor: "#f8f9fa", borderRadius: "10px", border: "1px solid #ccc" }}
 				>
 					<div className="d-flex flex-start w-100">
 						<div className="form-outline w-100">
@@ -144,10 +144,11 @@ export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
 							type="button"
 							className="btn btn-primary"
 							onClick={handleSelectFile}
+							style={{ marginRight: "10px" }}
 						>
 							Select File
 						</button>
-						<span>{selectedFile ? selectedFile.name : "No file selected"}</span>
+						<span style={{ marginRight: "10px" }}>{selectedFile ? selectedFile.name : "No file selected"}</span>
 						<input
 							type="file"
 							id={`commentFileInput${post.postId}`}
@@ -159,6 +160,7 @@ export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
 							type="submit"
 							className="btn btn-primary btn-sm"
 							onClick={submit}
+							style={{ marginTop: "10px" }}
 						>
 							Post comment
 						</button>

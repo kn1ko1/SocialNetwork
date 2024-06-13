@@ -35,7 +35,28 @@ export function Notifications() {
     // Update notifications state with the filtered notifications
     setNotifications(updatedNotifications);
   };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Notifications"), notifications !== null && Object.keys(notifications).length > 0 ? /*#__PURE__*/React.createElement("ul", null, Object.values(notifications).map((notification, index) => /*#__PURE__*/React.createElement("li", {
+  const notificationsStyle = {
+    maxWidth: '1000px',
+    background: 'linear-gradient(to bottom, #c7ddef, #ffffff)',
+    // Light blue/grey to white gradient
+    borderRadius: '10px',
+    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+    // Optional: Add shadow for depth
+    padding: '40px',
+    margin: 'auto',
+    marginBottom: '20px',
+    // Adjust spacing between post cards
+    border: '1px solid #ccc' // Add a thin border
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    style: notificationsStyle,
+    className: "col-md-4"
+  }, /*#__PURE__*/React.createElement("h2", {
+    style: {
+      textDecoration: 'underline',
+      textAlign: 'center'
+    }
+  }, "Notifications"), notifications !== null && Object.keys(notifications).length > 0 ? /*#__PURE__*/React.createElement("ul", null, Object.values(notifications).map((notification, index) => /*#__PURE__*/React.createElement("li", {
     key: index
   }, notification.notificationType === "groupInvite" && /*#__PURE__*/React.createElement(GroupInvite, {
     notification: notification,

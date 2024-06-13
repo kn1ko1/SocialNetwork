@@ -115,15 +115,29 @@ export function Home({ socket }) {
 	}, [])
 
 
-	return (
-		<main className="homePage">
-			<PostForm groupId={0} followedUsers={followedUsersList} fetchFunc={fetchUserPostData} />
+	const homeStyle = {
+		maxWidth: '1000px',
+		background: 'linear-gradient(to bottom, #c7ddef, #ffffff)', // Light blue/grey to white gradient
+		borderRadius: '10px',
+		boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth
+		padding: '40px',
+		margin: 'auto',
+		marginBottom: '20px', // Adjust spacing between post cards
+		border: '1px solid #ccc', // Add a thin border
+	};
 
-			<div class="container text-center">
-				<div class="row align-items-start">
-					<div class="col-3">
+
+	return (
+		<main className="homePage" style={homeStyle}>
+<div style={{ padding: '20px' }}>
+  <PostForm groupId={0} followedUsers={followedUsersList} fetchFunc={fetchUserPostData} />
+</div>
+			<div className="container text-center">
+				<div className="row align-items-start">
+					<div className="col-3">
+					<div className="border" style={{ borderRadius: "10px", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', border: "3px solid #333", padding: "10px" }}>
 						<div className="userList">
-							<h2>UserList</h2>
+							<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>User List</h2>
 							{userList !== null && userList.length > 0 ? (
 								userList
 									// Filter out the current user
@@ -148,12 +162,14 @@ export function Home({ socket }) {
 								<p>No Users?!</p>
 							)}
 						</div>
+						</div>
 					</div>
+
 					<div class="col-6">
 
 						{/* Rendering Public Posts */}
 						<div className="publicPostsWithComments">
-							<h2>Public Posts</h2>
+							<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>Public Posts</h2>
 							{publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? (
 								[...publicPostsWithComments]
 									.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -173,7 +189,7 @@ export function Home({ socket }) {
 
 						{/* Rendering Private Posts */}
 						<div className="privatePosts">
-							<h2>Private Posts</h2>
+							<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>Private Posts</h2>
 							{privatePosts !== null && privatePosts.length > 0 ? (
 								[...privatePosts]
 									.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -192,7 +208,7 @@ export function Home({ socket }) {
 
 						{/* Rendering Almost Private Posts */}
 						<div className="almostPrivatePosts">
-							<h2>Almost Private Posts</h2>
+							<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>Almost Private Posts</h2>
 							{almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? (
 								[...almostPrivatePosts]
 									.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -228,7 +244,8 @@ export function Home({ socket }) {
 					<div class="col-3">
 
 						<div className="userEvents">
-							<h2>Events that you're attending</h2>
+						<div className="border" style={{ borderRadius: "10px", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', border: "3px solid #333", padding: "10px", background: 'linear-gradient(to bottom, #c7ddef, #ffffff)'}}>
+							<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>Events</h2>
 							{userEvents !== null && userEvents.length > 0 ? (
 								userEvents.map((event) => (
 									<li key={event.dateTime}>
@@ -239,6 +256,7 @@ export function Home({ socket }) {
 							) : (
 								<p>No almost private posts</p>
 							)}
+							</div>
 						</div>
 					</div>
 				</div>

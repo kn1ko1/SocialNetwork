@@ -3,6 +3,7 @@ const { useState, useEffect } = React
 
 const GROUP_CHAT_MESSAGE = 1;
 const PRIVATE_MESSAGE = 2;
+const CREATE_EVENT = 3;
 
 export const renderChat = ({ socket }) => {
     const pageContainer = document.querySelector(".page-container");
@@ -11,13 +12,14 @@ export const renderChat = ({ socket }) => {
 
 export function Chat({ socket }) {
     const { currentUserId } = getCurrentUserId();
-    const [chatHistory, setChatHistory] = useState([]);
     const [messageCode, setMessageCode] = useState(0);
     const [messageType, setMessageType] = useState("");
     const [targetId, setTargetId] = useState(0);
     const [sendMessage, setSendMessage] = useState("");
     const [groupsPartOf, setGroupsPartOf] = useState([]);
     const [uniqueUsers, setUniqueUsers] = useState([]);
+
+    const [isEmojiPickerVisible, setEmojiPickerVisible] = useState(false);
 
     let messages = document.getElementById("messages");
 
@@ -128,6 +130,41 @@ export function Chat({ socket }) {
         color: "orange",
     }
 
+      // Function to handle opening/closing the emoji picker
+      const toggleEmojiPicker = () => {
+        setEmojiPickerVisible(!isEmojiPickerVisible);
+    };
+
+    // // Function to handle emoji selection
+    // const handleEmojiSelect = (emoji) => {
+    //     const messageTextarea = document.getElementById('message-textarea');
+    //     const startPos = messageTextarea.selectionStart;
+    //     const endPos = messageTextarea.selectionEnd;
+    
+    //     // Insert the emoji at the current cursor position
+    //     const messageText = messageTextarea.value;
+    //     // const updatedMessageText =
+    //     //     messageText.substring(0, startPos) +
+    //     //     emoji +
+    //     //     messageText.substring(endPos, messageText.length);
+    //     const updatedMessageText = messageText + emoji;
+    
+    //     // Update the message text in the textarea
+    //     setSendMessage(updatedMessageText);
+    // };
+
+    const handleEmojiSelect = (emoji) => {
+        // Get the current text in the textarea
+        const messageTextarea = document.getElementById('message-textarea');
+        const messageText = messageTextarea.value;
+    
+        // Append the emoji to the end of the text
+        const updatedMessageText = messageText + emoji;
+    
+        // Update the message text in the textarea
+        messageTextarea.value = updatedMessageText;
+    };
+
     return (
         <div className="container">
             <h1>Chat</h1>
@@ -160,9 +197,31 @@ export function Chat({ socket }) {
                 {selectedGroup && <li>Chat in {selectedGroup.title}</li>}
             </ul>
             <form id="chatbox" onSubmit={handleSubmit} style={{ display: isChatboxVisible ? "block" : "none" }}>
-                <textarea className="form-control" onChange={handleMessages}></textarea>
-                <button type="submit" className="btn btn-primary mt-2">Send</button>
-            </form>
+            {/* Message input */}
+            <div>
+                <textarea
+                id="message-textarea"
+                    className="form-control"
+                    value={sendMessage}
+                    onChange={handleMessages}
+                    placeholder="Type your message..."
+                ></textarea>
+                {/* Emoji button */}
+                <button onClick={toggleEmojiPicker}>😊</button>
+                {/* Emoji picker */}
+                {isEmojiPickerVisible && (
+                    <div id="emoji-picker" className="emoji-picker">
+                        <button onClick={() => handleEmojiSelect('😊')}>😊</button>
+                        <button onClick={() => handleEmojiSelect('😂')}>😂</button>
+                        <button onClick={() => handleEmojiSelect('❤️')}>❤️</button>
+                        {/* Add more emoji buttons as needed */}
+                    </div>
+                )}
+            </div>
+            {/* Send button */}
+            <button type="submit" className="btn btn-primary mt-2">Send</button>
+        </form>
         </div>
     );
 }
+

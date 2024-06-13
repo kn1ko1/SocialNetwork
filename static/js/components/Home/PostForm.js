@@ -99,17 +99,48 @@ export function PostForm({
   }), followedUser.username)))) : /*#__PURE__*/React.createElement("p", {
     className: "text-muted"
   }, "No followed users") : null;
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '40vh',
+      padding: '10px'
+    }
+  }, /*#__PURE__*/React.createElement("main", {
     className: "postForm container",
     style: {
-      maxWidth: "400px"
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: '0'
     }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "border",
+    style: {
+      borderRadius: "10px",
+      boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+      border: "3px solid #333",
+      padding: "10px",
+      width: '100%',
+      maxWidth: '600px',
+      background: 'linear-gradient(to bottom, #c7ddef, #ffffff)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "col-12"
   }, /*#__PURE__*/React.createElement("h1", {
-    className: "h3 mb-3 fw-normal"
-  }, "Post Message Here"), /*#__PURE__*/React.createElement("form", {
+    className: "h3 mb-3 fw-normal",
+    style: {
+      textDecoration: 'underline',
+      textAlign: "center"
+    }
+  }, "New Post"), /*#__PURE__*/React.createElement("form", {
     onSubmit: submit
   }, /*#__PURE__*/React.createElement("div", {
-    className: "form-floating mb-3"
+    className: "form-floating mb-3",
+    style: {
+      textAlign: "center"
+    }
   }, /*#__PURE__*/React.createElement("input", {
     type: "text",
     className: "form-control",
@@ -119,7 +150,10 @@ export function PostForm({
   })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     type: "button",
     className: "btn btn-primary",
-    onClick: handleSelectFile
+    onClick: handleSelectFile,
+    style: {
+      marginRight: "10px"
+    }
   }, "Select File"), /*#__PURE__*/React.createElement("span", null, selectedFile ? selectedFile.name : "No file selected"), /*#__PURE__*/React.createElement("input", {
     type: "file",
     id: "fileInput",
@@ -175,5 +209,5 @@ export function PostForm({
   }, "Almost Private"))), followedUsersList, /*#__PURE__*/React.createElement("button", {
     className: "w-100 btn btn-lg btn-primary",
     type: "submit"
-  }, "Submit"))));
+  }, "Submit"))))));
 }
