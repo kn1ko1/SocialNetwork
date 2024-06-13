@@ -1,3 +1,4 @@
+import { GroupMessage } from "./GroupMessage.js";
 import { PrivateMessage } from "./PrivateMessage.js";
 import { FollowRequest } from "./FollowRequest.js";
 import { GroupRequest } from "./GroupRequest.js";
@@ -32,17 +33,24 @@ export const NotificationPopUp = ({ data, onClose }) => {
                         <button type="button" className="btn-close" aria-label="Close" onClick={onClose}></button>
                     </div>
                     <div className="toast-body">
-                        {
-                            code === 2 || code === 3 || code === 4 || code === 5 || code === 6 ? (
-                                <>
-                                    {code === 2 && <PrivateMessage notification={notification} />}
-                                    {code === 3 && <FollowRequest notification={notification} onNotificationResponse={onClose} />}
-                                    {code === 4 && <GroupRequest notification={notification} onNotificationResponse={onClose} />}
-                                    {code === 5 && <GroupInvite notification={notification} onNotificationResponse={onClose} />}
-                                    {code === 6 && <EventInvite notification={notification} onNotificationResponse={onClose} />}
-                                </>
-                            ) : ("Error displaying notification")
-                        }
+                    {(() => {
+                    switch (code) {
+                        case 1:
+                            return <GroupMessage notification={notification} />;
+                        case 2:
+                            return <PrivateMessage notification={notification} />;
+                        case 3:
+                            return <FollowRequest notification={notification} onNotificationResponse={onClose} />;
+                        case 4:
+                            return <GroupRequest notification={notification} onNotificationResponse={onClose} />;
+                        case 5:
+                            return <GroupInvite notification={notification} onNotificationResponse={onClose} />;
+                        case 6:
+                            return <EventInvite notification={notification} onNotificationResponse={onClose} />;
+                        default:
+                            return null;
+                    }
+                })()}
                     </div>
                 </div>
             </div>

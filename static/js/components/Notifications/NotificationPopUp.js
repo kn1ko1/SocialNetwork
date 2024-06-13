@@ -1,3 +1,4 @@
+import { GroupMessage } from "./GroupMessage.js";
 import { PrivateMessage } from "./PrivateMessage.js";
 import { FollowRequest } from "./FollowRequest.js";
 import { GroupRequest } from "./GroupRequest.js";
@@ -40,21 +41,40 @@ export const NotificationPopUp = ({
       onClick: onClose
     })), /*#__PURE__*/React.createElement("div", {
       className: "toast-body"
-    }, code === 2 || code === 3 || code === 4 || code === 5 || code === 6 ? /*#__PURE__*/React.createElement(React.Fragment, null, code === 2 && /*#__PURE__*/React.createElement(PrivateMessage, {
-      notification: notification
-    }), code === 3 && /*#__PURE__*/React.createElement(FollowRequest, {
-      notification: notification,
-      onNotificationResponse: onClose
-    }), code === 4 && /*#__PURE__*/React.createElement(GroupRequest, {
-      notification: notification,
-      onNotificationResponse: onClose
-    }), code === 5 && /*#__PURE__*/React.createElement(GroupInvite, {
-      notification: notification,
-      onNotificationResponse: onClose
-    }), code === 6 && /*#__PURE__*/React.createElement(EventInvite, {
-      notification: notification,
-      onNotificationResponse: onClose
-    })) : "Error displaying notification")));
+    }, (() => {
+      switch (code) {
+        case 1:
+          return /*#__PURE__*/React.createElement(GroupMessage, {
+            notification: notification
+          });
+        case 2:
+          return /*#__PURE__*/React.createElement(PrivateMessage, {
+            notification: notification
+          });
+        case 3:
+          return /*#__PURE__*/React.createElement(FollowRequest, {
+            notification: notification,
+            onNotificationResponse: onClose
+          });
+        case 4:
+          return /*#__PURE__*/React.createElement(GroupRequest, {
+            notification: notification,
+            onNotificationResponse: onClose
+          });
+        case 5:
+          return /*#__PURE__*/React.createElement(GroupInvite, {
+            notification: notification,
+            onNotificationResponse: onClose
+          });
+        case 6:
+          return /*#__PURE__*/React.createElement(EventInvite, {
+            notification: notification,
+            onNotificationResponse: onClose
+          });
+        default:
+          return null;
+      }
+    })())));
   } catch (error) {
     console.error("Error processing notification data:", error);
     return null;
