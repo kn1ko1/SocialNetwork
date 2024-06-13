@@ -158,17 +158,29 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		message.CreatedAt = ctime
 		message.UpdatedAt = ctime
 
+		// Store the message in the database
+		returnGroupMessage, err := c.Repo.CreateMessage(message)
+		if err != nil {
+			utils.HandleError("[ws/client.go] Error adding message to database in CreateMessage", err)
+		}
+
+		jsonGroupMessage, err := json.Marshal(returnGroupMessage)
+		if err != nil {
+			utils.HandleError("[ws/client.go] Error marshalling returnNotification", err)
+		}
+		returnMsg := WebSocketMessage{
+			Code: 1,
+			Body: string(jsonGroupMessage),
+		}
 		groupId := message.TargetId
 		group, ok := c.SocketGroups[groupId]
 		if !ok {
 			log.Printf("SocketGroup %d does not exist\n", groupId)
 			return
 		}
+
 		// Broadcast the message to the group
-		group.Broadcast <- msg
-		// Store the message in the database
-		c.Repo.CreateMessage(message)
-		log.Println("Group Message added to db in Client.go is:", message)
+		group.Broadcast <- returnMsg
 
 	case PRIVATE_MESSAGE:
 
@@ -185,15 +197,25 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		message.CreatedAt = ctime
 		message.UpdatedAt = ctime
 
-		c.Repo.CreateMessage(message)
-
+		returnPrivateMessage, err := c.Repo.CreateMessage(message)
+		if err != nil {
+			utils.HandleError("[ws/client.go] Error adding message to database in CreateMessage", err)
+		}
+		jsonPrivateMessage, err := json.Marshal(returnPrivateMessage)
+		if err != nil {
+			utils.HandleError("[ws/client.go] Error marshalling returnNotification", err)
+		}
 		group, ok := c.SocketGroups[0]
 		if !ok {
 			log.Println("primary group does not exist")
 			return
 		}
+		returnMsg := WebSocketMessage{
+			Code: 2,
+			Body: string(jsonPrivateMessage),
+		}
 		// Broadcast the message to the main group (group 0)
-		group.Broadcast <- msg
+		group.Broadcast <- returnMsg
 		// Store the message in the database
 	case FOLLOW_REQUEST:
 		ctime := time.Now().UTC().UnixMilli()
@@ -217,7 +239,7 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		if err != nil {
 			utils.HandleError("[ws/client.go] Error marshalling returnNotification", err)
 		}
-		returnMessage := WebSocketMessage{
+		returnMsg := WebSocketMessage{
 			Code: 3,
 			Body: string(jsonNotification),
 		}
@@ -229,7 +251,7 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		}
 
 		// Broadcast the message to the main group (group 0)
-		group.Broadcast <- returnMessage
+		group.Broadcast <- returnMsg
 		// Store the message in the database
 
 	case GROUP_INVITE:
@@ -259,7 +281,7 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			utils.HandleError("[ws/client.go] Error marshalling returnNotification", err)
 			return
 		}
-		returnMessage := WebSocketMessage{
+		returnMsg := WebSocketMessage{
 			Code: 5,
 			Body: string(jsonNotification),
 		}
@@ -270,7 +292,7 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			return
 		}
 		// Broadcast the message to the main group (group 0)
-		group.Broadcast <- returnMessage
+		group.Broadcast <- returnMsg
 		// Store the message in the database
 	case GROUP_REQUEST:
 		ctime := time.Now().UTC().UnixMilli()
@@ -297,7 +319,7 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			utils.HandleError("[ws/client.go] Error marshalling returnNotification", err)
 			return
 		}
-		returnMessage := WebSocketMessage{
+		returnMsg := WebSocketMessage{
 			Code: 4,
 			Body: string(jsonNotification),
 		}
@@ -308,7 +330,7 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			return
 		}
 		// Broadcast the message to the main group (group 0)
-		group.Broadcast <- returnMessage
+		group.Broadcast <- returnMsg
 		// Store the message in the database
 
 	case EVENT_INVITE:
@@ -375,13 +397,13 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 					utils.HandleError("[ws/client.go] Error marshalling returnNotification", err)
 					continue
 				}
-				returnMessage := WebSocketMessage{
+				returnMsg := WebSocketMessage{
 					Code: 6,
 					Body: string(jsonNotification),
 				}
 				_, ok := group.Clients[groupUsers[i].UserId]
 				if ok {
-					group.Broadcast <- returnMessage
+					group.Broadcast <- returnMsg
 				}
 
 			}

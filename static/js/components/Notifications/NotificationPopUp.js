@@ -1,7 +1,8 @@
-import { EventInvite } from "./EventInvite.js";
+import { PrivateMessage } from "./PrivateMessage.js";
+import { FollowRequest } from "./FollowRequest.js";
 import { GroupRequest } from "./GroupRequest.js";
 import { GroupInvite } from "./GroupInvite.js";
-import { FollowRequest } from "./FollowRequest.js";
+import { EventInvite } from "./EventInvite.js";
 const codeToHeaderText = {
   1: "Group Chat Message",
   2: "Private Message",
@@ -39,7 +40,9 @@ export const NotificationPopUp = ({
       onClick: onClose
     })), /*#__PURE__*/React.createElement("div", {
       className: "toast-body"
-    }, code === 3 || code === 4 || code === 5 || code === 6 ? /*#__PURE__*/React.createElement(React.Fragment, null, code === 3 && /*#__PURE__*/React.createElement(FollowRequest, {
+    }, code === 2 || code === 3 || code === 4 || code === 5 || code === 6 ? /*#__PURE__*/React.createElement(React.Fragment, null, code === 2 && /*#__PURE__*/React.createElement(PrivateMessage, {
+      notification: notification
+    }), code === 3 && /*#__PURE__*/React.createElement(FollowRequest, {
       notification: notification,
       onNotificationResponse: onClose
     }), code === 4 && /*#__PURE__*/React.createElement(GroupRequest, {
@@ -51,7 +54,7 @@ export const NotificationPopUp = ({
     }), code === 6 && /*#__PURE__*/React.createElement(EventInvite, {
       notification: notification,
       onNotificationResponse: onClose
-    })) : notification)));
+    })) : "Error displaying notification")));
   } catch (error) {
     console.error("Error processing notification data:", error);
     return null;

@@ -1,7 +1,8 @@
-import { EventInvite } from "./EventInvite.js";
+import { PrivateMessage } from "./PrivateMessage.js";
+import { FollowRequest } from "./FollowRequest.js";
 import { GroupRequest } from "./GroupRequest.js";
 import { GroupInvite } from "./GroupInvite.js";
-import { FollowRequest } from "./FollowRequest.js";
+import { EventInvite } from "./EventInvite.js";
 
 const codeToHeaderText = {
     1: "Group Chat Message",
@@ -32,14 +33,15 @@ export const NotificationPopUp = ({ data, onClose }) => {
                     </div>
                     <div className="toast-body">
                         {
-                            code === 3 || code === 4 || code === 5 || code === 6 ? (
+                            code === 2 || code === 3 || code === 4 || code === 5 || code === 6 ? (
                                 <>
+                                    {code === 2 && <PrivateMessage notification={notification} />}
                                     {code === 3 && <FollowRequest notification={notification} onNotificationResponse={onClose} />}
                                     {code === 4 && <GroupRequest notification={notification} onNotificationResponse={onClose} />}
                                     {code === 5 && <GroupInvite notification={notification} onNotificationResponse={onClose} />}
                                     {code === 6 && <EventInvite notification={notification} onNotificationResponse={onClose} />}
                                 </>
-                            ) : notification
+                            ) : ("Error displaying notification")
                         }
                     </div>
                 </div>

@@ -6,7 +6,7 @@ import { renderChat } from "../../Chat.js"
 import { renderGroup } from "../../Group.js"
 import { renderLogin } from "../../Login.js"
 import { NotificationPopUp } from "../Notifications/NotificationPopUp.js"
-const { useState } = React
+const { useState, useEffect } = React
 
 export const renderNavbar = ({ socket }) => {
 	const navContainer = document.querySelector(".nav-container")
@@ -17,13 +17,19 @@ export function Navbar({ socket }) {
 	const { currentUserId } = getCurrentUserId()
 	const [notificationData, setNotificationData] = useState(null);
 
-	socket.onmessage = function (e) {
-		let data = JSON.parse(e.data);
-		console.log("data:", data)
-		// Show custom notification
-		setNotificationData(data);
-
-	}
+	useEffect(() => {
+		const handleSocketMessage = (e) => {
+		  let data = JSON.parse(e.data);
+		  console.log("data:", data);
+		  setNotificationData(data);
+		};
+	
+		socket.addEventListener("message", handleSocketMessage);
+	
+		return () => {
+		  socket.removeEventListener("message", handleSocketMessage);
+		};
+	  }, [socket]);
 
 	const logout = async () => {
 		try {
