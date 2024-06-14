@@ -53,8 +53,11 @@ export function EventForm({
       maxWidth: "400px"
     }
   }, /*#__PURE__*/React.createElement("h1", {
-    className: "h3 mb-3 fw-normal"
-  }, "Post Event Here"), /*#__PURE__*/React.createElement("form", {
+    className: "h3 mb-3 fw-normal",
+    style: {
+      textDecoration: 'underline'
+    }
+  }, "New Event"), /*#__PURE__*/React.createElement("form", {
     onSubmit: submit
   }, /*#__PURE__*/React.createElement("div", {
     className: "form-floating mb-3"

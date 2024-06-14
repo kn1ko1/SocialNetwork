@@ -80,16 +80,16 @@ export function Navbar({
   }, /*#__PURE__*/React.createElement("a", {
     className: "nav-link",
     href: "#",
-    onClick: () => renderProfile(socket, currentUserId, true)
-  }, "PROFILE")), /*#__PURE__*/React.createElement("li", {
-    className: "nav-item"
-  }, /*#__PURE__*/React.createElement("a", {
-    className: "nav-link",
-    href: "#",
     onClick: () => renderHome({
       socket
     })
   }, "HOME")), /*#__PURE__*/React.createElement("li", {
+    className: "nav-item"
+  }, /*#__PURE__*/React.createElement("a", {
+    className: "nav-link",
+    href: "#",
+    onClick: () => renderProfile(socket, currentUserId, true)
+  }, "PROFILE")), /*#__PURE__*/React.createElement("li", {
     className: "nav-item"
   }, /*#__PURE__*/React.createElement("a", {
     className: "nav-link",

@@ -57,7 +57,7 @@ export function PostFormGroup({ group, fetchFunc }) {
 	return (
 		<div>
 			<main className="postForm container" style={{ maxWidth: "400px" }}>
-				<h1 className="h3 mb-3 fw-normal">Post Message Here</h1>
+				<h1 className="h3 mb-3 fw-normal" style={{textDecoration: 'underline'}}>New Post</h1>
 				<form onSubmit={submit}>
 					<div className="form-floating mb-3">
 						<input
@@ -72,6 +72,7 @@ export function PostFormGroup({ group, fetchFunc }) {
 						<button
 							type="button"
 							className="btn btn-primary"
+							style={{ marginRight: "10px" }}
 							onClick={handleSelectFile}
 						>
 							Select File
