@@ -1,14 +1,14 @@
 export function GroupDetailsUserList({ userList, groupId, groupMembers, AddGroupUser }) {
     return (
         <div className="userListGroup">
-            <h2>UserList</h2>
+            <h2 style={{textDecoration: 'underline'}}>User List</h2>
             {userList !== null && userList.length !== groupMembers.length ? (
                 userList
                     .filter(user => !groupMembers.some(member => member.userId === user.userId))
                     .map((user, index) => (
                         <div key={index}>
                             <span>{user.username}</span>
-                            <button onClick={() => AddGroupUser(user.userId, groupId, "groupInvite")}>Add to Group</button>
+                            <button type="button" className="btn btn-primary" style={{ marginLeft: "10px" }} onClick={() => AddGroupUser(user.userId, groupId, "groupInvite")}>Add to Group</button>
                         </div>
                     ))
             ) : (

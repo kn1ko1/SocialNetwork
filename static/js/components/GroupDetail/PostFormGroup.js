@@ -58,8 +58,11 @@ export function PostFormGroup({
       maxWidth: "400px"
     }
   }, /*#__PURE__*/React.createElement("h1", {
-    className: "h3 mb-3 fw-normal"
-  }, "Post Message Here"), /*#__PURE__*/React.createElement("form", {
+    className: "h3 mb-3 fw-normal",
+    style: {
+      textDecoration: 'underline'
+    }
+  }, "New Post"), /*#__PURE__*/React.createElement("form", {
     onSubmit: submit
   }, /*#__PURE__*/React.createElement("div", {
     className: "form-floating mb-3"
@@ -72,6 +75,9 @@ export function PostFormGroup({
   })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     type: "button",
     className: "btn btn-primary",
+    style: {
+      marginRight: "10px"
+    },
     onClick: handleSelectFile
   }, "Select File"), /*#__PURE__*/React.createElement("span", null, selectedFile ? selectedFile.name : "No file selected"), /*#__PURE__*/React.createElement("input", {
     type: "file",

@@ -105,7 +105,7 @@ export function Home({
     fetchUserPostData();
   }, []);
   const homeStyle = {
-    maxWidth: '1000px',
+    maxWidth: '1300px',
     background: 'linear-gradient(to bottom, #c7ddef, #ffffff)',
     // Light blue/grey to white gradient
     borderRadius: '10px',
@@ -137,10 +137,10 @@ export function Home({
   }, /*#__PURE__*/React.createElement("div", {
     className: "border",
     style: {
-      borderRadius: "10px",
+      borderRadius: '10px',
       boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-      border: "3px solid #333",
-      padding: "10px"
+      border: '3px solid #333',
+      padding: '10px'
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "userList"
@@ -162,7 +162,7 @@ export function Home({
     followerId: currentUserId,
     user: user
   }))) : /*#__PURE__*/React.createElement("p", null, "No Users?!")))), /*#__PURE__*/React.createElement("div", {
-    class: "col-6"
+    className: "col-6"
   }, /*#__PURE__*/React.createElement("div", {
     className: "publicPostsWithComments"
   }, /*#__PURE__*/React.createElement("h2", {
@@ -201,24 +201,210 @@ export function Home({
     comments: almostPrivatePost.comments,
     showCommentForm: true
   })) : /*#__PURE__*/React.createElement("p", null, "No almost private posts"))), /*#__PURE__*/React.createElement("div", {
-    class: "col-3"
+    className: "col-3"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "userEvents"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "border",
-    style: {
-      borderRadius: "10px",
-      boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-      border: "3px solid #333",
-      padding: "10px",
-      background: 'linear-gradient(to bottom, #c7ddef, #ffffff)'
-    }
+    className: "userEvents",
+    style: homeStyle
   }, /*#__PURE__*/React.createElement("h2", {
     style: {
-      textDecoration: 'underline',
-      textAlign: 'center'
+      textDecoration: 'underline'
     }
-  }, "Events"), userEvents !== null && userEvents.length > 0 ? userEvents.map(event => /*#__PURE__*/React.createElement("li", {
-    key: event.dateTime
-  }, event.title, " - ", event.description, "- ", formattedDate(event.dateTime))) : /*#__PURE__*/React.createElement("p", null, "No almost private posts")))))));
+  }, "Events"), userEvents !== null && userEvents.length > 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "accordion",
+    id: "eventAccordion"
+  }, userEvents.map((event, index) => /*#__PURE__*/React.createElement("div", {
+    key: index,
+    className: "accordion-item"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "accordion-header",
+    id: `heading${index}`
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "accordion-button collapsed",
+    type: "button",
+    "data-bs-toggle": "collapse",
+    "data-bs-target": `#collapse${index}`,
+    "aria-expanded": "false",
+    "aria-controls": `collapse${index}`
+  }, event.title)), /*#__PURE__*/React.createElement("div", {
+    id: `collapse${index}`,
+    className: "accordion-collapse collapse",
+    "aria-labelledby": `heading${index}`,
+    "data-bs-parent": "#eventAccordion"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "accordion-body"
+  }, /*#__PURE__*/React.createElement("p", null, event.description), /*#__PURE__*/React.createElement("small", null, formattedDate(event.dateTime))))))) : /*#__PURE__*/React.createElement("p", null, "No Events"))))));
 }
+;
+
+// 	return (
+// 		<main className="homePage" style={homeStyle}>
+// <div style={{ padding: '20px' }}>
+//   <PostForm groupId={0} followedUsers={followedUsersList} fetchFunc={fetchUserPostData} />
+// </div>
+// 			<div className="container text-center">
+// 				<div className="row align-items-start">
+// 					<div className="col-3">
+// 					<div className="border" style={{ borderRadius: "10px", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', border: "3px solid #333", padding: "10px" }}>
+// 						<div className="userList">
+// 							<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>User List</h2>
+// 							{userList !== null && userList.length > 0 ? (
+// 								userList
+// 									// Filter out the current user
+// 									.filter(user => user.userId !== currentUserId)
+// 									.map((user, index) => (
+// 										<div key={index}>
+// 											<a
+// 												className="nav-link"
+// 												href="#"
+// 												onClick={() => renderProfile(user.userId)}
+// 											>
+// 												{user.username}
+// 											</a>
+// 											<FollowButton
+// 												socket={socket}
+// 												followerId={currentUserId}
+// 												user={user}
+// 											/>
+// 										</div>
+// 									))
+// 							) : (
+// 								<p>No Users?!</p>
+// 							)}
+// 						</div>
+// 						</div>
+// 					</div>
+
+// 					<div class="col-6">
+
+// 						{/* Rendering Public Posts */}
+// 						<div className="publicPostsWithComments">
+// 							<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>Public Posts</h2>
+// 							{publicPostsWithComments !== null && publicPostsWithComments.length > 0 ? (
+// 								[...publicPostsWithComments]
+// 									.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+// 									.map((publicPostsWithComment) => (
+// 										<PostCard
+// 											key={`public-${publicPostsWithComment.post.id}`}
+// 											post={publicPostsWithComment.post}
+// 											comments={publicPostsWithComment.comments}
+// 											showCommentForm={true}
+// 											fetchFunc={fetchUserPostData}
+// 										/>
+// 									))
+// 							) : (
+// 								<p>No public posts</p>
+// 							)}
+// 						</div>
+
+// 						{/* Rendering Private Posts */}
+// 						<div className="privatePosts">
+// 							<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>Private Posts</h2>
+// 							{privatePosts !== null && privatePosts.length > 0 ? (
+// 								[...privatePosts]
+// 									.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+// 									.map((privatePost) => (
+// 										<PostCard
+// 											key={`private-${privatePost.post.id}`}
+// 											post={privatePost.post}
+// 											comments={privatePost.comments}
+// 											showCommentForm={true}
+// 										/>
+// 									))
+// 							) : (
+// 								<p>No private posts</p>
+// 							)}
+// 						</div>
+
+// 						{/* Rendering Almost Private Posts */}
+// 						<div className="almostPrivatePosts">
+// 							<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>Almost Private Posts</h2>
+// 							{almostPrivatePosts !== null && almostPrivatePosts.length > 0 ? (
+// 								[...almostPrivatePosts]
+// 									.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+// 									.map((almostPrivatePost) => (
+// 										<PostCard
+// 											key={`almost-private-${almostPrivatePost.post.id}`}
+// 											post={almostPrivatePost.post}
+// 											comments={almostPrivatePost.comments}
+// 											showCommentForm={true}
+// 										/>
+// 									))
+// 							) : (
+// 								<p>No almost private posts</p>
+// 							)}
+// 						</div>
+
+// 					</div>
+// 					<div class="col-3">
+
+// 							<div className="userEvents">
+//           <h2 style={{ textDecoration: 'underline' }}>Events</h2>
+//           {groupEvents !== null && groupEvents.length > 0 ? (
+//             <div className="accordion" id="eventAccordion">
+//               {groupEvents.map((event, index) => (
+//                 <div key={index} className="accordion-item">
+//                   <h2 className="accordion-header" id={`heading${index}`}>
+//                     <button
+//                       className="accordion-button collapsed"
+//                       type="button"
+//                       data-bs-toggle="collapse"
+//                       data-bs-target={`#collapse${index}`}
+//                       aria-expanded="false"
+//                       aria-controls={`collapse${index}`}
+//                     >
+//                       {event.title}
+//                     </button>
+//                   </h2>
+//                   <div
+//                     id={`collapse${index}`}
+//                     className="accordion-collapse collapse"
+//                     aria-labelledby={`heading${index}`}
+//                     data-bs-parent="#eventAccordion"
+//                   >
+//                     <div className="accordion-body">
+//                       <p>{event.description}</p>
+//                       <small>{formattedDate(event.dateTime)}</small>
+//                     </div>
+//                   </div>
+//                 </div>
+//               ))}
+//             </div>
+//           ) : (
+//             <p>No Events</p>
+//           )}
+//         </div>
+
+// 						</div>
+// 					</div>
+// 				</div>
+// 			</div>
+// 		</main>
+// 	)
+// }
+
+{/* <div className="userEvents">
+ 				<div className="border" style={{ borderRadius: "10px", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', border: "3px solid #333", padding: "10px", background: 'linear-gradient(to bottom, #c7ddef, #ffffff)'}}>
+ 					<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>Events</h2>
+ 					{userEvents !== null && userEvents.length > 0 ? (
+ 						userEvents.map((event) => (
+ 							<li key={event.dateTime}>
+ 								{event.title} - {event.description}
+ 								- {formattedDate(event.dateTime)}
+ 							</li>
+ 						))
+ 					) : (
+ 						<p>No Events</p>
+ 					)}
+ 					</div> */}
+{/* Rendering User Groups
+ <div className="userGroups">
+ <h2>Groups</h2>
+ <ul>
+ {userGroups !== null &&
+ userGroups.map((userGroup) => (
+ 	<li key={userGroup.title}>
+ 		{userGroup.title}
+ 		</li>
+ ))}
+ </ul>
+ </div> */}

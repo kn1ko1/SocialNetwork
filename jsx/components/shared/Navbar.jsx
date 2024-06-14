@@ -78,6 +78,13 @@ export function Navbar({ socket }) {
 						<NotificationPopUp data={notificationData} onClose={() => setNotificationData(null)} />
 					)}
 					<ul className="navbar-nav me-auto mx-auto mb-2 mb-lg-0">
+
+					<li className="nav-item">
+							<a className="nav-link" href="#" onClick={() => renderHome({ socket })}>
+								HOME
+							</a>
+						</li>
+						
 						<li className="nav-item">
 							<a
 								className="nav-link"
@@ -87,11 +94,7 @@ export function Navbar({ socket }) {
 								PROFILE
 							</a>
 						</li>
-						<li className="nav-item">
-							<a className="nav-link" href="#" onClick={() => renderHome({ socket })}>
-								HOME
-							</a>
-						</li>
+						
 						<li className="nav-item">
 							<a className="nav-link" href="#" onClick={renderNotifications}>
 								NOTIFICATIONS

@@ -105,7 +105,7 @@ export function GroupDetails({
     }
   }
   const groupDetailsStyle = {
-    maxWidth: '1000px',
+    maxWidth: '1400px',
     background: 'linear-gradient(to bottom, #c7ddef, #ffffff)',
     // Light blue/grey to white gradient
     borderRadius: '10px',
@@ -117,85 +117,6 @@ export function GroupDetails({
     // Adjust spacing between post cards
     border: '1px solid #ccc' // Add a thin border
   };
-
-  // return (
-  // 	<div className="group-details">
-  // 		<h2 style={{ textDecoration: 'underline', fontSize: '18px'  }}>{group.title}</h2>
-  // 		<p style={{ fontSize: '14px' }}>{group.description}</p>
-
-  // 		{group.isMember ? (
-  // 			<div id="groupData">
-  // 				<PostFormGroup group={group} fetchFunc={() => fetchGroupData(group.groupId)} />
-
-  // 				<EventForm group={group} socket={socket} />
-  // 				{/* user List here */}
-  // 				<GroupDetailsUserList
-  // 					userList={userList}
-  // 					groupId={group.groupId}
-  // 					groupMembers={groupMembers}
-  // 					AddGroupUser={AddGroupUser} />
-
-  // 				{/* group members here */}
-  // 				<div className="groupMembers">
-  // 					<h2>Group Members</h2>
-  // 					{groupMembers !== null && groupMembers.length > 0 ? (
-  // 						groupMembers.map((member, index) => {
-  // 							// Find the user object corresponding to the member's userId
-  // 							const user = userList.find((user) => user.userId === member.userId);
-  // 							return (
-  // 								<div key={index}>
-  // 									{user ? user.username : 'Unknown User'}
-  // 								</div>
-  // 							);
-  // 						})
-  // 					) : (
-  // 						<p>It's just you... Maybe you should invite someone?</p>
-  // 					)}
-  // 				</div>
-  // 				{/* group posts here */}
-  // 				<div id="groupPosts">
-  // 					<h2>Posts</h2>
-  // 					{groupPosts !== null ? (
-  // 						groupPosts.map((post) => (
-  // 							<li key={post.createdAt}>
-  // 								<PostCard
-  // 									post={post}
-  // 									comments={post.comments}
-  // 									showCommentForm={true}
-  // 									fetchFunc={() => fetchGroupData(group.groupId)} />
-
-  // 							</li>
-  // 						))
-  // 					) : (
-  // 						<div id="groupPosts">There are no posts in this groups yet</div>
-  // 					)}
-  // 				</div>
-  // 				{/* group Messages here */}
-  // 				<div className="groupMessages">
-  // 					<h2>Messages</h2>
-  // 					{groupMessages !== null && groupMessages.length > 0 ? (
-  // 						groupMessages.map((message, index) => (
-  // 							<div key={index}>
-  // 								{message.body}
-  // 							</div>
-  // 						))
-  // 					) : (
-  // 						<p>No Messages</p>
-  // 					)}
-  // 				</div>
-  // 				<GroupDetailsEvents groupEvents={groupEvents} />
-
-  // 			</div>
-  // 		) : (
-  // 			<div>
-  // 				<div>You are not a member yet</div>
-  // 				<button onClick={() => AddGroupUser(group.creatorId, group.groupId, "groupRequest")}>Request to join group</button>
-  // 			</div>
-  // 		)}
-
-  // 	</div>
-  // )
-
   return /*#__PURE__*/React.createElement("div", {
     className: "group-details container"
   }, /*#__PURE__*/React.createElement("div", {
