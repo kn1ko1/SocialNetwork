@@ -1,11 +1,13 @@
 import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js";
+import { formattedDate } from "./components/shared/FormattedDate.js";
 const {
   useState,
   useEffect
 } = React;
-const GROUP_CHAT_MESSAGE = 1;
-const PRIVATE_MESSAGE = 2;
-const CREATE_EVENT = 3;
+
+// const GROUP_CHAT_MESSAGE = 1;
+// const PRIVATE_MESSAGE = 2;
+
 export const renderChat = ({
   socket
 }) => {
@@ -77,7 +79,22 @@ export function Chat({
   const [isChatboxVisible, setChatboxVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedGroup, setSelectedGroup] = useState(null);
-  const handleUserClick = user => {
+  const handleUserClick = async user => {
+    const messagesResponse = await fetch(`http://localhost:8080/api/users/${currentUserId}/messages/${user.userId}`);
+    if (!messagesResponse.ok) {
+      throw new Error(`Failed to fetch messages between user ${currentUserId} and user ${user.userId}`);
+    }
+    const messages = await messagesResponse.json();
+    console.log("Messages:", messages);
+    let chatHistory = document.getElementById("chatHistory");
+    // Clear the chat history
+    chatHistory.innerHTML = "";
+
+    // Add new messages to chat history
+    messages.forEach(message => {
+      const messageCard = createMessageCard(user, message);
+      chatHistory.appendChild(messageCard);
+    });
     setSelectedUser(user);
     setMessageCode(2);
     setMessageType("users");
@@ -116,6 +133,26 @@ export function Chat({
     entry.appendChild(document.createTextNode(msg));
     messages.appendChild(entry);
   };
+  const createMessageCard = (user, message) => {
+    const card = document.createElement("div");
+    card.classList.add("card", "mb-3");
+    const cardBody = document.createElement("div");
+    cardBody.classList.add("card-body", "p-3");
+    const userNameElement = document.createElement("h6");
+    userNameElement.classList.add("fw-bold", "mb-1");
+    userNameElement.textContent = message.senderUsername;
+    const messageBodyElement = document.createElement("p");
+    messageBodyElement.classList.add("mb-1");
+    messageBodyElement.textContent = message.body;
+    const sentAtElement = document.createElement("small");
+    sentAtElement.classList.add("text-muted");
+    sentAtElement.textContent = `Sent at ${formattedDate(message.createdAt)}`;
+    cardBody.appendChild(userNameElement);
+    cardBody.appendChild(messageBodyElement);
+    cardBody.appendChild(sentAtElement);
+    card.appendChild(cardBody);
+    return card;
+  };
   const messageStyle = {
     color: "orange"
   };
@@ -124,25 +161,6 @@ export function Chat({
   const toggleEmojiPicker = () => {
     setEmojiPickerVisible(!isEmojiPickerVisible);
   };
-
-  // // Function to handle emoji selection
-  // const handleEmojiSelect = (emoji) => {
-  //     const messageTextarea = document.getElementById('message-textarea');
-  //     const startPos = messageTextarea.selectionStart;
-  //     const endPos = messageTextarea.selectionEnd;
-
-  //     // Insert the emoji at the current cursor position
-  //     const messageText = messageTextarea.value;
-  //     // const updatedMessageText =
-  //     //     messageText.substring(0, startPos) +
-  //     //     emoji +
-  //     //     messageText.substring(endPos, messageText.length);
-  //     const updatedMessageText = messageText + emoji;
-
-  //     // Update the message text in the textarea
-  //     setSendMessage(updatedMessageText);
-  // };
-
   const handleEmojiSelect = emoji => {
     // Get the current text in the textarea
     const messageTextarea = document.getElementById('message-textarea');
@@ -178,7 +196,9 @@ export function Chat({
       ...messageStyle,
       display: isChatboxVisible ? "block" : "none"
     }
-  }, selectedUser && /*#__PURE__*/React.createElement("li", null, "Chat with ", selectedUser.username), selectedGroup && /*#__PURE__*/React.createElement("li", null, "Chat in ", selectedGroup.title)), /*#__PURE__*/React.createElement("form", {
+  }, selectedUser && /*#__PURE__*/React.createElement("li", null, "Chat with ", selectedUser.username), selectedGroup && /*#__PURE__*/React.createElement("li", null, "Chat in ", selectedGroup.title)), /*#__PURE__*/React.createElement("div", {
+    id: "chatHistory"
+  }), /*#__PURE__*/React.createElement("form", {
     id: "chatbox",
     onSubmit: handleSubmit,
     style: {

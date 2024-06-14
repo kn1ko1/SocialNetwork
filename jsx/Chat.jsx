@@ -1,9 +1,9 @@
 import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js"
+import { formattedDate } from "./components/shared/FormattedDate.js";
 const { useState, useEffect } = React
 
-const GROUP_CHAT_MESSAGE = 1;
-const PRIVATE_MESSAGE = 2;
-const CREATE_EVENT = 3;
+// const GROUP_CHAT_MESSAGE = 1;
+// const PRIVATE_MESSAGE = 2;
 
 export const renderChat = ({ socket }) => {
     const pageContainer = document.querySelector(".page-container");
@@ -85,7 +85,24 @@ export function Chat({ socket }) {
     const [selectedUser, setSelectedUser] = useState(null);
     const [selectedGroup, setSelectedGroup] = useState(null);
 
-    const handleUserClick = (user) => {
+    const handleUserClick = async (user) => {
+        const messagesResponse = await fetch(`http://localhost:8080/api/users/${currentUserId}/messages/${user.userId}`)
+        if (!messagesResponse.ok) {
+            throw new Error(`Failed to fetch messages between user ${currentUserId} and user ${user.userId}`);
+        }
+        const messages = await messagesResponse.json();
+        console.log("Messages:", messages)
+
+        let chatHistory = document.getElementById("chatHistory")
+        // Clear the chat history
+        chatHistory.innerHTML = "";
+
+        // Add new messages to chat history
+        messages.forEach(message => {
+            const messageCard = createMessageCard(user, message);
+            chatHistory.appendChild(messageCard);
+        });
+
         setSelectedUser(user);
         setMessageCode(2);
         setMessageType("users");
@@ -118,49 +135,60 @@ export function Chat({ socket }) {
 
     socket.onmessage = function (e) {
         let data = JSON.parse(e.data);
-        let msg = JSON.parse(data.body).body;
-        console.log("you received websocket message:", msg);
+        let message = JSON.parse(data.body).body;
+        console.log("you received websocket message:", message);
+        let chatHistory = document.getElementById("chatHistory")
 
-        let entry = document.createElement("li");
-        entry.appendChild(document.createTextNode(msg));
-        messages.appendChild(entry);
+        const messageCard = createMessageCard(user, message);
+        chatHistory.appendChild(messageCard);
     }
+
+    const createMessageCard = (user, message) => {
+        const card = document.createElement("div");
+        card.classList.add("card", "mb-3");
+      
+        const cardBody = document.createElement("div");
+        cardBody.classList.add("card-body", "p-3");
+      
+        const userNameElement = document.createElement("h6");
+        userNameElement.classList.add("fw-bold", "mb-1");
+        userNameElement.textContent = message.senderUsername
+      
+        const messageBodyElement = document.createElement("p");
+        messageBodyElement.classList.add("mb-1");
+        messageBodyElement.textContent = message.body;
+      
+        const sentAtElement = document.createElement("small");
+        sentAtElement.classList.add("text-muted");
+        sentAtElement.textContent = `Sent at ${formattedDate(message.createdAt)}`;
+      
+        cardBody.appendChild(userNameElement);
+        cardBody.appendChild(messageBodyElement);
+        cardBody.appendChild(sentAtElement);
+      
+        card.appendChild(cardBody);
+      
+        return card;
+      };
+
 
     const messageStyle = {
         color: "orange",
     }
 
-      // Function to handle opening/closing the emoji picker
-      const toggleEmojiPicker = () => {
+    // Function to handle opening/closing the emoji picker
+    const toggleEmojiPicker = () => {
         setEmojiPickerVisible(!isEmojiPickerVisible);
     };
-
-    // // Function to handle emoji selection
-    // const handleEmojiSelect = (emoji) => {
-    //     const messageTextarea = document.getElementById('message-textarea');
-    //     const startPos = messageTextarea.selectionStart;
-    //     const endPos = messageTextarea.selectionEnd;
-    
-    //     // Insert the emoji at the current cursor position
-    //     const messageText = messageTextarea.value;
-    //     // const updatedMessageText =
-    //     //     messageText.substring(0, startPos) +
-    //     //     emoji +
-    //     //     messageText.substring(endPos, messageText.length);
-    //     const updatedMessageText = messageText + emoji;
-    
-    //     // Update the message text in the textarea
-    //     setSendMessage(updatedMessageText);
-    // };
 
     const handleEmojiSelect = (emoji) => {
         // Get the current text in the textarea
         const messageTextarea = document.getElementById('message-textarea');
         const messageText = messageTextarea.value;
-    
+
         // Append the emoji to the end of the text
         const updatedMessageText = messageText + emoji;
-    
+
         // Update the message text in the textarea
         messageTextarea.value = updatedMessageText;
     };
@@ -196,31 +224,32 @@ export function Chat({ socket }) {
                 {selectedUser && <li>Chat with {selectedUser.username}</li>}
                 {selectedGroup && <li>Chat in {selectedGroup.title}</li>}
             </ul>
+            <div id="chatHistory"></div>
             <form id="chatbox" onSubmit={handleSubmit} style={{ display: isChatboxVisible ? "block" : "none" }}>
-            {/* Message input */}
-            <div>
-                <textarea
-                id="message-textarea"
-                    className="form-control"
-                    value={sendMessage}
-                    onChange={handleMessages}
-                    placeholder="Type your message..."
-                ></textarea>
-                {/* Emoji button */}
-                <button onClick={toggleEmojiPicker}>😊</button>
-                {/* Emoji picker */}
-                {isEmojiPickerVisible && (
-                    <div id="emoji-picker" className="emoji-picker">
-                        <button onClick={() => handleEmojiSelect('😊')}>😊</button>
-                        <button onClick={() => handleEmojiSelect('😂')}>😂</button>
-                        <button onClick={() => handleEmojiSelect('❤️')}>❤️</button>
-                        {/* Add more emoji buttons as needed */}
-                    </div>
-                )}
-            </div>
-            {/* Send button */}
-            <button type="submit" className="btn btn-primary mt-2">Send</button>
-        </form>
+                {/* Message input */}
+                <div>
+                    <textarea
+                        id="message-textarea"
+                        className="form-control"
+                        value={sendMessage}
+                        onChange={handleMessages}
+                        placeholder="Type your message..."
+                    ></textarea>
+                    {/* Emoji button */}
+                    <button onClick={toggleEmojiPicker}>😊</button>
+                    {/* Emoji picker */}
+                    {isEmojiPickerVisible && (
+                        <div id="emoji-picker" className="emoji-picker">
+                            <button onClick={() => handleEmojiSelect('😊')}>😊</button>
+                            <button onClick={() => handleEmojiSelect('😂')}>😂</button>
+                            <button onClick={() => handleEmojiSelect('❤️')}>❤️</button>
+                            {/* Add more emoji buttons as needed */}
+                        </div>
+                    )}
+                </div>
+                {/* Send button */}
+                <button type="submit" className="btn btn-primary mt-2">Send</button>
+            </form>
         </div>
     );
 }

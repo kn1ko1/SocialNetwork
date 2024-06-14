@@ -88,9 +88,9 @@ func (g *SocketGroup) Run() {
 				c, ok := g.Clients[message.TargetId]
 				if !ok {
 					log.Printf("Target client %d not found for private message\n", message.TargetId)
-					return
+				} else {
+					c.Send(msg)
 				}
-				c.Send(msg)
 			case FOLLOW_REQUEST:
 				var notification models.Notification
 				err := json.Unmarshal([]byte(msg.Body), &notification)
@@ -102,9 +102,9 @@ func (g *SocketGroup) Run() {
 				c, ok := g.Clients[notification.TargetId]
 				if !ok {
 					log.Printf("Target client %d not found for FOLLOW_REQUEST\n", notification.TargetId)
-					return
+				} else {
+					c.Send(msg)
 				}
-				c.Send(msg)
 			case EVENT_INVITE:
 				var notification models.Notification
 				err := json.Unmarshal([]byte(msg.Body), &notification)
@@ -127,9 +127,9 @@ func (g *SocketGroup) Run() {
 				c, ok := g.Clients[notification.TargetId]
 				if !ok {
 					log.Printf("Target client %d not found for group invite\n", notification.TargetId)
-					return
+				} else {
+					c.Send(msg)
 				}
-				c.Send(msg)
 
 			case GROUP_REQUEST:
 				var notification models.Notification
@@ -141,9 +141,10 @@ func (g *SocketGroup) Run() {
 				c, ok := g.Clients[notification.TargetId]
 				if !ok {
 					log.Printf("Target client %d not found for group invite\n", notification.TargetId)
-					return
+				} else {
+					c.Send(msg)
 				}
-				c.Send(msg)
+
 			}
 
 		}

@@ -1,8 +1,7 @@
 const { useState, useEffect } = React
 
+// CURRENTLY NOT IMPLIMENTED
 export function ChatButton( targetId ) {
-
-    const rightContainer = document.getElementById("rightContainer")
 	
 	useEffect(() => {
 		setIsFollowing(isFollowed)
