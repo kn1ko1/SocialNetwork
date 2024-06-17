@@ -116,6 +116,7 @@ export function Chat({
     setChatboxVisible(true);
   };
   const handleSubmit = e => {
+    console.log("currentUserId in the submit is", currentUserId);
     e.preventDefault();
     let bodymessage = {
       body: sendMessage,

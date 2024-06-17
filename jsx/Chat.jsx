@@ -126,6 +126,7 @@ export function Chat({ socket }) {
     };
 
     const handleSubmit = (e) => {
+        console.log("currentUserId in the submit is", currentUserId)
         e.preventDefault();
         let bodymessage = {
             body: sendMessage,
