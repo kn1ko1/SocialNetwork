@@ -117,9 +117,20 @@ export function Home({
     // Adjust spacing between post cards
     border: '1px solid #ccc' // Add a thin border
   };
+  const opaqueStyle = {
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    // Adjust the opacity here 
+    maxWidth: '1300px',
+    borderRadius: '10px',
+    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+    // Optional: Add shadow for depth
+    padding: '40px',
+    margin: 'auto',
+    marginBottom: '20px' // Adjust spacing between post cards
+  };
   return /*#__PURE__*/React.createElement("main", {
     className: "homePage",
-    style: homeStyle
+    style: opaqueStyle
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       padding: '20px'
@@ -135,15 +146,8 @@ export function Home({
   }, /*#__PURE__*/React.createElement("div", {
     className: "col-3"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "border",
-    style: {
-      borderRadius: '10px',
-      boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-      border: '3px solid #333',
-      padding: '10px'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "userList"
+    className: "userList",
+    style: homeStyle
   }, /*#__PURE__*/React.createElement("h2", {
     style: {
       textDecoration: 'underline',
@@ -161,8 +165,9 @@ export function Home({
     socket: socket,
     followerId: currentUserId,
     user: user
-  }))) : /*#__PURE__*/React.createElement("p", null, "No Users?!")))), /*#__PURE__*/React.createElement("div", {
-    className: "col-6"
+  }))) : /*#__PURE__*/React.createElement("p", null, "No Users?!"))), /*#__PURE__*/React.createElement("div", {
+    className: "col-6",
+    style: opaqueStyle
   }, /*#__PURE__*/React.createElement("div", {
     className: "publicPostsWithComments"
   }, /*#__PURE__*/React.createElement("h2", {

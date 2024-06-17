@@ -126,25 +126,26 @@ export function Home({ socket }) {
 		border: '1px solid #ccc', // Add a thin border
 	};
 
-
+	const opaqueStyle = {
+		backgroundColor: 'rgba(255, 255, 255, 0.25)', // Adjust the opacity here 
+		maxWidth: '1300px',
+		borderRadius: '10px',
+		boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth
+		padding: '40px',
+		margin: 'auto',
+		marginBottom: '20px', // Adjust spacing between post cards
+	  };
+	  
 	return (
-		<main className="homePage" style={homeStyle}>
+		<main className="homePage" style={opaqueStyle}>
 		  <div style={{ padding: '20px' }}>
 			<PostForm groupId={0} followedUsers={followedUsersList} fetchFunc={fetchUserPostData} />
 		  </div>
 		  <div className="container text-center">
 			<div className="row align-items-start">
 			  <div className="col-3">
-				<div
-				  className="border"
-				  style={{
-					borderRadius: '10px',
-					boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-					border: '3px solid #333',
-					padding: '10px',
-				  }}
-				>
-				  <div className="userList">
+
+				  <div className="userList" style={homeStyle}>
 					<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>User List</h2>
 					{userList !== null && userList.length > 0 ? (
 					  userList
@@ -163,9 +164,9 @@ export function Home({ socket }) {
 					)}
 				  </div>
 				</div>
-			  </div>
+			  
 	  
-			  <div className="col-6">
+			  <div className="col-6" style={opaqueStyle}>
 				{/* Rendering Public Posts */}
 				<div className="publicPostsWithComments">
 				  <h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>Public Posts</h2>

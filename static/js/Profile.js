@@ -130,7 +130,7 @@ export function Profile({
     });
   };
   const profileStyle = {
-    maxWidth: '1000px',
+    maxWidth: '1300px',
     background: 'linear-gradient(to bottom, #c7ddef, #ffffff)',
     // Light blue/grey to white gradient
     borderRadius: '10px',
@@ -142,13 +142,24 @@ export function Profile({
     // Adjust spacing between post cards
     border: '1px solid #ccc' // Add a thin border
   };
+  const opaqueStyle = {
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    // Adjust the opacity here 
+    maxWidth: '1300px',
+    borderRadius: '10px',
+    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+    // Optional: Add shadow for depth
+    padding: '40px',
+    margin: 'auto',
+    marginBottom: '20px' // Adjust spacing between post cards
+  };
   return /*#__PURE__*/React.createElement("div", {
     className: "container",
-    style: profileStyle
+    style: opaqueStyle
   }, /*#__PURE__*/React.createElement("div", {
     className: "row"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "col-md-4",
+    className: "col-md-3",
     style: profileStyle
   }, /*#__PURE__*/React.createElement("h2", {
     style: {
@@ -190,7 +201,9 @@ export function Profile({
     checked: isPublicValue === false,
     onChange: handlePrivacyChange
   }), "Private"))) : /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Privacy:"), " ", isPublicValue ? "Public" : "Private"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Username:"), " ", profileUserData.username), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Email:"), " ", profileUserData.email), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "First Name:"), " ", profileUserData.firstName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Last Name:"), " ", profileUserData.lastName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Date of Birth:"), " ", new Date(profileUserData.dob).toLocaleDateString()), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Bio:"), " ", profileUserData.bio)) : /*#__PURE__*/React.createElement("p", null, "This profile is private.")), /*#__PURE__*/React.createElement("div", {
-    className: "col-md-4"
+    className: "col-md-6"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: opaqueStyle
   }, /*#__PURE__*/React.createElement("h2", {
     style: {
       textDecoration: 'underline',
@@ -203,8 +216,8 @@ export function Profile({
   }, /*#__PURE__*/React.createElement(PostCard, {
     post: post,
     showCommentForm: false
-  }))))), /*#__PURE__*/React.createElement("div", {
-    className: "col-md-4"
+  })))))), /*#__PURE__*/React.createElement("div", {
+    className: "col-md-3"
   }, /*#__PURE__*/React.createElement("div", {
     style: profileStyle
   }, /*#__PURE__*/React.createElement("h2", {

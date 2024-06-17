@@ -107,9 +107,24 @@ export function Group({ socket }) {
 		marginBottom: '20px', // Adjust spacing between post cards
 		border: '1px solid #ccc', // Add a thin border
 	  };
+
+	  const opaqueStyle = {
+		backgroundColor: 'rgba(255, 255, 255, 0.25)', // Adjust the opacity here 
+		maxWidth: '1300px',
+		borderRadius: '10px',
+		boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth
+		padding: '40px',
+		margin: 'auto',
+		marginBottom: '20px', // Adjust spacing between post cards
+	  };
+
+	  const overriddenStyle = {
+		...groupStyle,
+		maxWidth: '400px' // Override maxWidth
+	  };
 	  
 	  return (
-		<div className="container" style={groupStyle}>
+		<div className="container" style={opaqueStyle}>
 		  {selectedGroup ? (
 			<div>
 			  <button onClick={() => setSelectedGroup(null)} type="submit" className="btn btn-primary" >Go Back</button>
@@ -117,8 +132,9 @@ export function Group({ socket }) {
 			</div>
 		  ) : (
 			<div>
-			  <form onSubmit={create} className="container" style={{ maxWidth: "400px", border: "1px solid #ccc", borderRadius: "10px", padding: "20px", marginBottom: "20px" }}>
+			  <form onSubmit={create} className="container" style={overriddenStyle}>
 				<div className="mb-3">
+					<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>New Group</h2>
 				  <label htmlFor="exampleTitle" className="form-label">
 					Title
 				  </label>
@@ -148,15 +164,15 @@ export function Group({ socket }) {
 				</button>
 			  </form>
 	  
-			  <div className="text-center">
+			  <div className="text-center" style={opaqueStyle}>
 				<h2 style={{ textDecoration: 'underline' }}>Groups</h2>
 				<div id="groupData" className="row">
 				  {groupData !== null ? (
 					groupData.map((group) => (
 					  <div key={group.title} className="col-lg-3 col-md-4 col-sm-6 col-12 mb-4" onClick={() => handleGroupClick(group)}>
-						<div className="p-3 border rounded">
-						  <h3 style={{ textDecoration: 'underline', fontSize: '18px' }}>{group.title}</h3>
-						  <p style={{ fontSize: '14px' }}>{group.description}</p>
+						<div style={groupStyle}>
+						  <h3 style={{ textDecoration: 'underline', fontSize: '22px' }}>{group.title}</h3>
+						  <p style={{ fontSize: '18px' }}>{group.description}</p>
 						</div>
 					  </div>
 					))
