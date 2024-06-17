@@ -85,6 +85,12 @@ export function Register() {
 
 		return (
 			<div className="container login-container">
+
+						<div className="logo-container">
+    <img src="../static/sphere-logo.png" alt="Logo" className="logo" />
+   
+</div>
+
 			  <h1 className="h3 mb-3 fw-normal login-text">Register</h1>
 			  <form onSubmit={submit}>
 		  

@@ -18,17 +18,45 @@ export const renderNavbar = ({
     socket: socket
   }), navContainer);
 };
+const fetchUsername = async userId => {
+  if (!userId) {
+    throw new Error('Invalid userId');
+  }
+  try {
+    const response = await fetch(`http://localhost:8080/api/users/${userId}`);
+    if (!response.ok) {
+      throw new Error('Error fetching user data');
+    }
+    const data = await response.json();
+    return data.username;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    throw error; // re-throw the error to be caught by the caller
+  }
+};
 export function Navbar({
   socket
 }) {
   const {
-    currentUserId
+    currentUserId,
+    isLoading,
+    error
   } = getCurrentUserId();
   const [notificationData, setNotificationData] = useState(null);
+  const [username, setUsername] = useState('');
+  useEffect(() => {
+    if (currentUserId) {
+      fetchUsername(currentUserId).then(username => {
+        console.log('Fetched username:', username); // Log the username
+        setUsername(username);
+      }).catch(error => {
+        console.error('Error fetching username:', error);
+      });
+    }
+  }, [currentUserId]);
   useEffect(() => {
     const handleSocketMessage = e => {
       let data = JSON.parse(e.data);
-      console.log("data:", data);
       setNotificationData(data);
     };
     socket.addEventListener("message", handleSocketMessage);
@@ -36,6 +64,51 @@ export function Navbar({
       socket.removeEventListener("message", handleSocketMessage);
     };
   }, [socket]);
+
+  // const userId = getCurrentUserId();
+  // console.log("this is userId:", userId);
+
+  // const fetchUsername = async (userId) => {
+  //     try {
+  //         const response = await fetch(`http://localhost:8080/api/users/${userId}`);
+  //         if (!response.ok) {
+  //             throw new Error('Error fetching user data');
+  //         }
+  //         const data = await response.json();
+  //         console.log("this is data from navbar fetch:", data);
+  //         return data.username;   
+  //     } catch (error) {
+  //         console.error('Error fetching user data:', error);
+  //         throw error; // re-throw the error to be caught by the caller
+  //     }
+  // };
+
+  // fetchUsername(userId).then((username) => {
+  //     console.log("this is username:", username);
+  // }).catch((error) => {
+  //     console.error('Error fetching username:', error);
+  // });
+
+  // export function Navbar({ socket }) {
+  // 	const { currentUserId } = getCurrentUserId()
+  // 	const [notificationData, setNotificationData] = useState(null);
+
+  // console.log("currentUserId:", currentUserId)
+
+  // 	useEffect(() => {
+  // 		const handleSocketMessage = (e) => {
+  // 		  let data = JSON.parse(e.data);
+  // 		  console.log("data:", data);
+  // 		  setNotificationData(data);
+  // 		};
+
+  // 		socket.addEventListener("message", handleSocketMessage);
+
+  // 		return () => {
+  // 		  socket.removeEventListener("message", handleSocketMessage);
+  // 		};
+  // 	  }, [socket]);
+
   const logout = async () => {
     try {
       const response = await fetch("http://localhost:8080/auth/logout", {
@@ -59,6 +132,12 @@ export function Navbar({
       console.error("An error occurred during logout:", error);
     }
   };
+  if (isLoading) {
+    return /*#__PURE__*/React.createElement("div", null, "Loading..."); // Render a loading state
+  }
+  if (error) {
+    return /*#__PURE__*/React.createElement("div", null, "Error: ", error); // Render an error state
+  }
   return /*#__PURE__*/React.createElement("nav", {
     className: "navbar navbar-expand-md bg-body-tertiary"
   }, /*#__PURE__*/React.createElement("div", {
@@ -79,7 +158,19 @@ export function Navbar({
   }, notificationData && /*#__PURE__*/React.createElement(NotificationPopUp, {
     data: notificationData,
     onClose: () => setNotificationData(null)
-  }), /*#__PURE__*/React.createElement("ul", {
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "navbar-logo"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: "../../static/sphere-logo.png",
+    alt: "Logo",
+    className: "logo",
+    style: {
+      width: '60px',
+      height: 'auto'
+    }
+  }), username && /*#__PURE__*/React.createElement("span", {
+    className: "ms-2"
+  }, "Welcome, ", username)), /*#__PURE__*/React.createElement("ul", {
     className: "navbar-nav me-auto mx-auto mb-2 mb-lg-0"
   }, /*#__PURE__*/React.createElement("li", {
     className: "nav-item"
