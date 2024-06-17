@@ -28,20 +28,27 @@ export function Chat({
   const [sendMessage, setSendMessage] = useState("");
   const [groupsPartOf, setGroupsPartOf] = useState([]);
   const [uniqueUsers, setUniqueUsers] = useState([]);
+  const [isChatboxVisible, setChatboxVisible] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState(null);
   const [isEmojiPickerVisible, setEmojiPickerVisible] = useState(false);
-  let messages = document.getElementById("messages");
   useEffect(() => {
     console.log("currentUserId", currentUserId);
     const fetchUserAndGroupData = async () => {
       try {
         const promises = [];
+        promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}`));
         promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/followedUsers`));
         promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/followerUsers`));
         promises.push(fetch(`http://localhost:8080/api/users/${currentUserId}/groups`));
         const results = await Promise.all(promises);
-        const usersIFollowResponse = results[0];
-        const usersFollowMeResponse = results[1];
-        const groupsPartOfResponse = results[2];
+        const currentUserResponse = results[0];
+        const usersIFollowResponse = results[1];
+        const usersFollowMeResponse = results[2];
+        const groupsPartOfResponse = results[3];
+        if (!currentUserResponse.ok) {
+          throw new Error('Failed to fetch current user');
+        }
         if (!usersIFollowResponse.ok) {
           throw new Error('Failed to fetch usersIFollow list');
         }
@@ -51,6 +58,7 @@ export function Chat({
         if (!groupsPartOfResponse.ok) {
           throw new Error('Failed to fetch groupsPartOf list');
         }
+        const currentUser = await currentUserResponse.json();
         const usersIFollowData = await usersIFollowResponse.json();
         const usersFollowMeData = await usersFollowMeResponse.json();
         const groupsPartOfData = await groupsPartOfResponse.json();
@@ -76,9 +84,6 @@ export function Chat({
   const handleMessages = e => {
     setSendMessage(e.target.value);
   };
-  const [isChatboxVisible, setChatboxVisible] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [selectedGroup, setSelectedGroup] = useState(null);
   const handleUserClick = async user => {
     const messagesResponse = await fetch(`http://localhost:8080/api/users/${currentUserId}/messages/${user.userId}`);
     if (!messagesResponse.ok) {
@@ -127,11 +132,11 @@ export function Chat({
   };
   socket.onmessage = function (e) {
     let data = JSON.parse(e.data);
-    let msg = JSON.parse(data.body).body;
-    console.log("you received websocket message:", msg);
-    let entry = document.createElement("li");
-    entry.appendChild(document.createTextNode(msg));
-    messages.appendChild(entry);
+    let message = JSON.parse(data.body).body;
+    console.log("you received websocket message:", message);
+    let chatHistory = document.getElementById("chatHistory");
+    const messageCard = createMessageCard(user, message);
+    chatHistory.appendChild(messageCard);
   };
   const createMessageCard = (user, message) => {
     const card = document.createElement("div");

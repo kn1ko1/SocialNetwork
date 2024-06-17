@@ -72,6 +72,8 @@ func (h *MessagesBySenderAndTargetIDHandler) get(w http.ResponseWriter, r *http.
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			sender.Username = "Error Fetching Username"
 		}
+		log.Println("MessagesBySenderAndTargetIDHandler,SenderUsername: ", sender.Username)
+
 		transportMessage := transport.MessageTransport{
 			MessageId:      message.MessageId,
 			Body:           message.Body,

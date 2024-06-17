@@ -5,6 +5,7 @@ import (
 	"log"
 	"socialnetwork/models"
 	"socialnetwork/repo"
+	"socialnetwork/transport"
 	"socialnetwork/utils"
 	"time"
 
@@ -201,7 +202,17 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		if err != nil {
 			utils.HandleError("[ws/client.go] Error adding message to database in CreateMessage", err)
 		}
-		jsonPrivateMessage, err := json.Marshal(returnPrivateMessage)
+		transportMessage := transport.MessageTransport{
+			MessageId:      returnPrivateMessage.MessageId,
+			Body:           returnPrivateMessage.Body,
+			CreatedAt:      returnPrivateMessage.CreatedAt,
+			MessageType:    returnPrivateMessage.MessageType,
+			SenderUsername: c.User.Username,
+			TargetId:       returnPrivateMessage.TargetId,
+			UpdatedAt:      returnPrivateMessage.UpdatedAt,
+		}
+
+		jsonPrivateMessage, err := json.Marshal(transportMessage)
 		if err != nil {
 			utils.HandleError("[ws/client.go] Error marshalling returnNotification", err)
 		}
