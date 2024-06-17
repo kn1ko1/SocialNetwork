@@ -146,7 +146,7 @@ export function Profile({ socket, userId, isEditable }) {
 	}
 
 	const profileStyle = {
-		maxWidth: '1000px',
+		maxWidth: '1300px',
 		background: 'linear-gradient(to bottom, #c7ddef, #ffffff)', // Light blue/grey to white gradient
 		borderRadius: '10px',
 		boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth
@@ -156,10 +156,21 @@ export function Profile({ socket, userId, isEditable }) {
 		border: '1px solid #ccc', // Add a thin border
 	};
 
+
+	const opaqueStyle = {
+		backgroundColor: 'rgba(255, 255, 255, 0.25)', // Adjust the opacity here 
+		maxWidth: '1300px',
+		borderRadius: '10px',
+		boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth
+		padding: '40px',
+		margin: 'auto',
+		marginBottom: '20px', // Adjust spacing between post cards
+	  };
+
 	return (
-		<div className="container" style={profileStyle}>
+		<div className="container" style={opaqueStyle}>
 			<div className="row" >
-				<div className="col-md-4" style={profileStyle}>
+				<div className="col-md-3" style={profileStyle}>
 					{/* User data */}
 					<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>{profileUserData.username}'s Profile</h2>
 					<br />
@@ -251,7 +262,8 @@ export function Profile({ socket, userId, isEditable }) {
 					)}
 				</div>
 
-				<div className="col-md-4">
+				<div className="col-md-6">
+					<div style={opaqueStyle}>
 					{/* Posts data */}
 					<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>{profileUserData.username}'s Posts</h2>
 					<div id="myPostsData">
@@ -262,8 +274,9 @@ export function Profile({ socket, userId, isEditable }) {
 						))}
 					</div>
 				</div>
+				</div>
 
-				<div className="col-md-4">
+				<div className="col-md-3">
 					{/* Followers data */}
 					<div style={profileStyle}>
 					<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>{profileUserData.username}'s Followers</h2>

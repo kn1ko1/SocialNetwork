@@ -102,9 +102,24 @@ export function Group({
     // Adjust spacing between post cards
     border: '1px solid #ccc' // Add a thin border
   };
+  const opaqueStyle = {
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    // Adjust the opacity here 
+    maxWidth: '1300px',
+    borderRadius: '10px',
+    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+    // Optional: Add shadow for depth
+    padding: '40px',
+    margin: 'auto',
+    marginBottom: '20px' // Adjust spacing between post cards
+  };
+  const overriddenStyle = {
+    ...groupStyle,
+    maxWidth: '400px' // Override maxWidth
+  };
   return /*#__PURE__*/React.createElement("div", {
     className: "container",
-    style: groupStyle
+    style: opaqueStyle
   }, selectedGroup ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     onClick: () => setSelectedGroup(null),
     type: "submit",
@@ -115,16 +130,15 @@ export function Group({
   })) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("form", {
     onSubmit: create,
     className: "container",
-    style: {
-      maxWidth: "400px",
-      border: "1px solid #ccc",
-      borderRadius: "10px",
-      padding: "20px",
-      marginBottom: "20px"
-    }
+    style: overriddenStyle
   }, /*#__PURE__*/React.createElement("div", {
     className: "mb-3"
-  }, /*#__PURE__*/React.createElement("label", {
+  }, /*#__PURE__*/React.createElement("h2", {
+    style: {
+      textDecoration: 'underline',
+      textAlign: 'center'
+    }
+  }, "New Group"), /*#__PURE__*/React.createElement("label", {
     htmlFor: "exampleTitle",
     className: "form-label"
   }, "Title"), /*#__PURE__*/React.createElement("input", {
@@ -149,7 +163,8 @@ export function Group({
     type: "submit",
     className: "btn btn-primary"
   }, "Create")), /*#__PURE__*/React.createElement("div", {
-    className: "text-center"
+    className: "text-center",
+    style: opaqueStyle
   }, /*#__PURE__*/React.createElement("h2", {
     style: {
       textDecoration: 'underline'
@@ -162,15 +177,15 @@ export function Group({
     className: "col-lg-3 col-md-4 col-sm-6 col-12 mb-4",
     onClick: () => handleGroupClick(group)
   }, /*#__PURE__*/React.createElement("div", {
-    className: "p-3 border rounded"
+    style: groupStyle
   }, /*#__PURE__*/React.createElement("h3", {
     style: {
       textDecoration: 'underline',
-      fontSize: '18px'
+      fontSize: '22px'
     }
   }, group.title), /*#__PURE__*/React.createElement("p", {
     style: {
-      fontSize: '14px'
+      fontSize: '18px'
     }
   }, group.description)))) : /*#__PURE__*/React.createElement("div", {
     id: "noGroupsError"
