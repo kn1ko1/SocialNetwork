@@ -47,7 +47,7 @@ export function EventForm({ group, socket }) {
     return (
         <div>
             <main className="eventForm container" style={{ maxWidth: "400px" }}>
-                <h1 className="h3 mb-3 fw-normal">Post Event Here</h1>
+                <h1 className="h3 mb-3 fw-normal" style={{textDecoration: 'underline'}}>New Event</h1>
                 <form onSubmit={submit}>
                     <div className="form-floating mb-3">
                         <input

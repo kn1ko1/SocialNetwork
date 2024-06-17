@@ -105,7 +105,7 @@ export function GroupDetails({
     }
   }
   const groupDetailsStyle = {
-    maxWidth: '1000px',
+    maxWidth: '1400px',
     background: 'linear-gradient(to bottom, #c7ddef, #ffffff)',
     // Light blue/grey to white gradient
     borderRadius: '10px',

@@ -67,8 +67,17 @@ export function Login() {
 		}
 	}, [isLoggedIn])
 
+
+	
+
 	return (
-		<div className="container login-container">
+		<div className="container login-container" >
+
+			<div className="logo-container">
+    <img src="../static/sphere-logo.png" alt="Logo" className="logo" />
+  
+</div>
+
 			<h1 className="h3 mb-3 fw-normal login-text">Log in</h1>
 			<form onSubmit={handleSubmit}>
 				<div className="mb-3">

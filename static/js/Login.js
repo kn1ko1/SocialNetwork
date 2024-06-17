@@ -66,7 +66,13 @@ export function Login() {
   }, [isLoggedIn]);
   return /*#__PURE__*/React.createElement("div", {
     className: "container login-container"
-  }, /*#__PURE__*/React.createElement("h1", {
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "logo-container"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: "../static/sphere-logo.png",
+    alt: "Logo",
+    className: "logo"
+  })), /*#__PURE__*/React.createElement("h1", {
     className: "h3 mb-3 fw-normal login-text"
   }, "Log in"), /*#__PURE__*/React.createElement("form", {
     onSubmit: handleSubmit

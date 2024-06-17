@@ -109,7 +109,7 @@ export function GroupDetails({ group, socket }) {
 	}
 
 	const groupDetailsStyle = {
-		maxWidth: '1000px',
+		maxWidth: '1400px',
 		background: 'linear-gradient(to bottom, #c7ddef, #ffffff)', // Light blue/grey to white gradient
 		borderRadius: '10px',
 		boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth
@@ -119,15 +119,24 @@ export function GroupDetails({ group, socket }) {
 		border: '1px solid #ccc', // Add a thin border
 	  };
 
+	
+
+
+
 	return (
 		<div className="group-details container">
 
-			<div style={groupDetailsStyle}>
-		  <h2 style={{ textDecoration: 'underline', fontSize: '24px', textAlign: 'center'  }}>{group.title}</h2>
-		  <p style={{ fontSize: '20px', textAlign: 'center'  }}>{group.description}</p>
-	  </div>
 
-		
+        <div style={groupDetailsStyle}>
+          <h2 style={{ textDecoration: 'underline', fontSize: '24px', textAlign: 'center'  }}>{group.title}</h2>
+          <p style={{ fontSize: '20px', textAlign: 'center'  }}>{group.description}</p>
+        </div>
+      
+
+     
+      
+  
+
 		  {group.isMember ? (
 			<div className="row">
 			  {/* Column 1 */}
@@ -169,6 +178,7 @@ export function GroupDetails({ group, socket }) {
 				<PostFormGroup group={group} fetchFunc={() => fetchGroupData(group.groupId)} />
 					</div>
 
+					{/* <div style={groupDetailsStyle}> */}
 				<h3 style={{textDecoration: 'underline'}}>Posts</h3>
 				<div id="groupPosts">
 				  {groupPosts !== null ? (
@@ -186,6 +196,7 @@ export function GroupDetails({ group, socket }) {
 					<div>There are no posts in this group yet</div>
 				  )}
 				</div>
+				{/* </div> */}
 
 				<div style={groupDetailsStyle}>
 				<h3 style={{textDecoration: 'underline'}}>Messages</h3>
@@ -204,9 +215,10 @@ export function GroupDetails({ group, socket }) {
 			  {/* Column 3 */}
 			  <div className="col-lg-3 text-center">
 				
-				<div style={groupDetailsStyle}>
-				<EventForm  group={group} socket={socket} />
-				</div>
+			  <div style={groupDetailsStyle}>
+          <EventForm group={group} socket={socket} />
+        </div>
+      
 
 				<div style={groupDetailsStyle}>
 				<GroupDetailsEvents groupEvents={groupEvents}  />	

@@ -148,13 +148,26 @@ export function Profile({
   }, /*#__PURE__*/React.createElement("div", {
     className: "row"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "col-md-4"
+    className: "col-md-4",
+    style: profileStyle
   }, /*#__PURE__*/React.createElement("h2", {
     style: {
       textDecoration: 'underline',
       textAlign: 'center'
     }
-  }, profileUserData.username, "'s Profile"), /*#__PURE__*/React.createElement("br", null), !isEditable && /*#__PURE__*/React.createElement("div", {
+  }, profileUserData.username, "'s Profile"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("p", {
+    className: "d-flex justify-content-center"
+  }, profileUserData.imageURL ? /*#__PURE__*/React.createElement("img", {
+    src: profileUserData.imageURL,
+    className: "rounded-circle shadow-1-strong me-3 img-fluid rounded-circle",
+    width: "60",
+    height: "60"
+  }) : /*#__PURE__*/React.createElement("img", {
+    src: "https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-479x512-n8sg74wg.png",
+    className: "rounded-circle shadow-1-strong me-3 img-fluid rounded-circle",
+    width: "60",
+    height: "60"
+  })), !isEditable && /*#__PURE__*/React.createElement("div", {
     className: "d-flex justify-content-center align-items-center"
   }, /*#__PURE__*/React.createElement(FollowButton, {
     socket: socket,
@@ -176,17 +189,7 @@ export function Profile({
     value: false,
     checked: isPublicValue === false,
     onChange: handlePrivacyChange
-  }), "Private"))) : /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Privacy:"), " ", isPublicValue ? "Public" : "Private"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Username:"), " ", profileUserData.username), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Email:"), " ", profileUserData.email), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "First Name:"), " ", profileUserData.firstName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Last Name:"), " ", profileUserData.lastName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Date of Birth:"), " ", new Date(profileUserData.dob).toLocaleDateString()), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Bio:"), " ", profileUserData.bio), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Image:"), profileUserData.imageURL ? /*#__PURE__*/React.createElement("img", {
-    src: profileUserData.imageURL,
-    className: "rounded-circle shadow-1-strong me-3 img-fluid rounded-circle",
-    width: "60",
-    height: "60"
-  }) : /*#__PURE__*/React.createElement("img", {
-    src: "https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-479x512-n8sg74wg.png",
-    className: "rounded-circle shadow-1-strong me-3 img-fluid rounded-circle",
-    width: "60",
-    height: "60"
-  }))) : /*#__PURE__*/React.createElement("p", null, "This profile is private.")), /*#__PURE__*/React.createElement("div", {
+  }), "Private"))) : /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Privacy:"), " ", isPublicValue ? "Public" : "Private"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Username:"), " ", profileUserData.username), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Email:"), " ", profileUserData.email), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "First Name:"), " ", profileUserData.firstName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Last Name:"), " ", profileUserData.lastName), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Date of Birth:"), " ", new Date(profileUserData.dob).toLocaleDateString()), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", null, "Bio:"), " ", profileUserData.bio)) : /*#__PURE__*/React.createElement("p", null, "This profile is private.")), /*#__PURE__*/React.createElement("div", {
     className: "col-md-4"
   }, /*#__PURE__*/React.createElement("h2", {
     style: {
@@ -202,6 +205,8 @@ export function Profile({
     showCommentForm: false
   }))))), /*#__PURE__*/React.createElement("div", {
     className: "col-md-4"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: profileStyle
   }, /*#__PURE__*/React.createElement("h2", {
     style: {
       textDecoration: 'underline',
@@ -211,7 +216,9 @@ export function Profile({
     id: "myFollowersData"
   }, userFollowerData && userFollowerData.map(follower => /*#__PURE__*/React.createElement("p", {
     key: follower.username
-  }, follower.username))), /*#__PURE__*/React.createElement("h2", {
+  }, follower.username)))), /*#__PURE__*/React.createElement("div", {
+    style: profileStyle
+  }, /*#__PURE__*/React.createElement("h2", {
     style: {
       textDecoration: 'underline',
       textAlign: 'center'
@@ -220,5 +227,5 @@ export function Profile({
     id: "usersIFollowData"
   }, userFollowsData && userFollowsData.map(user => /*#__PURE__*/React.createElement("p", {
     key: user.username
-  }, user.username))))));
+  }, user.username)))))));
 }

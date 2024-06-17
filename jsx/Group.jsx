@@ -98,7 +98,7 @@ export function Group({ socket }) {
 	
 
 	const groupStyle = {
-		maxWidth: '1000px',
+		maxWidth: '1300px',
 		background: 'linear-gradient(to bottom, #c7ddef, #ffffff)', // Light blue/grey to white gradient
 		borderRadius: '10px',
 		boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth

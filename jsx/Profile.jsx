@@ -158,11 +158,32 @@ export function Profile({ socket, userId, isEditable }) {
 
 	return (
 		<div className="container" style={profileStyle}>
-			<div className="row">
-				<div className="col-md-4">
+			<div className="row" >
+				<div className="col-md-4" style={profileStyle}>
 					{/* User data */}
 					<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>{profileUserData.username}'s Profile</h2>
 					<br />
+
+					<p className="d-flex justify-content-center">
+								
+								{profileUserData.imageURL ? (
+									<img
+										src={profileUserData.imageURL}
+										className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle"
+										width="60"
+										height="60"
+									/>
+								) : (
+									<img
+										src="https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-479x512-n8sg74wg.png"
+										className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle"
+										width="60"
+										height="60"
+									/>
+								)}
+
+							</p>
+
 					{!isEditable && (
 						<div className="d-flex justify-content-center align-items-center">
 							<FollowButton
@@ -223,30 +244,13 @@ export function Profile({ socket, userId, isEditable }) {
 							<p>
 								<strong>Bio:</strong> {profileUserData.bio}
 							</p>
-							<p>
-								<strong>Image:</strong>
-								{profileUserData.imageURL ? (
-									<img
-										src={profileUserData.imageURL}
-										className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle"
-										width="60"
-										height="60"
-									/>
-								) : (
-									<img
-										src="https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-479x512-n8sg74wg.png"
-										className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle"
-										width="60"
-										height="60"
-									/>
-								)}
-
-							</p>
+							
 						</>
 					) : (
 						<p>This profile is private.</p>
 					)}
 				</div>
+
 				<div className="col-md-4">
 					{/* Posts data */}
 					<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>{profileUserData.username}'s Posts</h2>
@@ -258,8 +262,10 @@ export function Profile({ socket, userId, isEditable }) {
 						))}
 					</div>
 				</div>
+
 				<div className="col-md-4">
 					{/* Followers data */}
+					<div style={profileStyle}>
 					<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>{profileUserData.username}'s Followers</h2>
 					<div id="myFollowersData">
 						{userFollowerData &&
@@ -267,13 +273,17 @@ export function Profile({ socket, userId, isEditable }) {
 								<p key={follower.username}>{follower.username}</p>
 							))}
 					</div>
+					</div>
+
 					{/* Followed data */}
+					<div style={profileStyle}>
 					<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>Users {profileUserData.username} Follows</h2>
 					<div id="usersIFollowData">
 						{userFollowsData &&
 							userFollowsData.map((user) => (
 								<p key={user.username}>{user.username}</p>
 							))}
+					</div>
 					</div>
 				</div>
 			</div>

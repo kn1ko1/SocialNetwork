@@ -1,38 +1,44 @@
 import { formattedDate } from "../shared/FormattedDate.js"
 
 export function GroupDetailsEvents({groupEvents}) {
+   
+    
     return (
         <div className="groupEvents">
-            <h2>Events</h2>
-            {groupEvents !== null && groupEvents.length > 0 ? (
-                groupEvents.map((event, index) => (
-                    <div key={index} className="row">
-                        <div className="col-3">
-                            <p className="d-inline-flex gap-1">
-                                <button
-                                    className="btn btn-primary"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    // Use unique ID for data-bs-target
-                                    data-bs-target={`#collapseExample${index}`}
-                                    aria-expanded="false"
-                                    aria-controls={`collapseExample${index}`}
-                                >
-                                    {event.title}
-                                </button>
-                            </p>
-                        </div>
-                        <div className="col-9">
-                            <div className="collapse" id={`collapseExample${index}`}>
-                                <div className="card card-body">
-                                    {event.description} - {formattedDate(event.dateTime)}
-                                </div>
-                            </div>
-                        </div>
+          <h2 style={{ textDecoration: 'underline' }}>Events</h2>
+          {groupEvents !== null && groupEvents.length > 0 ? (
+            <div className="accordion" id="eventAccordion">
+              {groupEvents.map((event, index) => (
+                <div key={index} className="accordion-item">
+                  <h2 className="accordion-header" id={`heading${index}`}>
+                    <button
+                      className="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target={`#collapse${index}`}
+                      aria-expanded="false"
+                      aria-controls={`collapse${index}`}
+                    >
+                      {event.title}
+                    </button>
+                  </h2>
+                  <div
+                    id={`collapse${index}`}
+                    className="accordion-collapse collapse"
+                    aria-labelledby={`heading${index}`}
+                    data-bs-parent="#eventAccordion"
+                  >
+                    <div className="accordion-body">
+                      <p>{event.description}</p>
+                      <small>{formattedDate(event.dateTime)}</small>
                     </div>
-                ))
-            ) : (
-                <p>No Events</p>
-            )}
-        </div>)
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No Events</p>
+          )}
+        </div>
+      );
 }
