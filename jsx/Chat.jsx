@@ -142,39 +142,45 @@ export function Chat({ socket }) {
         let data = JSON.parse(e.data);
         let message = JSON.parse(data.body).body;
         console.log("you received websocket message:", message);
-        let chatHistory = document.getElementById("chatHistory")
+        let chatHistory = document.getElementById("chatHistory");
 
         const messageCard = createMessageCard(user, message);
-        chatHistory.appendChild(messageCard);
+
+        // Insert the new message at the beginning of chatHistory
+        if (chatHistory.firstChild) {
+            chatHistory.insertBefore(messageCard, chatHistory.firstChild);
+        } else {
+            chatHistory.appendChild(messageCard);
+        }
     }
 
     const createMessageCard = (user, message) => {
         const card = document.createElement("div");
         card.classList.add("card", "mb-3");
-      
+
         const cardBody = document.createElement("div");
         cardBody.classList.add("card-body", "p-3");
-      
+
         const userNameElement = document.createElement("h6");
         userNameElement.classList.add("fw-bold", "mb-1");
         userNameElement.textContent = message.senderUsername
-      
+
         const messageBodyElement = document.createElement("p");
         messageBodyElement.classList.add("mb-1");
         messageBodyElement.textContent = message.body;
-      
+
         const sentAtElement = document.createElement("small");
         sentAtElement.classList.add("text-muted");
         sentAtElement.textContent = `Sent at ${formattedDate(message.createdAt)}`;
-      
+
         cardBody.appendChild(userNameElement);
         cardBody.appendChild(messageBodyElement);
         cardBody.appendChild(sentAtElement);
-      
+
         card.appendChild(cardBody);
-      
+
         return card;
-      };
+    };
 
 
     const messageStyle = {

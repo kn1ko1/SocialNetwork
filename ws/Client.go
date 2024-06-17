@@ -195,6 +195,7 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			return
 		}
 
+		log.Println("Client.Go.  Received message", message)
 		message.CreatedAt = ctime
 		message.UpdatedAt = ctime
 

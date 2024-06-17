@@ -136,7 +136,13 @@ export function Chat({
     console.log("you received websocket message:", message);
     let chatHistory = document.getElementById("chatHistory");
     const messageCard = createMessageCard(user, message);
-    chatHistory.appendChild(messageCard);
+
+    // Insert the new message at the beginning of chatHistory
+    if (chatHistory.firstChild) {
+      chatHistory.insertBefore(messageCard, chatHistory.firstChild);
+    } else {
+      chatHistory.appendChild(messageCard);
+    }
   };
   const createMessageCard = (user, message) => {
     const card = document.createElement("div");

@@ -66,13 +66,12 @@ func (h *MessagesBySenderAndTargetIDHandler) get(w http.ResponseWriter, r *http.
 	for _, message := range messages {
 
 		// Fetch the sender's username using the senderId
-		sender, err := h.Repo.GetUserById(senderId)
+		sender, err := h.Repo.GetUserById(message.SenderId)
 		if err != nil {
 			utils.HandleError("Failed to get sender in GetUserById. ", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			sender.Username = "Error Fetching Username"
 		}
-		log.Println("MessagesBySenderAndTargetIDHandler,SenderUsername: ", sender.Username)
 
 		transportMessage := transport.MessageTransport{
 			MessageId:      message.MessageId,
