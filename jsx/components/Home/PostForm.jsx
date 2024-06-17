@@ -122,11 +122,13 @@ export function PostForm({ groupId, followedUsers, fetchFunc }) {
 			<div className="col-12">
 			  <h1 className="h3 mb-3 fw-normal" style={{ textDecoration: 'underline', textAlign: "center" }}>New Post</h1>
 			  <form onSubmit={submit}>
-				<div className="form-floating mb-3" style={{ textAlign: "center" }}>
+				<div style={{ display: "flex", gap: "10px" }}>
+				
 				  <input
 							type="text"
 							className="form-control"
 							id="postFormBody"
+							rows="2"
 							placeholder="Type your post here..."
 							onChange={(e) => setBody(e.target.value)}
 						/>
@@ -136,7 +138,7 @@ export function PostForm({ groupId, followedUsers, fetchFunc }) {
 							type="button"
 							className="btn btn-primary"
 							onClick={handleSelectFile}
-							style={{ marginRight: "10px" }}
+							style={{ marginRight: "10px" , marginTop: "10px"}}
 						>
 							Select File
 						</button>

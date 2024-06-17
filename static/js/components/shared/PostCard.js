@@ -116,13 +116,17 @@ export function PostCard({
   }, /*#__PURE__*/React.createElement("textarea", {
     className: "form-control",
     id: "commentTextArea",
-    rows: "4",
+    rows: "2",
     style: {
       background: "#fff"
     },
+    placeholder: "Reply here...",
     onChange: e => setBody(e.target.value)
-  }, "Reply here..."))), /*#__PURE__*/React.createElement("div", {
-    className: "float-end mt-2 pt-1"
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: "20px",
+      paddingTop: "10px"
+    }
   }, /*#__PURE__*/React.createElement("button", {
     type: "button",
     className: "btn btn-primary",
@@ -147,12 +151,22 @@ export function PostCard({
     className: "btn btn-primary btn-sm",
     onClick: submit,
     style: {
-      marginTop: "10px"
+      marginTop: "10px",
+      marginBottom: "10px"
     }
   }, "Post comment")), comments && comments.length > 0 && /*#__PURE__*/React.createElement("div", {
-    className: "comments"
-  }, /*#__PURE__*/React.createElement("h2", null, "Comments"), comments.map(comment => /*#__PURE__*/React.createElement(CommentCard, {
+    className: "comments",
+    style: {
+      marginTop: "20px"
+    }
+  }, /*#__PURE__*/React.createElement("h4", null, "Comments"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "10px"
+    }
+  }, comments.map(comment => /*#__PURE__*/React.createElement(CommentCard, {
     key: comment.createdAt,
     comment: comment
-  })))));
+  }))))));
 }

@@ -1,5 +1,22 @@
 import { formattedDate } from "../shared/FormattedDate.js";
+import { fetchUserById } from "../shared/FetchUserById.js";
+const { useState, useEffect } = React;
 export function CommentCard({ comment }) {
+
+	const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const fetchUsername = async () => {
+      try {
+        const user = await fetchUserById(comment.userId);
+        setUsername(user.username);
+      } catch (error) {
+        console.error("Error fetching username:", error);
+      }
+    };
+
+    fetchUsername();
+  }, [comment.userId]);
 
 	return (
 		<div className="card mt-3">
@@ -7,16 +24,18 @@ export function CommentCard({ comment }) {
 				{comment.userAvatar ? (
 					<img
 						src={comment.userAvatar}
-						className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle"
+						className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle border border-2"
 						width="60"
 						height="60"
+						style={{ padding: "5px" }}
 					/>
 				) : (
 					<img
 						src="https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-479x512-n8sg74wg.png"
-						className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle"
+						className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle border border-2"
 						width="60"
 						height="60"
+						style={{ padding: "5px" }}
 					/>
 				)}
 				<div>
@@ -24,7 +43,7 @@ export function CommentCard({ comment }) {
 						className="fw-bold text-primary mb-1"
 						onClick={() => renderProfile(comment.userId)}
 					>
-						{comment.userId}
+						{username}
 					</h6>
 					<p className="text-muted small mb-0">{formattedDate(comment.createdAt)}</p>
 				</div>

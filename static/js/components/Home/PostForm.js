@@ -137,14 +137,15 @@ export function PostForm({
   }, "New Post"), /*#__PURE__*/React.createElement("form", {
     onSubmit: submit
   }, /*#__PURE__*/React.createElement("div", {
-    className: "form-floating mb-3",
     style: {
-      textAlign: "center"
+      display: "flex",
+      gap: "10px"
     }
   }, /*#__PURE__*/React.createElement("input", {
     type: "text",
     className: "form-control",
     id: "postFormBody",
+    rows: "2",
     placeholder: "Type your post here...",
     onChange: e => setBody(e.target.value)
   })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
@@ -152,7 +153,8 @@ export function PostForm({
     className: "btn btn-primary",
     onClick: handleSelectFile,
     style: {
-      marginRight: "10px"
+      marginRight: "10px",
+      marginTop: "10px"
     }
   }, "Select File"), /*#__PURE__*/React.createElement("span", null, selectedFile ? selectedFile.name : "No file selected"), /*#__PURE__*/React.createElement("input", {
     type: "file",
