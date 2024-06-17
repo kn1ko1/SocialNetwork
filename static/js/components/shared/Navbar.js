@@ -1,15 +1,20 @@
-import { getCurrentUserId } from "./GetCurrentUserId.js";
-import { renderProfile } from "../../Profile.js";
-import { renderHome } from "../../Home.js";
-import { renderNotifications } from "../../Notifications.js";
-import { renderChat } from "../../Chat.js";
-import { renderGroup } from "../../Group.js";
-import { renderLogin } from "../../Login.js";
-import { NotificationPopUp } from "../Notifications/NotificationPopUp.js";
 const {
   useState,
   useEffect
 } = React;
+//import ReactDOM from "react-dom";
+import { getCurrentUserId } from "./GetCurrentUserId.js";
+import { renderProfile } from "../../Profile.js";
+import { renderHome } from "../../Home.js";
+//import { renderNotifications } from "../../Notifications.js";
+import { renderChat } from "../../Chat.js";
+import { renderGroup } from "../../Group.js";
+import { renderLogin } from "../../Login.js";
+import { NotificationPopUp } from "../Notifications/NotificationPopUp.js";
+import { GroupInvite } from "../../components/Notifications/GroupInvite.js";
+import { GroupRequest } from "../../components/Notifications/GroupRequest.js";
+import { FollowRequest } from "../../components/Notifications/FollowRequest.js";
+import { EventInvite } from "../../components/Notifications/EventInvite.js";
 export const renderNavbar = ({
   socket
 }) => {
@@ -18,40 +23,20 @@ export const renderNavbar = ({
     socket: socket
   }), navContainer);
 };
-const fetchUsername = async userId => {
-  if (!userId) {
-    throw new Error('Invalid userId');
-  }
-  try {
-    const response = await fetch(`http://localhost:8080/api/users/${userId}`);
-    if (!response.ok) {
-      throw new Error('Error fetching user data');
-    }
-    const data = await response.json();
-    return data.username;
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-    throw error; // re-throw the error to be caught by the caller
-  }
-};
-export function Navbar({
+export const Navbar = ({
   socket
-}) {
+}) => {
   const {
     currentUserId,
     isLoading,
     error
   } = getCurrentUserId();
+  const [notifications, setNotifications] = useState(null);
   const [notificationData, setNotificationData] = useState(null);
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
   useEffect(() => {
     if (currentUserId) {
-      fetchUsername(currentUserId).then(username => {
-        console.log('Fetched username:', username); // Log the username
-        setUsername(username);
-      }).catch(error => {
-        console.error('Error fetching username:', error);
-      });
+      fetchUsername(currentUserId).then(username => setUsername(username)).catch(error => console.error("Error fetching username:", error));
     }
   }, [currentUserId]);
   useEffect(() => {
@@ -64,58 +49,44 @@ export function Navbar({
       socket.removeEventListener("message", handleSocketMessage);
     };
   }, [socket]);
-
-  // const userId = getCurrentUserId();
-  // console.log("this is userId:", userId);
-
-  // const fetchUsername = async (userId) => {
-  //     try {
-  //         const response = await fetch(`http://localhost:8080/api/users/${userId}`);
-  //         if (!response.ok) {
-  //             throw new Error('Error fetching user data');
-  //         }
-  //         const data = await response.json();
-  //         console.log("this is data from navbar fetch:", data);
-  //         return data.username;   
-  //     } catch (error) {
-  //         console.error('Error fetching user data:', error);
-  //         throw error; // re-throw the error to be caught by the caller
-  //     }
-  // };
-
-  // fetchUsername(userId).then((username) => {
-  //     console.log("this is username:", username);
-  // }).catch((error) => {
-  //     console.error('Error fetching username:', error);
-  // });
-
-  // export function Navbar({ socket }) {
-  // 	const { currentUserId } = getCurrentUserId()
-  // 	const [notificationData, setNotificationData] = useState(null);
-
-  // console.log("currentUserId:", currentUserId)
-
-  // 	useEffect(() => {
-  // 		const handleSocketMessage = (e) => {
-  // 		  let data = JSON.parse(e.data);
-  // 		  console.log("data:", data);
-  // 		  setNotificationData(data);
-  // 		};
-
-  // 		socket.addEventListener("message", handleSocketMessage);
-
-  // 		return () => {
-  // 		  socket.removeEventListener("message", handleSocketMessage);
-  // 		};
-  // 	  }, [socket]);
-
+  const fetchNotifications = () => {
+    fetch(`http://localhost:8080/api/users/${currentUserId}/notifications`).then(response => {
+      if (!response.ok) {
+        throw new Error("Failed to fetch notifications");
+      }
+      return response.json();
+    }).then(data => {
+      setNotifications(data);
+    }).catch(error => {
+      console.error("Error fetching notifications:", error);
+    });
+  };
+  const handleNotificationResponse = notificationId => {
+    const updatedNotifications = notifications.filter(notification => notification.notificationId !== notificationId);
+    setNotifications(updatedNotifications);
+  };
+  const fetchUsername = async userId => {
+    if (!userId) {
+      throw new Error("Invalid userId");
+    }
+    try {
+      const response = await fetch(`http://localhost:8080/api/users/${userId}`);
+      if (!response.ok) {
+        throw new Error("Error fetching user data");
+      }
+      const data = await response.json();
+      return data.username;
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      throw error;
+    }
+  };
   const logout = async () => {
     try {
       const response = await fetch("http://localhost:8080/auth/logout", {
         method: "POST",
         credentials: "include"
       });
-      console.log(response);
       if (response.ok) {
         socket.close();
         socket.addEventListener("close", event => {
@@ -133,10 +104,10 @@ export function Navbar({
     }
   };
   if (isLoading) {
-    return /*#__PURE__*/React.createElement("div", null, "Loading..."); // Render a loading state
+    return /*#__PURE__*/React.createElement("div", null, "Loading...");
   }
   if (error) {
-    return /*#__PURE__*/React.createElement("div", null, "Error: ", error); // Render an error state
+    return /*#__PURE__*/React.createElement("div", null, "Error: ", error);
   }
   return /*#__PURE__*/React.createElement("nav", {
     className: "navbar navbar-expand-md bg-body-tertiary"
@@ -165,8 +136,8 @@ export function Navbar({
     alt: "Logo",
     className: "logo",
     style: {
-      width: '60px',
-      height: 'auto'
+      width: "60px",
+      height: "auto"
     }
   }), username && /*#__PURE__*/React.createElement("span", {
     className: "ms-2"
@@ -187,12 +158,36 @@ export function Navbar({
     href: "#",
     onClick: () => renderProfile(socket, currentUserId, true)
   }, "PROFILE")), /*#__PURE__*/React.createElement("li", {
-    className: "nav-item"
+    className: "nav-item dropdown"
   }, /*#__PURE__*/React.createElement("a", {
-    className: "nav-link",
+    className: "nav-link dropdown-toggle",
     href: "#",
-    onClick: renderNotifications
-  }, "NOTIFICATIONS")), /*#__PURE__*/React.createElement("li", {
+    id: "notificationsDropdown",
+    role: "button",
+    "data-bs-toggle": "dropdown",
+    "aria-expanded": "false",
+    onClick: () => fetchNotifications()
+  }, "NOTIFICATIONS"), /*#__PURE__*/React.createElement("ul", {
+    className: "dropdown-menu",
+    "aria-labelledby": "notificationsDropdown",
+    style: {
+      minWidth: '500px'
+    }
+  }, notifications !== null && Object.keys(notifications).length > 0 ? Object.values(notifications).map((notification, index) => /*#__PURE__*/React.createElement("li", {
+    key: index
+  }, notification.notificationType === "groupInvite" && /*#__PURE__*/React.createElement(GroupInvite, {
+    notification: notification,
+    onNotificationResponse: handleNotificationResponse
+  }), notification.notificationType === "groupRequest" && /*#__PURE__*/React.createElement(GroupRequest, {
+    notification: notification,
+    onNotificationResponse: handleNotificationResponse
+  }), notification.notificationType === "eventInvite" && /*#__PURE__*/React.createElement(EventInvite, {
+    notification: notification,
+    onNotificationResponse: handleNotificationResponse
+  }), notification.notificationType === "followRequest" && /*#__PURE__*/React.createElement(FollowRequest, {
+    notification: notification,
+    onNotificationResponse: handleNotificationResponse
+  }))) : /*#__PURE__*/React.createElement("li", null, "No notifications"))), /*#__PURE__*/React.createElement("li", {
     className: "nav-item"
   }, /*#__PURE__*/React.createElement("a", {
     className: "nav-link",
@@ -217,4 +212,6 @@ export function Navbar({
       socket
     })
   }, "LOGOUT"))))));
-}
+};
+
+// export default Navbar;
