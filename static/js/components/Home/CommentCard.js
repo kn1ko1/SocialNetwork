@@ -8,23 +8,26 @@ export function CommentCard({
   comment
 }) {
   const [username, setUsername] = useState("");
+  const [imageURL, setImageURL] = useState("");
   useEffect(() => {
-    const fetchUsername = async () => {
+    const fetchUsernameandImageURL = async () => {
       try {
         const user = await fetchUserById(comment.userId);
         setUsername(user.username);
+        setImageURL(user.imageURL);
+        console.log("this should be the imageURL used for picture in comment card", imageURL);
       } catch (error) {
         console.error("Error fetching username:", error);
       }
     };
-    fetchUsername();
+    fetchUsernameandImageURL();
   }, [comment.userId]);
   return /*#__PURE__*/React.createElement("div", {
     className: "card mt-3"
   }, /*#__PURE__*/React.createElement("div", {
     className: "d-flex flex-start align-items-center"
   }, comment.userAvatar ? /*#__PURE__*/React.createElement("img", {
-    src: comment.userAvatar,
+    src: imageURL,
     className: "rounded-circle shadow-1-strong me-3 img-fluid rounded-circle border border-2",
     width: "60",
     height: "60",
