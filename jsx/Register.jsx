@@ -1,214 +1,438 @@
-const { useState, useEffect } = React
+const { useState } = React
+import { initializeSocket } from "./app.js"
+import { renderNavbar } from "./components/shared/Navbar.js"
+import { renderHome } from "./Home.js"
+import { renderLogin } from "./Login.js"
+
+
+export const renderRegister = () => {
+	const pageContainer = document.querySelector(".page-container")
+	ReactDOM.render(<Register />, pageContainer)
+}
+
 
 export function Register() {
-	const [email, setEmail] = useState("")
-	const [encryptedPassword, setEncryptedPassword] = useState("")
-	const [firstName, setFirstName] = useState("")
-	const [lastName, setLastName] = useState("")
-	const [dob, setDob] = useState("")
-	const [imageURL, setImageURL] = useState("")
-	const [username, setUsername] = useState("")
-	const [bio, setBio] = useState("")
-	const [isPublic, setIsPublic] = useState(true)
-	const [isRegistered, setIsRegistered] = useState(false)
+	const [formValues, setFormValues] = useState({
+		email: "",
+		password: "",
+		firstName: "",
+		lastName: "",
+		dob: "",
+		username: "",
+		bio: "",
+		isPublic: true,
+	});
+	const [selectedFile, setSelectedFile] = useState(null);
+	const [isRegistered, setIsRegistered] = useState(false);
 
 	const handleChange = (e) => {
-		setIsPublic(e.target.value === "true")
-	}
-	//this is register button
-	const submit = async (e) => {
-		e.preventDefault() // prevent reload.
+		const { name, value, type, checked } = e.target;
+		setFormValues((prevValues) => ({
+			...prevValues,
+			[name]: type === "checkbox" ? checked : value,
+		}));
+	};
 
-		// Create new user as JS object.
-		const newUser = {
-			email,
-			encryptedPassword,
-			firstName,
-			lastName,
-			dob,
-			imageURL,
-			username,
-			bio,
-			isPublic,
-		}
+	const handleFileChange = (e) => {
+		setSelectedFile(e.target.files[0]);
+	};
+
+	const handleSelectFile = () => {
+		const fileInput = document.getElementById("fileInput");
+		fileInput.click();
+	};
+
+	const submit = async (e) => {
+		e.preventDefault(); // prevent reload.
 
 		try {
+			const formData = new FormData();
+			Object.keys(formValues).forEach((key) => {
+				formData.append(key, formValues[key]);
+			});
+			if (selectedFile) {
+				formData.append("image", selectedFile);
+			}
+			console.log("formData:", formData)
 			// Send user data to backend
 			const response = await fetch("http://localhost:8080/auth/registration", {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(newUser),
-			})
+				body: formData,
+			});
 
 			if (!response.ok) {
-				throw new Error("Invalid credentials")
+				throw new Error("Invalid credentials");
 			}
 
-			//takes response from backend and processes
-			const data = await response.json()
+			const data = await response.json();
 			if (data.success) {
-				setIsRegistered(true)
+				setIsRegistered(true);
 			} else {
-				throw new Error("Invalid credentials")
+				throw new Error("Invalid credentials");
 			}
 		} catch (error) {
-			throw new Error("Invalid credentials")
+			console.error("Registration error:", error);
 		}
-	}
+	};
 
-	//if credentials frontend succesfully create a new user then we render home
 	if (isRegistered) {
-		socket = new WebSocket("ws://localhost:8080/ws")
-		socket.onopen = function (event) {
-			console.log("WebSocket connection established.")
-		}
-		renderNavbar()
-		renderHome()
+		const socket = initializeSocket();
+		renderNavbar({ socket });
+		renderHome({ socket });
 	}
 
-	//this is the login button, when pressed will serve login form
+	
 
-	return (
-		<div className="container login-container">
-			<h1 className="h3 mb-3 fw-normal login-text">register</h1>
-			<form onSubmit={submit}>
-				<div className="mb-3">
-					<label htmlFor="floatingInput">Email address</label>
+		return (
+			<div className="container login-container">
+
+						<div className="logo-container">
+    <img src="../static/sphere-logo.png" alt="Logo" className="logo" />
+   
+</div>
+
+			  <h1 className="h3 mb-3 fw-normal login-text">Register</h1>
+			  <form onSubmit={submit}>
+		  
+				<div className="row mb-3">
+				  <div className="col-md-6">
+					<label htmlFor="floatingInput" className="form-label">Email address</label>
 					<input
-						required
-						type="email"
-						className="form-control"
-						id="floatingInput"
-						placeholder="name@example.com"
-						onChange={(e) => setEmail(e.target.value)}
+					  required
+					  type="email"
+					  className="form-control"
+					  id="floatingInput"
+					  name="email"
+					  placeholder="name@example.com"
+					  onChange={handleChange}
 					/>
-				</div>
-
-				<div className="mb-3">
-					<label htmlFor="regpassword">Password</label>
+				  </div>
+				  <div className="col-md-6">
+					<label htmlFor="regpassword" className="form-label">Password</label>
 					<input
-						required
-						type="password"
-						className="form-control reginput"
-						id="regpassword"
-						placeholder="Password"
-						onChange={(e) => setEncryptedPassword(e.target.value)}
+					  required
+					  type="password"
+					  className="form-control"
+					  id="regpassword"
+					  name="password"
+					  placeholder="Password"
+					  onChange={handleChange}
 					/>
+				  </div>
 				</div>
-
-				<div className="mb-3">
-					<label htmlFor="firstName">First Name</label>
+		  
+				<div className="row mb-3">
+				  <div className="col-md-6">
+					<label htmlFor="firstName" className="form-label">First Name</label>
 					<input
-						required
-						type="text"
-						className="form-control reginput"
-						id="firstName"
-						placeholder="John"
-						onChange={(e) => setFirstName(e.target.value)}
+					  required
+					  type="text"
+					  className="form-control"
+					  id="firstName"
+					  name="firstName"
+					  placeholder="John"
+					  onChange={handleChange}
 					/>
-				</div>
-
-				<div className="mb-3">
-					<label htmlFor="lastName">Last Name</label>
+				  </div>
+				  <div className="col-md-6">
+					<label htmlFor="lastName" className="form-label">Last Name</label>
 					<input
-						required
-						type="text"
-						className="form-control reginput"
-						id="lastName"
-						placeholder="Doe"
-						onChange={(e) => setLastName(e.target.value)}
+					  required
+					  type="text"
+					  className="form-control"
+					  id="lastName"
+					  name="lastName"
+					  placeholder="Doe"
+					  onChange={handleChange}
 					/>
+				  </div>
 				</div>
-
-				<div className="mb-3">
-					<label htmlFor="dob">Date of Birth</label>
+		  
+				<div className="row mb-3">
+				  <div className="col-md-6">
+					<label htmlFor="dob" className="form-label">Date of Birth</label>
 					<input
-						required
-						type="date"
-						className="form-control reginput"
-						id="dob"
-						placeholder="16/01/1998"
-						onChange={(e) => setDob(e.target.value)}
+					  required
+					  type="date"
+					  className="form-control"
+					  id="dob"
+					  name="dob"
+					  placeholder="16/01/1998"
+					  onChange={handleChange}
 					/>
-				</div>
-
-				<div className="mb-3">
-					<label htmlFor="imageURL">ImageURL</label>
+				  </div>
+				  <div className="col-md-6">
+					<label htmlFor="username" className="form-label">Username</label>
 					<input
-						type="text"
-						className="form-control reginput"
-						id="imageURL"
-						placeholder="https://..."
-						onChange={(e) => setImageURL(e.target.value)}
+					  type="text"
+					  className="form-control"
+					  id="username"
+					  name="username"
+					  placeholder="Johnny"
+					  onChange={handleChange}
 					/>
+				  </div>
 				</div>
+		  
+				<div className="row mb-3">
+				  <div className="col-md-6">
+					<label htmlFor="image" className="form-label">Avatar Image (optional)</label>
+					<div className="input-group">
+					  <input
+						type="file"
+						id="fileInput"
+						accept="image/*"
+						style={{ display: "none" }}
+						onChange={handleFileChange}
+					  />
+					<button
+	 					class="btn btn-primary rounded"
+						type="button"
+	 					onClick={handleSelectFile}
+	 				>
+	 					Select File
+					</button>
+					  <span className="input-group-text" style={{backgroundColor: "transparent", border: "none"}}>{selectedFile ? selectedFile.name : "No file selected"}</span>
+					</div>
+				  </div>
+{/* 
+				//  <div className="mb-3">
+	// 				<label htmlFor="image">Avatar Image (optional)</label>
+	// 				<button
+	// 					type="button"
+	// 					className="btn btn-primary"
+	// 					onClick={handleSelectFile}
+	// 				>
+	// 					Select File
+	// 				</button>
+	// 				<span>{selectedFile ? selectedFile.name : "No file selected"}</span>
+	// 				<input
+	// 					type="file"
+	// 					id="fileInput"
+	// 					accept="image/*"
+	// 					style={{ display: "none" }}
+	// 					onChange={handleFileChange}
+	// 				/>
+	// 			</div> */}
 
-				<div className="mb-3">
-					<label htmlFor="username">Username</label>
+				  <div className="col-md-6">
+					<div className="mb-3">
+					  <label className="form-label">Profile Visibility</label>
+					  <div className="form-check">
+						<input
+						  className="form-check-input"
+						  type="radio"
+						  id="public-status"
+						  name="isPublic"
+						  value={true}
+						  checked={formValues.isPublic === true}
+						  onChange={handleChange}
+						/>
+						<label className="form-check-label" htmlFor="public-status">
+						  Public
+						</label>
+					  </div>
+					  <div className="form-check">
+						<input
+						  className="form-check-input"
+						  type="radio"
+						  id="private-status"
+						  name="isPublic"
+						  value={false}
+						  checked={formValues.isPublic === false}
+						  onChange={handleChange}
+						/>
+						<label className="form-check-label" htmlFor="private-status">
+						  Private
+						</label>
+					  </div>
+					</div>
+				  </div>
+				</div>
+		  
+				<div className="row mb-3">
+				  <div className="col-md-12">
+					<label htmlFor="bio" className="form-label">About me (optional)</label>
 					<input
-						type="text"
-						className="form-control reginput"
-						id="username"
-						placeholder="Johnny"
-						onChange={(e) => setUsername(e.target.value)}
+					  type="text"
+					  className="form-control"
+					  id="bio"
+					  name="bio"
+					  placeholder="About Me"
+					  onChange={handleChange}
 					/>
+				  </div>
 				</div>
-
-				<div className="form-check">
-					<input
-						className="form-check-input"
-						type="radio"
-						id="public-status"
-						value={true}
-						name="status"
-						checked={isPublic === true}
-						onChange={handleChange}
-					/>
-					<label className="form-check-label" htmlFor="public-status">
-						Public
-					</label>
-				</div>
-
-				<div className="form-check">
-					<input
-						className="form-check-input"
-						type="radio"
-						id="private-status"
-						value={false}
-						name="status"
-						checked={isPublic === false}
-						onChange={handleChange}
-					/>
-					<label className="form-check-label" htmlFor="private-status">
-						Private
-					</label>
-				</div>
-
-				<div className="mb-3">
-					<label htmlFor="about">About me</label>
-					<input
-						type="text"
-						className="form-control reginput"
-						id="bio"
-						placeholder="About Me"
-						cols="30"
-						rows="10"
-						onChange={(e) => setBio(e.target.value)}
-					/>
-				</div>
-
-				<button className="btn btn-primary" type="submit">
-					Register
-				</button>
-			</form>
-			<div className="error-message"></div>
-			<br /> {/* Add a line break for spacing */}
-			<div className="mb3">
+		  
+				<button className="btn btn-primary" type="submit">Register</button>
+		  
+			  </form>
+		  
+			  <div className="error-message"></div>
+			  <br />
+		  
+			  <div className="mb-3">
 				<span className="login-text">Already have an account? &nbsp;</span>
-				<button type="submit" className="btn btn-primary" onClick={renderLogin}>
-					Log in
-				</button>
+				<button type="button" className="btn btn-primary" onClick={renderLogin}>Log in</button>
+			  </div>
 			</div>
-		</div>
-	)
+		  );
+
+	// 	<div className="container login-container">
+	// 		<h1 className="h3 mb-3 fw-normal login-text">Register</h1>
+	// 		<form onSubmit={submit}>
+	// 			<div className="mb-3">
+	// 				<label htmlFor="floatingInput">Email address</label>
+	// 				<input
+	// 					required
+	// 					type="email"
+	// 					className="form-control"
+	// 					id="floatingInput"
+	// 					name="email"
+	// 					placeholder="name@example.com"
+	// 					onChange={handleChange}
+	// 				/>
+	// 			</div>
+
+	// 			<div className="mb-3">
+	// 				<label htmlFor="regpassword">Password</label>
+	// 				<input
+	// 					required
+	// 					type="password"
+	// 					className="form-control reginput"
+	// 					id="regpassword"
+	// 					name="password"
+	// 					placeholder="Password"
+	// 					onChange={handleChange}
+	// 				/>
+	// 			</div>
+
+	// 			<div className="mb-3">
+	// 				<label htmlFor="firstName">First Name</label>
+	// 				<input
+	// 					required
+	// 					type="text"
+	// 					className="form-control reginput"
+	// 					id="firstName"
+	// 					name="firstName"
+	// 					placeholder="John"
+	// 					onChange={handleChange}
+	// 				/>
+	// 			</div>
+
+	// 			<div className="mb-3">
+	// 				<label htmlFor="lastName">Last Name</label>
+	// 				<input
+	// 					required
+	// 					type="text"
+	// 					className="form-control reginput"
+	// 					id="lastName"
+	// 					name="lastName"
+	// 					placeholder="Doe"
+	// 					onChange={handleChange}
+	// 				/>
+	// 			</div>
+
+	// 			<div className="mb-3">
+	// 				<label htmlFor="dob">Date of Birth</label>
+	// 				<input
+	// 					required
+	// 					type="date"
+	// 					className="form-control reginput"
+	// 					id="dob"
+	// 					name="dob"
+	// 					placeholder="16/01/1998"
+	// 					onChange={handleChange}
+	// 				/>
+	// 			</div>
+
+	// 			<div className="mb-3">
+	// 				<label htmlFor="image">Avatar Image (optional)</label>
+	// 				<button
+	// 					type="button"
+	// 					className="btn btn-primary"
+	// 					onClick={handleSelectFile}
+	// 				>
+	// 					Select File
+	// 				</button>
+	// 				<span>{selectedFile ? selectedFile.name : "No file selected"}</span>
+	// 				<input
+	// 					type="file"
+	// 					id="fileInput"
+	// 					accept="image/*"
+	// 					style={{ display: "none" }}
+	// 					onChange={handleFileChange}
+	// 				/>
+	// 			</div>
+
+	// 			<div className="mb-3">
+	// 				<label htmlFor="username">Username</label>
+	// 				<input
+	// 					type="text"
+	// 					className="form-control reginput"
+	// 					id="username"
+	// 					name="username"
+	// 					placeholder="Johnny"
+	// 					onChange={handleChange}
+	// 				/>
+	// 			</div>
+
+	// 			<div className="form-check">
+	// 				<input
+	// 					className="form-check-input"
+	// 					type="radio"
+	// 					id="public-status"
+	// 					name="isPublic"
+	// 					value={true}
+	// 					checked={formValues.isPublic === true}
+	// 					onChange={handleChange}
+	// 				/>
+	// 				<label className="form-check-label" htmlFor="public-status">
+	// 					Public
+	// 				</label>
+	// 			</div>
+
+	// 			<div className="form-check">
+	// 				<input
+	// 					className="form-check-input"
+	// 					type="radio"
+	// 					id="private-status"
+	// 					name="isPublic"
+	// 					value={false}
+	// 					checked={formValues.isPublic === false}
+	// 					onChange={handleChange}
+	// 				/>
+	// 				<label className="form-check-label" htmlFor="private-status">
+	// 					Private
+	// 				</label>
+	// 			</div>
+
+	// 			<div className="mb-3">
+	// 				<label htmlFor="about">About me (optional)</label>
+	// 				<input
+	// 					type="text"
+	// 					className="form-control reginput"
+	// 					id="bio"
+	// 					name="bio"
+	// 					placeholder="About Me"
+	// 					cols="30"
+	// 					rows="10"
+	// 					onChange={handleChange}
+	// 				/>
+	// 			</div>
+
+	// 			<button className="btn btn-primary" type="submit">
+	// 				Register
+	// 			</button>
+	// 		</form>
+	// 		<div className="error-message"></div>
+	// 		<br />
+	// 		<div className="mb3">
+	// 			<span className="login-text">Already have an account? &nbsp;</span>
+	// 			<button type="submit" className="btn btn-primary" onClick={renderLogin}>
+	// 				Log in
+	// 			</button>
+	// 		</div>
+	// 	</div>
+	// );
 }

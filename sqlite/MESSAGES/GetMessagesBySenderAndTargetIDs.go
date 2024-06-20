@@ -13,7 +13,7 @@ func GetMessagesBySenderAndTargetIds(database *sql.DB, senderId, targetId int) (
 	FROM MESSAGES
 	WHERE (SenderId = (?) AND TargetId = (?))
 	OR (SenderId = (?) AND TargetId = (?))
-	ORDER BY timestamp ASC;`
+	ORDER BY CreatedAt Desc;`
 
 	var messages []models.Message
 	rows, err := database.Query(queryStr, senderId, targetId, targetId, senderId)

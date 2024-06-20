@@ -43,7 +43,6 @@ func (h *GroupUsersHandler) post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 		return
 	}
-
 	ctime := time.Now().UTC().UnixMilli()
 	groupUser.CreatedAt = ctime
 	groupUser.UpdatedAt = ctime

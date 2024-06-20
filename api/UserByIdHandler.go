@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"socialnetwork/imageProcessing"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
@@ -51,22 +52,22 @@ func (h *UserByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	userUsers, err := h.Repo.GetUserById(userId)
+	user, err := h.Repo.GetUserById(userId)
 	if err != nil {
 		utils.HandleError("Failed to get Users in GetUserById. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(userUsers)
+	w.WriteHeader(http.StatusOK)
+
+	err = json.NewEncoder(w).Encode(user)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Here is the User"))
 }
 
 func (h *UserByIdHandler) put(w http.ResponseWriter, r *http.Request) {
@@ -101,7 +102,7 @@ func (h *UserByIdHandler) put(w http.ResponseWriter, r *http.Request) {
 	if file != nil {
 		defer file.Close()
 		var ImageProcessingrErr error
-		user.ImageURL, ImageProcessingrErr = ImageProcessing(w, r, file, *fileHeader)
+		user.ImageURL, ImageProcessingrErr = imageProcessing.ImageProcessing(w, r, file, *fileHeader)
 		if ImageProcessingrErr != nil {
 			utils.HandleError("Error with ImageHandler", ImageProcessingrErr)
 		}

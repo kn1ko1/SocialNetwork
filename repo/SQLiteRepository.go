@@ -65,9 +65,7 @@ func (r *SQLiteRepository) CreateUser(user models.User) (models.User, error) {
 func (r *SQLiteRepository) GetAllUsers() ([]models.User, error) {
 	return users.GetAllUsers(r.identityDb)
 }
-func (r *SQLiteRepository) GetAllUsersTransport() ([]transport.UserTransport, error) {
-	return sqlite.GetAllUsersTransport(r.identityDb)
-}
+
 func (r *SQLiteRepository) GetUsersByPublic() ([]models.User, error) {
 	return users.GetUsersByPublic(r.identityDb)
 }
@@ -366,8 +364,8 @@ func (r *SQLiteRepository) GetNotificationById(notificationId int) (models.Notif
 	return notifications.GetNotificationById(r.businessDb, notificationId)
 }
 
-func (r *SQLiteRepository) GetNotificationsByUserId(userId int) ([]models.Notification, error) {
-	return notifications.GetNotificationsByUserId(r.businessDb, userId)
+func (r *SQLiteRepository) GetNotificationsByTargetId(targetId int) ([]models.Notification, error) {
+	return notifications.GetNotificationsByTargetId(r.businessDb, targetId)
 }
 func (r *SQLiteRepository) UpdateNotification(notification models.Notification) (models.Notification, error) {
 	return notifications.UpdateNotification(r.businessDb, notification)

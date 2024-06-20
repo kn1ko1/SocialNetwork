@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"socialnetwork/auth"
+	"socialnetwork/imageProcessing"
 	"socialnetwork/models"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
@@ -82,7 +83,7 @@ func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
 	if file != nil {
 
 		defer file.Close()
-		imageURL, err = ImageProcessing(w, r, file, *fileHeader)
+		imageURL, err = imageProcessing.ImageProcessing(w, r, file, *fileHeader)
 		if err != nil {
 			utils.HandleError("Error with ImageHandler", err)
 			// http.Error(w, "Failed to process image", http.StatusInternalServerError)

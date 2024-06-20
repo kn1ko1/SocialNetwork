@@ -13,15 +13,19 @@ func GetPostsPrivateWithComments(database *sql.DB, userId int) ([]transport.Post
 	var result []transport.PostWithComments
 
 	query := `
-        SELECT p.PostId, p.Body, p.CreatedAt, p.GroupId, p.ImageURL, p.Privacy, p.UpdatedAt, p.UserId
-        FROM POSTS p
-        JOIN USER_USERS uu ON uu.SubjectId = p.UserId
-        WHERE uu.FollowerId = ? AND p.Privacy = 'private'
-		ORDER BY 
-    	p.CreatedAt DESC;
+	SELECT p.PostId, p.Body, p.CreatedAt, p.GroupId, p.ImageURL, p.Privacy, p.UpdatedAt, p.UserId
+	FROM POSTS p
+	WHERE p.Privacy = 'private' AND (
+		p.UserId = ? OR p.UserId IN (
+			SELECT uu.SubjectId
+			FROM USER_USERS uu
+			WHERE uu.FollowerId = ?
+		)
+	)
+	ORDER BY p.CreatedAt DESC;
     `
 
-	rows, err := database.Query(query, userId)
+	rows, err := database.Query(query, userId, userId)
 	if err != nil {
 		// no entries found in DB
 		return result, nil

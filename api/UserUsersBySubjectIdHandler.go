@@ -28,7 +28,7 @@ func (h *UserUsersBySubjectIdHandler) ServeHTTP(w http.ResponseWriter, r *http.R
 	// Switch on the Request method, call the correct subroutine...
 	switch r.Method {
 
-	case http.MethodPost:
+	case http.MethodGet:
 		h.get(w, r)
 		return
 	case http.MethodDelete:
@@ -43,7 +43,7 @@ func (h *UserUsersBySubjectIdHandler) ServeHTTP(w http.ResponseWriter, r *http.R
 
 func (h *UserUsersBySubjectIdHandler) get(w http.ResponseWriter, r *http.Request) {
 	fields := strings.Split(r.URL.Path, "/")
-	subjectId, subjectIdErr := strconv.Atoi(fields[len(fields)-1])
+	subjectId, subjectIdErr := strconv.Atoi(fields[len(fields)-2])
 	if subjectIdErr != nil {
 		utils.HandleError("Problem with AtoI subjectId. ", subjectIdErr)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

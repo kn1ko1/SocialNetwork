@@ -139,10 +139,6 @@ func (r *DummyRepository) GetAllUsers() ([]models.User, error) {
 	return users, nil
 }
 
-func (r *DummyRepository) GetAllUsersTransport() ([]transport.UserTransport, error) {
-	var userTransports []transport.UserTransport
-	return userTransports, errors.New("not yet implimented")
-}
 func (r *DummyRepository) GetUserById(userId int) (models.User, error) {
 	user := validUser
 	user.UserId = userId
@@ -624,7 +620,6 @@ func (r *DummyRepository) GetGroupUser(groupUserId int) (models.GroupUser, error
 }
 func (r *DummyRepository) GetGroupUsersByUserId(userId int) ([]models.GroupUser, error) {
 	var groupUsers []models.GroupUser
-
 	for i := 0; i < rand.Intn(6); i++ {
 		groupUser := validGroupUser
 		groupUser.UserId = userId
@@ -677,13 +672,13 @@ func (r *DummyRepository) GetNotificationById(notificationId int) (models.Notifi
 
 	return notification, nil
 }
-func (r *DummyRepository) GetNotificationsByUserId(userId int) ([]models.Notification, error) {
+func (r *DummyRepository) GetNotificationsByTargetId(targetId int) ([]models.Notification, error) {
 
 	notifications := make([]models.Notification, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
 		n := validNotification
 		n.NotificationId = i + 1
-		n.TargetId = userId
+		n.TargetId = targetId
 	}
 	return notifications, nil
 }

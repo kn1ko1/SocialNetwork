@@ -13,7 +13,7 @@ type User struct {
 	CreatedAt         int64  `json:"createdAt"`
 	DOB               int64  `json:"dob"`
 	Email             string `json:"email"`
-	EncryptedPassword string `json:"encryptedPassword"`
+	EncryptedPassword string `json:"-"`
 	FirstName         string `json:"firstName"`
 	ImageURL          string `json:"imageURL"`
 	IsPublic          bool   `json:"isPublic"`

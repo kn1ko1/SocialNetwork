@@ -33,7 +33,6 @@ func GetGroupUsersByUserId(database *sql.DB, userId int) ([]models.GroupUser, er
 
 		groupUsers = append(groupUsers, groupUser)
 	}
-
 	if err := rows.Err(); err != nil {
 		utils.HandleError("Error iterating over rows in GetGroupUsersByUserId.", err)
 		return nil, err

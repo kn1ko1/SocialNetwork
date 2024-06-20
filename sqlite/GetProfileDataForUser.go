@@ -45,7 +45,7 @@ func GetProfileDataForUser(identityDb *sql.DB, businessDb *sql.DB, userId int) (
 
 	// var userFollowersData []transport.UserTransport
 	for i := 0; i < len(followerUserUsers); i++ {
-		userFollowerData, err := GetUsernameByUserId(identityDb, followerUserUsers[i].FollowerId)
+		userFollowerData, err := users.GetUserById(identityDb, followerUserUsers[i].FollowerId)
 		if err != nil {
 			utils.HandleError("Error in GetProfileDataForUser", err)
 		}
@@ -59,7 +59,7 @@ func GetProfileDataForUser(identityDb *sql.DB, businessDb *sql.DB, userId int) (
 	}
 	//var userFollowsData []transport.UserTransport
 	for i := 0; i < len(followsUsersUsers); i++ {
-		userFollowData, err := GetUsernameByUserId(identityDb, followsUsersUsers[i].SubjectId)
+		userFollowData, err := users.GetUserById(identityDb, followsUsersUsers[i].SubjectId)
 		if err != nil {
 			utils.HandleError("Error in GetProfileDataForUser", err)
 		}

@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"socialnetwork/repo"
 	"socialnetwork/utils"
@@ -45,7 +46,7 @@ func (h *MessagesByTypeAndTargetIdHandler) get(w http.ResponseWriter, r *http.Re
 		http.Error(w, "internal server errror", http.StatusInternalServerError)
 		return
 	}
-
+	log.Println("[api/MessagesByTypeAndTargetIdHandler]:", messageType, targetId)
 	messages, err := h.Repo.GetMessagesByMessageTypeandTargetId(messageType, targetId)
 	if err != nil {
 		utils.HandleError("Failed to get message in GetMessagesByTypeAndTargetIdHandler. ", err)

@@ -6,9 +6,11 @@ import (
 	"net/http"
 	"socialnetwork/models"
 	"socialnetwork/repo"
+	"socialnetwork/transport"
 	"socialnetwork/utils"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // Allowed methods: GET, PUT, DELETE
@@ -54,6 +56,7 @@ func (h *NotificationByIdHandler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("Received delete request for notificationId:", notificationId)
+
 	notification, err := h.Repo.GetNotificationById(notificationId)
 	if err != nil {
 		utils.HandleError("Failed to get notification in GetNotificationByIdHandler. ", err)
@@ -117,12 +120,64 @@ func (h *NotificationByIdHandler) delete(w http.ResponseWriter, r *http.Request)
 	}
 	log.Println("Received delete request for notificationId:", notificationId)
 
-	err := h.Repo.DeleteNotificationById(notificationId)
+	ctime := time.Now().UTC().UnixMilli()
+
+	var notificationResponse transport.NotificationResponse
+
+	err := json.NewDecoder(r.Body).Decode(&notificationResponse)
+	if err != nil {
+		utils.HandleError("Failed to decode request body:", err)
+		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+		return
+	}
+
+	log.Println("[api/NotificationById] Response:", notificationResponse)
+
+	if notificationResponse.Reply == "confirm" {
+		switch notificationResponse.Notification.NotificationType {
+		case "groupInvite":
+			groupUser := models.GroupUser{
+				CreatedAt: ctime,
+				GroupId:   notificationResponse.Notification.ObjectId,
+				UpdatedAt: ctime,
+				UserId:    notificationResponse.Notification.TargetId,
+			}
+			h.Repo.CreateGroupUser(groupUser)
+		case "groupRequest":
+			groupUser := models.GroupUser{
+				CreatedAt: ctime,
+				GroupId:   notificationResponse.Notification.ObjectId,
+				UpdatedAt: ctime,
+				UserId:    notificationResponse.Notification.SenderId,
+			}
+			h.Repo.CreateGroupUser(groupUser)
+		case "eventInvite":
+			eventUser := models.EventUser{
+				CreatedAt: ctime,
+				EventId:   notificationResponse.Notification.ObjectId,
+				IsGoing:   true,
+				UpdatedAt: ctime,
+				UserId:    notificationResponse.Notification.TargetId,
+			}
+			h.Repo.CreateEventUser(eventUser)
+		case "followRequest":
+			userUser := models.UserUser{
+				CreatedAt:  ctime,
+				FollowerId: notificationResponse.Notification.SenderId,
+				UpdatedAt:  ctime,
+				SubjectId:  notificationResponse.Notification.TargetId,
+			}
+			h.Repo.CreateUserUser(userUser)
+		}
+	}
+
+	err = h.Repo.DeleteNotificationById(notificationId)
 	if err != nil {
 		utils.HandleError("Failed to delete Notifications. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
+	// Send a success response
+	w.WriteHeader(http.StatusNoContent)
+	w.Write([]byte("Notification deleted successfully"))
 }

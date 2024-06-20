@@ -8,7 +8,7 @@ import (
 
 func TestNotificationByUserIdHandlerValidRequestExpectPass_Get(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		handler := NewNotificationByUserIdHandler(R)
+		handler := NewNotificationsByUserIdHandler(R)
 		userId := RandomNumberStr
 
 		URL := "/api/notifications/" + userId
@@ -33,7 +33,7 @@ func TestNotificationByUserIdHandlerValidRequestExpectPass_Get(t *testing.T) {
 }
 
 func TestNotificationByUserIdHandlerValidRequestExpectPass_Post(t *testing.T) {
-	handler := NewNotificationByUserIdHandler(R)
+	handler := NewNotificationsByUserIdHandler(R)
 	userId := RandomNumberStr
 
 	URL := "/api/notifications/" + userId
@@ -57,7 +57,7 @@ func TestNotificationByUserIdHandlerValidRequestExpectPass_Post(t *testing.T) {
 }
 
 func TestNotificationByUserIdHandlerValidRequestExpectPass_Put(t *testing.T) {
-	handler := NewNotificationByUserIdHandler(R)
+	handler := NewNotificationsByUserIdHandler(R)
 	userId := RandomNumberStr
 
 	URL := "/api/notifications/" + userId
