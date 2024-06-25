@@ -1,6 +1,6 @@
 import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js";
-import { PostCard } from "./components/shared/PostCard.js";
 import { FollowButton } from "./components/shared/FollowButton.js";
+import { PostCardProfile } from "./components/Profile/PostCardProfile.js";
 const {
   useState,
   useEffect
@@ -41,15 +41,9 @@ export function Profile({
           promises.push(fetch(`http://localhost:8080/api/users/${userId}/followedUsers`));
           promises.push(fetch(`http://localhost:8080/api/users/${userId}/followerUsers`));
           const results = await Promise.all(promises);
-
-          // const userDataResponse = results[0];
           const userPostResponse = results[0];
           const usersIFollowResponse = results[1];
           const usersFollowMeResponse = results[2];
-
-          // if (!userDataResponse.ok) {
-          // 	throw new Error('Failed to fetch user profile');
-          // }
           if (!userPostResponse.ok) {
             throw new Error('Failed to fetch user posts');
           }
@@ -213,9 +207,8 @@ export function Profile({
     id: "myPostsData"
   }, userPostData.map(post => /*#__PURE__*/React.createElement("div", {
     key: post.postId
-  }, /*#__PURE__*/React.createElement(PostCard, {
-    post: post,
-    showCommentForm: false
+  }, /*#__PURE__*/React.createElement(PostCardProfile, {
+    post: post
   })))))), /*#__PURE__*/React.createElement("div", {
     className: "col-md-3"
   }, /*#__PURE__*/React.createElement("div", {

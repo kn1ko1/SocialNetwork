@@ -1,6 +1,6 @@
 import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js"
-import { PostCard } from "./components/shared/PostCard.js"
 import { FollowButton } from "./components/shared/FollowButton.js"
+import { PostCardProfile } from "./components/Profile/PostCardProfile.js"
 const { useState, useEffect } = React
 
 export const renderProfile = (socket, userId, isEditable) => {
@@ -39,14 +39,10 @@ export function Profile({ socket, userId, isEditable }) {
 
 					const results = await Promise.all(promises);
 
-					// const userDataResponse = results[0];
 					const userPostResponse = results[0]
 					const usersIFollowResponse = results[1];
 					const usersFollowMeResponse = results[2];
 
-					// if (!userDataResponse.ok) {
-					// 	throw new Error('Failed to fetch user profile');
-					// }
 					if (!userPostResponse.ok) {
 						throw new Error('Failed to fetch user posts');
 					}
@@ -269,7 +265,7 @@ export function Profile({ socket, userId, isEditable }) {
 					<div id="myPostsData">
 						{userPostData.map((post) => (
 							<div key={post.postId}>
-								<PostCard post={post} showCommentForm={false} />
+								<PostCardProfile post={post} />
 							</div>
 						))}
 					</div>

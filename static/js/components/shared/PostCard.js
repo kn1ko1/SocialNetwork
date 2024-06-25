@@ -2,8 +2,7 @@ import { CommentCard } from '../Home/CommentCard.js';
 import { formattedDate } from './FormattedDate.js';
 import { renderProfile } from '../../Profile.js';
 const {
-  useState,
-  useEffect
+  useState
 } = React;
 const postCardStyle = {
   maxWidth: '600px',
