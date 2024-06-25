@@ -91,6 +91,13 @@ export function Chat({ socket }) {
 
 
     const handleUserClick = async (user) => {
+        setSelectedUser(user);
+        setMessageCode(2);
+        setMessageType("users");
+        setTargetId(user.userId);
+        setSelectedGroup(null); // Clear the selected group when selecting a user
+        setChatboxVisible(true);
+
         const messagesResponse = await fetch(`http://localhost:8080/api/users/${currentUserId}/messages/${user.userId}`)
         if (!messagesResponse.ok) {
             throw new Error(`Failed to fetch messages between user ${currentUserId} and user ${user.userId}`);
@@ -104,25 +111,37 @@ export function Chat({ socket }) {
 
         // Add new messages to chat history
         messages.forEach(message => {
-            const messageCard = createMessageCard(user, message);
+            const messageCard = createMessageCard(message);
             chatHistory.appendChild(messageCard);
         });
 
-        setSelectedUser(user);
-        setMessageCode(2);
-        setMessageType("users");
-        setTargetId(user.userId);
-        setSelectedGroup(null); // Clear the selected group when selecting a user
-        setChatboxVisible(true);
+       
     };
 
-    const handleGroupClick = (group) => {
+    const handleGroupClick = async (group) => {
         setSelectedGroup(group);
         setMessageCode(1);
         setMessageType("groups");
         setTargetId(group.groupId);
         setSelectedUser(null); // Clear the selected user when selecting a group
         setChatboxVisible(true);
+
+        const messagesResponse = await fetch(`http://localhost:8080/api/groups/${group.groupId}/messages`)
+        if (!messagesResponse.ok) {
+            throw new Error(`Failed to fetch messages for group ${group.groupId}`);
+        }
+        const messages = await messagesResponse.json();
+        console.log("Messages:", messages)
+
+        let chatHistory = document.getElementById("chatHistory")
+        // Clear the chat history
+        chatHistory.innerHTML = "";
+
+        // Add new messages to chat history
+        messages.forEach(message => {
+            const messageCard = createMessageCard(message);
+            chatHistory.appendChild(messageCard);
+        });
     };
 
     const handleSubmit = (e) => {
@@ -144,11 +163,11 @@ export function Chat({ socket }) {
         console.log("you received websocket message:", message);
         let chatHistory = document.getElementById("chatHistory")
 
-        const messageCard = createMessageCard(user, message);
+        const messageCard = createMessageCard(message);
         chatHistory.appendChild(messageCard);
     }
 
-    const createMessageCard = (user, message) => {
+    const createMessageCard = (message) => {
         const card = document.createElement("div");
         card.classList.add("card", "mb-3");
       
@@ -229,7 +248,7 @@ export function Chat({ socket }) {
                 {selectedUser && <li>Chat with {selectedUser.username}</li>}
                 {selectedGroup && <li>Chat in {selectedGroup.title}</li>}
             </ul>
-            <div id="chatHistory"></div>
+
             <form id="chatbox" onSubmit={handleSubmit} style={{ display: isChatboxVisible ? "block" : "none" }}>
                 {/* Message input */}
                 <div>
@@ -255,6 +274,7 @@ export function Chat({ socket }) {
                 {/* Send button */}
                 <button type="submit" className="btn btn-primary mt-2">Send</button>
             </form>
+            <div id="chatHistory"></div>
         </div>
     );
 }

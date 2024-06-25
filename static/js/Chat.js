@@ -85,6 +85,12 @@ export function Chat({
     setSendMessage(e.target.value);
   };
   const handleUserClick = async user => {
+    setSelectedUser(user);
+    setMessageCode(2);
+    setMessageType("users");
+    setTargetId(user.userId);
+    setSelectedGroup(null); // Clear the selected group when selecting a user
+    setChatboxVisible(true);
     const messagesResponse = await fetch(`http://localhost:8080/api/users/${currentUserId}/messages/${user.userId}`);
     if (!messagesResponse.ok) {
       throw new Error(`Failed to fetch messages between user ${currentUserId} and user ${user.userId}`);
@@ -97,23 +103,32 @@ export function Chat({
 
     // Add new messages to chat history
     messages.forEach(message => {
-      const messageCard = createMessageCard(user, message);
+      const messageCard = createMessageCard(message);
       chatHistory.appendChild(messageCard);
     });
-    setSelectedUser(user);
-    setMessageCode(2);
-    setMessageType("users");
-    setTargetId(user.userId);
-    setSelectedGroup(null); // Clear the selected group when selecting a user
-    setChatboxVisible(true);
   };
-  const handleGroupClick = group => {
+  const handleGroupClick = async group => {
     setSelectedGroup(group);
     setMessageCode(1);
     setMessageType("groups");
     setTargetId(group.groupId);
     setSelectedUser(null); // Clear the selected user when selecting a group
     setChatboxVisible(true);
+    const messagesResponse = await fetch(`http://localhost:8080/api/groups/${group.groupId}/messages`);
+    if (!messagesResponse.ok) {
+      throw new Error(`Failed to fetch messages for group ${group.groupId}`);
+    }
+    const messages = await messagesResponse.json();
+    console.log("Messages:", messages);
+    let chatHistory = document.getElementById("chatHistory");
+    // Clear the chat history
+    chatHistory.innerHTML = "";
+
+    // Add new messages to chat history
+    messages.forEach(message => {
+      const messageCard = createMessageCard(message);
+      chatHistory.appendChild(messageCard);
+    });
   };
   const handleSubmit = e => {
     e.preventDefault();
@@ -135,10 +150,10 @@ export function Chat({
     let message = JSON.parse(data.body).body;
     console.log("you received websocket message:", message);
     let chatHistory = document.getElementById("chatHistory");
-    const messageCard = createMessageCard(user, message);
+    const messageCard = createMessageCard(message);
     chatHistory.appendChild(messageCard);
   };
-  const createMessageCard = (user, message) => {
+  const createMessageCard = message => {
     const card = document.createElement("div");
     card.classList.add("card", "mb-3");
     const cardBody = document.createElement("div");
@@ -201,9 +216,7 @@ export function Chat({
       ...messageStyle,
       display: isChatboxVisible ? "block" : "none"
     }
-  }, selectedUser && /*#__PURE__*/React.createElement("li", null, "Chat with ", selectedUser.username), selectedGroup && /*#__PURE__*/React.createElement("li", null, "Chat in ", selectedGroup.title)), /*#__PURE__*/React.createElement("div", {
-    id: "chatHistory"
-  }), /*#__PURE__*/React.createElement("form", {
+  }, selectedUser && /*#__PURE__*/React.createElement("li", null, "Chat with ", selectedUser.username), selectedGroup && /*#__PURE__*/React.createElement("li", null, "Chat in ", selectedGroup.title)), /*#__PURE__*/React.createElement("form", {
     id: "chatbox",
     onSubmit: handleSubmit,
     style: {
@@ -229,5 +242,7 @@ export function Chat({
   }, "\u2764\uFE0F"))), /*#__PURE__*/React.createElement("button", {
     type: "submit",
     className: "btn btn-primary mt-2"
-  }, "Send")));
+  }, "Send")), /*#__PURE__*/React.createElement("div", {
+    id: "chatHistory"
+  }));
 }

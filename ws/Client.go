@@ -164,8 +164,16 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		if err != nil {
 			utils.HandleError("[ws/client.go] Error adding message to database in CreateMessage", err)
 		}
-
-		jsonGroupMessage, err := json.Marshal(returnGroupMessage)
+		transportMessage := transport.MessageTransport{
+			MessageId:      returnGroupMessage.MessageId,
+			Body:           returnGroupMessage.Body,
+			CreatedAt:      returnGroupMessage.CreatedAt,
+			MessageType:    returnGroupMessage.MessageType,
+			SenderUsername: c.User.Username,
+			TargetId:       returnGroupMessage.TargetId,
+			UpdatedAt:      returnGroupMessage.UpdatedAt,
+		}
+		jsonGroupMessage, err := json.Marshal(transportMessage)
 		if err != nil {
 			utils.HandleError("[ws/client.go] Error marshalling returnNotification", err)
 		}
