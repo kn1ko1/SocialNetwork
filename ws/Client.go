@@ -144,9 +144,6 @@ func (c *Client) CreateGroupAndSocketGroup(msg WebSocketMessage) {
 func (c *Client) HandleMessage(msg WebSocketMessage) {
 	switch msg.Code {
 	case GROUP_CHAT_MESSAGE:
-
-		ctime := time.Now().UTC().UnixMilli()
-
 		var message models.Message
 
 		// Handle group chat message
@@ -155,9 +152,6 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			log.Println(err.Error())
 			return
 		}
-
-		message.CreatedAt = ctime
-		message.UpdatedAt = ctime
 
 		// Store the message in the database
 		returnGroupMessage, err := c.Repo.CreateMessage(message)
@@ -193,7 +187,6 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 
 	case PRIVATE_MESSAGE:
 
-		ctime := time.Now().UTC().UnixMilli()
 		var message models.Message
 
 		// Handle private message
@@ -202,10 +195,6 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			log.Println(err.Error())
 			return
 		}
-
-		log.Println("Client.Go.  Received message", message)
-		message.CreatedAt = ctime
-		message.UpdatedAt = ctime
 
 		returnPrivateMessage, err := c.Repo.CreateMessage(message)
 		if err != nil {

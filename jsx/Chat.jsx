@@ -12,6 +12,7 @@ export const renderChat = ({ socket }) => {
 
 export function Chat({ socket }) {
     const { currentUserId } = getCurrentUserId();
+    const [currentUser, setCurrentUser] = useState({})
     const [messageCode, setMessageCode] = useState(0);
     const [messageType, setMessageType] = useState("");
     const [targetId, setTargetId] = useState(0);
@@ -60,6 +61,7 @@ export function Chat({ socket }) {
                 const usersFollowMeData = await usersFollowMeResponse.json();
                 const groupsPartOfData = await groupsPartOfResponse.json();
 
+                setCurrentUser(currentUser)
                 setGroupsPartOf(groupsPartOfData);
 
                 let uniqueUsers = null;
@@ -146,25 +148,43 @@ export function Chat({ socket }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        let bodymessage = {
+
+        let currentTimeInMilliseconds = new Date().getTime();
+       
+        let submitMessage = {
             body: sendMessage,
+            createdAt:currentTimeInMilliseconds,
             messageType: messageType,
             senderId: currentUserId,
+            senderUsername: currentUser.username,
             targetId: targetId,
+            updatedAt: currentTimeInMilliseconds,
         }
-        let obj = { code: messageCode, body: JSON.stringify(bodymessage) }
+        let obj = { code: messageCode, body: JSON.stringify(submitMessage) }
         socket.send(JSON.stringify(obj));
         setSendMessage("");
+
+        let chatHistory = document.getElementById("chatHistory")
+        const messageCard = createMessageCard(submitMessage)
+        if (chatHistory.childNodes.length > 0) {
+            chatHistory.prepend(messageCard); // Add to the start
+        } else {
+            chatHistory.appendChild(messageCard); // Add normally if length is 0
+        }
     }
 
     socket.onmessage = function (e) {
         let data = JSON.parse(e.data);
-        let message = JSON.parse(data.body).body;
+        let message = JSON.parse(data.body);
         console.log("you received websocket message:", message);
         let chatHistory = document.getElementById("chatHistory")
 
         const messageCard = createMessageCard(message);
-        chatHistory.appendChild(messageCard);
+        if (chatHistory.childNodes.length > 0) {
+            chatHistory.prepend(messageCard); // Add to the start
+        } else {
+            chatHistory.appendChild(messageCard); // Add normally if length is 0
+        }
     }
 
     const createMessageCard = (message) => {
