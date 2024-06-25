@@ -117,7 +117,7 @@ export function Chat({ socket }) {
             chatHistory.appendChild(messageCard);
         });
 
-       
+
     };
 
     const handleGroupClick = async (group) => {
@@ -150,10 +150,10 @@ export function Chat({ socket }) {
         e.preventDefault();
 
         let currentTimeInMilliseconds = new Date().getTime();
-       
+
         let submitMessage = {
             body: sendMessage,
-            createdAt:currentTimeInMilliseconds,
+            createdAt: currentTimeInMilliseconds,
             messageType: messageType,
             senderId: currentUserId,
             senderUsername: currentUser.username,
@@ -173,47 +173,50 @@ export function Chat({ socket }) {
         }
     }
 
+    // When refceiving a websocket message in chat:
     socket.onmessage = function (e) {
         let data = JSON.parse(e.data);
         let message = JSON.parse(data.body);
         console.log("you received websocket message:", message);
         let chatHistory = document.getElementById("chatHistory")
-
-        const messageCard = createMessageCard(message);
-        if (chatHistory.childNodes.length > 0) {
-            chatHistory.prepend(messageCard); // Add to the start
-        } else {
-            chatHistory.appendChild(messageCard); // Add normally if length is 0
+        if ((data.code == 1 && selectedGroup.groupId == message.targetId) || (data.code == 2 && selectedUser.username == message.senderUsername)) {
+            const messageCard = createMessageCard(message);
+            if (chatHistory.childNodes.length > 0) {
+                chatHistory.prepend(messageCard); // Add to the start
+            } else {
+                chatHistory.appendChild(messageCard); // Add normally if length is 0
+            }
         }
+       
     }
 
     const createMessageCard = (message) => {
         const card = document.createElement("div");
         card.classList.add("card", "mb-3");
-      
+
         const cardBody = document.createElement("div");
         cardBody.classList.add("card-body", "p-3");
-      
+
         const userNameElement = document.createElement("h6");
         userNameElement.classList.add("fw-bold", "mb-1");
         userNameElement.textContent = message.senderUsername
-      
+
         const messageBodyElement = document.createElement("p");
         messageBodyElement.classList.add("mb-1");
         messageBodyElement.textContent = message.body;
-      
+
         const sentAtElement = document.createElement("small");
         sentAtElement.classList.add("text-muted");
         sentAtElement.textContent = `Sent at ${formattedDate(message.createdAt)}`;
-      
+
         cardBody.appendChild(userNameElement);
         cardBody.appendChild(messageBodyElement);
         cardBody.appendChild(sentAtElement);
-      
+
         card.appendChild(cardBody);
-      
+
         return card;
-      };
+    };
 
 
     const messageStyle = {

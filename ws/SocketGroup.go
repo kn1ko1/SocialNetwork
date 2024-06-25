@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"socialnetwork/models"
+	"socialnetwork/transport"
 )
 
 // const (
@@ -53,7 +54,7 @@ func (g *SocketGroup) Run() {
 			switch msg.Code {
 
 			case GROUP_CHAT_MESSAGE:
-				var message models.Message
+				var message transport.MessageTransport
 
 				err := json.Unmarshal([]byte(msg.Body), &message)
 				if err != nil {
@@ -73,7 +74,10 @@ func (g *SocketGroup) Run() {
 				// Broadcast the message to all clients in the group.
 				if len(g.Clients) > 1 {
 					for _, c := range g.Clients {
-						c.Send(msg)
+						if c.User.Username != message.SenderUsername {
+							c.Send(msg)
+						}
+
 					}
 				}
 			case PRIVATE_MESSAGE:

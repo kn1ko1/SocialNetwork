@@ -158,16 +158,20 @@ export function Chat({
       chatHistory.appendChild(messageCard); // Add normally if length is 0
     }
   };
+
+  // When refceiving a websocket message in chat:
   socket.onmessage = function (e) {
     let data = JSON.parse(e.data);
     let message = JSON.parse(data.body);
     console.log("you received websocket message:", message);
     let chatHistory = document.getElementById("chatHistory");
-    const messageCard = createMessageCard(message);
-    if (chatHistory.childNodes.length > 0) {
-      chatHistory.prepend(messageCard); // Add to the start
-    } else {
-      chatHistory.appendChild(messageCard); // Add normally if length is 0
+    if (data.code == 1 && selectedGroup.groupId == message.targetId || data.code == 2 && selectedUser.username == message.senderUsername) {
+      const messageCard = createMessageCard(message);
+      if (chatHistory.childNodes.length > 0) {
+        chatHistory.prepend(messageCard); // Add to the start
+      } else {
+        chatHistory.appendChild(messageCard); // Add normally if length is 0
+      }
     }
   };
   const createMessageCard = message => {
