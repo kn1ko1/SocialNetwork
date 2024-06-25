@@ -1,16 +1,14 @@
-package sqlite
+package posts
 
 import (
 	"database/sql"
 	"socialnetwork/models"
-	comments "socialnetwork/sqlite/COMMENTS"
-	"socialnetwork/transport"
 	"socialnetwork/utils"
 )
 
 // GetPostsAlmostPrivateWithComments retrieves almost private posts for the provided userId along with associated comments
-func GetPostsAlmostPrivateWithComments(database *sql.DB, userId int) ([]transport.PostWithComments, error) {
-	var result []transport.PostWithComments
+func GetPostsAlmostPrivateForUserId(database *sql.DB, userId int) ([]models.Post, error) {
+	var result []models.Post
 
 	// Query to select almost private posts based on the provided userId
 	query := `
@@ -45,25 +43,6 @@ func GetPostsAlmostPrivateWithComments(database *sql.DB, userId int) ([]transpor
 			utils.HandleError("Error scanning row in GetPostsAlmostPrivate.", err)
 			return nil, err
 		}
-
-		// Get comments associated with the current post
-		comments, err := comments.GetCommentsByPostId(database, post.PostId)
-		if err != nil {
-			utils.HandleError("Error getting comments for post.", err)
-			return nil, err
-		}
-
-		// Append the post along with its comments to the result
-		postWithComments := transport.PostWithComments{
-			Post:     post,
-			Comments: comments,
-		}
-		result = append(result, postWithComments)
-	}
-
-	if err := rows.Err(); err != nil {
-		utils.HandleError("Error iterating over rows in GetPostsAlmostPrivate.", err)
-		return nil, err
 	}
 
 	return result, nil

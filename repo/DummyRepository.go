@@ -61,59 +61,6 @@ func NewDummyRepository() *DummyRepository {
 	return &DummyRepository{identityDb: identityDb, businessDb: businessDb}
 }
 
-// Home
-func (r *DummyRepository) GetHomeDataForUser(userId int) (transport.HomeModel, error) {
-	var homeModel transport.HomeModel
-
-	homeModel.AlmostPrivatePosts = make([]transport.PostWithComments, sutTableRuns)
-	for i := 0; i < sutTableRuns; i++ {
-		ap := validPost
-		ap.PostId = i + 1
-		homeModel.AlmostPrivatePosts[i].Post = ap
-		homeModel.AlmostPrivatePosts[i].Comments = make([]models.Comment, sutTableRuns)
-		for j := 0; j < sutTableRuns; j++ {
-			c := validComment
-			c.CommentId = j + 1
-			homeModel.AlmostPrivatePosts[i].Comments[j] = c
-		}
-	}
-
-	homeModel.PrivatePosts = make([]transport.PostWithComments, sutTableRuns)
-	for i := 0; i < sutTableRuns; i++ {
-		ap := validPost
-		ap.PostId = i + 1
-		homeModel.PrivatePosts[i].Post = ap
-		homeModel.PrivatePosts[i].Comments = make([]models.Comment, sutTableRuns)
-		for j := 0; j < sutTableRuns; j++ {
-			c := validComment
-			c.CommentId = j + 1
-			homeModel.PrivatePosts[i].Comments[j] = c
-		}
-	}
-
-	homeModel.PublicPostsWithComments = make([]transport.PostWithComments, sutTableRuns)
-	for i := 0; i < sutTableRuns; i++ {
-		p := validPost
-		p.PostId = i + 1
-		homeModel.PublicPostsWithComments[i].Post = p
-		homeModel.PublicPostsWithComments[i].Comments = make([]models.Comment, sutTableRuns)
-		for j := 0; j < sutTableRuns; j++ {
-			c := validComment
-			c.CommentId = j + 1
-			homeModel.PublicPostsWithComments[i].Comments[j] = c
-		}
-	}
-
-	homeModel.UserGroups = make([]models.Group, sutTableRuns)
-	for i := 0; i < sutTableRuns; i++ {
-		g := validGroup
-		g.GroupId = i + 1
-		homeModel.UserGroups[i] = g
-	}
-
-	return homeModel, nil
-}
-
 func (r *DummyRepository) GetProfileDataForUser(userId int) (transport.ProfileModel, error) {
 	var profileModel transport.ProfileModel
 	return profileModel, errors.New("not implimented yet")
@@ -205,11 +152,10 @@ func (r *DummyRepository) GetUserUsersByFollowerId(followerId int) ([]models.Use
 }
 
 func (r *DummyRepository) GetUserUserByFollowerIdAndSubjectId(followerId, subjectId int) (models.UserUser, error) {
-	var userUser models.UserUser
 
-	user := validUserUser
-	user.FollowerId = followerId
-	user.SubjectId = subjectId
+	userUser := validUserUser
+	userUser.FollowerId = followerId
+	userUser.SubjectId = subjectId
 
 	return userUser, nil
 }
@@ -275,6 +221,27 @@ func (r *DummyRepository) GetPostsByUserId(userId int) ([]models.Post, error) {
 	}
 	return posts, nil
 }
+func (r *DummyRepository) GetPostsAlmostPrivateForUserId(userId int) ([]models.Post, error) {
+	posts := make([]models.Post, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		p := validPost
+		p.UserId = userId
+		p.PostId = i + 1
+		posts[i] = p
+	}
+	return posts, nil
+}
+func (r *DummyRepository) GetPostsPrivateForUserId(userId int) ([]models.Post, error) {
+	posts := make([]models.Post, sutTableRuns)
+	for i := 0; i < sutTableRuns; i++ {
+		p := validPost
+		p.UserId = userId
+		p.PostId = i + 1
+		posts[i] = p
+	}
+	return posts, nil
+}
+
 func (r *DummyRepository) GetPostsByPrivacy(privacy string) ([]models.Post, error) {
 	posts := make([]models.Post, sutTableRuns)
 	for i := 0; i < sutTableRuns; i++ {
@@ -674,11 +641,12 @@ func (r *DummyRepository) GetNotificationById(notificationId int) (models.Notifi
 }
 func (r *DummyRepository) GetNotificationsByTargetId(targetId int) ([]models.Notification, error) {
 
-	notifications := make([]models.Notification, sutTableRuns)
+	var notifications []models.Notification
 	for i := 0; i < sutTableRuns; i++ {
 		n := validNotification
 		n.NotificationId = i + 1
 		n.TargetId = targetId
+		notifications = append(notifications, n)
 	}
 	return notifications, nil
 }

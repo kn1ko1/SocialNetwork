@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"socialnetwork/repo"
-	"socialnetwork/transport"
 	"socialnetwork/utils"
 	"strconv"
 	"strings"
@@ -55,31 +54,7 @@ func (h *MessagesByTypeAndTargetIdHandler) get(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	// Map the existing messages to the new type
-	var transportMessages []transport.MessageTransport
-	for _, message := range messages {
-
-		// Fetch the sender's username using the senderId
-		sender, err := h.Repo.GetUserById(message.SenderId)
-		if err != nil {
-			utils.HandleError("Failed to get sender in GetUserById. ", err)
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-			sender.Username = "Error Fetching Username"
-		}
-
-		transportMessage := transport.MessageTransport{
-			MessageId:      message.MessageId,
-			Body:           message.Body,
-			CreatedAt:      message.CreatedAt,
-			MessageType:    message.MessageType,
-			SenderUsername: sender.Username,
-			TargetId:       message.TargetId,
-			UpdatedAt:      message.UpdatedAt,
-		}
-		transportMessages = append(transportMessages, transportMessage)
-	}
-
-	err = json.NewEncoder(w).Encode(transportMessages)
+	err = json.NewEncoder(w).Encode(messages)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response. ", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

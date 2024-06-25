@@ -8,6 +8,8 @@ type IPosts interface {
 	GetPostById(postId int) (models.Post, error)
 	GetPostsByGroupId(groupId int) ([]models.Post, error)
 	GetPostsByUserId(userId int) ([]models.Post, error)
+	GetPostsAlmostPrivateForUserId(userId int) ([]models.Post, error)
+	GetPostsPrivateForUserId(userId int) ([]models.Post, error)
 	GetPostsByPrivacy(privacy string) ([]models.Post, error)
 	UpdatePost(post models.Post) (models.Post, error)
 	DeletePostById(postId int) error

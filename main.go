@@ -54,9 +54,12 @@ func addApiHandlers(rt *router.Router) {
 
 	postsHandler := api.NewPostsHandler(r)
 	postByIdHandler := api.NewPostByIdHandler(r)
+	publicPostsWithCommentsHandler := api.NewPublicPostsWithCommentsHandler(r)
+	postsPrivateWithCommentsHandler := api.NewPostsPrivateWithCommentsHandler(r)
+	postsAlmostPrivateWithCommentsHandler := api.NewPostsAlmostPrivateWithCommentsHandler(r)
 	// postUsersByPostIdHandler := api.NewPostUsersByPostIdHandler(r)
 	// userPostsHandler := api.NewUserPostsHandler(r)
-	// postByPrivacyHandler := api.NewPostsByPrivacyHandler(r)
+	// postsByPrivacyHandler := api.NewPostsByPrivacyHandler(r)
 	// postUserHandler := api.NewPostUsersHandler(r)
 	commentsHandler := api.NewCommentsHandler(r)
 	commentByIdHandler := api.NewCommentByIdHandler(r)
@@ -86,7 +89,6 @@ func addApiHandlers(rt *router.Router) {
 	UserUserBySubjectIdAndFollowerIdHandler := api.NewUserUserBySubjectIdAndFollowerIdHandler(r)
 
 	userIdHandler := api.NewUserIdHandler(r)
-	homeHandler := api.NewHomeHandler(r)
 	privacyHandler := api.NewPrivacyHandler(r)
 
 	// Auth Handlers
@@ -106,6 +108,9 @@ func addApiHandlers(rt *router.Router) {
 
 	rt.AddHandler(regexp.MustCompile(`^/api/posts$`), postsHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/posts/[0-9]+$`), postByIdHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/posts/public/withComments$`), publicPostsWithCommentsHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/posts/private/withComments$`), postsPrivateWithCommentsHandler)
+	rt.AddHandler(regexp.MustCompile(`^/api/posts/almostPrivate/withComments$`), postsAlmostPrivateWithCommentsHandler)
 
 	rt.AddHandler(regexp.MustCompile(`^/api/comments$`), commentsHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/comments/[0-9]+$`), commentByIdHandler)
@@ -143,7 +148,6 @@ func addApiHandlers(rt *router.Router) {
 	rt.AddHandler(regexp.MustCompile(`^/api/users/[0-9]+/userUsers/[0-9]+$`), UserUserBySubjectIdAndFollowerIdHandler)
 
 	rt.AddHandler(regexp.MustCompile(`^/api/userId$`), userIdHandler)
-	rt.AddHandler(regexp.MustCompile(`^/api/home$`), homeHandler)
 	rt.AddHandler(regexp.MustCompile(`^/api/profile/privacy$`), privacyHandler)
 }
 

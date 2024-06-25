@@ -1,34 +1,23 @@
-import { CommentCard } from "../Home/CommentCard.js";
-import { formattedDate } from "./FormattedDate.js";
-import { renderProfile } from "../../Profile.js";
-import { fetchUserById } from "./FetchUserById.js";
+import { CommentCard } from '../Home/CommentCard.js';
+import { formattedDate } from './FormattedDate.js';
+import { renderProfile } from '../../Profile.js';
 const { useState, useEffect } = React;
 
 const postCardStyle = {
-  maxWidth: "600px",
-  background: "linear-gradient(to bottom, #c7ddef, #ffffff)", // Light blue/grey to white gradient
-  borderRadius: "10px",
-  boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)", // Optional: Add shadow for depth
-  padding: "20px",
-  margin: "auto",
-  marginBottom: "20px", // Adjust spacing between post cards
+  maxWidth: '600px',
+  background: 'linear-gradient(to bottom, #c7ddef, #ffffff)', // Light blue/grey to white gradient
+  borderRadius: '10px',
+  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth
+  padding: '20px',
+  margin: 'auto',
+  marginBottom: '20px', // Adjust spacing between post cards
 };
 
 export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
-  const [body, setBody] = useState("");
+  const [body, setBody] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
-  const [user, setUser] = useState("");
 
-  const postDate = formattedDate(post.createdAt);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const fetchedUser = await fetchUserById(post.userId);
-      setUser(fetchedUser);
-    };
-
-    fetchUserData();
-  }, []);
+  const postDate = formattedDate(post.post.createdAt);
 
   const submit = async (e) => {
     e.preventDefault(); // prevent reload.
@@ -36,26 +25,26 @@ export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
     const formData = new FormData();
 
     // Append form data
-    formData.append("body", body);
-    formData.append("postId", post.postId);
+    formData.append('body', body);
+    formData.append('postId', post.post.postId);
     if (selectedFile) {
-      formData.append("image", selectedFile);
+      formData.append('image', selectedFile);
     }
 
-    console.log("Form data being sent to backend: ", formData);
+    console.log('Form data being sent to backend: ', formData);
 
     // Send user data to golang api/PostHandler.go.
-    await fetch("http://localhost:8080/api/comments", {
-      method: "POST",
-      credentials: "include",
+    await fetch('http://localhost:8080/api/comments', {
+      method: 'POST',
+      credentials: 'include',
       body: formData,
     });
 
     // Reset the form fields to their default state
-    setBody("");
+    setBody('');
     setSelectedFile(null);
 
-    document.getElementById("commentTextArea").value = "";
+    document.getElementById('commentTextArea').value = '';
     fetchFunc();
   };
 
@@ -67,7 +56,7 @@ export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
 
   const handleSelectFile = () => {
     const commentFileInput = document.getElementById(
-      `commentFileInput${post.postId}`
+      `commentFileInput${post.post.postId}`
     );
     commentFileInput.click();
   };
@@ -78,9 +67,9 @@ export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
         <div className="d-flex flex-start align-items-center">
           {showCommentForm && (
             <>
-              {user.imageURL ? (
+              {post.user.imageURL ? (
                 <img
-                  src={user.imageURL}
+                  src={post.user.imageURL}
                   className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle"
                   width="60"
                   height="60"
@@ -101,30 +90,30 @@ export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
               <a
                 className="fw-bold text-primary mb-0 me-2"
                 href="#"
-                onClick={() => renderProfile(post.userId)}
+                onClick={() => renderProfile(post.post.userId)}
               >
-                {user.username}
+                {post.user.username}
               </a>
             </div>
             <p className="text-muted small mb-0">{postDate}</p>
           </div>
         </div>
         {/* Image, if there is one */}
-        {!post.imageURL ? null : (
+        {!post.post.imageURL ? null : (
           <p className="mt-3 mb-2 pb-1">
-            <img src={post.imageURL} className="img-fluid" />
+            <img src={post.post.imageURL} className="img-fluid" />
           </p>
         )}
         {/* Post Body */}
-        <p className="mt-3 mb-2 pb-1">{post.body}</p>
+        <p className="mt-3 mb-2 pb-1">{post.post.body}</p>
       </div>
       {showCommentForm && (
         <div
           className="card-footer py-3 border-0"
           style={{
-            backgroundColor: "#f8f9fa",
-            borderRadius: "10px",
-            border: "1px solid #ccc",
+            backgroundColor: '#f8f9fa',
+            borderRadius: '10px',
+            border: '1px solid #ccc',
           }}
         >
           <div className="d-flex flex-start w-100">
@@ -133,36 +122,36 @@ export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
                 className="form-control"
                 id="commentTextArea"
                 rows="2"
-                style={{ background: "#fff" }}
+                style={{ background: '#fff' }}
                 placeholder="Reply here..."
                 onChange={(e) => setBody(e.target.value)}
               ></textarea>
             </div>
           </div>
-          <div style={{ marginTop: "20px", paddingTop: "10px" }}>
+          <div style={{ marginTop: '20px', paddingTop: '10px' }}>
             <button
               type="button"
               className="btn btn-primary"
               onClick={handleSelectFile}
-              style={{ marginRight: "10px" }}
+              style={{ marginRight: '10px' }}
             >
               Select File
             </button>
-            <span style={{ marginRight: "10px" }}>
-              {selectedFile ? selectedFile.name : "No file selected"}
+            <span style={{ marginRight: '10px' }}>
+              {selectedFile ? selectedFile.name : 'No file selected'}
             </span>
             <input
               type="file"
-              id={`commentFileInput${post.postId}`}
+              id={`commentFileInput${post.post.postId}`}
               accept="image/*"
-              style={{ display: "none" }}
+              style={{ display: 'none' }}
               onChange={handleFileChange}
             />
             <button
               type="submit"
               className="btn btn-primary btn-sm"
               onClick={submit}
-              style={{ marginTop: "10px", marginBottom: "10px" }}
+              style={{ marginTop: '10px', marginBottom: '10px' }}
             >
               Post comment
             </button>
@@ -170,13 +159,13 @@ export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
 
           {/* If there are comments then render them, otherwise... don't */}
           {comments && comments.length > 0 && (
-            <div className="comments" style={{ marginTop: "20px" }}>
+            <div className="comments" style={{ marginTop: '20px' }}>
               <h4>Comments</h4>
               <div
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '10px',
                 }}
               >
                 {comments.map((comment) => (

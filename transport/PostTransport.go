@@ -3,6 +3,6 @@ package transport
 import "socialnetwork/models"
 
 type PostTransport struct {
-	models.Post
-	Username string `json:"username"`
+	Post models.Post `json:"post"`
+	User models.User `json:"user"`
 }

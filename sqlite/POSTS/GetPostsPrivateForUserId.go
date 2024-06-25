@@ -1,16 +1,14 @@
-package sqlite
+package posts
 
 import (
 	"database/sql"
 	"socialnetwork/models"
-	comments "socialnetwork/sqlite/COMMENTS"
-	"socialnetwork/transport"
 	"socialnetwork/utils"
 )
 
-// GetPostsPrivateWithComments retrieves private posts for the given followerId along with associated comments
-func GetPostsPrivateWithComments(database *sql.DB, userId int) ([]transport.PostWithComments, error) {
-	var result []transport.PostWithComments
+// GetPostsPrivateForUserId retrieves private posts for the given followerId along with associated comments
+func GetPostsPrivateForUserId(database *sql.DB, userId int) ([]models.Post, error) {
+	var result []models.Post
 
 	query := `
 	SELECT p.PostId, p.Body, p.CreatedAt, p.GroupId, p.ImageURL, p.Privacy, p.UpdatedAt, p.UserId
@@ -48,25 +46,6 @@ func GetPostsPrivateWithComments(database *sql.DB, userId int) ([]transport.Post
 			utils.HandleError("Error scanning row in GetPostsPrivate.", err)
 			return nil, err
 		}
-
-		// Get comments associated with the current post
-		comments, err := comments.GetCommentsByPostId(database, post.PostId)
-		if err != nil {
-			utils.HandleError("Error getting comments for post.", err)
-			return nil, err
-		}
-
-		// Append the post along with its comments to the result
-		result = append(result, transport.PostWithComments{
-			Post:     post,
-			Comments: comments,
-		})
 	}
-
-	if err := rows.Err(); err != nil {
-		utils.HandleError("Error iterating over rows in GetPostsPrivate.", err)
-		return nil, err
-	}
-
 	return result, nil
 }

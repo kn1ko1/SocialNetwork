@@ -45,11 +45,6 @@ func NewSQLiteRepository() *SQLiteRepository {
 	return ret
 }
 
-// Home
-func (r *SQLiteRepository) GetHomeDataForUser(userId int) (transport.HomeModel, error) {
-	return sqlite.GetHomeDataForUser(r.identityDb, r.businessDb, userId)
-}
-
 // Profile
 func (r *SQLiteRepository) GetProfileDataForUser(userId int) (transport.ProfileModel, error) {
 	return sqlite.GetProfileDataForUser(r.identityDb, r.businessDb, userId)
@@ -133,6 +128,13 @@ func (r *SQLiteRepository) GetPostsByGroupId(groupId int) ([]models.Post, error)
 func (r *SQLiteRepository) GetPostsByUserId(userId int) ([]models.Post, error) {
 	return posts.GetPostsByUserId(r.businessDb, userId)
 }
+func (r *SQLiteRepository) GetPostsAlmostPrivateForUserId(userId int) ([]models.Post, error) {
+	return posts.GetPostsAlmostPrivateForUserId(r.businessDb, userId)
+}
+func (r *SQLiteRepository) GetPostsPrivateForUserId(userId int) ([]models.Post, error) {
+	return posts.GetPostsPrivateForUserId(r.businessDb, userId)
+}
+
 func (r *SQLiteRepository) GetPostsByPrivacy(privacy string) ([]models.Post, error) {
 	return posts.GetPostsByPrivacy(r.businessDb, privacy)
 }
