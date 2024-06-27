@@ -173,8 +173,8 @@ export function Home({
       textDecoration: 'underline',
       textAlign: 'center'
     }
-  }, "Public Posts"), publicPosts !== null && publicPosts.length > 0 ? [...publicPosts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(publicPost => /*#__PURE__*/React.createElement(PostCard, {
-    key: `public-${publicPost.post.id}`,
+  }, "Public Posts"), publicPosts !== null && publicPosts.length > 0 ? [...publicPosts].sort((a, b) => new Date(b.post.createdAt) - new Date(a.post.createdAt)).map(publicPost => /*#__PURE__*/React.createElement(PostCard, {
+    key: `public-${publicPost.post.postId}`,
     post: publicPost.post,
     comments: publicPost.comments,
     showCommentForm: true,

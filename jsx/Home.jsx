@@ -185,10 +185,10 @@ export function Home({ socket }) {
               {publicPosts !== null &&
               publicPosts.length > 0 ? (
                 [...publicPosts]
-                  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                  .sort((a, b) => new Date(b.post.createdAt) - new Date(a.post.createdAt))
                   .map((publicPost) => (
                     <PostCard
-                      key={`public-${publicPost.post.id}`}
+                      key={`public-${publicPost.post.postId}`}
                       post={publicPost.post}
                       comments={publicPost.comments}
                       showCommentForm={true}

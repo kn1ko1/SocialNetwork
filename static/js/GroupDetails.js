@@ -4,7 +4,6 @@ import { EventForm } from "./components/GroupDetail/EventForm.js";
 import { GroupDetailsUserList } from "./components/GroupDetail/GroupDetailsUserList.js";
 import { PostCard } from "./components/shared/PostCard.js";
 import { GroupDetailsEvents } from "./components/GroupDetail/GroupDetailsEvent.js";
-import { fetchCommentsForPosts } from "./components/shared/FetchCommentsForPosts.js";
 const {
   useState,
   useEffect
@@ -30,51 +29,35 @@ export function GroupDetails({
   const [groupEvents, setGroupEvents] = useState([]);
   if (group.isMember) {
     useEffect(() => {
-      fetchGroupData(group.groupId);
-    }, [group.groupId]);
+      fetchGroupData(group);
+    }, [group]);
   }
-  const fetchGroupData = async groupId => {
+  const fetchGroupData = async group => {
     try {
-      const promises = [];
-      promises.push(fetch(`http://localhost:8080/api/users`));
-      promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/groupUsers`));
-      promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/posts`));
-      promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/messages`));
-      promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/events`));
-      const results = await Promise.all(promises);
-      const userListResponse = results[0];
-      const groupMembersResponse = results[1];
-      const postsResponse = results[2];
-      const messagesResponse = results[3];
-      const eventsResponse = results[4];
-      if (!userListResponse.ok) {
-        throw new Error('Failed to fetch user list');
-      }
-      if (!groupMembersResponse.ok) {
-        throw new Error('Failed to fetch group members');
-      }
-      if (!postsResponse.ok) {
-        throw new Error('Failed to fetch group posts');
-      }
-      if (!messagesResponse.ok) {
-        throw new Error('Failed to fetch group messages');
-      }
-      if (!eventsResponse.ok) {
-        throw new Error('Failed to fetch group eventsResponse');
-      }
-      const userListData = await userListResponse.json();
-      const groupMembersData = await groupMembersResponse.json();
-      const postsData = await postsResponse.json();
-      const messagesData = await messagesResponse.json();
-      const eventsData = await eventsResponse.json();
+      // Define the URLs
+      const userListURL = `http://localhost:8080/api/users`;
+      const groupMembersURL = `http://localhost:8080/api/groups/${group.groupId}/groupUsers`;
+      const postsURL = `http://localhost:8080/api/groups/${group.groupId}/posts/withComments`;
+      const messagesURL = `http://localhost:8080/api/groups/${group.groupId}/messages`;
+      const eventsURL = `http://localhost:8080/api/groups/${group.groupId}/events`;
+
+      // Initiate all fetch calls
+      const [userListResponse, groupMembersResponse, postsResponse, messagesResponse, eventsResponse] = await Promise.all([fetch(userListURL), fetch(groupMembersURL), fetch(postsURL), fetch(messagesURL), fetch(eventsURL)]);
+
+      // Check for any failed responses
+      if (!userListResponse.ok) throw new Error('Failed to fetch user list');
+      if (!groupMembersResponse.ok) throw new Error('Failed to fetch group members');
+      if (!postsResponse.ok) throw new Error('Failed to fetch group posts');
+      if (!messagesResponse.ok) throw new Error('Failed to fetch group messages');
+      if (!eventsResponse.ok) throw new Error('Failed to fetch group events');
+
+      // Parse the JSON data
+      const [userListData, groupMembersData, postsData, messagesData, eventsData] = await Promise.all([userListResponse.json(), groupMembersResponse.json(), postsResponse.json(), messagesResponse.json(), eventsResponse.json()]);
+
+      // Set state with the fetched data
       setUserList(userListData);
       setGroupMembers(groupMembersData);
-      if (postsData != null) {
-        const postsWithComments = await fetchCommentsForPosts(postsData);
-        setGroupPosts(postsWithComments);
-      } else {
-        setGroupPosts(null);
-      }
+      setGroupPosts(postsData);
       setGroupMessages(messagesData);
       setGroupEvents(eventsData);
     } catch (error) {
@@ -183,9 +166,10 @@ export function GroupDetails({
   }, "Posts"), /*#__PURE__*/React.createElement("div", {
     id: "groupPosts"
   }, groupPosts !== null ? groupPosts.map(post => /*#__PURE__*/React.createElement("li", {
-    key: post.createdAt
+    key: post.post.createdAt
   }, /*#__PURE__*/React.createElement(PostCard, {
-    post: post,
+    key: `groupPostId-${post.post.postId}`,
+    post: post.post,
     comments: post.comments,
     showCommentForm: true,
     fetchFunc: () => fetchGroupData(group.groupId)
