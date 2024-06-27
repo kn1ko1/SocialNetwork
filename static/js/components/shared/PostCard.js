@@ -5,15 +5,15 @@ const {
   useState
 } = React;
 const postCardStyle = {
-  maxWidth: '600px',
-  background: 'linear-gradient(to bottom, #c7ddef, #ffffff)',
+  maxWidth: "600px",
+  background: "linear-gradient(to bottom, #c7ddef, #ffffff)",
   // Light blue/grey to white gradient
-  borderRadius: '10px',
-  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+  borderRadius: "10px",
+  boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
   // Optional: Add shadow for depth
-  padding: '20px',
-  margin: 'auto',
-  marginBottom: '20px' // Adjust spacing between post cards
+  padding: "20px",
+  margin: "auto",
+  marginBottom: "20px" // Adjust spacing between post cards
 };
 export function PostCard({
   post,
@@ -60,6 +60,7 @@ export function PostCard({
     const commentFileInput = document.getElementById(`commentFileInput${post.post.postId}`);
     commentFileInput.click();
   };
+  console.log("this should be the imageURL used for picture in post card", user.imageURL);
   return /*#__PURE__*/React.createElement("div", {
     className: "card",
     style: postCardStyle

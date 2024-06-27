@@ -120,7 +120,15 @@ export function GroupDetails({ group, socket }) {
 	  };
 
 	
-
+	  const opaqueStyle = {
+		backgroundColor: 'rgba(255, 255, 255, 0.25)', // Adjust the opacity here 
+		maxWidth: '1300px',
+		borderRadius: '10px',
+		boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Optional: Add shadow for depth
+		padding: '40px',
+		margin: 'auto',
+		marginBottom: '20px', // Adjust spacing between post cards
+	  };
 
 
 	return (
@@ -178,7 +186,7 @@ export function GroupDetails({ group, socket }) {
 				<PostFormGroup group={group} fetchFunc={() => fetchGroupData(group.groupId)} />
 					</div>
 
-					{/* <div style={groupDetailsStyle}> */}
+					<div style={opaqueStyle}> 
 				<h3 style={{textDecoration: 'underline'}}>Posts</h3>
 				<div id="groupPosts">
 				  {groupPosts !== null ? (
@@ -196,7 +204,7 @@ export function GroupDetails({ group, socket }) {
 					<div>There are no posts in this group yet</div>
 				  )}
 				</div>
-				{/* </div> */}
+				</div> 
 
 				<div style={groupDetailsStyle}>
 				<h3 style={{textDecoration: 'underline'}}>Messages</h3>

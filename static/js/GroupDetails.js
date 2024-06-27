@@ -117,6 +117,17 @@ export function GroupDetails({
     // Adjust spacing between post cards
     border: '1px solid #ccc' // Add a thin border
   };
+  const opaqueStyle = {
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    // Adjust the opacity here 
+    maxWidth: '1300px',
+    borderRadius: '10px',
+    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+    // Optional: Add shadow for depth
+    padding: '40px',
+    margin: 'auto',
+    marginBottom: '20px' // Adjust spacing between post cards
+  };
   return /*#__PURE__*/React.createElement("div", {
     className: "group-details container"
   }, /*#__PURE__*/React.createElement("div", {
@@ -163,7 +174,9 @@ export function GroupDetails({
   }, /*#__PURE__*/React.createElement(PostFormGroup, {
     group: group,
     fetchFunc: () => fetchGroupData(group.groupId)
-  })), /*#__PURE__*/React.createElement("h3", {
+  })), /*#__PURE__*/React.createElement("div", {
+    style: opaqueStyle
+  }, /*#__PURE__*/React.createElement("h3", {
     style: {
       textDecoration: 'underline'
     }
@@ -176,7 +189,7 @@ export function GroupDetails({
     comments: post.comments,
     showCommentForm: true,
     fetchFunc: () => fetchGroupData(group.groupId)
-  }))) : /*#__PURE__*/React.createElement("div", null, "There are no posts in this group yet")), /*#__PURE__*/React.createElement("div", {
+  }))) : /*#__PURE__*/React.createElement("div", null, "There are no posts in this group yet"))), /*#__PURE__*/React.createElement("div", {
     style: groupDetailsStyle
   }, /*#__PURE__*/React.createElement("h3", {
     style: {
