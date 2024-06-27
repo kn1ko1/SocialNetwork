@@ -61,7 +61,6 @@ export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
     commentFileInput.click();
   };
 
-  console.log("this should be the imageURL used for picture in post card", user.imageURL)
 
   return (
     <div className="card" style={postCardStyle}>
