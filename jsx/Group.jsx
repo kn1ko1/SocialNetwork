@@ -127,7 +127,7 @@ export function Group({ socket }) {
 		<div className="container" style={opaqueStyle}>
 		  {selectedGroup ? (
 			<div>
-			  <button onClick={() => setSelectedGroup(null)} type="submit" className="btn btn-primary" >Go Back</button>
+			  <button onClick={() => setSelectedGroup(null)} type="submit" className="btn btn-primary" style={{ margin: '30px'}} >Go Back</button>
 			  <GroupDetails group={selectedGroup} socket={socket} />
 			</div>
 		  ) : (

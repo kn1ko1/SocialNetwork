@@ -123,7 +123,10 @@ export function Group({
   }, selectedGroup ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     onClick: () => setSelectedGroup(null),
     type: "submit",
-    className: "btn btn-primary"
+    className: "btn btn-primary",
+    style: {
+      margin: '30px'
+    }
   }, "Go Back"), /*#__PURE__*/React.createElement(GroupDetails, {
     group: selectedGroup,
     socket: socket

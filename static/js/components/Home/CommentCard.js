@@ -15,13 +15,13 @@ export function CommentCard({
         const user = await fetchUserById(comment.userId);
         setUsername(user.username);
         setImageURL(user.imageURL);
-        console.log("this should be the imageURL used for picture in comment card", imageURL);
       } catch (error) {
         console.error("Error fetching username:", error);
       }
     };
     fetchUsernameandImageURL();
   }, [comment.userId]);
+  console.log("this should be the imageURL used for picture in comment card", imageURL);
   return /*#__PURE__*/React.createElement("div", {
     className: "card mt-3"
   }, /*#__PURE__*/React.createElement("div", {
