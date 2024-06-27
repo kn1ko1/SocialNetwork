@@ -4,7 +4,6 @@ import { EventForm } from "./components/GroupDetail/EventForm.js";
 import { GroupDetailsUserList } from "./components/GroupDetail/GroupDetailsUserList.js";
 import { PostCard } from "./components/shared/PostCard.js";
 import { GroupDetailsEvents } from "./components/GroupDetail/GroupDetailsEvent.js";
-import { fetchCommentsForPosts } from "./components/shared/FetchCommentsForPosts.js";
 const {
   useState,
   useEffect
@@ -38,7 +37,7 @@ export function GroupDetails({
       const promises = [];
       promises.push(fetch(`http://localhost:8080/api/users`));
       promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/groupUsers`));
-      promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/posts`));
+      promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/posts/withComments`));
       promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/messages`));
       promises.push(fetch(`http://localhost:8080/api/groups/${groupId}/events`));
       const results = await Promise.all(promises);
@@ -69,12 +68,7 @@ export function GroupDetails({
       const eventsData = await eventsResponse.json();
       setUserList(userListData);
       setGroupMembers(groupMembersData);
-      if (postsData != null) {
-        const postsWithComments = await fetchCommentsForPosts(postsData);
-        setGroupPosts(postsWithComments);
-      } else {
-        setGroupPosts(null);
-      }
+      setGroupPosts(postsData);
       setGroupMessages(messagesData);
       setGroupEvents(eventsData);
     } catch (error) {
@@ -170,9 +164,10 @@ export function GroupDetails({
   }, "Posts"), /*#__PURE__*/React.createElement("div", {
     id: "groupPosts"
   }, groupPosts !== null ? groupPosts.map(post => /*#__PURE__*/React.createElement("li", {
-    key: post.createdAt
+    key: post.post.createdAt
   }, /*#__PURE__*/React.createElement(PostCard, {
-    post: post,
+    key: `groupPostId-${post.post.postId}`,
+    post: post.post,
     comments: post.comments,
     showCommentForm: true,
     fetchFunc: () => fetchGroupData(group.groupId)

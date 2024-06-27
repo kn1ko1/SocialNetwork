@@ -12,18 +12,18 @@ import (
 // Endpoint: /api/posts/privacy/public
 // Allowed methods: GET
 
-type PublicPostsWithCommentsHandler struct {
+type PostsPublicWithCommentsHandler struct {
 	Repo repo.IRepository
 }
 
 // Constructor with dependency injection of a repo implementation
-func NewPublicPostsWithCommentsHandler(r repo.IRepository) *PublicPostsWithCommentsHandler {
-	return &PublicPostsWithCommentsHandler{Repo: r}
+func NewPostsPublicWithCommentsHandler(r repo.IRepository) *PostsPublicWithCommentsHandler {
+	return &PostsPublicWithCommentsHandler{Repo: r}
 }
 
 // A PostsHandler instance implements the ServeHTTP interface, and thus
 // itself becomes an HTTPHandler
-func (h *PublicPostsWithCommentsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *PostsPublicWithCommentsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
@@ -35,11 +35,11 @@ func (h *PublicPostsWithCommentsHandler) ServeHTTP(w http.ResponseWriter, r *htt
 	}
 }
 
-func (h *PublicPostsWithCommentsHandler) get(w http.ResponseWriter) {
+func (h *PostsPublicWithCommentsHandler) get(w http.ResponseWriter) {
 
 	publicPosts, err := h.Repo.GetPostsByPrivacy("public")
 	if err != nil {
-		utils.HandleError("Failed to get posts in GetPublicPostsWithCommentsHandler.", err)
+		utils.HandleError("Failed to get posts in GetPostsPublicWithCommentsHandler.", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -53,7 +53,7 @@ func (h *PublicPostsWithCommentsHandler) get(w http.ResponseWriter) {
 		if !exists {
 			user, err := h.Repo.GetUserById(post.UserId)
 			if err != nil {
-				utils.HandleError("Failed to get user in GetPublicPostsWithCommentsHandler.", err)
+				utils.HandleError("Failed to get user in GetPostsPublicWithCommentsHandler.", err)
 				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 				return
 			}
@@ -68,7 +68,7 @@ func (h *PublicPostsWithCommentsHandler) get(w http.ResponseWriter) {
 		// Fetch comments for the post
 		postComments, err := h.Repo.GetCommentsByPostId(post.PostId)
 		if err != nil {
-			utils.HandleError("Failed to get comments in GetPublicPostsWithCommentsHandler.", err)
+			utils.HandleError("Failed to get comments in GetPostsPublicWithCommentsHandler.", err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
@@ -80,7 +80,7 @@ func (h *PublicPostsWithCommentsHandler) get(w http.ResponseWriter) {
 			if !exists {
 				user, err := h.Repo.GetUserById(comment.UserId)
 				if err != nil {
-					utils.HandleError("Failed to get user in GetPublicPostsWithCommentsHandler.", err)
+					utils.HandleError("Failed to get user in GetPostsPublicWithCommentsHandler.", err)
 					http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 					return
 				}
