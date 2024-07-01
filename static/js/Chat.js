@@ -372,7 +372,10 @@ export function Chat({
     onClick: () => handleEmojiSelect("😍")
   }, "\uD83D\uDE0D")), /*#__PURE__*/React.createElement("button", {
     type: "submit",
-    className: "btn btn-primary mt-2"
+    className: "btn btn-primary mt-2",
+    style: {
+      marginBottom: "10px"
+    }
   }, "Send"))), /*#__PURE__*/React.createElement("div", {
     id: "chatHistory"
   }))));

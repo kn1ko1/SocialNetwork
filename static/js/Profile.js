@@ -148,13 +148,16 @@ export function Profile({
     marginBottom: '20px' // Adjust spacing between post cards
   };
   return /*#__PURE__*/React.createElement("div", {
-    className: "container",
+    className: "container-fluid",
     style: opaqueStyle
   }, /*#__PURE__*/React.createElement("div", {
     className: "row"
   }, /*#__PURE__*/React.createElement("div", {
     className: "col-md-3",
-    style: profileStyle
+    style: {
+      ...profileStyle,
+      margin: "0 0 20px 0"
+    }
   }, /*#__PURE__*/React.createElement("h2", {
     style: {
       textDecoration: 'underline',

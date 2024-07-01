@@ -164,9 +164,9 @@ export function Profile({ socket, userId, isEditable }) {
 	  };
 
 	return (
-		<div className="container" style={opaqueStyle}>
+		<div className="container-fluid" style={opaqueStyle}>
 			<div className="row" >
-				<div className="col-md-3" style={profileStyle}>
+				<div className="col-md-3" style={{...profileStyle, margin: "0 0 20px 0" }} >
 					{/* User data */}
 					<h2 style={{ textDecoration: 'underline', textAlign: 'center' }}>{profileUserData.username}'s Profile</h2>
 					<br />
