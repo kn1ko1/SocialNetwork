@@ -30,7 +30,7 @@ export function Home({
   const [userList, setUserList] = useState([]);
   const [followedUsersList, setFollowedUsersList] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
-  const fetchUserData = async () => {
+  const fetchUserData = async currentUserId => {
     try {
       const promises = [];
       promises.push(fetch(`http://localhost:8080/api/users`));
@@ -99,7 +99,7 @@ export function Home({
   };
   useEffect(() => {
     if (currentUserId != null) {
-      fetchUserData();
+      fetchUserData(currentUserId);
     }
   }, [currentUserId]);
   const homeStyle = {
@@ -136,7 +136,7 @@ export function Home({
   }, /*#__PURE__*/React.createElement(PostForm, {
     groupId: 0,
     followedUsers: followedUsersList,
-    fetchFunc: fetchUserData
+    fetchFunc: () => fetchUserData(currentUserId)
   })), /*#__PURE__*/React.createElement("div", {
     className: "container text-center"
   }, /*#__PURE__*/React.createElement("div", {
@@ -178,7 +178,7 @@ export function Home({
     post: publicPost.post,
     comments: publicPost.comments,
     showCommentForm: true,
-    fetchFunc: fetchUserData
+    fetchFunc: () => fetchUserData(currentUserId)
   })) : /*#__PURE__*/React.createElement("p", null, "No public posts")), /*#__PURE__*/React.createElement("div", {
     className: "privatePosts"
   }, /*#__PURE__*/React.createElement("h2", {

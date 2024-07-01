@@ -1,7 +1,6 @@
 package ui
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 )
@@ -20,7 +19,7 @@ func (h *PageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err.Error())
 		} else {
-			fmt.Println(cookie.Value)
+			log.Println("[ui/PageHandler.go]", cookie.Value)
 		}
 		h.get(w, r)
 		return

@@ -39,6 +39,8 @@ func (h *WebSocketHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // get handles WebSocket upgrade and authentication.
 func (h *WebSocketHandler) get(w http.ResponseWriter, r *http.Request) {
 	// Authenticate the user making the WebSocket request.
+	c, _ := r.Cookie("SessionID")
+	log.Println("[ws/WebsocketHandler], c.Value:", c.Value)
 	user, err := auth.AuthenticateRequest(r)
 	if err != nil {
 		utils.HandleError("Error verifying cookie in WebSocket Handler: ", err)
@@ -50,7 +52,7 @@ func (h *WebSocketHandler) get(w http.ResponseWriter, r *http.Request) {
 	upgrader := websocket.Upgrader{ReadBufferSize: bufferSize, WriteBufferSize: bufferSize}
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Println(err.Error())
+		utils.HandleError("Error upgrading conn in WebSocketHandler", err)
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
@@ -64,11 +66,8 @@ func (h *WebSocketHandler) get(w http.ResponseWriter, r *http.Request) {
 
 	// Get all groups associated with the user and put the client in those groups.
 	groupUsers, err := h.Repo.GetGroupUsersByUserId(user.UserId)
-	for i := 0; i < len(groupUsers); i++ {
-		log.Println("User is creating/entering socketGroup:", groupUsers[i].GroupId)
-	}
 	if err != nil {
-		log.Println(err.Error())
+		utils.HandleError("Error in GetGroupUsersByUserId in WebSocketHandler", err)
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}

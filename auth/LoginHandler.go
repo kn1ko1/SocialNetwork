@@ -90,7 +90,7 @@ func (h *LoginHandler) post(w http.ResponseWriter, r *http.Request) {
 		Value:    cookieValue,
 		Path:     "/",
 		Secure:   true,
-		HttpOnly: true,
+		HttpOnly: false,
 		SameSite: http.SameSiteLaxMode,
 		MaxAge:   DefaultManager.Lifetime(),
 	}

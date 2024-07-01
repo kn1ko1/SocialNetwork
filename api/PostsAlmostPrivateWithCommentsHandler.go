@@ -53,7 +53,7 @@ func (h *PostsAlmostPrivateWithCommentsHandler) get(w http.ResponseWriter, r *ht
 		// Fetch and cache the post author's user details
 		user, exists := userCache[post.UserId]
 		if !exists {
-			user, err := h.Repo.GetUserById(post.UserId)
+			user, err = h.Repo.GetUserById(post.UserId)
 			if err != nil {
 				utils.HandleError("Failed to get user in GetPostsAlmostPrivateWithCommentsHandler.", err)
 				http.Error(w, "Internal Server Error", http.StatusInternalServerError)

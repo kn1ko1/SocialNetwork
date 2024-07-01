@@ -24,6 +24,7 @@ export function PostCard({
   const [body, setBody] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const postDate = formattedDate(post.post.createdAt);
+  console.log(post.user);
   const submit = async e => {
     e.preventDefault(); // prevent reload.
 
@@ -67,7 +68,7 @@ export function PostCard({
     className: "card-body"
   }, /*#__PURE__*/React.createElement("div", {
     className: "d-flex flex-start align-items-center"
-  }, showCommentForm && /*#__PURE__*/React.createElement(React.Fragment, null, post.user.imageURL ? /*#__PURE__*/React.createElement("img", {
+  }, post.user.imageURL ? /*#__PURE__*/React.createElement("img", {
     src: post.user.imageURL,
     className: "rounded-circle shadow-1-strong me-3 img-fluid rounded-circle",
     width: "60",
@@ -77,7 +78,7 @@ export function PostCard({
     className: "rounded-circle shadow-1-strong me-3 img-fluid rounded-circle",
     width: "60",
     height: "60"
-  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "d-flex align-items-center mb-1"
   }, /*#__PURE__*/React.createElement("a", {
     className: "fw-bold text-primary mb-0 me-2",

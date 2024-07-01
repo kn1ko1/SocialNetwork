@@ -18,6 +18,7 @@ export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const postDate = formattedDate(post.post.createdAt);
+  console.log(post.user)
 
   const submit = async (e) => {
     e.preventDefault(); // prevent reload.
@@ -66,24 +67,21 @@ export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
     <div className="card" style={postCardStyle}>
       <div className="card-body">
         <div className="d-flex flex-start align-items-center">
-          {showCommentForm && (
-            <>
-              {post.user.imageURL ? (
-                <img
-                  src={post.user.imageURL}
-                  className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle"
-                  width="60"
-                  height="60"
-                />
-              ) : (
-                <img
-                  src="https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-479x512-n8sg74wg.png"
-                  className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle"
-                  width="60"
-                  height="60"
-                />
-              )}
-            </>
+
+          {post.user.imageURL ? (
+            <img
+              src={post.user.imageURL}
+              className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle"
+              width="60"
+              height="60"
+            />
+          ) : (
+            <img
+              src="https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-479x512-n8sg74wg.png"
+              className="rounded-circle shadow-1-strong me-3 img-fluid rounded-circle"
+              width="60"
+              height="60"
+            />
           )}
 
           <div>
