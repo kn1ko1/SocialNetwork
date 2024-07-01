@@ -192,7 +192,8 @@ export function GroupDetails({
     style: groupDetailsStyle
   }, /*#__PURE__*/React.createElement(EventForm, {
     group: group,
-    socket: socket
+    socket: socket,
+    fetchFunc: () => fetchGroupData(group)
   })), /*#__PURE__*/React.createElement("div", {
     style: groupDetailsStyle
   }, /*#__PURE__*/React.createElement(GroupDetailsEvents, {

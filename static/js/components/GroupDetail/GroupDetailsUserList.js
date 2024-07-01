@@ -10,8 +10,11 @@ export function GroupDetailsUserList({
     style: {
       textDecoration: 'underline'
     }
-  }, "User List"), userList !== null && userList.length !== groupMembers.length ? userList.filter(user => !groupMembers.some(member => member.userId === user.userId)).map((user, index) => /*#__PURE__*/React.createElement("div", {
-    key: index
+  }, "Invite User"), userList !== null && userList.length !== groupMembers.length ? userList.filter(user => !groupMembers.some(member => member.userId === user.userId)).map((user, index) => /*#__PURE__*/React.createElement("div", {
+    key: index,
+    style: {
+      padding: "10px"
+    }
   }, /*#__PURE__*/React.createElement("span", null, user.username), /*#__PURE__*/React.createElement("button", {
     type: "button",
     className: "btn btn-primary",

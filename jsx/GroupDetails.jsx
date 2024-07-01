@@ -222,7 +222,7 @@ export function GroupDetails({ group, socket }) {
 					<div className="col-lg-3 text-center">
 
 						<div style={groupDetailsStyle}>
-							<EventForm group={group} socket={socket} />
+							<EventForm group={group} socket={socket} fetchFunc={() => fetchGroupData(group)} />
 						</div>
 
 

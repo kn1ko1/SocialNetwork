@@ -4,7 +4,7 @@ const { useState } = React
 // import { GroupDetails } from "./GroupDetails";
 
 //Test Description
-export function EventForm({ group, socket }) {
+export function EventForm({ group, socket, fetchFunc }) {
     const [dateTime, setDateTime] = useState("");
     const [eventDescription, setEventDescription] = useState("");
     const [eventTitle, setEventTitle] = useState("");
@@ -42,6 +42,7 @@ export function EventForm({ group, socket }) {
         } catch (error) {
             console.error("Error submitting event:", error);
         }
+        fetchFunc(group)
     };
 
     return (

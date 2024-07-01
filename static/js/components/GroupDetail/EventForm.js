@@ -7,7 +7,8 @@ const {
 //Test Description
 export function EventForm({
   group,
-  socket
+  socket,
+  fetchFunc
 }) {
   const [dateTime, setDateTime] = useState("");
   const [eventDescription, setEventDescription] = useState("");
@@ -46,6 +47,7 @@ export function EventForm({
     } catch (error) {
       console.error("Error submitting event:", error);
     }
+    fetchFunc(group);
   };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("main", {
     className: "eventForm container",
