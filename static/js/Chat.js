@@ -4,10 +4,6 @@ const {
   useState,
   useEffect
 } = React;
-
-// const GROUP_CHAT_MESSAGE = 1;
-// const PRIVATE_MESSAGE = 2;
-
 export const renderChat = ({
   socket
 }) => {
@@ -48,16 +44,16 @@ export function Chat({
         const usersFollowMeResponse = results[2];
         const groupsPartOfResponse = results[3];
         if (!currentUserResponse.ok) {
-          throw new Error('Failed to fetch current user');
+          throw new Error("Failed to fetch current user");
         }
         if (!usersIFollowResponse.ok) {
-          throw new Error('Failed to fetch usersIFollow list');
+          throw new Error("Failed to fetch usersIFollow list");
         }
         if (!usersFollowMeResponse.ok) {
-          throw new Error('Failed to fetch usersFollowMe list');
+          throw new Error("Failed to fetch usersFollowMe list");
         }
         if (!groupsPartOfResponse.ok) {
-          throw new Error('Failed to fetch groupsPartOf list');
+          throw new Error("Failed to fetch groupsPartOf list");
         }
         const currentUser = await currentUserResponse.json();
         const usersIFollowData = await usersIFollowResponse.json();
@@ -76,7 +72,7 @@ export function Chat({
         setUniqueUsers(uniqueUsers);
         console.log("Unique Usernames:", uniqueUsers);
       } catch (error) {
-        console.error('Error fetching possible chat options list:', error);
+        console.error("Error fetching possible chat options list:", error);
       }
     };
     if (currentUserId !== null) {
@@ -177,6 +173,7 @@ export function Chat({
   const createMessageCard = message => {
     const card = document.createElement("div");
     card.classList.add("card", "mb-3");
+    card.style.backgroundColor = "transparent";
     const cardBody = document.createElement("div");
     cardBody.classList.add("card-body", "p-3");
     const userNameElement = document.createElement("h6");
@@ -185,17 +182,30 @@ export function Chat({
     const messageBodyElement = document.createElement("p");
     messageBodyElement.classList.add("mb-1");
     messageBodyElement.textContent = message.body;
+
+    // Add the following CSS styles
+    messageBodyElement.style.backgroundColor = "#f0f0f0"; // Adjust the background color as needed
+    messageBodyElement.style.padding = "10px"; // Adjust the padding as needed
+    messageBodyElement.style.borderRadius = "10px"; // Adjust the border radius as needed
+    messageBodyElement.style.wordWrap = "break-word"; // Enable word wrapping
+
     const sentAtElement = document.createElement("small");
     sentAtElement.classList.add("text-muted");
     sentAtElement.textContent = `Sent at ${formattedDate(message.createdAt)}`;
+    if (message.senderUsername === currentUser.username) {
+      cardBody.classList.add("me-auto");
+      //console.log("did we get here 1?")
+    } else {
+      cardBody.classList.add("ms-auto");
+      userNameElement.classList.add("text-end");
+      messageBodyElement.classList.add("text-end");
+      //console.log("did we get here 2?")
+    }
     cardBody.appendChild(userNameElement);
     cardBody.appendChild(messageBodyElement);
     cardBody.appendChild(sentAtElement);
     card.appendChild(cardBody);
     return card;
-  };
-  const messageStyle = {
-    color: "orange"
   };
 
   // Function to handle opening/closing the emoji picker
@@ -204,18 +214,76 @@ export function Chat({
   };
   const handleEmojiSelect = emoji => {
     // Get the current text in the textarea
-    const messageTextarea = document.getElementById('message-textarea');
+    const messageTextarea = document.getElementById("message-textarea");
     const messageText = messageTextarea.value;
+
+    // if (messageText === "") {
+    //   messageText + " "
+    // }
 
     // Append the emoji to the end of the text
     const updatedMessageText = messageText + emoji;
 
     // Update the message text in the textarea
     messageTextarea.value = updatedMessageText;
+    setSendMessage(updatedMessageText);
+  };
+  const messageStyle = {
+    color: "black",
+    marginBottom: "20px",
+    textDecoration: "underline",
+    textAlign: "center",
+    backgroundColor: "linear-gradient(to bottom, #c7ddef, #ffffff)",
+    // Light gray background
+    padding: "10px",
+    // Inner spacing
+    borderRadius: "10px",
+    // Rounded corners
+    margin: "5px 0"
+  };
+  const chatStyle = {
+    maxWidth: "1300px",
+    background: "linear-gradient(to bottom, #c7ddef, #ffffff)",
+    // Light blue/grey to white gradient
+    borderRadius: "10px",
+    boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+    // Optional: Add shadow for depth
+    padding: "40px",
+    margin: "auto",
+    marginBottom: "20px",
+    // Adjust spacing between post cards
+    border: "1px solid #ccc" // Add a thin border
+  };
+  const opaqueStyle = {
+    backgroundColor: "rgba(255, 255, 255, 0.25)",
+    // Adjust the opacity here
+    maxWidth: "1300px",
+    borderRadius: "10px",
+    boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+    // Optional: Add shadow for depth
+    padding: "40px",
+    margin: "auto",
+    marginBottom: "20px" // Adjust spacing between post cards
   };
   return /*#__PURE__*/React.createElement("div", {
-    className: "container"
-  }, /*#__PURE__*/React.createElement("h1", null, "Chat"), /*#__PURE__*/React.createElement("h3", null, "Users"), uniqueUsers && uniqueUsers.length > 0 ? /*#__PURE__*/React.createElement("ul", {
+    className: "container-fluid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "col-md-4",
+    style: {
+      ...opaqueStyle,
+      height: "100vh",
+      overflowY: "auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: chatStyle
+  }, /*#__PURE__*/React.createElement("h3", {
+    style: {
+      textDecoration: "underline",
+      textAlign: "center"
+    }
+  }, "Users"), uniqueUsers && uniqueUsers.length > 0 ? /*#__PURE__*/React.createElement("ul", {
     className: "list-group"
   }, uniqueUsers.map((user, index) => /*#__PURE__*/React.createElement("li", {
     key: index,
@@ -223,7 +291,14 @@ export function Chat({
   }, /*#__PURE__*/React.createElement("a", {
     href: "#",
     onClick: () => handleUserClick(user)
-  }, user.username)))) : /*#__PURE__*/React.createElement("p", null, "You're not following/followed by any users"), /*#__PURE__*/React.createElement("h3", null, "Groups"), groupsPartOf && groupsPartOf.length > 0 ? /*#__PURE__*/React.createElement("ul", {
+  }, user.username)))) : /*#__PURE__*/React.createElement("p", null, "You're not following/followed by any users")), /*#__PURE__*/React.createElement("div", {
+    style: chatStyle
+  }, /*#__PURE__*/React.createElement("h3", {
+    style: {
+      textDecoration: "underline",
+      textAlign: "center"
+    }
+  }, "Groups"), groupsPartOf && groupsPartOf.length > 0 ? /*#__PURE__*/React.createElement("ul", {
     className: "list-group"
   }, groupsPartOf.map((group, index) => /*#__PURE__*/React.createElement("li", {
     key: index,
@@ -231,39 +306,74 @@ export function Chat({
   }, /*#__PURE__*/React.createElement("a", {
     href: "#",
     onClick: () => handleGroupClick(group)
-  }, group.title)))) : /*#__PURE__*/React.createElement("p", null, "You're not part of any groups"), /*#__PURE__*/React.createElement("ul", {
+  }, group.title)))) : /*#__PURE__*/React.createElement("p", null, "You're not part of any groups"))), /*#__PURE__*/React.createElement("div", {
+    className: `col-md-7 ${isChatboxVisible ? "d-block" : "d-none"}`,
+    style: {
+      ...opaqueStyle,
+      height: "100vh",
+      overflowY: "auto"
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "btn-close",
+    "aria-label": "Close",
+    onClick: () => setChatboxVisible(false)
+  }), /*#__PURE__*/React.createElement("h3", {
     id: "messages",
     style: {
       ...messageStyle,
       display: isChatboxVisible ? "block" : "none"
     }
-  }, selectedUser && /*#__PURE__*/React.createElement("li", null, "Chat with ", selectedUser.username), selectedGroup && /*#__PURE__*/React.createElement("li", null, "Chat in ", selectedGroup.title)), /*#__PURE__*/React.createElement("form", {
+  }, selectedUser && /*#__PURE__*/React.createElement("h3", null, "Chat with ", selectedUser.username), selectedGroup && /*#__PURE__*/React.createElement("h3", null, "Chat in ", selectedGroup.title)), /*#__PURE__*/React.createElement("form", {
     id: "chatbox",
-    onSubmit: handleSubmit,
-    style: {
-      display: isChatboxVisible ? "block" : "none"
-    }
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("textarea", {
+    onSubmit: handleSubmit
+  }, /*#__PURE__*/React.createElement("textarea", {
     id: "message-textarea",
     className: "form-control",
     value: sendMessage,
     onChange: handleMessages,
     placeholder: "Type your message..."
-  }), /*#__PURE__*/React.createElement("button", {
-    onClick: toggleEmojiPicker
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start"
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: toggleEmojiPicker,
+    style: {
+      marginBottom: "10px"
+    }
   }, "\uD83D\uDE0A"), isEmojiPickerVisible && /*#__PURE__*/React.createElement("div", {
     id: "emoji-picker",
-    className: "emoji-picker"
+    className: "emoji-picker",
+    style: {
+      marginBottom: "10px",
+      marginTop: "10px"
+    }
   }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => handleEmojiSelect('😊')
+    type: "button",
+    onClick: () => handleEmojiSelect("😊")
   }, "\uD83D\uDE0A"), /*#__PURE__*/React.createElement("button", {
-    onClick: () => handleEmojiSelect('😂')
+    type: "button",
+    onClick: () => handleEmojiSelect("😂")
   }, "\uD83D\uDE02"), /*#__PURE__*/React.createElement("button", {
-    onClick: () => handleEmojiSelect('❤️')
-  }, "\u2764\uFE0F"))), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: () => handleEmojiSelect("❤️")
+  }, "\u2764\uFE0F"), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: () => handleEmojiSelect("👍")
+  }, "\uD83D\uDC4D"), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: () => handleEmojiSelect("😢")
+  }, "\uD83D\uDE22"), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: () => handleEmojiSelect("😍")
+  }, "\uD83D\uDE0D")), /*#__PURE__*/React.createElement("button", {
     type: "submit",
     className: "btn btn-primary mt-2"
-  }, "Send")), /*#__PURE__*/React.createElement("div", {
+  }, "Send"))), /*#__PURE__*/React.createElement("div", {
     id: "chatHistory"
-  }));
+  }))));
 }
