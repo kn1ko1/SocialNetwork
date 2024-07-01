@@ -1,5 +1,5 @@
-import { Home, renderHome } from "./Home.js";
-import { Login } from "./Login.js";
+import { Login, renderLogin } from "./Login.js";
+import { renderHome } from "./Home.js";
 import { renderNavbar } from "./components/shared/Navbar.js";
 export function initializeSocket() {
   // if (!socket) {
@@ -23,22 +23,19 @@ const App = () => {
     // Correct syntax for if statement
     console.log("Cookie Value is:", cookieValue);
     socket = initializeSocket();
+    console.log("socket:", socket);
     renderNavbar({
       socket
     });
+    console.log("I am alive 1");
     renderHome({
       socket
     });
+    console.log("I am alive 2");
+  } else {
+    renderLogin();
   }
-  return /*#__PURE__*/React.createElement("div", {
-    className: "app-container"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "nav-container"
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "page-container"
-  }, cookieValue ? /*#__PURE__*/React.createElement(Home, {
-    socket: socket
-  }) : /*#__PURE__*/React.createElement(Login, null)));
 };
-const root = document.querySelector("#root");
-ReactDOM.render( /*#__PURE__*/React.createElement(App, null), root);
+App();
+// const root = document.querySelector("#root")
+// ReactDOM.render(<App />, root)

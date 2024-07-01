@@ -1,5 +1,5 @@
-import { Home, renderHome } from "./Home.js";
-import { Login } from "./Login.js"
+import { Login, renderLogin } from "./Login.js"
+import { renderHome } from "./Home.js";
 import { renderNavbar } from "./components/shared/Navbar.js";
 
 
@@ -26,24 +26,18 @@ const App = () => {
 	if (cookieValue !== null) { // Correct syntax for if statement
 		console.log("Cookie Value is:", cookieValue);
 		socket = initializeSocket()
-		renderNavbar({socket})
-		renderHome({socket})
+		console.log("socket:", socket)
+		renderNavbar({ socket })
+		console.log("I am alive 1")
+		renderHome({ socket })
+		console.log("I am alive 2")
+	} else {
+		renderLogin()
 	}
 
-	return (
-		<div className="app-container">
-			<div className="nav-container">
-			</div>
-			<div className="page-container">
-				{cookieValue ?
-				(<Home socket={socket} />) :
-				(<Login />)}
 
-
-			</div>
-		</div>
-	)
 }
 
-const root = document.querySelector("#root")
-ReactDOM.render(<App />, root)
+App()
+// const root = document.querySelector("#root")
+// ReactDOM.render(<App />, root)
