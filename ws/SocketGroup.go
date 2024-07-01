@@ -61,15 +61,6 @@ func (g *SocketGroup) Run() {
 					log.Println(err.Error())
 				}
 				log.Println("Group Message Body in socketGroup is:", message)
-				// Persist the group message to the database.
-				// ctime := time.Now().UTC().UnixMilli()
-				// message.CreatedAt = ctime
-				// message.UpdatedAt = ctime
-				// ret, err := g.Repo.CreateMessage(message)
-				// if err != nil {
-				// 	log.Println(err.Error())
-				// }
-				// log.Println("Group Message added to db in socketGroup is:", ret)
 
 				// Broadcast the message to all clients in the group.
 				if len(g.Clients) > 1 {

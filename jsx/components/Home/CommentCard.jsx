@@ -1,5 +1,4 @@
 import { formattedDate } from '../shared/FormattedDate.js';
-const { useState, useEffect } = React;
 export function CommentCard({ comment }) {
   return (
     <div className="card mt-3">

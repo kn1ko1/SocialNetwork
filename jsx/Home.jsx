@@ -21,7 +21,7 @@ export function Home({ socket }) {
   const [followedUsersList, setFollowedUsersList] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
 
-  const fetchUserData = async () => {
+  const fetchUserData = async (currentUserId) => {
     try {
       const promises = [];
       promises.push(fetch(`http://localhost:8080/api/users`));
@@ -109,7 +109,7 @@ export function Home({ socket }) {
 
   useEffect(() => {
     if (currentUserId != null) {
-      fetchUserData();
+      fetchUserData(currentUserId);
     }
   }, [currentUserId]);
 
@@ -140,7 +140,7 @@ export function Home({ socket }) {
         <PostForm
           groupId={0}
           followedUsers={followedUsersList}
-          fetchFunc={fetchUserData}
+          fetchFunc={() => fetchUserData(currentUserId)}
         />
       </div>
       <div className="container text-center">
@@ -192,7 +192,7 @@ export function Home({ socket }) {
                       post={publicPost.post}
                       comments={publicPost.comments}
                       showCommentForm={true}
-                      fetchFunc={fetchUserData}
+                      fetchFunc={() => fetchUserData(currentUserId)}
                     />
                   ))
               ) : (

@@ -1,9 +1,13 @@
 import { getCurrentUserId } from "./components/shared/GetCurrentUserId.js";
-import { PostFormGroup } from "./components/GroupDetail/PostFormGroup.js";
+
+// 
 import { EventForm } from "./components/GroupDetail/EventForm.js";
+import { GroupDetailsEvents } from "./components/GroupDetail/GroupDetailsEvent.js";
 import { GroupDetailsUserList } from "./components/GroupDetail/GroupDetailsUserList.js";
 import { PostCard } from "./components/shared/PostCard.js";
-import { GroupDetailsEvents } from "./components/GroupDetail/GroupDetailsEvent.js";
+import { PostFormGroup } from "./components/GroupDetail/PostFormGroup.js";
+
+
 
 const { useState, useEffect } = React
 
