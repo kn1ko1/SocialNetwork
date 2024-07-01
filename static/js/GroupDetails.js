@@ -174,7 +174,8 @@ export function GroupDetails({
     post: post.post,
     comments: post.comments,
     showCommentForm: true,
-    fetchFunc: () => fetchGroupData(group.groupId)
+    fetchFunc: () => fetchGroupData(group.groupId),
+    socket: socket
   }))) : /*#__PURE__*/React.createElement("div", null, "There are no posts in this group yet"))), /*#__PURE__*/React.createElement("div", {
     style: groupDetailsStyle
   }, /*#__PURE__*/React.createElement("h3", {

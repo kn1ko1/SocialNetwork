@@ -13,7 +13,7 @@ const postCardStyle = {
   marginBottom: '20px', // Adjust spacing between post cards
 };
 
-export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
+export function PostCard({ post, comments, showCommentForm, fetchFunc, socket }) {
   const [body, setBody] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -89,7 +89,7 @@ export function PostCard({ post, comments, showCommentForm, fetchFunc }) {
               <a
                 className="fw-bold text-primary mb-0 me-2"
                 href="#"
-                onClick={() => renderProfile(post.post.userId)}
+                onClick={() => renderProfile(socket, post.post.userId)}
               >
                 {post.user.username}
               </a>
