@@ -81,25 +81,25 @@ export function Login() {
 			<h1 className="h3 mb-3 fw-normal login-text">Log in</h1>
 			<form onSubmit={handleSubmit}>
 				<div className="mb-3">
-					<label htmlFor="exampleInputEmail1" className="form-label">
-						Email address
+					<label htmlFor="usernameOrEmail" className="form-label">
+						Email address or Username
 					</label>
 					<input
-						type="email"
+						type="text"
 						className="form-control form-control-lg"
-						id="exampleInputEmail1"
+						id="usernameOrEmail"
 						aria-describedby="emailHelp"
 						onChange={handleUsernameOrEmailChange}
 					/>
 				</div>
 				<div className="mb-3">
-					<label htmlFor="exampleInputPassword1" className="form-label">
+					<label htmlFor="password" className="form-label">
 						Password
 					</label>
 					<input
 						type="password"
 						className="form-control form-control-lg"
-						id="exampleInputPassword1"
+						id="password"
 						onChange={handlePasswordChange}
 					/>
 				</div>

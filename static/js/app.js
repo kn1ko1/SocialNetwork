@@ -1,4 +1,4 @@
-import { Login, renderLogin } from "./Login.js";
+import { renderLogin } from "./Login.js";
 import { renderHome } from "./Home.js";
 import { renderNavbar } from "./components/shared/Navbar.js";
 export function initializeSocket() {

@@ -105,7 +105,7 @@ export function Home({ socket }) {
       console.error('Error fetching data:', error);
     }
   };
-  
+
 
   useEffect(() => {
     if (currentUserId != null) {
@@ -159,7 +159,7 @@ export function Home({ socket }) {
                       <a
                         className="nav-link"
                         href="#"
-                        onClick={() => renderProfile(user.userId)}
+                        onClick={() => renderProfile(socket, user.userId)}
                       >
                         {user.username}
                       </a>
@@ -183,7 +183,7 @@ export function Home({ socket }) {
                 Public Posts
               </h2>
               {publicPosts !== null &&
-              publicPosts.length > 0 ? (
+                publicPosts.length > 0 ? (
                 [...publicPosts]
                   .sort((a, b) => new Date(b.post.createdAt) - new Date(a.post.createdAt))
                   .map((publicPost) => (
@@ -193,6 +193,7 @@ export function Home({ socket }) {
                       comments={publicPost.comments}
                       showCommentForm={true}
                       fetchFunc={() => fetchUserData(currentUserId)}
+                      socket={socket}
                     />
                   ))
               ) : (

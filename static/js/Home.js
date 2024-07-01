@@ -158,7 +158,7 @@ export function Home({
   }, /*#__PURE__*/React.createElement("a", {
     className: "nav-link",
     href: "#",
-    onClick: () => renderProfile(user.userId)
+    onClick: () => renderProfile(socket, user.userId)
   }, user.username), /*#__PURE__*/React.createElement(FollowButton, {
     socket: socket,
     followerId: currentUserId,
@@ -178,7 +178,8 @@ export function Home({
     post: publicPost.post,
     comments: publicPost.comments,
     showCommentForm: true,
-    fetchFunc: () => fetchUserData(currentUserId)
+    fetchFunc: () => fetchUserData(currentUserId),
+    socket: socket
   })) : /*#__PURE__*/React.createElement("p", null, "No public posts")), /*#__PURE__*/React.createElement("div", {
     className: "privatePosts"
   }, /*#__PURE__*/React.createElement("h2", {

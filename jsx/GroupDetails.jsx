@@ -194,6 +194,7 @@ export function GroupDetails({ group, socket }) {
 												comments={post.comments}
 												showCommentForm={true}
 												fetchFunc={() => fetchGroupData(group)}
+												socket={socket}
 											/>
 										</div>
 									))

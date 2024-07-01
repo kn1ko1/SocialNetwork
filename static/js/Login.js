@@ -79,23 +79,23 @@ export function Login() {
   }, /*#__PURE__*/React.createElement("div", {
     className: "mb-3"
   }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "exampleInputEmail1",
+    htmlFor: "usernameOrEmail",
     className: "form-label"
-  }, "Email address"), /*#__PURE__*/React.createElement("input", {
-    type: "email",
+  }, "Email address or Username"), /*#__PURE__*/React.createElement("input", {
+    type: "text",
     className: "form-control form-control-lg",
-    id: "exampleInputEmail1",
+    id: "usernameOrEmail",
     "aria-describedby": "emailHelp",
     onChange: handleUsernameOrEmailChange
   })), /*#__PURE__*/React.createElement("div", {
     className: "mb-3"
   }, /*#__PURE__*/React.createElement("label", {
-    htmlFor: "exampleInputPassword1",
+    htmlFor: "password",
     className: "form-label"
   }, "Password"), /*#__PURE__*/React.createElement("input", {
     type: "password",
     className: "form-control form-control-lg",
-    id: "exampleInputPassword1",
+    id: "password",
     onChange: handlePasswordChange
   })), /*#__PURE__*/React.createElement("button", {
     type: "submit",
