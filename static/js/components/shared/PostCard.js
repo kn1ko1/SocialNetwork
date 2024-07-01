@@ -25,7 +25,6 @@ export function PostCard({
   const [body, setBody] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const postDate = formattedDate(post.post.createdAt);
-  console.log(post.user);
   const submit = async e => {
     e.preventDefault(); // prevent reload.
 
