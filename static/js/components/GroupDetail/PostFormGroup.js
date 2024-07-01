@@ -41,7 +41,7 @@ export function PostFormGroup({
     } catch (error) {
       console.error("Error submitting post:", error);
     }
-    fetchFunc();
+    fetchFunc(group);
   };
 
   // Handler for file selection
@@ -57,7 +57,7 @@ export function PostFormGroup({
     style: {
       maxWidth: "400px"
     }
-  }, /*#__PURE__*/React.createElement("h1", {
+  }, /*#__PURE__*/React.createElement("h2", {
     className: "h3 mb-3 fw-normal",
     style: {
       textDecoration: 'underline'
@@ -65,7 +65,7 @@ export function PostFormGroup({
   }, "New Post"), /*#__PURE__*/React.createElement("form", {
     onSubmit: submit
   }, /*#__PURE__*/React.createElement("div", {
-    className: "form-floating mb-3"
+    className: "mb-3"
   }, /*#__PURE__*/React.createElement("input", {
     type: "text",
     className: "form-control",

@@ -144,6 +144,7 @@ export function Group({ socket }) {
 					id="exampleTitle"
 					aria-describedby="emailHelp"
 					value={title}
+					placeholder="Type your group title here..."
 					onChange={(e) => setTitle(e.target.value)}
 				  />
 				</div>
@@ -156,6 +157,7 @@ export function Group({ socket }) {
 					className="form-control"
 					id="exampleDescription"
 					value={description}
+					placeholder="Type your group description here..."
 					onChange={(e) => setDescription(e.target.value)}
 				  />
 				</div>

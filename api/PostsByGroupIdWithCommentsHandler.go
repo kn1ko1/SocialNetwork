@@ -49,21 +49,21 @@ func (h *PostsByGroupIdWithCommentsHandler) get(w http.ResponseWriter, r *http.R
 		return
 	}
 	log.Println("Received get request for group Id:", groupId)
-	publicPosts, err := h.Repo.GetPostsByPrivacy("public")
+	groupPosts, err := h.Repo.GetPostsByGroupId(groupId)
 	if err != nil {
 		utils.HandleError("Failed to get posts in GetPostsByGroupIdWithCommentsHandler.", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	var publicPostsWithComments []transport.PostWithComments
+	var groupPostsWithComments []transport.PostWithComments
 	userCache := make(map[int]models.User)
 
-	for _, post := range publicPosts {
+	for _, post := range groupPosts {
 		// Fetch and cache the post author's user details
 		user, exists := userCache[post.UserId]
 		if !exists {
-			user, err := h.Repo.GetUserById(post.UserId)
+			user, err = h.Repo.GetUserById(post.UserId)
 			if err != nil {
 				utils.HandleError("Failed to get user in GetPostsByGroupIdWithCommentsHandler.", err)
 				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -110,11 +110,11 @@ func (h *PostsByGroupIdWithCommentsHandler) get(w http.ResponseWriter, r *http.R
 			Post:     postTransport,
 			Comments: transportComments,
 		}
-		publicPostsWithComments = append(publicPostsWithComments, postWithComments)
+		groupPostsWithComments = append(groupPostsWithComments, postWithComments)
 	}
 
 	w.WriteHeader(http.StatusOK)
-	err = json.NewEncoder(w).Encode(publicPostsWithComments)
+	err = json.NewEncoder(w).Encode(groupPostsWithComments)
 	if err != nil {
 		utils.HandleError("Failed to encode and write JSON response.", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

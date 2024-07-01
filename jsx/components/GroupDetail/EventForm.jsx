@@ -47,23 +47,32 @@ export function EventForm({ group, socket }) {
     return (
         <div>
             <main className="eventForm container" style={{ maxWidth: "400px" }}>
-                <h1 className="h3 mb-3 fw-normal" style={{textDecoration: 'underline'}}>New Event</h1>
+                <h2 className="h3 mb-3 fw-normal" style={{textDecoration: 'underline'}}>New Event</h2>
                 <form onSubmit={submit}>
-                    <div className="form-floating mb-3">
+                
+                    <div className="mb-3">
+                    <label htmlFor="exampleTitle" className="form-label">
+					Event Title
+				  </label>
                         <input
                             type="text"
                             className="form-control"
                             id="eventFormTitle"
-                            placeholder="Type your event title here..."
+                            placeholder="Title here..."
                             onChange={(e) => setEventTitle(e.target.value)}
                         />
                     </div>
-                    <div className="form-floating mb-3">
+
+                    <div className="mb-3">
+
+                    <label htmlFor="exampleDescription" className="form-label">
+					Event Description
+				  </label>
                         <input
                             type="text"
                             className="form-control"
                             id="eventFormDescription"
-                            placeholder="Type your event Description here..."
+                            placeholder="Description here..."
                             onChange={(e) => setEventDescription(e.target.value)}
                         />
                     </div>

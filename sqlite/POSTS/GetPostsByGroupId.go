@@ -8,7 +8,7 @@ import (
 
 // Retrieves posts with the relevant groupId from the POSTS table
 func GetPostsByGroupId(database *sql.DB, groupId int) ([]models.Post, error) {
-	rows, err := database.Query("SELECT * FROM POSTS WHERE GroupId = ?", groupId)
+	rows, err := database.Query("SELECT * FROM POSTS WHERE GroupId = ? ORDER BY CreatedAt DESC", groupId)
 	if err != nil {
 		utils.HandleError("Error querying posts by GroupId.", err)
 		return nil, err

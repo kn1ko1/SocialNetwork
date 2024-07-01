@@ -167,14 +167,14 @@ export function GroupDetails({
     }
   }, "Posts"), /*#__PURE__*/React.createElement("div", {
     id: "groupPosts"
-  }, groupPosts !== null ? groupPosts.map(post => /*#__PURE__*/React.createElement("li", {
+  }, groupPosts !== null ? groupPosts.map(post => /*#__PURE__*/React.createElement("div", {
     key: post.post.createdAt
   }, /*#__PURE__*/React.createElement(PostCard, {
     key: `groupPostId-${post.post.postId}`,
     post: post.post,
     comments: post.comments,
     showCommentForm: true,
-    fetchFunc: () => fetchGroupData(group.groupId)
+    fetchFunc: () => fetchGroupData(group)
   }))) : /*#__PURE__*/React.createElement("div", null, "There are no posts in this group yet"))), /*#__PURE__*/React.createElement("div", {
     style: groupDetailsStyle
   }, /*#__PURE__*/React.createElement("h3", {

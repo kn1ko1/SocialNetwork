@@ -41,7 +41,7 @@ export function PostFormGroup({ group, fetchFunc }) {
 			console.error("Error submitting post:", error);
 		}
 
-		fetchFunc()
+		fetchFunc(group)
 	};
 
 	// Handler for file selection
@@ -57,9 +57,9 @@ export function PostFormGroup({ group, fetchFunc }) {
 	return (
 		<div>
 			<main className="postForm container" style={{ maxWidth: "400px" }}>
-				<h1 className="h3 mb-3 fw-normal" style={{textDecoration: 'underline'}}>New Post</h1>
+				<h2 className="h3 mb-3 fw-normal" style={{textDecoration: 'underline'}}>New Post</h2>
 				<form onSubmit={submit}>
-					<div className="form-floating mb-3">
+					<div className="mb-3">
 						<input
 							type="text"
 							className="form-control"

@@ -187,15 +187,15 @@ export function GroupDetails({ group, socket }) {
 							<div id="groupPosts">
 								{groupPosts !== null ? (
 									groupPosts.map((post) => (
-										<li key={post.post.createdAt}>
+										<div key={post.post.createdAt}>
 											<PostCard
 												key={`groupPostId-${post.post.postId}`}
 												post={post.post}
 												comments={post.comments}
 												showCommentForm={true}
-												fetchFunc={() => fetchGroupData(group.groupId)}
+												fetchFunc={() => fetchGroupData(group)}
 											/>
-										</li>
+										</div>
 									))
 								) : (
 									<div>There are no posts in this group yet</div>

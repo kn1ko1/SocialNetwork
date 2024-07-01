@@ -8,7 +8,7 @@ import (
 
 // Retrieves comments with the relevant postId from the COMMENTS table
 func GetCommentsByPostId(database *sql.DB, postId int) ([]models.Comment, error) {
-	rows, err := database.Query("SELECT * FROM COMMENTS WHERE PostId = ?", postId)
+	rows, err := database.Query("SELECT * FROM COMMENTS WHERE PostId = ? ORDER BY CreatedAt DESC", postId)
 	if err != nil {
 		utils.HandleError("Error executing SELECT * FROM COMMENTS WHERE PostId = ? statement.", err)
 		return nil, err

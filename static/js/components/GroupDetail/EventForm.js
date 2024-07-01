@@ -52,7 +52,7 @@ export function EventForm({
     style: {
       maxWidth: "400px"
     }
-  }, /*#__PURE__*/React.createElement("h1", {
+  }, /*#__PURE__*/React.createElement("h2", {
     className: "h3 mb-3 fw-normal",
     style: {
       textDecoration: 'underline'
@@ -60,20 +60,26 @@ export function EventForm({
   }, "New Event"), /*#__PURE__*/React.createElement("form", {
     onSubmit: submit
   }, /*#__PURE__*/React.createElement("div", {
-    className: "form-floating mb-3"
-  }, /*#__PURE__*/React.createElement("input", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "exampleTitle",
+    className: "form-label"
+  }, "Event Title"), /*#__PURE__*/React.createElement("input", {
     type: "text",
     className: "form-control",
     id: "eventFormTitle",
-    placeholder: "Type your event title here...",
+    placeholder: "Title here...",
     onChange: e => setEventTitle(e.target.value)
   })), /*#__PURE__*/React.createElement("div", {
-    className: "form-floating mb-3"
-  }, /*#__PURE__*/React.createElement("input", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "exampleDescription",
+    className: "form-label"
+  }, "Event Description"), /*#__PURE__*/React.createElement("input", {
     type: "text",
     className: "form-control",
     id: "eventFormDescription",
-    placeholder: "Type your event Description here...",
+    placeholder: "Description here...",
     onChange: e => setEventDescription(e.target.value)
   })), /*#__PURE__*/React.createElement("div", {
     className: "mb-3"

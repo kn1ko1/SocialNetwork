@@ -150,6 +150,7 @@ export function Group({
     id: "exampleTitle",
     "aria-describedby": "emailHelp",
     value: title,
+    placeholder: "Type your group title here...",
     onChange: e => setTitle(e.target.value)
   })), /*#__PURE__*/React.createElement("div", {
     className: "mb-3"
@@ -161,6 +162,7 @@ export function Group({
     className: "form-control",
     id: "exampleDescription",
     value: description,
+    placeholder: "Type your group description here...",
     onChange: e => setDescription(e.target.value)
   })), /*#__PURE__*/React.createElement("button", {
     type: "submit",
