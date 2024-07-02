@@ -1,3 +1,4 @@
+const { useEffect } = React
 import { GroupMessage } from "./GroupMessage.js";
 import { PrivateMessage } from "./PrivateMessage.js";
 import { FollowRequest } from "./FollowRequest.js";
@@ -17,6 +18,16 @@ const codeToHeaderText = {
 
 
 export const NotificationPopUp = ({ data, onClose }) => {
+    useEffect(() => {
+        // Set a timer to close the popup after 10 seconds
+        const timer = setTimeout(() => {
+            onClose();
+        }, 10000);
+
+        // Cleanup the timer when the component unmounts
+        return () => clearTimeout(timer);
+    }, [onClose]);
+
     try {
         const notification = JSON.parse(data.body);
         const code = parseInt(data.code, 10);
