@@ -71,7 +71,7 @@ export function Login() {
 	
 
 	return (
-		<div className="container login-container" >
+		<div className="container login-container" style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
 
 			<div className="logo-container">
     <img src="../static/sphere-logo.png" alt="Logo" className="logo" />

@@ -11,7 +11,7 @@ body {
     min-width: 100vw; /* Set the minimum width to 100% of the viewport width */
     min-height: 100vh; /* Set the minimum height to 100% of the viewport height */
     background-image: url('../sphere-blue.jpg');  /* Specify the path to your new image */
-    background-size: cover; /* Cover the entire page */
+    background-size: 110% 110%; /* Cover the entire page */
     background-position: center; /* Center the background image */
     background-repeat: no-repeat; /* Prevent repeating the image */
 }

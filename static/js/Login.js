@@ -65,7 +65,13 @@ export function Login() {
     }
   }, [isLoggedIn]);
   return /*#__PURE__*/React.createElement("div", {
-    className: "container login-container"
+    className: "container login-container",
+    style: {
+      minHeight: "100vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+    }
   }, /*#__PURE__*/React.createElement("div", {
     className: "logo-container"
   }, /*#__PURE__*/React.createElement("img", {
