@@ -14,12 +14,14 @@ import (
 
 // Define constants for different types of WebSocket messages
 const (
-	GROUP_CHAT_MESSAGE = 1
-	PRIVATE_MESSAGE    = 2
-	FOLLOW_REQUEST     = 3
-	GROUP_REQUEST      = 4
-	GROUP_INVITE       = 5
-	EVENT_INVITE       = 6
+	GROUP_CHAT_MESSAGE        = 1
+	PRIVATE_MESSAGE           = 2
+	FOLLOW_REQUEST            = 3
+	GROUP_REQUEST             = 4
+	GROUP_INVITE              = 5
+	EVENT_INVITE              = 6
+	CreateGroupAndSocketGroup = 10
+	AcceptGroupAndSocketGroup = 11
 )
 
 // Client represents a connected user
@@ -69,9 +71,13 @@ func (c *Client) Receive() {
 		switch wsm.Code {
 		case 10:
 			c.CreateGroupAndSocketGroup(wsm)
+		case 11:
+			c.AcceptGroupAndSocketGroup(wsm)
+		default:
+			// Handle the received message
+			c.HandleMessage(wsm)
 		}
-		// Handle the received message
-		c.HandleMessage(wsm)
+
 	}
 }
 
@@ -84,7 +90,7 @@ func (c *Client) Send(v any) {
 	}
 }
 
-// HandleMessage processes incoming WebSocket messages
+// CreateGroupAndSocketGroup processes messages for creating groups and associated socketGroup
 func (c *Client) CreateGroupAndSocketGroup(msg WebSocketMessage) {
 	//switch msg.Code {
 	//case GROUP_CHAT_MESSAGE:
@@ -128,9 +134,11 @@ func (c *Client) CreateGroupAndSocketGroup(msg WebSocketMessage) {
 	if !exists {
 		socketGroupManager.SocketGroups[createdGroup.GroupId] = NewSocketGroup(createdGroup.GroupId)
 		go socketGroupManager.SocketGroups[createdGroup.GroupId].Run() // Run the socket group in a separate goroutine.
-		log.Println("CLient.Go.  Socket group", createdGroup.GroupId, "should exist")
+		log.Printf("Client.go.  Socket group %d created and Run() called", createdGroup.GroupId)
+		log.Printf("SocketGroups map now contains: %v", socketGroupManager.SocketGroups)
 	}
 	// Add the client to the socket group.
+
 	c.SocketGroups[createdGroup.GroupId] = socketGroupManager.SocketGroups[createdGroup.GroupId]
 	socketGroupManager.SocketGroups[createdGroup.GroupId].Enter <- c
 	//	}
@@ -138,6 +146,44 @@ func (c *Client) CreateGroupAndSocketGroup(msg WebSocketMessage) {
 	//case PRIVATE_MESSAGE:
 
 	//}
+}
+
+// CreateGroupAndSocketGroup processes messages for accepting group requests/invites and  joining/starting associated socketGroup
+func (c *Client) AcceptGroupAndSocketGroup(msg WebSocketMessage) {
+	var notification models.Notification
+
+	log.Println("Starting AcceptGroupAndSocketGroup") // Log for function start
+
+	err := json.Unmarshal([]byte(msg.Body), &notification)
+	if err != nil {
+		log.Println("Unmarshal error:", err.Error())
+		return
+	}
+	log.Println("Unmarshal successful") // Log after successful unmarshal
+
+	log.Println("Trying to create socket group", notification.ObjectId) // Log before creating socket group
+
+	// Check if the socket group exists, and create it if it doesn't.
+	_, exists := socketGroupManager.SocketGroups[notification.ObjectId]
+	if !exists {
+		socketGroupManager.SocketGroups[notification.ObjectId] = NewSocketGroup(notification.ObjectId)
+		go socketGroupManager.SocketGroups[notification.ObjectId].Run() // Run the socket group in a separate goroutine.
+		log.Printf("Client.go.  Socket group %d created and Run() called", notification.ObjectId)
+		log.Printf("SocketGroups map now contains: %v", socketGroupManager.SocketGroups)
+	} else {
+		log.Println("Socket group", notification.ObjectId, "already exists") // Log if socket group already exists
+	}
+
+	// Add the client to the socket group.
+	c.SocketGroups[notification.ObjectId] = socketGroupManager.SocketGroups[notification.ObjectId]
+	log.Println("Client added to socket group") // Log after adding client to socket group
+
+	log.Println()
+	log.Println("Client.go. Print me, print me, I'm here you damned code!!!!", c.SocketGroups) // Log we want to reach
+	log.Println()
+
+	socketGroupManager.SocketGroups[notification.ObjectId].Enter <- c
+	log.Println("Client added to socket group's Enter channel") // Log after sending client to Enter channel
 }
 
 // HandleMessage processes incoming WebSocket messages
@@ -343,6 +389,7 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		// Store the message in the database
 
 	case EVENT_INVITE:
+
 		ctime := time.Now().UTC().UnixMilli()
 
 		// Handle event invite
@@ -352,6 +399,7 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			log.Println(err.Error())
 			return
 		}
+		log.Printf("Handling EVENT_INVITE. GroupId: %d", event.GroupId)
 		event.CreatedAt = ctime
 		event.UpdatedAt = ctime
 		// Adds Event to db

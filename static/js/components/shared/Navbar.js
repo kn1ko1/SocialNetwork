@@ -128,7 +128,8 @@ export const Navbar = ({
     id: "navbarSupportedContent"
   }, notificationData && /*#__PURE__*/React.createElement(NotificationPopUp, {
     data: notificationData,
-    onClose: () => setNotificationData(null)
+    onClose: () => setNotificationData(null),
+    socket: socket
   }), /*#__PURE__*/React.createElement("div", {
     className: "navbar-logo"
   }, /*#__PURE__*/React.createElement("img", {
@@ -177,10 +178,12 @@ export const Navbar = ({
     key: index
   }, notification.notificationType === "groupInvite" && /*#__PURE__*/React.createElement(GroupInvite, {
     notification: notification,
-    onNotificationResponse: handleNotificationResponse
+    onNotificationResponse: handleNotificationResponse,
+    socket: socket
   }), notification.notificationType === "groupRequest" && /*#__PURE__*/React.createElement(GroupRequest, {
     notification: notification,
-    onNotificationResponse: handleNotificationResponse
+    onNotificationResponse: handleNotificationResponse,
+    socket: socket
   }), notification.notificationType === "eventInvite" && /*#__PURE__*/React.createElement(EventInvite, {
     notification: notification,
     onNotificationResponse: handleNotificationResponse

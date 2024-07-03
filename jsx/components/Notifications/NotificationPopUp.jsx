@@ -17,7 +17,7 @@ const codeToHeaderText = {
 
 
 
-export const NotificationPopUp = ({ data, onClose }) => {
+export const NotificationPopUp = ({ data, onClose, socket }) => {
     useEffect(() => {
         // Set a timer to close the popup after 10 seconds
         const timer = setTimeout(() => {
@@ -44,24 +44,24 @@ export const NotificationPopUp = ({ data, onClose }) => {
                         <button type="button" className="btn-close" aria-label="Close" onClick={onClose}></button>
                     </div>
                     <div className="toast-body">
-                    {(() => {
-                    switch (code) {
-                        case 1:
-                            return <GroupMessage notification={notification} />;
-                        case 2:
-                            return <PrivateMessage notification={notification} />;
-                        case 3:
-                            return <FollowRequest notification={notification} onNotificationResponse={onClose} />;
-                        case 4:
-                            return <GroupRequest notification={notification} onNotificationResponse={onClose} />;
-                        case 5:
-                            return <GroupInvite notification={notification} onNotificationResponse={onClose} />;
-                        case 6:
-                            return <EventInvite notification={notification} onNotificationResponse={onClose} />;
-                        default:
-                            return null;
-                    }
-                })()}
+                        {(() => {
+                            switch (code) {
+                                case 1:
+                                    return <GroupMessage notification={notification} />;
+                                case 2:
+                                    return <PrivateMessage notification={notification} />;
+                                case 3:
+                                    return <FollowRequest notification={notification} onNotificationResponse={onClose} />;
+                                case 4:
+                                    return <GroupRequest notification={notification} onNotificationResponse={onClose} socket={socket}/>;
+                                case 5:
+                                    return <GroupInvite notification={notification} onNotificationResponse={onClose} socket={socket} />;
+                                case 6:
+                                    return <EventInvite notification={notification} onNotificationResponse={onClose} />;
+                                default:
+                                    return null;
+                            }
+                        })()}
                     </div>
                 </div>
             </div>

@@ -17,7 +17,8 @@ const codeToHeaderText = {
 };
 export const NotificationPopUp = ({
   data,
-  onClose
+  onClose,
+  socket
 }) => {
   useEffect(() => {
     // Set a timer to close the popup after 10 seconds
@@ -71,12 +72,14 @@ export const NotificationPopUp = ({
         case 4:
           return /*#__PURE__*/React.createElement(GroupRequest, {
             notification: notification,
-            onNotificationResponse: onClose
+            onNotificationResponse: onClose,
+            socket: socket
           });
         case 5:
           return /*#__PURE__*/React.createElement(GroupInvite, {
             notification: notification,
-            onNotificationResponse: onClose
+            onNotificationResponse: onClose,
+            socket: socket
           });
         case 6:
           return /*#__PURE__*/React.createElement(EventInvite, {

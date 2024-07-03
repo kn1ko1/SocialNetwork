@@ -1,10 +1,12 @@
 const { useState, useEffect } = React
 import { fetchGroupById } from "../shared/FetchGroupById.js";
 import { fetchUserById } from "../shared/FetchUserById.js";
-import { respondToNotification } from "./RespondToNotification.js";
-import { notificationCardStyle } from "./NotificationCardStyle.js";
 
-export function GroupRequest({ notification, onNotificationResponse }) {
+import { notificationCardStyle } from "./NotificationCardStyle.js";
+import { respondToNotification } from "./RespondToNotification.js";
+import { websocketRespondToGroupNotification } from "./WebsocketRespondToGroupNotification.js";
+
+export function GroupRequest({ notification, onNotificationResponse, socket }) {
 	const [username, setUsername] = useState("");
 	const [groupName, setGroupName] = useState("");
 
@@ -18,6 +20,10 @@ export function GroupRequest({ notification, onNotificationResponse }) {
 	const handleNotificationResponse = async (responseType) => {
 		// Call the respondToNotification function to handle the response
 		respondToNotification(responseType, notification);
+
+		if (responseType == "confirm") {
+			websocketRespondToGroupNotification(notification, socket)
+		}
 		// Call the parent component's callback to remove this notification
 		onNotificationResponse(notification.notificationId);
 	};

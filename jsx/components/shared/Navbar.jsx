@@ -136,6 +136,7 @@ export const Navbar = ({ socket }) => {
             <NotificationPopUp
               data={notificationData}
               onClose={() => setNotificationData(null)}
+              socket={socket}
             />
           )}
 
@@ -189,10 +190,12 @@ export const Navbar = ({ socket }) => {
                       {notification.notificationType === "groupInvite" && <GroupInvite
                         notification={notification}
                         onNotificationResponse={handleNotificationResponse}
+                        socket={socket}
                       />}
                       {notification.notificationType === "groupRequest" && <GroupRequest
                         notification={notification}
                         onNotificationResponse={handleNotificationResponse}
+                        socket={socket}
                       />}
                       {notification.notificationType === "eventInvite" && <EventInvite
                         notification={notification}
