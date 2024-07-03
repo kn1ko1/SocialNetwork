@@ -178,10 +178,6 @@ func (c *Client) AcceptGroupAndSocketGroup(msg WebSocketMessage) {
 	c.SocketGroups[notification.ObjectId] = socketGroupManager.SocketGroups[notification.ObjectId]
 	log.Println("Client added to socket group") // Log after adding client to socket group
 
-	log.Println()
-	log.Println("Client.go. Print me, print me, I'm here you damned code!!!!", c.SocketGroups) // Log we want to reach
-	log.Println()
-
 	socketGroupManager.SocketGroups[notification.ObjectId].Enter <- c
 	log.Println("Client added to socket group's Enter channel") // Log after sending client to Enter channel
 }
