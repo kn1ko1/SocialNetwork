@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"log"
-	"socialnetwork/models"
+	"socialnetwork/Server/models"
 	"socialnetwork/utils"
 )
 

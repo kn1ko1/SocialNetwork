@@ -2,7 +2,7 @@ package messages
 
 import (
 	"database/sql"
-	"socialnetwork/models"
+	"socialnetwork/Server/models"
 	// Assuming you have a utility package for error handling
 )
 

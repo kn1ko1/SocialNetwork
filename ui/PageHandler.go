@@ -21,14 +21,14 @@ func (h *PageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		} else {
 			log.Println("[ui/PageHandler.go]", cookie.Value)
 		}
-		h.get(w, r)
+		h.get(w)
 		return
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 	}
 }
 
-func (h *PageHandler) get(w http.ResponseWriter, r *http.Request) {
+func (h *PageHandler) get(w http.ResponseWriter) {
 	err := Template.ExecuteTemplate(w, "Index", nil)
 	if err != nil {
 		http.Error(w, "internal server error", http.StatusInternalServerError)

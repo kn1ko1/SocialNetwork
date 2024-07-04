@@ -3,9 +3,9 @@ package ws
 import (
 	"encoding/json"
 	"log"
-	"socialnetwork/models"
-	"socialnetwork/repo"
-	"socialnetwork/transport"
+	"socialnetwork/Server/models"
+	"socialnetwork/Server/repo"
+	"socialnetwork/Server/transport"
 	"socialnetwork/utils"
 	"time"
 

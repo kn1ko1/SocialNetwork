@@ -3,7 +3,7 @@ package messages
 
 import (
 	"database/sql"
-	"socialnetwork/models"
+	"socialnetwork/Server/models"
 	"socialnetwork/utils"
 )
 

@@ -3,8 +3,8 @@ package ws
 import (
 	"log"
 	"net/http"
-	"socialnetwork/auth"
-	"socialnetwork/repo"
+	"socialnetwork/Server/auth"
+	"socialnetwork/Server/repo"
 	"socialnetwork/utils"
 
 	"github.com/gorilla/websocket"

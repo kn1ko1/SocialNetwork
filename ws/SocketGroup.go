@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"socialnetwork/models"
-	"socialnetwork/transport"
+	"socialnetwork/Server/models"
+
+	"socialnetwork/Server/transport"
 )
 
 // const (

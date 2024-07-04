@@ -3,7 +3,7 @@ package post_users
 import (
 	"database/sql"
 	"log"
-	"socialnetwork/models"
+	"socialnetwork/Server/models"
 	"socialnetwork/utils"
 )
 

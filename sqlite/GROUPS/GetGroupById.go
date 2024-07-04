@@ -3,7 +3,7 @@ package groups
 import (
 	"database/sql"
 	"errors"
-	"socialnetwork/models"
+	"socialnetwork/Server/models"
 	"socialnetwork/utils"
 )
 
