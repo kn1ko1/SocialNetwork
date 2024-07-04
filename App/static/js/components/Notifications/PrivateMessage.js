@@ -1,4 +1,4 @@
-import { notificationCardStyle } from "./NotificationCardStyle.js";
+import { notificationCardStyle } from "./NotificationCardStyle.jsx";
 export function PrivateMessage({
   notification
 }) {
