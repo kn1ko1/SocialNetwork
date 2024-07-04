@@ -3,7 +3,7 @@ package events
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Adds event into the given database

@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"socialnetwork/Server/imageProcessing"
 	"socialnetwork/Server/models"
 	"socialnetwork/Server/repo"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -77,7 +76,7 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 	if file != nil {
 
 		defer file.Close()
-		imageURL, err = imageProcessing.ImageProcessing(w, r, file, *fileHeader)
+		imageURL, err = utils.ImageProcessing(w, r, file, *fileHeader)
 		if err != nil {
 			utils.HandleError("Error with ImageHandler", err)
 			// http.Error(w, "Failed to process image", http.StatusInternalServerError)

@@ -3,7 +3,7 @@ package comments
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Retrieves comment with the relevant groupId from the COMMENTS table

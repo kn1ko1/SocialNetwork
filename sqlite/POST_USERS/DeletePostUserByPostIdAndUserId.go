@@ -2,7 +2,7 @@ package post_users
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 func DeletePostUserByPostIdAndUserId(database *sql.DB, userId, postId int) error {

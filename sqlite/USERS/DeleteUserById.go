@@ -2,7 +2,7 @@ package users
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // deletes a specific user from the USERS table

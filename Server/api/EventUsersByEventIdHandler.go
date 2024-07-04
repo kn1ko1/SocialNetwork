@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	"socialnetwork/Server/repo"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 	"strconv"
 	"strings"
 )

@@ -3,7 +3,7 @@ package users
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Retrieves public users from the USERS table

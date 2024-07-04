@@ -6,7 +6,7 @@ import (
 	"socialnetwork/Server/models"
 	"socialnetwork/Server/repo"
 	"socialnetwork/Server/transport"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 	"time"
 
 	"github.com/gorilla/websocket"

@@ -2,7 +2,7 @@ package event_users
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // deletes event users related to UserId from the EVENT_USERS table

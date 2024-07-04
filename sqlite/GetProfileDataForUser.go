@@ -3,10 +3,10 @@ package sqlite
 import (
 	"database/sql"
 	"socialnetwork/Server/transport"
+	"socialnetwork/Server/utils"
 	posts "socialnetwork/sqlite/POSTS"
 	users "socialnetwork/sqlite/USERS"
 	user_users "socialnetwork/sqlite/USER_USERS"
-	"socialnetwork/utils"
 )
 
 // This Should not be a SQLite package function

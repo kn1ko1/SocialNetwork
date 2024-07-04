@@ -2,7 +2,7 @@ package user_users
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // deletes user users related to followerId from the USER_USERS table

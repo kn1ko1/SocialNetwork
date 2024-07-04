@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Retrieves message with the relevant messageId from the MESSAGES table

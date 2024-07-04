@@ -7,7 +7,7 @@ import (
 	"socialnetwork/Server/auth"
 	"socialnetwork/Server/models"
 	"socialnetwork/Server/repo"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 	"time"
 )
 

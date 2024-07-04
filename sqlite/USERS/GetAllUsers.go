@@ -3,7 +3,7 @@ package users
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Retrieves all users from the USERS table

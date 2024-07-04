@@ -3,7 +3,7 @@ package event_users
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Adds eventUser into the given database

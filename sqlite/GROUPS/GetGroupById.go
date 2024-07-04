@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Retrieves group with the relevant groupId from the GROUPS table

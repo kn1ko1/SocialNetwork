@@ -3,7 +3,7 @@ package events
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Retrieves event with the relevant userId from the EVENTS table

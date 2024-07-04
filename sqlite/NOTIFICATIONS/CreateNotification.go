@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Adds notification into the given database

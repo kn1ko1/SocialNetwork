@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Retrieves notification with the relevant notificationId from the NOTIFICATIONS table

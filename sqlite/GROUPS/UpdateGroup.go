@@ -3,7 +3,7 @@ package groups
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils" // Assuming you have a utility package for error handling
+	"socialnetwork/Server/utils" // Assuming you have a utility package for error handling
 )
 
 // Updates group information in the GROUPS table

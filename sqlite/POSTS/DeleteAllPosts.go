@@ -2,7 +2,7 @@ package posts
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Deletes all posts from the POSTS table; use with caution

@@ -3,7 +3,7 @@ package notifications
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Updates notification information in the MESSAGES table

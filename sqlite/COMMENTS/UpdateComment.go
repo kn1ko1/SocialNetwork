@@ -3,7 +3,7 @@ package comments
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Updates comment information in the COMMENTS table

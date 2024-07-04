@@ -3,7 +3,7 @@ package post_users
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Retrieves postUsers with the relevant userId from the POST_USERS table

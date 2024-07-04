@@ -2,7 +2,7 @@ package messages
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // deletes messages by SenderId from the MESSAGES table

@@ -3,7 +3,7 @@ package posts
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // GetPostsPrivateForUserId retrieves private posts for the given followerId along with associated comments

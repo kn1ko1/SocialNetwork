@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"socialnetwork/Server/models"
 	"socialnetwork/Server/repo"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 	"strconv"
 	"strings"
 )

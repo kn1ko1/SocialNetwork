@@ -3,7 +3,7 @@ package messages
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Retrieves messages with the relevant senderId from the MESSAGES table

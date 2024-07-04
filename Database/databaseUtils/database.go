@@ -1,4 +1,4 @@
-package utils
+package dbUtils
 
 import (
 	"database/sql"
@@ -22,7 +22,7 @@ func InitIdentityDatabase() {
 
 	log.Println("Connected to Identity SQLite database")
 
-	runMigrations(identityDB, "sqlite://./sqlite/data/Identity.db", "file://./sqlite/migrations/identity")
+	runMigrations("sqlite://./sqlite/data/Identity.db", "file://./sqlite/migrations/identity")
 
 }
 
@@ -35,11 +35,11 @@ func InitBusinessDatabase() {
 
 	log.Println("Connected to Business SQLite database")
 
-	runMigrations(businessDB, "sqlite://./sqlite/data/Business.db", "file://./sqlite/migrations/business")
+	runMigrations("sqlite://./sqlite/data/Business.db", "file://./sqlite/migrations/business")
 
 }
 
-func runMigrations(db *sql.DB, databaseURL, migrationsDir string) {
+func runMigrations(databaseURL, migrationsDir string) {
 
 	m, err := migrate.New(migrationsDir, databaseURL)
 

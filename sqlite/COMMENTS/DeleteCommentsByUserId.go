@@ -2,7 +2,7 @@ package comments
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // deletes comments related to UserId from the COMMENTS table

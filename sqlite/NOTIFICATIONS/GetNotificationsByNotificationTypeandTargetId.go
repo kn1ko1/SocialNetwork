@@ -3,7 +3,7 @@ package notifications
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Retrieves notifications with the relevant userId from the NOTIFICATIONS table

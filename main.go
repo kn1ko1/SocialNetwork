@@ -8,9 +8,9 @@ import (
 	"socialnetwork/Server/api"
 	"socialnetwork/Server/auth"
 	"socialnetwork/Server/repo"
-	"socialnetwork/router"
+	"socialnetwork/Server/router"
+	"socialnetwork/Server/ws"
 	"socialnetwork/ui"
-	"socialnetwork/ws"
 )
 
 const (

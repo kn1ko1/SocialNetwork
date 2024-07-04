@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Adds post user into the given database

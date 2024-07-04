@@ -2,7 +2,7 @@ package comments
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // deletes posts related to PostId from the COMMENTS table

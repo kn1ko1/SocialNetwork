@@ -2,7 +2,7 @@ package events
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Deletes all events from the EVENTS table; use with caution

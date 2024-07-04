@@ -5,7 +5,7 @@ import (
 	"errors"
 	"log"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 func GetUserUserByFollowerIdAndSubjectId(database *sql.DB, followerId, subjectId int) (models.UserUser, error) {

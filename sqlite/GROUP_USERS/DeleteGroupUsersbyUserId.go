@@ -2,7 +2,7 @@ package group_users
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // deletes group users related to UserId from the GROUP_USERS table

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"socialnetwork/Server/repo"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 	"strings"
 )
 

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"socialnetwork/Server/repo"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Allowed methods: GET, POST

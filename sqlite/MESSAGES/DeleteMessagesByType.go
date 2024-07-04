@@ -2,7 +2,7 @@ package messages
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // deletes messages of MessageType from the MESSAGES table

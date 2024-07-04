@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"socialnetwork/Server/repo"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Endpoint: /api/users
@@ -76,7 +76,7 @@ func (h *UsersHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // 	if file != nil {
 // 		defer file.Close()
 // 		var ImageProcessingrErr error
-// 		user.ImageURL, ImageProcessingrErr = imageProcessing.ImageProcessing(w, r, file, *fileHeader)
+// 		user.ImageURL, ImageProcessingrErr = utils.ImageProcessing(w, r, file, *fileHeader)
 // 		if ImageProcessingrErr != nil {
 // 			utils.HandleError("Error with ImageHandler", ImageProcessingrErr)
 // 		}

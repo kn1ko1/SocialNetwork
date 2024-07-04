@@ -2,7 +2,7 @@ package event_users
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 func DeleteEventUserByEventIdAndUserId(database *sql.DB, userId, eventId int) error {

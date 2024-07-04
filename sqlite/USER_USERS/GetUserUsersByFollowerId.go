@@ -3,7 +3,7 @@ package user_users
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Retrieves userUsers with the relevant subjectId from the USER_USERS table

@@ -3,7 +3,7 @@ package events
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils" // Assuming you have a utility package for error handling
+	"socialnetwork/Server/utils"
 )
 
 // Updates event information in the EVENTS table

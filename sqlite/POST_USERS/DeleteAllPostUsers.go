@@ -2,7 +2,7 @@ package post_users
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Deletes all postusers from the POST_USERS table; use with caution

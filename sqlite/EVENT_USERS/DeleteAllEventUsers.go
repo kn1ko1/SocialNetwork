@@ -2,7 +2,7 @@ package event_users
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Deletes all eventusers from the EVENT_USERS table; use with caution

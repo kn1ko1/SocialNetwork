@@ -3,7 +3,7 @@ package posts
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // GetPostsAlmostPrivateWithComments retrieves almost private posts for the provided userId along with associated comments

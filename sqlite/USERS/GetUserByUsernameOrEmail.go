@@ -3,7 +3,7 @@ package users
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Retrieves user with the relevant username from the USERS table

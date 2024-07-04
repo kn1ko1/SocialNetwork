@@ -7,7 +7,7 @@ import (
 	"socialnetwork/Server/models"
 	"socialnetwork/Server/repo"
 	"socialnetwork/Server/transport"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 type PostsPrivateWithCommentsHandler struct {

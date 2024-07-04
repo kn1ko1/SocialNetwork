@@ -2,7 +2,7 @@ package users
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Deletes all users from the USERS table; use with caution

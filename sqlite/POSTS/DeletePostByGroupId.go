@@ -2,7 +2,7 @@ package posts
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // deletes posts related to groupId from the POSTS table

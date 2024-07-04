@@ -2,7 +2,7 @@ package group_users
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Deletes all groupusers from the GROUP_USERS table; use with caution

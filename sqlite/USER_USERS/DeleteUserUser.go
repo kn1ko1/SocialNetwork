@@ -2,7 +2,7 @@ package user_users
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // deletes groupo of GroupId from the GROUPS table

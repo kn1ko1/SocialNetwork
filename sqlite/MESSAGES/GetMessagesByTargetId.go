@@ -3,7 +3,7 @@ package messages
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Retrieves messages with the relevant targetId from the MESSAGES table

@@ -2,7 +2,7 @@ package messages
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Deletes all messages from the MESSAGES table; use with caution

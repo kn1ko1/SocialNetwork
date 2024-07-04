@@ -2,7 +2,7 @@ package event_users
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // deletes posts related to groupId from the EVENT_USERS table

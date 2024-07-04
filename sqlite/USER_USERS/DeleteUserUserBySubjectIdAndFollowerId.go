@@ -2,7 +2,7 @@ package user_users
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 func DeleteUserUserBySubjectIdAndFollowerId(database *sql.DB, subjectId, followerId int) error {

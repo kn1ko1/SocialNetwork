@@ -3,7 +3,7 @@ package posts
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Retrieves posts with the relevant groupId from the POSTS table

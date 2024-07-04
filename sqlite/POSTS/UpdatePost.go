@@ -3,7 +3,7 @@ package posts
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Updates post information in the POSTS table

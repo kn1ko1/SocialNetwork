@@ -3,7 +3,7 @@ package group_users
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 func GetGroupUsersByGroupId(database *sql.DB, groupId int) ([]models.GroupUser, error) {

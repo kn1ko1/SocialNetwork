@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"socialnetwork/Server/auth"
 	"socialnetwork/Server/repo"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 
 	"github.com/gorilla/websocket"
 )

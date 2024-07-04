@@ -3,7 +3,7 @@ package groups
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // GetGroupsByUserId retrieves groups associated with a given user ID using foreign keys

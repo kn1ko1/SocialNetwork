@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"socialnetwork/Server/repo"
 	"socialnetwork/Server/transport"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 
 	"golang.org/x/crypto/bcrypt"
 )

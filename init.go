@@ -1,9 +1,8 @@
 package main
 
 import (
-	"socialnetwork/utils"
-
-	"socialnetwork/ws"
+	dbUtils "socialnetwork/Database/databaseUtils"
+	"socialnetwork/Server/ws"
 )
 
 var (
@@ -12,8 +11,8 @@ var (
 
 func init() {
 
-	utils.InitIdentityDatabase()
-	utils.InitBusinessDatabase()
+	dbUtils.InitIdentityDatabase()
+	dbUtils.InitBusinessDatabase()
 
 	socketGroupManager = ws.NewSocketGroupManager()
 	socketGroupManager.Start()

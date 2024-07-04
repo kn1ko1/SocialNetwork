@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Retrieves post with the relevant postId from the POSTS table

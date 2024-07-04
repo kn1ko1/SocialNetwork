@@ -3,7 +3,7 @@ package users
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Adds user into the gdatabase *sql.DBiven database

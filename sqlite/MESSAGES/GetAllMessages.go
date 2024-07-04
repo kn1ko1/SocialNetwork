@@ -4,7 +4,7 @@ import (
 	"database/sql"
 
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Retrieves all messages from the MESSAGES table

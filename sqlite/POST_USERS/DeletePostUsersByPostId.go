@@ -2,7 +2,7 @@ package post_users
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // deletes posts related to postId from the POST_USERS table

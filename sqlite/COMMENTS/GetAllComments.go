@@ -3,7 +3,7 @@ package comments
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Retrieves all comments from the COMMENTS table

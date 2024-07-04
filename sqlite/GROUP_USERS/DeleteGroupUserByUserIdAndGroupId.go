@@ -2,7 +2,7 @@ package group_users
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 func DeleteGroupUserByGroupIdAndUserId(database *sql.DB, groupId, userId int) error {

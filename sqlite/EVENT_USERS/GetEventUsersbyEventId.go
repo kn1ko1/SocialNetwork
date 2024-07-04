@@ -3,7 +3,7 @@ package event_users
 import (
 	"database/sql"
 	"socialnetwork/Server/models"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 func GetEventUsersByEventId(database *sql.DB, eventId int) ([]models.EventUser, error) {

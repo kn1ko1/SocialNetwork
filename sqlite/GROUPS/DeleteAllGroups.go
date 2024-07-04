@@ -2,7 +2,7 @@ package groups
 
 import (
 	"database/sql"
-	"socialnetwork/utils"
+	"socialnetwork/Server/utils"
 )
 
 // Deletes all comments from the COMMENTS table; use with caution
