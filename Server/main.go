@@ -1,10 +1,11 @@
-package Server
+package main
 
 import (
 	"fmt"
 	"log"
 	"net/http"
 	"regexp"
+	dbUtils "socialnetwork/Database/databaseUtils"
 	"socialnetwork/Server/api"
 	"socialnetwork/Server/auth"
 	"socialnetwork/Server/repo"
@@ -17,7 +18,24 @@ const (
 	addr = ":8080"
 )
 
+var (
+	socketGroupManager *ws.SocketGroupManager
+)
+
+func initDatabases() {
+
+	dbUtils.InitIdentityDatabase()
+	dbUtils.InitBusinessDatabase()
+
+	ui.InitTemplates()
+
+	socketGroupManager = ws.NewSocketGroupManager()
+	socketGroupManager.Start()
+}
+
 func main() {
+	initDatabases()
+
 	// Setup serve mux
 	mux := http.NewServeMux()
 	// Host static files
