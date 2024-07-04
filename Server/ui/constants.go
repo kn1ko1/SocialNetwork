@@ -2,7 +2,6 @@ package ui
 
 import (
 	"html/template"
-	"path/filepath"
 	"socialnetwork/Server/utils"
 )
 
@@ -11,11 +10,9 @@ var (
 )
 
 func InitTemplates() {
-	// Get the absolute path to the templates directory
-	templatesDir := filepath.Join("..", "templates", "*.go.html")
 
 	// Parse the templates using ParseGlob
-	tmpl, err := template.ParseGlob(templatesDir)
+	tmpl, err := template.ParseGlob("../Server/templates/*.go.html")
 	if err != nil {
 		utils.HandleError("Error with template.ParseGlob in ui/init()", err)
 	}
