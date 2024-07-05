@@ -17,13 +17,21 @@ import (
 //run `migrate --help` in terminal to explore migrate package.
 
 func InitIdentityDatabase() {
+	// Get the current working directory
 	wd, err := os.Getwd()
 	if err != nil {
 		log.Fatal("Unable to get current working directory:", err)
 	}
-	log.Println("Current working directory:", wd)
 
-	dbPath := filepath.Join(wd, "Identity.db")
+	// Define the relative path for the database
+	dbDir := filepath.Join(wd, "..", "Database")
+	dbPath := filepath.Join(dbDir, "Identity.db")
+
+	// Ensure the directory exists
+	if err := os.MkdirAll(dbDir, 0755); err != nil {
+		log.Fatal("Unable to create database directory:", err)
+	}
+
 	identityDB, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
 		log.Fatal("Unable to open identity database:", err)
@@ -39,20 +47,55 @@ func InitIdentityDatabase() {
 
 	// Adjust the migration paths if necessary
 	dbURL := fmt.Sprintf("sqlite://%s", dbPath)
-	migrationsDir := "file://sqlite/migrations/identity"
+	migrationsDir := fmt.Sprintf("file://%s", filepath.Join(dbDir, "migrations", "identity"))
 	runMigrations(dbURL, migrationsDir)
 }
 
 func InitBusinessDatabase() {
-	businessDB, err := sql.Open("sqlite3", "Business.db")
+	// Get the current working directory
+	wd, err := os.Getwd()
+	if err != nil {
+		log.Fatal("Unable to get current working directory:", err)
+	}
+
+	// Define the relative path for the database
+	dbDir := filepath.Join(wd, "..", "Database")
+	dbPath := filepath.Join(dbDir, "Business.db")
+
+	// Ensure the directory exists
+	if err := os.MkdirAll(dbDir, 0755); err != nil {
+		log.Fatal("Unable to create database directory:", err)
+	}
+
+	businessDB, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
 		log.Fatal("Unable to open business database:", err)
 	}
 	defer businessDB.Close()
-	log.Println("Connected to Business SQLite database")
 
-	runMigrations("sqlite://../sqlite/data/Business.db", "file://../sqlite/migrations/business")
+	// Ensure the database file is created
+	if _, err := businessDB.Exec("PRAGMA foreign_keys = ON"); err != nil {
+		log.Fatal("Error initializing database:", err)
+	}
+
+	log.Println("Connected to Identity SQLite database at:", dbPath)
+
+	// Adjust the migration paths if necessary
+	dbURL := fmt.Sprintf("sqlite://%s", dbPath)
+	migrationsDir := fmt.Sprintf("file://%s", filepath.Join(dbDir, "migrations", "business"))
+	runMigrations(dbURL, migrationsDir)
 }
+
+// func InitBusinessDatabase() {
+// 	businessDB, err := sql.Open("sqlite3", "Business.db")
+// 	if err != nil {
+// 		log.Fatal("Unable to open business database:", err)
+// 	}
+// 	defer businessDB.Close()
+// 	log.Println("Connected to Business SQLite database")
+
+// 	runMigrations("sqlite://../sqlite/data/Business.db", "file://../sqlite/migrations/business")
+// }
 
 func runMigrations(databaseURL, migrationsDir string) {
 	m, err := migrate.New(migrationsDir, databaseURL)

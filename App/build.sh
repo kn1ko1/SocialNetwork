@@ -7,5 +7,3 @@ npx babel ./jsx/components/Notifications/*.jsx -d ./static/js/components/Notific
 npx babel ./jsx/components/Profile/*.jsx -d ./static/js/components/Profile/
 
 npx babel ./jsx/*.jsx -d ./static/js/
-
-go run ./../Server/main.go
