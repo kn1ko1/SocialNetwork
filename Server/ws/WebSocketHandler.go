@@ -1,7 +1,6 @@
 package ws
 
 import (
-	"log"
 	"net/http"
 	"socialnetwork/Server/auth"
 	"socialnetwork/Server/repo"
@@ -39,8 +38,6 @@ func (h *WebSocketHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // get handles WebSocket upgrade and authentication.
 func (h *WebSocketHandler) get(w http.ResponseWriter, r *http.Request) {
 	// Authenticate the user making the WebSocket request.
-	c, _ := r.Cookie("SessionID")
-	log.Println("[ws/WebsocketHandler], c.Value:", c.Value)
 	user, err := auth.AuthenticateRequest(r)
 	if err != nil {
 		utils.HandleError("Error verifying cookie in WebSocket Handler: ", err)

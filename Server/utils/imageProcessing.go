@@ -10,7 +10,7 @@ import (
 
 const (
 	maxFileSize = 20 << 20 // 20MB
-	dirPath     = "static/uploadedFiles/images"
+	dirPath     = "./uploads/images"
 )
 
 var supportedFileTypes = map[string]bool{
@@ -44,5 +44,6 @@ func ImageProcessing(w http.ResponseWriter, r *http.Request, file multipart.File
 		http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
 		return "", copyErr
 	}
+
 	return osFile.Name(), nil
 }

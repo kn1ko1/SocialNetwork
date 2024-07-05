@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"regexp"
 	dbUtils "socialnetwork/Database/databaseUtils"
 	"socialnetwork/Server/api"
@@ -55,6 +57,7 @@ func setupRouter(mux *http.ServeMux) {
 	addApiHandlers(rt)
 	addWSHandler(rt)
 	addUIHandlers(rt)
+	addImageHandlers(rt)
 	mux.Handle("/", rt)
 }
 
@@ -64,6 +67,7 @@ func addApiHandlers(rt *router.Router) {
 	loginHandler := auth.NewLoginHandler(r)
 	logoutHandler := auth.NewLogoutHandler(r)
 	registrationHandler := auth.NewRegistrationHandler(r)
+
 	usersHandler := api.NewUsersHandler(r)
 	userByIdHandler := api.NewUserByIdHandler(r)
 	postsByUserIdHandler := api.NewPostsByUserIdHandler(r)
@@ -77,31 +81,31 @@ func addApiHandlers(rt *router.Router) {
 	PostsPublicWithCommentsHandler := api.NewPostsPublicWithCommentsHandler(r)
 	postsPrivateWithCommentsHandler := api.NewPostsPrivateWithCommentsHandler(r)
 	postsAlmostPrivateWithCommentsHandler := api.NewPostsAlmostPrivateWithCommentsHandler(r)
-	// postUsersByPostIdHandler := api.NewPostUsersByPostIdHandler(r)
-	// userPostsHandler := api.NewUserPostsHandler(r)
-	// postsByPrivacyHandler := api.NewPostsByPrivacyHandler(r)
-	// postUserHandler := api.NewPostUsersHandler(r)
+
 	commentsHandler := api.NewCommentsHandler(r)
 	commentByIdHandler := api.NewCommentByIdHandler(r)
 	commentByPostIdHandler := api.NewCommentsByPostIdHandler(r)
+
 	eventsHandler := api.NewEventsHandler(r)
 	eventByIdHandler := api.NewEventByIdHandler(r)
 	eventsByGroupIdHandler := api.NewEventsByGroupIdHandler(r)
 	eventsByUserIdHandler := api.NewEventsByUserIdHandler(r)
 	eventUsersHandler := api.NewEventUsersHandler(r)
-	// eventUsersByEventIdHandler := api.NewEventUsersByEventIdHandler(r)
-	// eventUsersByEventIdAndUserIdHandler := api.NewEventUserByEventIdAndUserIdHandler(r)
+
 	groupsHandler := api.NewGroupsHandler(r)
 	groupByIdHandler := api.NewGroupByIdHandler(r)
 	groupsByUserIdHandler := api.NewGroupsByUserIdHandler(r)
 	groupUsersHandler := api.NewGroupUsersHandler(r)
 	groupUsersByGroupIdHandler := api.NewGroupUsersByGroupIdHandler(r)
 	groupUsersByUserIdHandler := api.NewGroupUsersByUserIdHandler(r)
+
 	messagesBySenderAndTargetIDHandler := api.NewMessagesBySenderAndTargetIDHandler(r)
 	messagesByTypeAndTargetIdHandler := api.NewMessagesByTypeAndTargetIdHandler(r)
+
 	notificationsHandler := api.NewNotificationsHandler(r)
 	notificationByIdHandler := api.NewNotificationByIdHandler(r)
 	notificationsByUserIdHandler := api.NewNotificationsByUserIdHandler(r)
+
 	userUsersHandler := api.NewUserUsersHandler(r)
 	userUsersByFollowerIdHandler := api.NewUserUsersByFollowerIdHandler(r)
 	userUsersBySubjectIdHandler := api.NewUserUsersBySubjectIdHandler(r)
@@ -180,8 +184,16 @@ func addUIHandlers(rt *router.Router) {
 	rt.AddHandler(regexp.MustCompile(`^/$`), ui.NewPageHandler())
 }
 
+func addImageHandlers(rt *router.Router) {
+	rt.AddHandler(regexp.MustCompile(`^/uploads/.*$`), ui.NewImageHandler())
+}
+
 func serveStaticFiles(mux *http.ServeMux) {
-	fsRoot := http.Dir("./static/")
+	workDir, _ := os.Getwd()
+	staticDir := filepath.Join(workDir, "..", "App", "static") // Go up one level, then into 'App/static'
+	fsRoot := http.Dir(staticDir)
 	fs := http.FileServer(fsRoot)
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
+
+	log.Println("Serving static files from:", staticDir) // Log the path for debugging
 }

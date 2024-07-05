@@ -2,6 +2,6 @@ package repo
 
 const (
 	dbDriver       = "sqlite3"
-	identityDbPath = "./sqlite/data/Identity.db"
-	businessDbPath = "./sqlite/data/Business.db"
+	identityDbPath = "../Database/Identity.db"
+	businessDbPath = "../Database/Business.db"
 )
