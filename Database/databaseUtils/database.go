@@ -2,7 +2,10 @@ package dbUtils
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
+	"os"
+	"path/filepath"
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/sqlite"
@@ -14,35 +17,45 @@ import (
 //run `migrate --help` in terminal to explore migrate package.
 
 func InitIdentityDatabase() {
-	identityDB, err := sql.Open("sqlite3", "./sqlite/data/Identity.db")
+	wd, err := os.Getwd()
+	if err != nil {
+		log.Fatal("Unable to get current working directory:", err)
+	}
+	log.Println("Current working directory:", wd)
+
+	dbPath := filepath.Join(wd, "Identity.db")
+	identityDB, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
 		log.Fatal("Unable to open identity database:", err)
 	}
 	defer identityDB.Close()
 
-	log.Println("Connected to Identity SQLite database")
+	// Ensure the database file is created
+	if _, err := identityDB.Exec("PRAGMA foreign_keys = ON"); err != nil {
+		log.Fatal("Error initializing database:", err)
+	}
 
-	runMigrations("sqlite://./sqlite/data/Identity.db", "file://./sqlite/migrations/identity")
+	log.Println("Connected to Identity SQLite database at:", dbPath)
 
+	// Adjust the migration paths if necessary
+	dbURL := fmt.Sprintf("sqlite://%s", dbPath)
+	migrationsDir := "file://sqlite/migrations/identity"
+	runMigrations(dbURL, migrationsDir)
 }
 
 func InitBusinessDatabase() {
-	businessDB, err := sql.Open("sqlite3", "./sqlite/data/Business.db")
+	businessDB, err := sql.Open("sqlite3", "Business.db")
 	if err != nil {
 		log.Fatal("Unable to open business database:", err)
 	}
 	defer businessDB.Close()
-
 	log.Println("Connected to Business SQLite database")
 
-	runMigrations("sqlite://./sqlite/data/Business.db", "file://./sqlite/migrations/business")
-
+	runMigrations("sqlite://../sqlite/data/Business.db", "file://../sqlite/migrations/business")
 }
 
 func runMigrations(databaseURL, migrationsDir string) {
-
 	m, err := migrate.New(migrationsDir, databaseURL)
-
 	if err != nil {
 		log.Fatal("Error creating migrations instance:", err)
 	}
