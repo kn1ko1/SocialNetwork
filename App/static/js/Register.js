@@ -315,7 +315,7 @@ export function Register() {
     } = e.target;
     setFormValues(prevValues => ({
       ...prevValues,
-      [name]: type === "checkbox" ? checked : value
+      [name]: type === "checkbox" ? checked : type === "radio" ? JSON.parse(value) : value
     }));
   };
   const handleFileChange = e => {
