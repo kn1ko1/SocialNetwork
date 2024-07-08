@@ -8,6 +8,7 @@ import (
 	"socialnetwork/Server/models"
 	"socialnetwork/Server/repo"
 	"socialnetwork/Server/utils"
+	"strings"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -117,7 +118,54 @@ func (h *RegistrationHandler) post(w http.ResponseWriter, r *http.Request) {
 	user, err = h.Repo.CreateUser(user)
 	if err != nil {
 		utils.HandleError("Unable to register a new user in AddUserHandler", err)
-		http.Error(w, "Unable to register a new user", http.StatusBadRequest)
+		// Convert the error to a string
+		errStr := err.Error()
+		splitErrStr := strings.Split(errStr, " ")
+		problemLocationString := splitErrStr[3]
+
+		type ErrorStruct struct {
+			ErrorField   string `json:"errorField"`
+			ErrorMessage string `json:"errorMessage"`
+		}
+		var returnErrorStruct ErrorStruct
+		switch problemLocationString {
+		case "USERS.Username":
+			returnErrorStruct = ErrorStruct{
+				ErrorField:   "Username",
+				ErrorMessage: "This username is already taken.",
+			}
+		case "USERS.Email":
+			returnErrorStruct = ErrorStruct{
+				ErrorField:   "Email",
+				ErrorMessage: "An account with that email address is already registered.",
+			}
+		default:
+			returnErrorStruct = ErrorStruct{
+				ErrorField:   "Unknown",
+				ErrorMessage: "An unknown error occurred.",
+			}
+
+		}
+		log.Println(returnErrorStruct)
+		jsonResponse, err := json.Marshal(returnErrorStruct)
+		if err != nil {
+			utils.HandleError("Failed to marshal JSON response", err)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+			return
+		}
+		var testErrorStruct ErrorStruct
+		err = json.Unmarshal([]byte(jsonResponse), &testErrorStruct)
+		if err != nil {
+			log.Fatalf("Failed to unmarshal JSON: %v", err)
+		}
+		log.Println(testErrorStruct)
+		w.Header().Set("Content-Type", "application/json")
+		_, err = w.Write(jsonResponse)
+		if err != nil {
+			utils.HandleError("Failed to write JSON response", err)
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+			return
+		}
 		return
 	}
 

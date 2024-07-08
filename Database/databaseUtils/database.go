@@ -78,24 +78,13 @@ func InitBusinessDatabase() {
 		log.Fatal("Error initializing database:", err)
 	}
 
-	log.Println("Connected to Identity SQLite database at:", dbPath)
+	log.Println("Connected to Business SQLite database at:", dbPath)
 
 	// Adjust the migration paths if necessary
 	dbURL := fmt.Sprintf("sqlite://%s", dbPath)
 	migrationsDir := fmt.Sprintf("file://%s", filepath.Join(dbDir, "migrations", "business"))
 	runMigrations(dbURL, migrationsDir)
 }
-
-// func InitBusinessDatabase() {
-// 	businessDB, err := sql.Open("sqlite3", "Business.db")
-// 	if err != nil {
-// 		log.Fatal("Unable to open business database:", err)
-// 	}
-// 	defer businessDB.Close()
-// 	log.Println("Connected to Business SQLite database")
-
-// 	runMigrations("sqlite://../sqlite/data/Business.db", "file://../sqlite/migrations/business")
-// }
 
 func runMigrations(databaseURL, migrationsDir string) {
 	m, err := migrate.New(migrationsDir, databaseURL)
@@ -107,4 +96,5 @@ func runMigrations(databaseURL, migrationsDir string) {
 	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
 		log.Fatal("Error applying migrations:", err)
 	}
+	log.Println("Applying Up migrations from", migrationsDir)
 }
