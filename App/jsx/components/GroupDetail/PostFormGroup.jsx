@@ -10,9 +10,16 @@ export function PostFormGroup({ group, fetchFunc }) {
 		e.preventDefault(); // Prevent page reload
 
 		const formData = new FormData();
+		// Handle body content
+		let requestBody = body;
 
+		if (selectedFile && !requestBody.trim()) {
+			// If selectedFile is present and body is empty or whitespace only,
+			// set requestBody to a space character
+			requestBody = " ";
+		}
 		// Append form data
-		formData.append("body", body);
+		formData.append("body", requestBody);
 		formData.append("groupId", group.groupId);
 		if (selectedFile) {
 			formData.append("image", selectedFile);
@@ -57,7 +64,7 @@ export function PostFormGroup({ group, fetchFunc }) {
 	return (
 		<div>
 			<main className="postForm container" style={{ maxWidth: "400px" }}>
-				<h2 className="h3 mb-3 fw-normal" style={{textDecoration: 'underline'}}>New Post</h2>
+				<h2 className="h3 mb-3 fw-normal" style={{ textDecoration: 'underline' }}>New Post</h2>
 				<form onSubmit={submit}>
 					<div className="mb-3">
 						<input

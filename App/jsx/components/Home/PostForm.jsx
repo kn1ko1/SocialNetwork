@@ -34,8 +34,21 @@ export function PostForm({ groupId, followedUsers, fetchFunc }) {
 
 		const formData = new FormData()
 
+		 // Handle body content
+		 let requestBody = body;
+
+		 if (selectedFile && !requestBody.trim()) {
+			// If selectedFile is present and body is empty or whitespace only,
+			// set requestBody to a space character
+			requestBody = " ";
+		}
 		// Append form data
-		formData.append("body", body)
+		if (selectedFile) {
+			formData.append("image", selectedFile)
+			
+		}
+		
+		formData.append("body", requestBody)
 		formData.append("privacy", privacy)
 		if (privacy === "private") {
 			groupId = -1 // Set groupId to -1 for private posts
@@ -45,9 +58,7 @@ export function PostForm({ groupId, followedUsers, fetchFunc }) {
 			formData.append("almostPrivatePostUsers", JSON.stringify(selectedUserIds));
 		}
 		formData.append("groupId", groupId);
-		if (selectedFile) {
-			formData.append("image", selectedFile)
-		}
+		
 
 		console.log("Form data being sent to backend: ", formData)
 
@@ -117,95 +128,95 @@ export function PostForm({ groupId, followedUsers, fetchFunc }) {
 
 	return (
 		<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '40vh', padding: '10px' }}>
-		<main className="postForm container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0'}}>
-		  <div className="border" style={{ borderRadius: "10px", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', border: "3px solid #333", padding: "10px", width: '100%', maxWidth: '600px', background: 'linear-gradient(to bottom, #c7ddef, #ffffff)'  }}>
-			<div className="col-12">
-			  <h1 className="h3 mb-3 fw-normal" style={{ textDecoration: 'underline', textAlign: "center" }}>New Post</h1>
-			  <form onSubmit={submit}>
-				<div style={{ display: "flex", gap: "10px" }}>
-				
-				  <input
-							type="text"
-							className="form-control"
-							id="postFormBody"
-							rows="2"
-							placeholder="Type your post here..."
-							onChange={(e) => setBody(e.target.value)}
-						/>
+			<main className="postForm container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0' }}>
+				<div className="border" style={{ borderRadius: "10px", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', border: "3px solid #333", padding: "10px", width: '100%', maxWidth: '600px', background: 'linear-gradient(to bottom, #c7ddef, #ffffff)' }}>
+					<div className="col-12">
+						<h1 className="h3 mb-3 fw-normal" style={{ textDecoration: 'underline', textAlign: "center" }}>New Post</h1>
+						<form onSubmit={submit}>
+							<div style={{ display: "flex", gap: "10px" }}>
+
+								<input
+									type="text"
+									className="form-control"
+									id="postFormBody"
+									rows="2"
+									placeholder="Type your post here..."
+									onChange={(e) => setBody(e.target.value)}
+								/>
+							</div>
+							<div>
+								<button
+									type="button"
+									className="btn btn-primary"
+									onClick={handleSelectFile}
+									style={{ marginRight: "10px", marginTop: "10px" }}
+								>
+									Select File
+								</button>
+								<span>{selectedFile ? selectedFile.name : "No file selected"}</span>
+								<input
+									type="file"
+									id="fileInput"
+									accept="image/*"
+									style={{ display: "none" }}
+									onChange={handleFileChange}
+								/>
+							</div>
+							<br /> {/* Line break */}
+							<div className="form-floating mb-3">
+								<div className="form-check">
+									<input
+										required
+										type="radio"
+										id="post-public-status"
+										value="public"
+										name="status"
+										checked={privacy === "public"}
+										onClick={handlePrivacyChange}
+										className="form-check-input"
+									/>
+									<label htmlFor="post-public-status" className="form-check-label">
+										Public
+									</label>
+								</div>
+								<div className="form-check">
+									<input
+										required
+										type="radio"
+										id="post-private-status"
+										value="private"
+										name="status"
+										checked={privacy === "private"}
+										onClick={handlePrivacyChange}
+										className="form-check-input"
+									/>
+									<label htmlFor="private-status" className="form-check-label">
+										Private
+									</label>
+								</div>
+								<div className="form-check">
+									<input
+										required
+										type="radio"
+										id="post-almostPrivate-status"
+										value="almost private"
+										name="status"
+										checked={privacy === "almost private"}
+										onClick={handlePrivacyChange}
+										className="form-check-input"
+									/>
+									<label htmlFor="private-status" className="form-check-label">
+										Almost Private
+									</label>
+								</div>
+							</div>
+
+							{followedUsersList}
+							<button className="w-100 btn btn-lg btn-primary" type="submit">
+								Submit
+							</button>
+						</form>
 					</div>
-					<div>
-						<button
-							type="button"
-							className="btn btn-primary"
-							onClick={handleSelectFile}
-							style={{ marginRight: "10px" , marginTop: "10px"}}
-						>
-							Select File
-						</button>
-						<span>{selectedFile ? selectedFile.name : "No file selected"}</span>
-						<input
-							type="file"
-							id="fileInput"
-							accept="image/*"
-							style={{ display: "none" }}
-							onChange={handleFileChange}
-						/>
-					</div>
-					<br /> {/* Line break */}
-					<div className="form-floating mb-3">
-						<div className="form-check">
-							<input
-								required
-								type="radio"
-								id="post-public-status"
-								value="public"
-								name="status"
-								checked={privacy === "public"}
-								onClick={handlePrivacyChange}
-								className="form-check-input"
-							/>
-							<label htmlFor="post-public-status" className="form-check-label">
-								Public
-							</label>
-						</div>
-						<div className="form-check">
-							<input
-								required
-								type="radio"
-								id="post-private-status"
-								value="private"
-								name="status"
-								checked={privacy === "private"}
-								onClick={handlePrivacyChange}
-								className="form-check-input"
-							/>
-							<label htmlFor="private-status" className="form-check-label">
-								Private
-							</label>
-						</div>
-						<div className="form-check">
-							<input
-								required
-								type="radio"
-								id="post-almostPrivate-status"
-								value="almost private"
-								name="status"
-								checked={privacy === "almost private"}
-								onClick={handlePrivacyChange}
-								className="form-check-input"
-							/>
-							<label htmlFor="private-status" className="form-check-label">
-								Almost Private
-							</label>
-						</div>
-					</div>
-					
-					{followedUsersList}
-					<button className="w-100 btn btn-lg btn-primary" type="submit">
-						Submit
-					</button>
-				</form>
-				</div>
 				</div>
 			</main>
 		</div>

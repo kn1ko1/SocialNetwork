@@ -29,9 +29,15 @@ export function PostCard({
     e.preventDefault(); // prevent reload.
 
     const formData = new FormData();
-
+    // Handle body content
+    let requestBody = body;
+    if (selectedFile && !requestBody.trim()) {
+      // If selectedFile is present and body is empty or whitespace only,
+      // set requestBody to a space character
+      requestBody = " ";
+    }
     // Append form data
-    formData.append('body', body);
+    formData.append('body', requestBody);
     formData.append('postId', post.post.postId);
     if (selectedFile) {
       formData.append('image', selectedFile);
@@ -55,7 +61,6 @@ export function PostCard({
   // Function to handle file selection
   const handleFileChange = e => {
     setSelectedFile(e.target.files[0]);
-    // const file = e.target.files[0];
   };
   const handleSelectFile = () => {
     const commentFileInput = document.getElementById(`commentFileInput${post.post.postId}`);

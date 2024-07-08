@@ -101,7 +101,6 @@ export function Register() {
       if (data.success) {
         setIsRegistered(true);
       } else {
-        console.log(1);
         const validationErrors = {};
         if (data.errorField == "Email") {
           validationErrors.email = data.errorMessage;
@@ -115,11 +114,6 @@ export function Register() {
         }
         return;
       }
-
-      // } else {
-      // 	setErrors({ server: "Invalid credentials" });
-      // 	throw new Error("Invalid credentials");
-      // }
     } catch (error) {
       console.error("Registration error:", error);
     }

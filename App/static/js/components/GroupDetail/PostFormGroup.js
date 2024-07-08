@@ -14,9 +14,15 @@ export function PostFormGroup({
     e.preventDefault(); // Prevent page reload
 
     const formData = new FormData();
-
+    // Handle body content
+    let requestBody = body;
+    if (selectedFile && !requestBody.trim()) {
+      // If selectedFile is present and body is empty or whitespace only,
+      // set requestBody to a space character
+      requestBody = " ";
+    }
     // Append form data
-    formData.append("body", body);
+    formData.append("body", requestBody);
     formData.append("groupId", group.groupId);
     if (selectedFile) {
       formData.append("image", selectedFile);

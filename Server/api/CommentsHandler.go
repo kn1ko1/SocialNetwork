@@ -98,6 +98,12 @@ func (h *CommentsHandler) post(w http.ResponseWriter, r *http.Request) {
 		UpdatedAt: ctime,
 		UserId:    userId,
 	}
+	// Validate the comment
+	if validationErr := comment.Validate(); validationErr != nil {
+		utils.HandleError("Validation failed:", validationErr)
+		http.Error(w, "Validation failed", http.StatusBadRequest)
+		return
+	}
 	result, createErr := h.Repo.CreateComment(comment)
 	if createErr != nil {
 		utils.HandleError("Failed to create post in the repository:", createErr)
