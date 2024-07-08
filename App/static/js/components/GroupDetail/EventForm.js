@@ -13,6 +13,7 @@ export function EventForm({
   const [dateTime, setDateTime] = useState("");
   const [eventDescription, setEventDescription] = useState("");
   const [eventTitle, setEventTitle] = useState("");
+  const [attendance, setAttendance] = useState("attending");
   const {
     currentUserId
   } = getCurrentUserId();
@@ -28,7 +29,8 @@ export function EventForm({
       description: eventDescription,
       groupId: group.groupId,
       title: eventTitle,
-      userId: currentUserId
+      userId: currentUserId,
+      attendance: attendance // Include attendance in event data
     };
     console.log("Event Form data being sent to backend: ", eventData);
     try {
@@ -42,8 +44,10 @@ export function EventForm({
       setDateTime("");
       setEventDescription("");
       setEventTitle("");
+      setAttendance("attending"); // Reset to default attendance
       document.getElementById("eventFormDescription").value = "";
       document.getElementById("eventFormTitle").value = "";
+      document.getElementById("attending").checked = true; // Reset radio button
     } catch (error) {
       console.error("Error submitting event:", error);
     }
@@ -93,7 +97,35 @@ export function EventForm({
     className: "form-control reginput",
     id: "dateTime",
     onChange: e => setDateTime(e.target.value)
-  })), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("button", {
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "mb-3"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "form-check"
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "form-check-input",
+    type: "radio",
+    name: "attendanceOptions",
+    id: "attending",
+    value: "attending",
+    checked: attendance === 'attending',
+    onChange: e => setAttendance(e.target.value)
+  }), /*#__PURE__*/React.createElement("label", {
+    className: "form-check-label",
+    htmlFor: "attending"
+  }, "Attending")), /*#__PURE__*/React.createElement("div", {
+    className: "form-check"
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "form-check-input",
+    type: "radio",
+    name: "attendanceOptions",
+    id: "notAttending",
+    value: "notAttending",
+    checked: attendance === 'notAttending',
+    onChange: e => setAttendance(e.target.value)
+  }), /*#__PURE__*/React.createElement("label", {
+    className: "form-check-label",
+    htmlFor: "notAttending"
+  }, "Not Attending")))), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("button", {
     className: "w-100 btn btn-lg btn-primary",
     type: "submit"
   }, "Submit"))));
