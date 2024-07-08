@@ -9,7 +9,6 @@ import (
 // GetPostsAlmostPrivateWithComments retrieves almost private posts for the provided userId along with associated comments
 func GetPostsAlmostPrivateForUserId(database *sql.DB, userId int) ([]models.Post, error) {
 	var result []models.Post
-
 	// Query to select almost private posts based on the provided userId
 	query := `
         SELECT p.PostId, p.Body, p.CreatedAt, p.GroupId, p.ImageURL, p.Privacy, p.UpdatedAt, p.UserId
@@ -43,6 +42,7 @@ func GetPostsAlmostPrivateForUserId(database *sql.DB, userId int) ([]models.Post
 			utils.HandleError("Error scanning row in GetPostsAlmostPrivate.", err)
 			return nil, err
 		}
+		result = append(result, post)
 	}
 
 	return result, nil

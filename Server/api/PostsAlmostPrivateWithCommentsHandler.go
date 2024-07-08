@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"socialnetwork/Server/auth"
 	"socialnetwork/Server/models"
@@ -40,16 +41,17 @@ func (h *PostsAlmostPrivateWithCommentsHandler) get(w http.ResponseWriter, r *ht
 		http.Redirect(w, r, "auth/login", http.StatusSeeOther)
 		return
 	}
-	privatePosts, err := h.Repo.GetPostsAlmostPrivateForUserId(user.UserId)
+	almostPrivatePosts, err := h.Repo.GetPostsAlmostPrivateForUserId(user.UserId)
 	if err != nil {
 		utils.HandleError("Error getting private posts in GetPostsPrivateForUserId.", err)
 		return
 	}
 
+	log.Println("postsAlmostPrivateWithCommentsHandler", almostPrivatePosts)
 	var PrivatePostsWithComments []transport.PostWithComments
 	userCache := make(map[int]models.User)
 
-	for _, post := range privatePosts {
+	for _, post := range almostPrivatePosts {
 		// Fetch and cache the post author's user details
 		user, exists := userCache[post.UserId]
 		if !exists {
