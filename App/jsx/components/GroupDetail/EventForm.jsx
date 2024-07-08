@@ -8,6 +8,7 @@ export function EventForm({ group, socket, fetchFunc }) {
     const [dateTime, setDateTime] = useState("");
     const [eventDescription, setEventDescription] = useState("");
     const [eventTitle, setEventTitle] = useState("");
+    const [attendance, setAttendance] = useState("attending");
     const { currentUserId } = getCurrentUserId();
 
 
@@ -23,7 +24,8 @@ export function EventForm({ group, socket, fetchFunc }) {
             description: eventDescription,
             groupId: group.groupId,
             title: eventTitle,
-            userId: currentUserId
+            userId: currentUserId,
+            attendance: attendance // Include attendance in event data
         };
 
         console.log("Event Form data being sent to backend: ", eventData);
@@ -37,8 +39,10 @@ export function EventForm({ group, socket, fetchFunc }) {
             setDateTime("");
             setEventDescription("");
             setEventTitle("");
+            setAttendance("attending"); // Reset to default attendance
             document.getElementById("eventFormDescription").value = "";
             document.getElementById("eventFormTitle").value = "";
+            document.getElementById("attending").checked = true; // Reset radio button
         } catch (error) {
             console.error("Error submitting event:", error);
         }
@@ -87,6 +91,41 @@ export function EventForm({ group, socket, fetchFunc }) {
                             onChange={(e) => setDateTime(e.target.value)}
                         />
                     </div>
+
+                    <div className="mb-3">
+            <div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="attendanceOptions"
+                  id="attending"
+                  value="attending"
+                  checked={attendance === 'attending'}
+                  onChange={(e) => setAttendance(e.target.value)}
+                />
+                <label className="form-check-label" htmlFor="attending">
+                  Attending
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="attendanceOptions"
+                  id="notAttending"
+                  value="notAttending"
+                  checked={attendance === 'notAttending'}
+                  onChange={(e) => setAttendance(e.target.value)}
+                />
+                <label className="form-check-label" htmlFor="notAttending">
+                  Not Attending
+                </label>
+              </div>
+            </div>
+          </div>
+
+
                     <br />
                     <button className="w-100 btn btn-lg btn-primary" type="submit">
                         Submit
