@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"socialnetwork/Server/auth"
 	"socialnetwork/Server/models"
@@ -47,7 +46,6 @@ func (h *PostsAlmostPrivateWithCommentsHandler) get(w http.ResponseWriter, r *ht
 		return
 	}
 
-	log.Println("postsAlmostPrivateWithCommentsHandler", almostPrivatePosts)
 	var PrivatePostsWithComments []transport.PostWithComments
 	userCache := make(map[int]models.User)
 

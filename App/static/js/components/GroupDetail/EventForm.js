@@ -36,6 +36,7 @@ export function EventForm({
     try {
       let obj = {
         code: 6,
+        isGoing: true,
         body: JSON.stringify(eventData)
       };
       socket.send(JSON.stringify(obj));

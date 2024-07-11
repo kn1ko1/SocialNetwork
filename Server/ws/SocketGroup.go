@@ -15,7 +15,7 @@ import (
 // 	FOLLOW_REQUEST       = 3
 // 	GROUP_REQUEST      = 4
 // 	GROUP_INVITE       = 5
-// 	EVENT_INVITE       = 6
+// 	CREATE_EVENT       = 6
 // )
 
 // SocketGroup represents a group of WebSocket clients.
@@ -101,7 +101,7 @@ func (g *SocketGroup) Run() {
 				} else {
 					c.Send(msg)
 				}
-			case EVENT_INVITE:
+			case CREATE_EVENT:
 				var notification models.Notification
 				err := json.Unmarshal([]byte(msg.Body), &notification)
 				if err != nil {
