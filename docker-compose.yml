@@ -18,3 +18,5 @@ services:
     volumes:
       - ./Database:/app/Database
       - ./App/build:/app/build
+    environment:
+      - APP_BASE_PATH=/app

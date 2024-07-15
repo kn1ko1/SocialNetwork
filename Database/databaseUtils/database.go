@@ -14,17 +14,22 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-//run `migrate --help` in terminal to explore migrate package.
+func getBasePath() string {
+	basePath := os.Getenv("APP_BASE_PATH")
+	if basePath == "" {
+		// Fallback to current working directory if env var is not set
+		wd, err := os.Getwd()
+		if err != nil {
+			log.Fatal("Unable to get current working directory:", err)
+		}
+		return wd
+	}
+	return basePath
+}
 
 func InitIdentityDatabase() {
-	// Get the current working directory
-	wd, err := os.Getwd()
-	if err != nil {
-		log.Fatal("Unable to get current working directory:", err)
-	}
-	log.Println("[InitIdentityDatabase] wd:", wd)
-	// Define the relative path for the database
-	dbDir := filepath.Join(wd, "Database")
+	basePath := getBasePath()
+	dbDir := filepath.Join(basePath, "Database")
 	dbPath := filepath.Join(dbDir, "Identity.db")
 
 	// Ensure the directory exists
@@ -52,14 +57,8 @@ func InitIdentityDatabase() {
 }
 
 func InitBusinessDatabase() {
-	// Get the current working directory
-	wd, err := os.Getwd()
-	if err != nil {
-		log.Fatal("Unable to get current working directory:", err)
-	}
-
-	// Define the relative path for the database
-	dbDir := filepath.Join(wd, "Database")
+	basePath := getBasePath()
+	dbDir := filepath.Join(basePath, "Database")
 	dbPath := filepath.Join(dbDir, "Business.db")
 
 	// Ensure the directory exists
