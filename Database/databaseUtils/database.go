@@ -22,9 +22,9 @@ func InitIdentityDatabase() {
 	if err != nil {
 		log.Fatal("Unable to get current working directory:", err)
 	}
-
+	log.Println("[InitIdentityDatabase] wd:", wd)
 	// Define the relative path for the database
-	dbDir := filepath.Join(wd, "..", "Database")
+	dbDir := filepath.Join(wd, "Database")
 	dbPath := filepath.Join(dbDir, "Identity.db")
 
 	// Ensure the directory exists
@@ -59,7 +59,7 @@ func InitBusinessDatabase() {
 	}
 
 	// Define the relative path for the database
-	dbDir := filepath.Join(wd, "..", "Database")
+	dbDir := filepath.Join(wd, "Database")
 	dbPath := filepath.Join(dbDir, "Business.db")
 
 	// Ensure the directory exists
