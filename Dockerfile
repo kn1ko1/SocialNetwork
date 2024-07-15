@@ -1,17 +1,25 @@
-# Use the official Golang image as a base image
-FROM golang:latest
+FROM golang:1.18-alpine
+
+# Install build dependencies
+RUN apk add --no-cache gcc musl-dev
+
 # Set the working directory inside the container
 WORKDIR /app
-# Copy only the go.mod and go.sum files to download dependencies
+
+# Copy go mod and sum files
 COPY go.mod go.sum ./
-# Download dependencies
+
+# Download all dependencies
 RUN go mod download
-# Copy the local code to the container
+
+# Copy the source code into the container
 COPY . .
-# TO-DO - Mount SQLite DBs as volumes
-# Build the Go application
-RUN go build -o social-network .
+
+# Build the Go app
+RUN go build -o main .
+
 # Expose the port the app runs on
 EXPOSE 8080
-# Command to run the executable
-CMD ["./social-network"]
+
+# Run the binary
+CMD ["./main"]

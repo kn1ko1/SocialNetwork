@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: 
+      context: ./App
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./Database:/app/Database
+    environment:
+      - DB_PATH=/app/Database
+
+volumes:
+  database:
