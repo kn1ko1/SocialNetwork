@@ -1,12 +1,11 @@
 version: '3.8'
-
 services:
   frontend:
     build:
       context: ./App
       dockerfile: Dockerfile
     volumes:
-      - ./App/build:/app/build  # Share the build folder with the backend
+      - ./App/build:/app/build
 
   backend:
     build:
@@ -17,14 +16,5 @@ services:
     depends_on:
       - frontend
     volumes:
-      - ./Database:/root/Database  # Mount the local Database directory into the container
-      - ./App/build:/root/build    # Mount the frontend build folder
-
-  database:
-    image: postgres:13
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
-    ports:
-      - "5432:5432"
+      - ./Database:/app/Database
+      - ./App/build:/app/build
