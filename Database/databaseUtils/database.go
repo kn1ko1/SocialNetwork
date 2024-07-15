@@ -87,6 +87,10 @@ func InitBusinessDatabase() {
 }
 
 func runMigrations(databaseURL, migrationsDir string) {
+
+	log.Println("testing path for Docker migrationsDir", migrationsDir)
+	log.Println("testing path for Docker databaseURL", databaseURL)
+
 	m, err := migrate.New(migrationsDir, databaseURL)
 	if err != nil {
 		log.Fatal("Error creating migrations instance:", err)

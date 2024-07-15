@@ -18,6 +18,11 @@ services:
       - ./Database:/app/Database
     environment:
       - DB_PATH=/app/Database
+      - IDENTITY_DB_PATH=/app/Database/Identity.db
+      - BUSINESS_DB_PATH=/app/Database/Business.db
+      - IDENTITY_MIGRATIONS_PATH=/app/Database/migrations/identity
+      - BUSINESS_MIGRATIONS_PATH=/app/Database/migrations/business
 
 volumes:
   database:
+
