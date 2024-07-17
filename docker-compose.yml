@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./App
+    ports:
+      - "80:80"
+
+  backend:
+    build:
+      context: .
+      dockerfile: Server/Dockerfile
+    ports:
+      - "8080:8080"
