@@ -11,5 +11,7 @@ services:
     build:
       context: .
       dockerfile: Server/Dockerfile
+    volumes:
+       - ./Database:/Database 
     ports:
       - "8080:8080"

@@ -12,7 +12,7 @@ var (
 func InitTemplates() {
 
 	// Parse the templates using ParseGlob
-	tmpl, err := template.ParseGlob("../Server/templates/*.go.html")
+	tmpl, err := template.ParseGlob("Server/templates/*.go.html")
 	if err != nil {
 		utils.HandleError("Error with template.ParseGlob in ui/init()", err)
 	}
