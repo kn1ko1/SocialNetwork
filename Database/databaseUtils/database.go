@@ -121,15 +121,6 @@ func InitBusinessDatabase() {
 	runMigrations(dbURL, migrationsURL)
 }
 
-// // Function to determine if running inside Docker
-// func runningInDocker() bool {
-// 	// Check if /proc/1/cgroup or /proc/self/cgroup has "docker" in it
-// 	// This is a simple and commonly used method to detect Docker
-// 	_, err := os.Stat("/.dockerenv")
-// 	log.Println("Running in Docker:", err)
-// 	return !os.IsNotExist(err)
-// }
-
 func runMigrations(databaseURL, migrationsDir string) {
 
 	log.Println("migrationsDir string:", migrationsDir)
@@ -152,6 +143,14 @@ func runningInDocker() bool {
 	log.Println("Running in Docker:", inDocker)
 	return inDocker
 }
+
+// // Function to determine if running inside Docker
+// func runningInDocker() bool {
+// 	// Check if /proc/1/cgroup or /proc/self/cgroup has "docker" in it
+// 	// This is a simple and commonly used method to detect Docker
+// 	_, err := os.Stat("/.dockerenv")
+// 	return !os.IsNotExist(err)
+// }
 
 // func InitIdentityDatabase() {
 // 	// Get the current working directory
