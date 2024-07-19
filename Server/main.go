@@ -189,8 +189,18 @@ func addImageHandlers(rt *router.Router) {
 }
 
 func serveStaticFiles(mux *http.ServeMux) {
+
+	var staticDir string
+
 	workDir, _ := os.Getwd()
-	staticDir := filepath.Join(workDir, "..", "App", "static") // Go up one level, then into 'App/static'
+
+	if dbUtils.RunningInDocker() {
+		staticDir = filepath.Join(workDir, "/usr/share/nginx/html", "static")
+	} else {
+		staticDir = filepath.Join(workDir, "..", "App", "static")
+	}
+
+	//staticDir := filepath.Join(workDir, "..", "App", "static") // Go up one level, then into 'App/static'
 	fsRoot := http.Dir(staticDir)
 	fs := http.FileServer(fsRoot)
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))

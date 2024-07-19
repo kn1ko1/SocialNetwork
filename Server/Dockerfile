@@ -30,6 +30,9 @@ WORKDIR /app
 # Copy the built binary from the build stage
 COPY --from=build /app/main .
 
+# Copy the Server directory to the container
+COPY --from=build /app/Server /app/Server
+
 # Copy the Database directory to the container
 COPY --from=build /app/Database /app/Database
 

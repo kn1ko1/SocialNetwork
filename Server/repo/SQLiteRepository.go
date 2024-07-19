@@ -5,6 +5,7 @@ package repo
 
 import (
 	"log"
+	dbUtils "socialnetwork/Database/databaseUtils"
 	"socialnetwork/Server/models"
 	"socialnetwork/Server/sqlite"
 	comments "socialnetwork/Server/sqlite/COMMENTS"
@@ -31,13 +32,27 @@ type SQLiteRepository struct {
 }
 
 func NewSQLiteRepository() *SQLiteRepository {
+	var identityString string
+	var businessString string
+
 	ret := &SQLiteRepository{}
-	db, err := sql.Open(dbDriver, identityDbPath)
+	if dbUtils.RunningInDocker() {
+		identityString = "Database/Identity.db"
+	} else {
+		identityString = identityDbPath
+	}
+	db, err := sql.Open(dbDriver, identityString)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 	ret.identityDb = db
-	db, err = sql.Open(dbDriver, businessDbPath)
+
+	if dbUtils.RunningInDocker() {
+		businessString = "Database/Business.db"
+	} else {
+		businessString = businessDbPath
+	}
+	db, err = sql.Open(dbDriver, businessString)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

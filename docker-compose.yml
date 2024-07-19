@@ -6,12 +6,14 @@ services:
       context: ./App
     ports:
       - "80:80"
+    volumes:
+       - ./App:/usr/share/nginx/html
 
   backend:
     build:
       context: .
       dockerfile: Server/Dockerfile
     volumes:
-       - ./Database:/Database 
+       - ./Database:/app/Database 
     ports:
       - "8080:8080"

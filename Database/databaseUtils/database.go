@@ -17,32 +17,34 @@ import (
 //run `migrate --help` in terminal to explore migrate package.
 
 func InitIdentityDatabase() {
-	// Determine the correct base directory depending on the environment (local or Docker)
 	var baseDir string
-	if runningInDocker() {
-		baseDir = "/Database"
+	var dbURL, migrationsURL string
+
+	wd, err := os.Getwd()
+	if err != nil {
+		log.Fatal("Unable to get current working directory:", err)
+	}
+	log.Println("IDENTITY wd string:", wd)
+
+	if RunningInDocker() {
+		baseDir = "Database"
+		dbURL = filepath.Join(wd, baseDir, "Identity.db")
+		migrationsURL = filepath.Join(wd, baseDir, "migrations", "identity")
 	} else {
-		wd, err := os.Getwd()
 
-		log.Println("working directory wd:", wd)
-
-		if err != nil {
-			log.Fatal("Unable to get current working directory:", err)
-		}
-		baseDir = filepath.Join(wd, "Database")
-
-		log.Println("baseDir:", baseDir)
+		baseDir = filepath.Join(wd, "..", "Database")
+		dbURL = fmt.Sprintf("sqlite://%s", filepath.Join(baseDir, "Identity.db"))
+		migrationsURL = fmt.Sprintf("file://%s", filepath.Join(baseDir, "migrations", "identity"))
+		log.Println("IDENTITY baseDir string:", baseDir)
 	}
 
 	// Define the path to the database file
 	dbPath := filepath.Join(baseDir, "Identity.db")
 
-	log.Println("dbPath:", dbPath)
-
 	// Ensure the directory exists
-	if err := os.MkdirAll(filepath.Dir(dbPath), 0755); err != nil {
-		log.Fatal("Unable to create database directory:", err)
-	}
+	// if err := os.MkdirAll(filepath.Dir(dbPath), 0755); err != nil {
+	// 	log.Fatal("Unable to create database directory:", err)
+	// }
 
 	// Open the SQLite database
 	identityDB, err := sql.Open("sqlite3", dbPath)
@@ -58,40 +60,48 @@ func InitIdentityDatabase() {
 
 	log.Println("Connected to Identity SQLite database at:", dbPath)
 
-	// Define the path to migrations directory
-	var migrationsDir string
-	if runningInDocker() {
-		migrationsDir = filepath.Join(baseDir, "migrations", "identity")
-	} else {
-		migrationsDir = filepath.Join(baseDir, "..", "migrations", "identity")
-	}
+	log.Println("IDENTITY migrationsDir string:", migrationsURL)
+	log.Println("IDENTITY databaseURL string:", dbURL)
 
-	// Adjust the migration paths if necessary
-	dbURL := fmt.Sprintf("sqlite://%s", dbPath)
-	migrationsURL := fmt.Sprintf("file://%s", migrationsDir)
-	runMigrations(dbURL, migrationsURL)
+	if !RunningInDocker() {
+		runMigrations(dbURL, migrationsURL)
+	}
 }
 
 func InitBusinessDatabase() {
-	// Determine the correct base directory depending on the environment (local or Docker)
 	var baseDir string
-	if runningInDocker() {
-		baseDir = "/Database"
-	} else {
+	var dbURL, migrationsURL string
+
+	wd, err := os.Getwd()
+	if err != nil {
+		log.Fatal("Unable to get current working directory:", err)
+	}
+	log.Println("BUSINESS wd string:", wd)
+	if RunningInDocker() {
+		baseDir = "Database"
+		dbURL = filepath.Join(wd, baseDir, "Business.db")
+		migrationsURL = filepath.Join(wd, baseDir, "migrations", "business")
+
 		wd, err := os.Getwd()
 		if err != nil {
 			log.Fatal("Unable to get current working directory:", err)
 		}
-		baseDir = filepath.Join(wd, "Database")
+		log.Println("BUSINESS docker working directory:", wd)
+	} else {
+
+		baseDir = filepath.Join(wd, "..", "Database")
+		dbURL = fmt.Sprintf("sqlite://%s", filepath.Join(baseDir, "Business.db"))
+		migrationsURL = fmt.Sprintf("file://%s", filepath.Join(baseDir, "migrations", "business"))
+		log.Println("BUSINESS baseDir string:", baseDir)
 	}
 
 	// Define the path to the database file
 	dbPath := filepath.Join(baseDir, "Business.db")
 
 	// Ensure the directory exists
-	if err := os.MkdirAll(filepath.Dir(dbPath), 0755); err != nil {
-		log.Fatal("Unable to create database directory:", err)
-	}
+	// if err := os.MkdirAll(filepath.Dir(dbPath), 0755); err != nil {
+	// 	log.Fatal("Unable to create database directory:", err)
+	// }
 
 	// Open the SQLite database
 	businessDB, err := sql.Open("sqlite3", dbPath)
@@ -107,24 +117,117 @@ func InitBusinessDatabase() {
 
 	log.Println("Connected to Business SQLite database at:", dbPath)
 
-	// Define the path to migrations directory
-	var migrationsDir string
-	if runningInDocker() {
-		migrationsDir = filepath.Join(baseDir, "migrations", "business")
-	} else {
-		migrationsDir = filepath.Join(baseDir, "..", "migrations", "business")
-	}
+	log.Println("BUSINESS migrationsDir string:", migrationsURL)
+	log.Println("BUSINESS databaseURL string:", dbURL)
 
-	// Adjust the migration paths if necessary
-	dbURL := fmt.Sprintf("sqlite://%s", dbPath)
-	migrationsURL := fmt.Sprintf("file://%s", migrationsDir)
-	runMigrations(dbURL, migrationsURL)
+	if !RunningInDocker() {
+		runMigrations(dbURL, migrationsURL)
+	}
 }
 
-func runMigrations(databaseURL, migrationsDir string) {
+// func InitIdentityDatabase() {
+// 	var baseDir string
 
-	log.Println("migrationsDir string:", migrationsDir)
-	log.Println("databaseURL string:", databaseURL)
+// 	if runningInDocker() {
+// 		baseDir = "/Database"
+// 	} else {
+// 		wd, err := os.Getwd()
+// 		if err != nil {
+// 			log.Fatal("Unable to get current working directory:", err)
+// 		}
+// 		baseDir = filepath.Join(wd, "..", "Database")
+// 		log.Println("IDENTITY baseDir string:", baseDir)
+// 	}
+
+// 	// Define the path to the database file
+// 	dbPath := filepath.Join(baseDir, "Identity.db")
+
+// 	// Ensure the directory exists
+// 	if err := os.MkdirAll(filepath.Dir(dbPath), 0755); err != nil {
+// 		log.Fatal("Unable to create database directory:", err)
+// 	}
+
+// 	// Open the SQLite database
+// 	identityDB, err := sql.Open("sqlite3", dbPath)
+// 	if err != nil {
+// 		log.Fatal("Unable to open identity database:", err)
+// 	}
+// 	defer identityDB.Close()
+
+// 	// Ensure foreign keys are enabled
+// 	if _, err := identityDB.Exec("PRAGMA foreign_keys = ON"); err != nil {
+// 		log.Fatal("Error initializing database:", err)
+// 	}
+
+// 	log.Println("Connected to Identity SQLite database at:", dbPath)
+
+// 	migrationsDir := filepath.Join(baseDir, "migrations", "identity")
+
+// 	// Adjust the migration paths if necessary
+// 	dbURL := fmt.Sprintf("sqlite://%s", dbPath)
+// 	migrationsURL := fmt.Sprintf("file://%s", migrationsDir)
+
+// 	log.Println("IDENTITY migrationsDir string:", migrationsURL)
+// 	log.Println("IDENTITY databaseURL string:", dbURL)
+
+// 	runMigrations(dbURL, migrationsURL)
+// }
+
+// func InitBusinessDatabase() {
+// 	// Determine the correct base directory depending on the environment (local or Docker)
+// 	var baseDir string
+// 	if runningInDocker() {
+// 		baseDir = "/Database"
+// 	} else {
+// 		wd, err := os.Getwd()
+// 		if err != nil {
+// 			log.Fatal("Unable to get current working directory:", err)
+// 		}
+// 		baseDir = filepath.Join(wd, "Database")
+// 		log.Println("BUSINESSbaseDir string:", baseDir)
+// 	}
+
+// 	// Define the path to the database file
+// 	dbPath := filepath.Join(baseDir, "Business.db")
+
+// 	// Ensure the directory exists
+// 	if err := os.MkdirAll(filepath.Dir(dbPath), 0755); err != nil {
+// 		log.Fatal("Unable to create database directory:", err)
+// 	}
+
+// 	// Open the SQLite database
+// 	businessDB, err := sql.Open("sqlite3", dbPath)
+// 	if err != nil {
+// 		log.Fatal("Unable to open business database:", err)
+// 	}
+// 	defer businessDB.Close()
+
+// 	// Ensure foreign keys are enabled
+// 	if _, err := businessDB.Exec("PRAGMA foreign_keys = ON"); err != nil {
+// 		log.Fatal("Error initializing database:", err)
+// 	}
+
+// 	log.Println("Connected to Business SQLite database at:", dbPath)
+
+// 	// Define the path to migrations directory
+// 	var migrationsDir string
+// 	if runningInDocker() {
+// 		migrationsDir = filepath.Join(baseDir, "migrations", "business")
+// 	} else {
+// 		migrationsDir = filepath.Join(baseDir, "migrations", "business")
+// 	}
+
+// 	// Adjust the migration paths if necessary
+// 	dbURL := fmt.Sprintf("sqlite://%s", dbPath)
+// 	migrationsURL := fmt.Sprintf("file://%s", migrationsDir)
+
+// 	log.Println("BUSINESS migrationsDir string:", migrationsDir)
+// 	log.Println("BUSINESS databaseURL string:", dbURL)
+
+// 	runMigrations(dbURL, migrationsURL)
+// }
+
+func runMigrations(databaseURL, migrationsDir string) {
 
 	m, err := migrate.New(migrationsDir, databaseURL)
 	if err != nil {
@@ -137,7 +240,7 @@ func runMigrations(databaseURL, migrationsDir string) {
 	}
 }
 
-func runningInDocker() bool {
+func RunningInDocker() bool {
 	// Docker sets the HOSTNAME environment variable, which can be used to detect if running in Docker
 	_, inDocker := os.LookupEnv("HOSTNAME")
 	log.Println("Running in Docker:", inDocker)
