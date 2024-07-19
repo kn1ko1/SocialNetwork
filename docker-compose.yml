@@ -4,10 +4,11 @@ services:
   frontend:
     build:
       context: ./App
+    volumes:
+       - ./App/static:/usr/share/nginx/html/static
     ports:
       - "80:80"
-    volumes:
-       - ./App:/usr/share/nginx/html
+   
 
   backend:
     build:
@@ -15,5 +16,6 @@ services:
       dockerfile: Server/Dockerfile
     volumes:
        - ./Database:/app/Database 
+       - ./App/static:/app/static
     ports:
       - "8080:8080"
