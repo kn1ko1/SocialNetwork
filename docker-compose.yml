@@ -1,16 +1,19 @@
+version: '3.8'
+
 services:
   frontend:
-    build: 
+    build:
       context: ./App
-    volumes:
-     - ./App
+      dockerfile: Dockerfile
     ports:
       - "80:80"
     depends_on:
       - backend
 
   backend:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     volumes:

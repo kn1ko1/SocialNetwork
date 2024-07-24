@@ -1,27 +1,42 @@
-FROM golang:1.18-alpine
+# Stage 1: Build the Go application
+FROM golang:1.18 AS build
 
-# Install build dependencies
-RUN apk add --no-cache gcc musl-dev
-
-# Set the working directory inside the container
+# Set the working directory in the build stage
 WORKDIR /app
 
-# Copy go mod and sum files
+# Copy Go module files
 COPY go.mod go.sum ./
 
-# Download all dependencies
+# Download dependencies
 RUN go mod download
 
-# Copy the source code into the container
+# Copy the entire source code
 COPY . .
 
-# Set the working directory inside the container
-WORKDIR /app/Server
-# Build the Go app
-RUN go build -o main main.go
+# Build the Go application, placing the binary in the Server folder
+RUN go build -o Server/main ./Server/main.go
 
-# Expose the port the app runs on
+# Stage 2: Create a minimal image for the final application
+FROM alpine:3.15
+
+# Install necessary libraries for running the Go binary
+RUN apk add --no-cache libgcc libstdc++
+
+# Set the working directory
+WORKDIR /app/Server
+
+# Copy the Go binary from the build stage
+COPY --from=build /app/Server/main .
+
+# Expose the port that the backend listens on
 EXPOSE 8080
 
-# Run the binary
+# Set environment variables if needed
+ENV DB_PATH /app/Database
+ENV IDENTITY_DB_PATH /app/Database/Identity.db
+ENV BUSINESS_DB_PATH /app/Database/Business.db
+ENV IDENTITY_MIGRATIONS_PATH /app/Database/migrations/identity
+ENV BUSINESS_MIGRATIONS_PATH /app/Database/migrations/business
+
+# Run the application from the Server directory
 CMD ["./main"]
