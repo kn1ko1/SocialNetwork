@@ -5,6 +5,8 @@ services:
     build: 
       context: ./App
       dockerfile: Dockerfile
+    volumes:
+     - ./App
     ports:
       - "80:80"
     depends_on:
@@ -25,4 +27,3 @@ services:
 
 volumes:
   database:
-
