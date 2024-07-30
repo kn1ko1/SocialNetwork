@@ -4,7 +4,7 @@ FROM golang:1.18 AS build
 # Install build essentials
 RUN apt-get update && apt-get install -y gcc libc6-dev
 
-# Set the working directory
+# Set the working directory in the build stage
 WORKDIR /app
 
 # Copy Go module files
@@ -16,16 +16,16 @@ RUN go mod download
 # Copy the entire source code
 COPY . .
 
-# Build the Go application with CGO enabled
+# Build the Go application with CGO enabled, placing the binary in the Server directory
 RUN CGO_ENABLED=1 go build -o /app/Server/main ./Server/main.go
 
 # Stage 2: Create a minimal image for the final application
 FROM alpine:3.15
 
-# Install necessary libraries
+# Install necessary libraries for running the Go binary
 RUN apk add --no-cache libgcc libstdc++
 
-# Set the working directory
+# Set the working directory in the final stage
 WORKDIR /app/Server
 
 # Copy the Go binary from the build stage
@@ -40,6 +40,9 @@ ENV DB_PATH=/app/Database \
     BUSINESS_DB_PATH=/app/Database/Business.db \
     IDENTITY_MIGRATIONS_PATH=/app/Database/migrations/identity \
     BUSINESS_MIGRATIONS_PATH=/app/Database/migrations/business
+
+# Ensure the main binary has executable permissions
+RUN chmod +x /app/Server/main
 
 # Run the application
 CMD ["./main"]
