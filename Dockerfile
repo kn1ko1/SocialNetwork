@@ -13,8 +13,8 @@ RUN go mod download
 # Copy the entire source code
 COPY . .
 
-# Build the Go application, placing the binary in the Server folder
-RUN go build -o Server/main ./Server/main.go
+# Build the Go application, placing the binary in the Server directory
+RUN go build -o /app/Server/main ./Server/main.go
 
 # Stage 2: Create a minimal image for the final application
 FROM alpine:3.15
@@ -37,6 +37,7 @@ ENV IDENTITY_DB_PATH /app/Database/Identity.db
 ENV BUSINESS_DB_PATH /app/Database/Business.db
 ENV IDENTITY_MIGRATIONS_PATH /app/Database/migrations/identity
 ENV BUSINESS_MIGRATIONS_PATH /app/Database/migrations/business
+
 
 # Run the application from the Server directory
 CMD ["./main"]
