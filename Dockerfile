@@ -19,9 +19,6 @@ COPY . .
 # Build the Go application with CGO enabled, placing the binary in the Server directory
 RUN CGO_ENABLED=1 go build -o /app/Server/main ./Server/main.go
 
-# Debugging: List files in /app and /app/Server
-RUN ls -la /app
-RUN ls -la /app/Server
 
 # Stage 2: Create a minimal image for the final application
 FROM debian:bullseye-slim
@@ -31,6 +28,9 @@ WORKDIR /app
 
 # Copy the Go binary from the build stage
 COPY --from=build /app/Server/main /app/Server/main
+
+# Copy the templates directory
+COPY --from=build /app/Server/templates /app/Server/templates
 
 # Expose the port that the backend listens on
 EXPOSE 8080

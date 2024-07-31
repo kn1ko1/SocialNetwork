@@ -195,5 +195,5 @@ func serveStaticFiles(mux *http.ServeMux) {
 	fs := http.FileServer(fsRoot)
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	log.Println("Serving static files from:", staticDir) // Log the path for debugging
+	log.Println("[Server/main.go] Serving static files from:", staticDir) // Log the path for debugging
 }
