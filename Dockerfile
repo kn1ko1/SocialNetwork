@@ -19,17 +19,18 @@ COPY . .
 # Build the Go application with CGO enabled, placing the binary in the Server directory
 RUN CGO_ENABLED=1 go build -o /app/Server/main ./Server/main.go
 
-# Stage 2: Create a minimal image for the final application
-FROM alpine:3.15
+# Debugging: List files in /app and /app/Server
+RUN ls -la /app
+RUN ls -la /app/Server
 
-# Install necessary libraries for running the Go binary
-RUN apk add --no-cache libgcc libstdc++
+# Stage 2: Create a minimal image for the final application
+FROM debian:bullseye-slim
 
 # Set the working directory in the final stage
-WORKDIR /app/Server
+WORKDIR /app
 
 # Copy the Go binary from the build stage
-COPY --from=build /app/Server/main .
+COPY --from=build /app/Server/main /app/Server/main
 
 # Expose the port that the backend listens on
 EXPOSE 8080
@@ -42,7 +43,9 @@ ENV DB_PATH=/app/Database \
     BUSINESS_MIGRATIONS_PATH=/app/Database/migrations/business
 
 # Ensure the main binary has executable permissions
-RUN chmod +x /app/Server/main
+RUN chmod 755 /app/Server/main
+
+WORKDIR /app/Server
 
 # Run the application
 CMD ["./main"]

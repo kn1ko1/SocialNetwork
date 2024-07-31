@@ -17,7 +17,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./Database:/app/Database
+      - ./Database:/app/Database  # Mount Database folder to /app/Database in the container
     environment:
       - DB_PATH=/app/Database
       - IDENTITY_DB_PATH=/app/Database/Identity.db
