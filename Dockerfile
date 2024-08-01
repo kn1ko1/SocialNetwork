@@ -32,6 +32,9 @@ COPY --from=build /app/Server/main /app/Server/main
 # Copy the templates directory
 COPY --from=build /app/Server/templates /app/Server/templates
 
+# Copy the templates directory
+COPY --from=build /app/Server/uploads /app/Server/uploads
+
 # Copy static files from the App/static directory
 COPY ../App/static /app/static
 

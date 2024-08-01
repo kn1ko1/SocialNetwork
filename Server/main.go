@@ -193,7 +193,19 @@ func serveStaticFiles(mux *http.ServeMux) {
 	staticDir := filepath.Join(workDir, "..", "App", "static") // Go up one level, then into 'App/static'
 	fsRoot := http.Dir(staticDir)
 	fs := http.FileServer(fsRoot)
-	mux.Handle("/static/", http.StripPrefix("/static/", fs))
+	mux.Handle("/static/", enableCors(http.StripPrefix("/static/", fs)))
 
 	log.Println("[Server/main.go] Serving static files from:", staticDir) // Log the path for debugging
+}
+
+func enableCors(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*") // or specify a specific origin
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		if r.Method == "OPTIONS" {
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
 }

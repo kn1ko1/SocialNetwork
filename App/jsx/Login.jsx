@@ -61,22 +61,24 @@ export function Login() {
 	useEffect(() => {
 		if (isLoggedIn) {
 			socket = initializeSocket()
-			renderNavbar({socket})
-			renderHome({socket})
-			
+			renderNavbar({ socket })
+			renderHome({ socket })
+
 		}
 	}, [isLoggedIn])
 
 
-	
+
 
 	return (
 		<div className="container login-container" style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
 
 			<div className="logo-container">
-    <img src="../static/sphere-logo.png" alt="Logo" className="logo" />
-  
-</div>
+				<img src="./uploads/images/sphere-logo.png" alt="Logo" className="logo" />
+				{/* Original image source, pre-docker */}
+				{/* <img src="../sphere-logo.png" alt="Logo" className="logo" /> */}
+
+			</div>
 
 			<h1 className="h3 mb-3 fw-normal login-text">Log in</h1>
 			<form onSubmit={handleSubmit}>

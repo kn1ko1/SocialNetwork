@@ -142,7 +142,7 @@ export const Navbar = ({ socket }) => {
 
           <div className="navbar-logo">
             <img
-              src="../../static/sphere-logo.png"
+              src="./uploads/images/sphere-logo.png"
               alt="Logo"
               className="logo"
               style={{ width: "60px", height: "auto" }}
