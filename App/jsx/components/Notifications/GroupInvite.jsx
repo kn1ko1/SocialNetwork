@@ -22,7 +22,8 @@ export function GroupInvite({ notification, onNotificationResponse, socket }) {
         respondToNotification(responseType, notification);
 
         if (responseType == "confirm"){
-            websocketRespondToGroupNotification(notification, socket)
+            const notificationObject = { code: 11, body: JSON.stringify(notification) }
+            websocketRespondToGroupNotification(notificationObject, socket)
         }
         // Call the parent component's callback to remove this notification
         onNotificationResponse(notification.notificationId);

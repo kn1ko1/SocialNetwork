@@ -36,8 +36,18 @@ export function PostForm({
 
     const formData = new FormData();
 
+    // Handle body content
+    let requestBody = body;
+    if (selectedFile && !requestBody.trim()) {
+      // If selectedFile is present and body is empty or whitespace only,
+      // set requestBody to a space character
+      requestBody = " ";
+    }
     // Append form data
-    formData.append("body", body);
+    if (selectedFile) {
+      formData.append("image", selectedFile);
+    }
+    formData.append("body", requestBody);
     formData.append("privacy", privacy);
     if (privacy === "private") {
       groupId = -1; // Set groupId to -1 for private posts
@@ -47,9 +57,6 @@ export function PostForm({
       formData.append("almostPrivatePostUsers", JSON.stringify(selectedUserIds));
     }
     formData.append("groupId", groupId);
-    if (selectedFile) {
-      formData.append("image", selectedFile);
-    }
     console.log("Form data being sent to backend: ", formData);
     try {
       // Send user data to the server

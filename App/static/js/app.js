@@ -27,11 +27,9 @@ const App = () => {
     renderNavbar({
       socket
     });
-    console.log("I am alive 1");
     renderHome({
       socket
     });
-    console.log("I am alive 2");
   } else {
     renderLogin();
   }

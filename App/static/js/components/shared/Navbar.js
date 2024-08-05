@@ -133,7 +133,9 @@ export const Navbar = ({
   }), /*#__PURE__*/React.createElement("div", {
     className: "navbar-logo"
   }, /*#__PURE__*/React.createElement("img", {
-    src: "../../static/sphere-logo.png",
+    /* Original image source, pre-docker */
+    /* <img src="../sphere-logo.png" alt="Logo" className="logo" /> */
+    src: "./uploads/images/sphere-logo.png",
     alt: "Logo",
     className: "logo",
     style: {

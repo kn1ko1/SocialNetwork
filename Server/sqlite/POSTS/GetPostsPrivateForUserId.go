@@ -46,6 +46,7 @@ func GetPostsPrivateForUserId(database *sql.DB, userId int) ([]models.Post, erro
 			utils.HandleError("Error scanning row in GetPostsPrivate.", err)
 			return nil, err
 		}
+		result = append(result, post)
 	}
 	return result, nil
 }

@@ -69,7 +69,9 @@ export function Home({
       const userEventsData = await userEventsResponse.json();
       const publicPostsData = await publicPostsResponse.json();
       const privatePostsData = await privatePostsResponse.json();
+      console.log("privatePostsData", privatePostsData);
       const almostPrivatePostsData = await almostPrivatePostsResponse.json();
+      console.log("almostPrivatePostsData", almostPrivatePostsData);
       let filteredFollowedUsers = null;
       let updatedUserListData = userListData;
       if (followedUsersListData != null) {

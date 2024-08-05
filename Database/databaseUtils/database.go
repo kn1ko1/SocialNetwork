@@ -116,15 +116,19 @@ func InitBusinessDatabase() {
 	}
 
 	log.Println("Connected to Business SQLite database at:", dbPath)
+<<<<<<< HEAD
 
 	log.Println("BUSINESS migrationsDir string:", migrationsURL)
 	log.Println("BUSINESS databaseURL string:", dbURL)
+=======
+>>>>>>> main
 
 	if !RunningInDocker() {
 		runMigrations(dbURL, migrationsURL)
 	}
 }
 
+<<<<<<< HEAD
 // func InitIdentityDatabase() {
 // 	var baseDir string
 
@@ -229,6 +233,13 @@ func InitBusinessDatabase() {
 
 func runMigrations(databaseURL, migrationsDir string) {
 
+=======
+func runMigrations(databaseURL, migrationsDir string) {
+
+	log.Println("testing path for Docker migrationsDir", migrationsDir)
+	log.Println("testing path for Docker databaseURL", databaseURL)
+
+>>>>>>> main
 	m, err := migrate.New(migrationsDir, databaseURL)
 	if err != nil {
 		log.Fatal("Error creating migrations instance:", err)
@@ -238,6 +249,7 @@ func runMigrations(databaseURL, migrationsDir string) {
 	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
 		log.Fatal("Error applying migrations:", err)
 	}
+	log.Println("Applying Up migrations from", migrationsDir)
 }
 
 func RunningInDocker() bool {

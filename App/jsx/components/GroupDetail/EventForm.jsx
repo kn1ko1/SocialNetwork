@@ -32,7 +32,7 @@ export function EventForm({ group, socket, fetchFunc }) {
 
         try {
 
-            let obj = { code: 6, body: JSON.stringify(eventData) }
+            let obj = { code: 6, isGoing: true, body: JSON.stringify(eventData) }
             socket.send(JSON.stringify(obj));
 
             // Reset form fields after successful submission

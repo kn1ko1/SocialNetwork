@@ -19,7 +19,7 @@ const (
 	FOLLOW_REQUEST            = 3
 	GROUP_REQUEST             = 4
 	GROUP_INVITE              = 5
-	EVENT_INVITE              = 6
+	CREATE_EVENT              = 6
 	CreateGroupAndSocketGroup = 10
 	AcceptGroupAndSocketGroup = 11
 )
@@ -71,7 +71,7 @@ func (c *Client) Receive() {
 		switch wsm.Code {
 		case 10:
 			c.CreateGroupAndSocketGroup(wsm)
-		case 11:
+		case 11, 12:
 			c.AcceptGroupAndSocketGroup(wsm)
 		default:
 			// Handle the received message
@@ -128,7 +128,6 @@ func (c *Client) CreateGroupAndSocketGroup(msg WebSocketMessage) {
 		return
 	}
 
-	log.Println("CLient.Go.  Trying to create socket group", createdGroup.GroupId)
 	// Check if the socket group exists, and create it if it doesn't.
 	_, exists := socketGroupManager.SocketGroups[createdGroup.GroupId]
 	if !exists {
@@ -152,16 +151,11 @@ func (c *Client) CreateGroupAndSocketGroup(msg WebSocketMessage) {
 func (c *Client) AcceptGroupAndSocketGroup(msg WebSocketMessage) {
 	var notification models.Notification
 
-	log.Println("Starting AcceptGroupAndSocketGroup") // Log for function start
-
 	err := json.Unmarshal([]byte(msg.Body), &notification)
 	if err != nil {
 		log.Println("Unmarshal error:", err.Error())
 		return
 	}
-	log.Println("Unmarshal successful") // Log after successful unmarshal
-
-	log.Println("Trying to create socket group", notification.ObjectId) // Log before creating socket group
 
 	// Check if the socket group exists, and create it if it doesn't.
 	_, exists := socketGroupManager.SocketGroups[notification.ObjectId]
@@ -169,17 +163,28 @@ func (c *Client) AcceptGroupAndSocketGroup(msg WebSocketMessage) {
 		socketGroupManager.SocketGroups[notification.ObjectId] = NewSocketGroup(notification.ObjectId)
 		go socketGroupManager.SocketGroups[notification.ObjectId].Run() // Run the socket group in a separate goroutine.
 		log.Printf("Client.go.  Socket group %d created and Run() called", notification.ObjectId)
-		log.Printf("SocketGroups map now contains: %v", socketGroupManager.SocketGroups)
 	} else {
 		log.Println("Socket group", notification.ObjectId, "already exists") // Log if socket group already exists
 	}
 
-	// Add the client to the socket group.
-	c.SocketGroups[notification.ObjectId] = socketGroupManager.SocketGroups[notification.ObjectId]
-	log.Println("Client added to socket group") // Log after adding client to socket group
+	switch msg.Code {
+	//GroupInvite accepted
+	case 11:
+		c.SocketGroups[notification.ObjectId] = socketGroupManager.SocketGroups[notification.ObjectId]
+		socketGroupManager.SocketGroups[notification.ObjectId].Enter <- c
+		log.Println("Client", c.User.Username, "added to socket group") // Log after adding client to socket group
+	//GroupRequest accepted
+	case 12:
+		client, ok := socketGroupManager.SocketGroups[0].Clients[notification.SenderId]
+		if ok {
+			client.SocketGroups[notification.ObjectId] = socketGroupManager.SocketGroups[notification.ObjectId]
+			socketGroupManager.SocketGroups[notification.ObjectId].Enter <- client
+			log.Println("Client", client.User.Username, "added to socket group") // Log after adding client to socket group
+		} else {
+			log.Println("Client is not online") // Log after failing to add client to socket group
 
-	socketGroupManager.SocketGroups[notification.ObjectId].Enter <- c
-	log.Println("Client added to socket group's Enter channel") // Log after sending client to Enter channel
+		}
+	}
 }
 
 // HandleMessage processes incoming WebSocket messages
@@ -384,20 +389,29 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 		group.Broadcast <- returnMsg
 		// Store the message in the database
 
-	case EVENT_INVITE:
+	case CREATE_EVENT:
 
 		ctime := time.Now().UTC().UnixMilli()
 
 		// Handle event invite
-		var event models.Event
-		err := json.Unmarshal([]byte(msg.Body), &event)
+		var eventTransport transport.EventTransport
+		err := json.Unmarshal([]byte(msg.Body), &eventTransport)
 		if err != nil {
 			log.Println(err.Error())
 			return
 		}
-		log.Printf("Handling EVENT_INVITE. GroupId: %d", event.GroupId)
-		event.CreatedAt = ctime
-		event.UpdatedAt = ctime
+		log.Printf("Handling CREATE_EVENT. GroupId: %d", eventTransport.GroupId)
+
+		event := models.Event{
+			CreatedAt:   ctime,
+			DateTime:    eventTransport.DateTime,
+			Description: eventTransport.Description,
+			GroupId:     eventTransport.GroupId,
+			Title:       eventTransport.Title,
+			UpdatedAt:   ctime,
+			UserId:      eventTransport.UserId,
+		}
+
 		// Adds Event to db
 		returnEvent, err := c.Repo.CreateEvent(event)
 		if err != nil {
@@ -405,15 +419,19 @@ func (c *Client) HandleMessage(msg WebSocketMessage) {
 			return
 		}
 
-		// Adds user who made event to eventUsers table.  It's their event, they better be going!
-		eventUserWhoMadeEvent := models.EventUser{
-			CreatedAt: ctime,
-			EventId:   returnEvent.EventId,
-			IsGoing:   true,
-			UpdatedAt: ctime,
-			UserId:    event.UserId,
+		if eventTransport.Attendance == "attending" {
+			// Adds user who made event to eventUsers table.  It's their event, they better be going!
+			eventUserWhoMadeEvent := models.EventUser{
+				CreatedAt: ctime,
+				EventId:   returnEvent.EventId,
+				IsGoing:   true,
+				UpdatedAt: ctime,
+				UserId:    event.UserId,
+			}
+			c.Repo.CreateEventUser(eventUserWhoMadeEvent)
 		}
-		c.Repo.CreateEventUser(eventUserWhoMadeEvent)
+
+		// Sends out an event invite to all members of the group via socketGroup
 		groupId := event.GroupId
 		group, ok := c.SocketGroups[groupId]
 		if !ok {
