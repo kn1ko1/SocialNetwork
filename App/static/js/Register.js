@@ -139,7 +139,9 @@ export function Register() {
   }, /*#__PURE__*/React.createElement("div", {
     className: "logo-container"
   }, /*#__PURE__*/React.createElement("img", {
-    src: "../static/sphere-logo.png",
+    // src: "../static/sphere-logo.png",
+    src:  "./uploads/images/sphere-logo.png",
+   
     alt: "Logo",
     className: "logo"
   })), /*#__PURE__*/React.createElement("h1", {
