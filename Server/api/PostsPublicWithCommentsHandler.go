@@ -78,7 +78,7 @@ func (h *PostsPublicWithCommentsHandler) get(w http.ResponseWriter) {
 			// Fetch and cache the comment author's user details
 			user, exists := userCache[comment.UserId]
 			if !exists {
-				user, err := h.Repo.GetUserById(comment.UserId)
+				user, err = h.Repo.GetUserById(comment.UserId)
 				if err != nil {
 					utils.HandleError("Failed to get user in GetPostsPublicWithCommentsHandler.", err)
 					http.Error(w, "Internal Server Error", http.StatusInternalServerError)
